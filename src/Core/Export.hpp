@@ -2,8 +2,8 @@
 
 #include <Config.hpp>
 
-#if defined(AXION_API_EXPORT)
-	#define AXION_CORE_API AXION_API_EXPORT
+#if defined(AXION_CORE_EXPORT)
+	#define AXION_CORE_API AXION_EXPORT
 #else
-	#define AXION_CORE_API AXION_API_IMPORT
+	#define AXION_CORE_API AXION_IMPORT
 #endif

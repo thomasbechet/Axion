@@ -3,7 +3,7 @@
 ///////////////////////////////////
 //Headers
 ///////////////////////////////////
-#include <Axion/System/Export.hpp>
+#include <Core/Export.hpp>
 
 namespace ax
 {	
@@ -15,21 +15,21 @@ namespace ax
 	template<typename T>
 	inline static T radians(const T& degrees)
 	{
-		return (degrees * AMath::PI) / (T)180;
+		return (degrees * PI) / (T)180;
 	}
 	template<typename T>
 	inline static void toRadians(const T& degrees)
 	{
-		degrees = (degrees * AMath::PI) / (T)180;
+		degrees = (degrees * PI) / (T)180;
 	}
 	template<typename T>
 	inline static T degrees(const T& radians)
 	{
-		return (radians * (T)180) / AMath::PI;
+		return (radians * (T)180) / PI;
 	}
 	template<typename T>
 	inline static void toDegrees(const T& radians)
 	{
-		radians = (radians * (T)180) / AMath::PI;
+		radians = (radians * (T)180) / PI;
 	}
 }

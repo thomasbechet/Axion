@@ -28,7 +28,7 @@ namespace ax
     };
 
     template<typename Type, typename F>
-    static void foreach_tuple(Type& t, F f)
+    static void AXION_CORE_API foreach_tuple(Type& t, F f)
     {
         foreach_tuple_impl<Type, F, 0, std::tuple_size<Type>::value - 1>()(t, f);
     }

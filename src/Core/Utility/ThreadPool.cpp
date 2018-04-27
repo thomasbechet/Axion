@@ -1,4 +1,5 @@
 #include <Core/Utility/ThreadPool.hpp>
+#include <iostream>
 
 using namespace ax;
 
@@ -51,7 +52,7 @@ Task ThreadPool::createTask()
 
     return task;
 }
-bool ThreadPool::isTaskFinished(Task task)
+bool ThreadPool::isTaskFinished(Task task) const
 {
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -67,7 +68,7 @@ void ThreadPool::performTask(Task task, const Job& job)
     m_job_size++;
     m_cv_worker.notify_one();
 }
-void waitTask(Task task)
+void ThreadPool::waitTask(Task task)
 {
     std::unique_lock<std::mutex> lock(m_mutex);
 

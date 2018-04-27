@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>6</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>882</x>
+      <y>270</y>
+      <w>234</w>
+      <h>228</h>
+    </coordinates>
+    <panel_attributes>GameContext
+--
+components : ComponentManager&amp;
+systems : SystemManager&amp;
+
+-renderer : unique_ptr&lt;Renderer&gt;
+-window : unique_ptr&lt;Window&gt;
+-sound : unique_ptr&lt;Sound&gt;
+--
++start() : void
++stop() : void
+
++renderer() : Renderer&amp;
++window() : Window&amp;
++sound() : Sound&amp;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>594</x>
+      <y>342</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>/System/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>666</x>
+      <y>312</y>
+      <w>228</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>360.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>906</x>
+      <y>114</y>
+      <w>186</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>ComponentManager
+--
+-vector&lt;unique_ptr&lt;IComponentList&gt; &gt;
+--
++create&lt;C&gt;() : ComponentHandle
++destroy(id : ComponentHandle)
++destroy&lt;C&gt;(id : unsigned)
++get&lt;C&gt;(id : unsigned)
+
+-getSection&lt;C&gt;() : size_t
+-generateSection&lt;C&gt;() : size_t</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>996</x>
+      <y>210</y>
+      <w>18</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>954</x>
+      <y>48</y>
+      <w>102</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>/IComponentList/
+--
++create() : size_t
++destroy(id : size_t)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>996</x>
+      <y>84</y>
+      <w>18</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>582</x>
+      <y>318</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>SystemManager</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>618</x>
+      <y>330</y>
+      <w>18</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>846</x>
+      <y>876</y>
+      <w>318</w>
+      <h>246</h>
+    </coordinates>
+    <panel_attributes>/Renderer/
+--
+--
++init(context : GameContext) : void
++terminate(context : GameContext) : void
++draw() : void
+
++createStaticmesh() : unsigned
++destroyStaticmesh(id : unsigned) : void
++setStaticmeshMaterial(id : unsigned, name : string) : void
++setStaticmeshTransform(id : unsigned, transform : Transform&amp;) : void
++setStaticmeshMesh(id : unsigned) : void
+
++createCamera() : unsigned
++destroyCamera(id : unsigned) : void
++setCameraTransform(id : unsigned, transform : Transform&amp;) : void
++setCameraFov(fov : float) : void
+
++registerMaterial(name : string, material : Material&amp;) : void
++unregisterMaterial(name : string) : void
+
++registerMesh(name : string, mesh : Mesh&amp;) : void
++unregisterMesh(name : string) : void
+
++registerShader(name : string, shader : Shader&amp;) : void
++unregisterShader(name : string) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>996</x>
+      <y>492</y>
+      <w>18</w>
+      <h>396</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;640.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>726</x>
+      <y>138</y>
+      <w>120</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>_ComponentHandle_
+--
++section : unsigned(12b)
++id : unsigned(20b)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>840</x>
+      <y>156</y>
+      <w>78</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;20.0;110.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>942</x>
+      <y>0</y>
+      <w>126</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>ComponentList&lt;C&gt;
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>996</x>
+      <y>12</y>
+      <w>18</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>120</y>
+      <w>186</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>Mesh
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>30</x>
+      <y>420</y>
+      <w>216</w>
+      <h>138</h>
+    </coordinates>
+    <panel_attributes>Transform
+--
+-position : Vector3f
+-rotation : Quaternion
+-scale : Vector3f
+-transform : Matrix4f
+-computeRequest : bool
+--
++getPosition() : const Vector3f&amp;
++setPosition(position : const Vector3f&amp;) : void
++getRotation() : const Quaternion&amp;
++setRotation(rotation : const Quaternion&amp;) : void
++getScale() : const Vector3f&amp;
++setScale(scale : const Vector3f&amp;) : void
++matrix() : const Matrix4f&amp;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>504</x>
+      <y>1272</y>
+      <w>198</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Camera
+--
+-transform : Transform
+-position : Vector3d
+-rotation : Quaternion
+-fov : float
+-requestCompute : bool
+--
++getPosition() : Vector3d
++getRotation() : Quaternion
++getMatrix() : Matrix4d
++setPosition(position : Vector3d) : void
++setRotation(rotation : Quaternion) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>6</y>
+      <w>228</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>AssetManager
+--
+--
++loadMesh(path : string, name : string) : bool
++getMesh(name : string) : Mesh&amp;
++loadShader(path : string, name : string) : bool
++getShader(name : string) : Shader&amp;
++loadTexture(path : string, name : string) : bool
++getTexture(name : string) : Texture&amp;
++loadMaterial(path : string, name : string) : bool
++getMaterial(name : string) : Material&amp;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>402</x>
+      <y>60</y>
+      <w>492</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;800.0;380.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>804</x>
+      <y>1182</y>
+      <w>144</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>RendererGL
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>876</x>
+      <y>1116</y>
+      <w>102</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1050</x>
+      <y>1182</y>
+      <w>138</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>RendererDX
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1032</x>
+      <y>1116</y>
+      <w>102</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;150.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>78</x>
+      <y>588</y>
+      <w>162</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Color
+--
++getRGB() : unsigned
+--
+-r : float
+-g : float
+-b : float
+-a : float</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1302</x>
+      <y>264</y>
+      <w>288</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>/Window/
+--
+--
++init(context : GameContext) : void
++terminate(context : GameContext) : void
++swapBuffers() : void
+
++requestGLContext(parameters : GLContextParameters) : bool
++requestDXContext(parameters : DXContextParameters) : bool</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>0</x>
+      <y>774</y>
+      <w>294</w>
+      <h>174</h>
+    </coordinates>
+    <panel_attributes>Math
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1110</x>
+      <y>306</y>
+      <w>204</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>320.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1674</x>
+      <y>246</y>
+      <w>228</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>Window.dll
+-&gt;Input-&gt;GLContext-&gt;DXContext
+--
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>282</x>
+      <y>546</y>
+      <w>174</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Clock
+--
+-start : long
+--
++start() : void
++restart() : void
++getElapsedTime() : Time</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>282</x>
+      <y>456</y>
+      <w>174</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Time
+--
+-time : long
+--
++Time(nano : long)
++asNanoseconds() : long
++asMicroseconds() : float
++asSeconds() : double</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>360</x>
+      <y>522</y>
+      <w>18</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1290</x>
+      <y>426</y>
+      <w>126</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;struct&gt;&gt;
+GLContextParameters
+--
++major : unsigned
++minor : unsigned
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1734</x>
+      <y>306</y>
+      <w>108</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>WindowGLFW
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1584</x>
+      <y>312</y>
+      <w>162</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;250.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1464</x>
+      <y>426</y>
+      <w>126</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;struct&gt;&gt;
+DXContextParameters
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1344</x>
+      <y>342</y>
+      <w>102</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>150.0;10.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1434</x>
+      <y>342</y>
+      <w>102</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;150.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>114</x>
+      <y>834</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Vector</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>114</x>
+      <y>858</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Quaternion</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>114</x>
+      <y>882</y>
+      <w>60</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>Matrix</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>714</x>
+      <y>1272</y>
+      <w>198</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>StaticMesh
+--
+-transform : Transform
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>486</x>
+      <y>750</y>
+      <w>210</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;struct&gt;&gt;
+StaticMeshComponent
+--
+-id : unsigned
++transform : ComponentReference&lt;Transform&gt;
+--
++StaticMeshComponent(renderer : Renderer&amp;)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>702</x>
+      <y>750</y>
+      <w>210</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;struct&gt;&gt;
+CameraComponent
+--
+-id : unsigned
+-renderer : Renderer&amp;
++transform : ComponentReference&lt;Transform&gt;
+--
++CameraComponent(renderer : Renderer&amp;)
+
++setFov(fov : float) : void
++getFov() : float</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>156</y>
+      <w>186</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>Shader
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>192</y>
+      <w>186</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>Texture
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>234</y>
+      <w>186</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>Material
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>702</x>
+      <y>672</y>
+      <w>210</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;struct&gt;&gt;
+CompositeComponent
+--
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>480</x>
+      <y>1146</y>
+      <w>840</w>
+      <h>342</h>
+    </coordinates>
+    <panel_attributes>Renderer.dll
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>0</x>
+      <y>372</y>
+      <w>510</w>
+      <h>354</h>
+    </coordinates>
+    <panel_attributes>Utility
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

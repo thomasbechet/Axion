@@ -10,11 +10,14 @@
 /////////////////////////////
 //IMPORT EXPORT
 /////////////////////////////
-#if !defined(AXION_STATIC)
-	#define AXION_API_EXPORT __declspec(dllexport)
-    #define AXION_API_IMPORT __declspec(dllimport)
+#if defined(_MSV_VER)
+    #define AXION_EXPORT __declspec(dllexport)
+    #define AXION_IMPORT __declspec(dllimport)
+#elif defined(__GNUC__)
+    #define AXION_EXPORT __attribute__((visibility("default")))
+    #define AXION_IMPORT
 #else
-	//AXION_STATIC declared
-	#define AXION_API_EXPORT
-	#define AXION_API_IMPORT
+    #define AXION_EXPORT
+    #define AXION_IMPORT
+    #pragma warning Unknown linkage directive import/export semantics.
 #endif

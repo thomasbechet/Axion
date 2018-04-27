@@ -27,7 +27,7 @@ namespace ax
         inline ~ThreadPool();
 
         Task createTask();
-        bool isTaskFinished(Task task) const
+        bool isTaskFinished(Task task) const;
         void performTask(Task task, const Job& job);
         void waitTask(Task task);
 
