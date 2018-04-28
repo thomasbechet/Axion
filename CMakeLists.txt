@@ -1,10 +1,7 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.0)
 
-#Core project
-PROJECT(axion-core DESCRIPTION "Core library")
-FILE(GLOB_RECURSE SRCS src/Core/*.cpp)
+PROJECT(Axion DESCRIPTION "A C++ GameEngine")
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
-
-ADD_LIBRARY(axion-core SHARED
-    
-)
+ADD_SUBDIRECTORY(src/Core)
+ADD_SUBDIRECTORY(src/RuntimeTest)
