@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.1.0)
 
-PROJECT(Axion DESCRIPTION "A C++ GameEngine")
+PROJECT(Axion VERSION 0.0.1)
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
 
 ADD_SUBDIRECTORY(src/Core)

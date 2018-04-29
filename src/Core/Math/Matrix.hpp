@@ -15,14 +15,11 @@ namespace ax
 	class AXION_CORE_API Matrix4
 	{
 	public:
-		inline Matrix4<T>()
-		{
-			
-		}
-		inline Matrix4<T>(T x1, T y1, T z1, T w1,
-							T x2, T y2, T z2, T w2,
-							T x3, T y3, T z3, T w3,
-							T x4, T y4, T z4, T w4)
+		Matrix4<T>(){}
+		Matrix4<T>(T x1, T y1, T z1, T w1,
+					T x2, T y2, T z2, T w2,
+					T x3, T y3, T z3, T w3,
+					T x4, T y4, T z4, T w4)
 		{
 			m[0][0] = x1;
 			m[0][1] = y1;
@@ -44,10 +41,10 @@ namespace ax
 			m[3][2] = z4;
 			m[3][3] = w4;
 		}
-		inline Matrix4<T>(Vector4<T> vec1,
-							Vector4<T> vec2,
-							Vector4<T> vec3,
-							Vector4<T> vec4)
+		Matrix4<T>(Vector4<T> vec1,
+					Vector4<T> vec2,
+					Vector4<T> vec3,
+					Vector4<T> vec4)
 		{
 			m[0][0] = vec1.x;
 			m[0][1] = vec1.y;
@@ -73,7 +70,7 @@ namespace ax
 		//////////////////////////
 		//OPERATORS
 		//////////////////////////
-		inline Matrix4<T> operator*(const Matrix4<T>& mat)
+		Matrix4<T> operator*(const Matrix4<T>& mat)
 		{
 			Matrix4<T> result;
 			for(uint i = 0; i < 4; i++)
@@ -89,7 +86,7 @@ namespace ax
 			
 			return result;
 		}
-		inline Vector4<T> operator*(const Vector4<T>& vec)
+		Vector4<T> operator*(const Vector4<T>& vec)
 		{
 			return Vector4<T>(
 				m[0][0] * vec.x + m[0][1] * vec.y + m[0][2] * vec.z + m[0][3] * vec.w,
@@ -102,21 +99,21 @@ namespace ax
 		//////////////////////////
 		//ALGEBRA
 		//////////////////////////
-		inline static Matrix4<T> identity()
+		static Matrix4<T> identity()
 		{
 			return Matrix4<T>(1, 0, 0, 0,
 								0, 1, 0, 0,
 								0, 0, 1, 0,
 								0, 0, 0, 1);
 		}
-		inline static Matrix4<T> translate(T x, T y, T z)
+		static Matrix4<T> translate(T x, T y, T z)
 		{
 			return Matrix4<T>(1, 0, 0, x,
 								0, 1, 0, y,
 								0, 0, 1, z,
 								0, 0, 0, 1);
 		}
-		inline static Matrix4<T> rotate(T x, T y, T z)
+		static Matrix4<T> rotate(T x, T y, T z)
 		{
 			Matrix4<T> trans = Matrix4<T>::identity();
 			if(x != 0)
@@ -134,28 +131,28 @@ namespace ax
 								
 			return trans;
 		}
-		inline static Matrix4<T> rotateX(T x)
+		static Matrix4<T> rotateX(T x)
 		{
 			return Matrix4<T>(1,  0,            0,           0,
 								0, std::cos(x), -std::sin(x), 0,
 								0, std::sin(x),  std::cos(x), 0,
 								0, 0,            0,           1);
 		}
-		inline static Matrix4<T> rotateY(T y)
+		static Matrix4<T> rotateY(T y)
 		{
 			return Matrix4<T>(std::cos(y),   0, std::sin(y), 0,
 								0,            1, 0,           0,
 								-std::sin(y), 0, std::cos(y), 0,
 								0,            0, 0,           1);
 		}
-		inline static Matrix4<T> rotateZ(T z)
+		static Matrix4<T> rotateZ(T z)
 		{
 			return Matrix4<T>(std::cos(z),  -std::sin(z), 0, 0,
 								std::sin(z),  std::cos(z), 0, 0,
 								0,            0,           1, 0,
 								0,            0,           0, 1);
 		}
-		inline static Matrix4<T> scale(T x, T y, T z)
+		static Matrix4<T> scale(T x, T y, T z)
 		{
 			return Matrix4<T>(Vector4<T>(x, 0, 0, 0),
 								Vector4<T>(0, y, 0, 0),
@@ -166,7 +163,7 @@ namespace ax
 		//////////////////////////
 		//UTILITY
 		//////////////////////////
-		inline friend std::ostream& operator<<(std::ostream& out, const Matrix4<T>& mat)
+		friend std::ostream& operator<<(std::ostream& out, const Matrix4<T>& mat)
 		{
 			for(uint y = 0; y < 4; y++)
 			{
@@ -186,7 +183,7 @@ namespace ax
 		T m[4][4] = {{0}}; //[columns = y][columns = x]
 	};
 
-	typedef Matrix4<float> Matrix4f;
-	typedef Matrix4<double> Matrix4d;
+	using Matrix4f = Matrix4<float>;
+	using Matrix4d = Matrix4<double>;
 }
 

@@ -18,11 +18,8 @@ namespace ax
 	class AXION_CORE_API Quaternion
 	{
 	public:
-		inline Quaternion()
-		{
-			
-		}
-		inline Quaternion(const T& angle, const Vector3<T>& axis)
+		Quaternion(){}
+		Quaternion(const T& angle, const Vector3<T>& axis)
 		{
 			w = std::cos(angle / (T)2);
 			x = axis.x * std::sin(angle / (T)2);
@@ -37,7 +34,7 @@ namespace ax
 		///////////////////////
 		//ALGEBRA
 		///////////////////////
-		inline static Matrix4<T> toMatrix(Quaternion quat)
+		static Matrix4<T> toMatrix(Quaternion quat)
 		{
 			const T n = (T)1 / std::sqrt(quat.x * quat.x + quat.y * quat.y + quat.z * quat.z + quat.w * quat.w);
 			quat.x *= n;
@@ -74,9 +71,8 @@ namespace ax
 		T y = (T)0; 
 		T z = (T)0;
 	};
-
-	typedef Quaternion<float> Quaternionf;
-	typedef Quaternion<double> Quaterniond;
-	//typedef AQuaternion<float> AQuaternion;
+	
+	using Quaternionf = Quaternion<float>;
+	using Quaterniond = Quaternion<double>;
 }
 

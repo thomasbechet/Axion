@@ -1,0 +1,7 @@
+.vscode/
+build/*
+
+bin/*
+!bin/README.txt
+lib/*
+!lib/README.txt

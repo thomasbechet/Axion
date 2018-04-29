@@ -15,16 +15,16 @@
 
 namespace ax
 {
-    using Task = int;
-
     class AXION_CORE_API ThreadPool : public NonCopyable
     {
     public:
+        using Task = unsigned;
+    private:
         using Job = std::function<void(void)>;
 
     public:
-        inline ThreadPool();
-        inline ~ThreadPool();
+        ThreadPool();
+        ~ThreadPool();
 
         Task createTask();
         bool isTaskFinished(Task task) const;

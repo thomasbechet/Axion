@@ -32,7 +32,7 @@ ThreadPool::~ThreadPool()
     std::cout << "[" << m_thread_count << " threads destroyed]" << std::endl;
 }
 
-Task ThreadPool::createTask()
+ThreadPool::Task ThreadPool::createTask()
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     Task task;
