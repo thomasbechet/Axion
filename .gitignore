@@ -3,5 +3,6 @@ build/*
 
 bin/*
 !bin/README.txt
+!bin/run.sh
 lib/*
 !lib/README.txt
