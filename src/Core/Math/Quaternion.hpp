@@ -34,7 +34,7 @@ namespace ax
 		///////////////////////
 		//ALGEBRA
 		///////////////////////
-		static Matrix4<T> toMatrix(Quaternion quat)
+		static Matrix4<T> toMatrix(Quaternion quat) noexcept
 		{
 			const T n = (T)1 / std::sqrt(quat.x * quat.x + quat.y * quat.y + quat.z * quat.z + quat.w * quat.w);
 			quat.x *= n;

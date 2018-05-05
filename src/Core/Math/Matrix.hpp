@@ -99,21 +99,25 @@ namespace ax
 		//////////////////////////
 		//ALGEBRA
 		//////////////////////////
-		static Matrix4<T> identity()
+		static Matrix4<T> identity() noexcept
 		{
 			return Matrix4<T>(1, 0, 0, 0,
 								0, 1, 0, 0,
 								0, 0, 1, 0,
 								0, 0, 0, 1);
 		}
-		static Matrix4<T> translate(T x, T y, T z)
+		static Matrix4<T> translate(T x, T y, T z) noexcept
 		{
 			return Matrix4<T>(1, 0, 0, x,
 								0, 1, 0, y,
 								0, 0, 1, z,
 								0, 0, 0, 1);
 		}
-		static Matrix4<T> rotate(T x, T y, T z)
+		static Matrix4<T> translate(const Vector3<T>& translation) noexcept
+		{
+			return Matrix4<T>::translate(translation.x, translation.y, translation.z);
+		}
+		static Matrix4<T> rotate(T x, T y, T z) noexcept
 		{
 			Matrix4<T> trans = Matrix4<T>::identity();
 			if(x != 0)
@@ -131,33 +135,41 @@ namespace ax
 								
 			return trans;
 		}
-		static Matrix4<T> rotateX(T x)
+		static Matrix4<T> rotate(const Vector3<T>& rotation) noexcept
+		{
+			return Matrix4<T>::rotate(rotation.x, rotation.y, rotation.z);
+		}
+		static Matrix4<T> rotateX(T x) noexcept
 		{
 			return Matrix4<T>(1,  0,            0,           0,
 								0, std::cos(x), -std::sin(x), 0,
 								0, std::sin(x),  std::cos(x), 0,
 								0, 0,            0,           1);
 		}
-		static Matrix4<T> rotateY(T y)
+		static Matrix4<T> rotateY(T y) noexcept
 		{
 			return Matrix4<T>(std::cos(y),   0, std::sin(y), 0,
 								0,            1, 0,           0,
 								-std::sin(y), 0, std::cos(y), 0,
 								0,            0, 0,           1);
 		}
-		static Matrix4<T> rotateZ(T z)
+		static Matrix4<T> rotateZ(T z) noexcept
 		{
 			return Matrix4<T>(std::cos(z),  -std::sin(z), 0, 0,
 								std::sin(z),  std::cos(z), 0, 0,
 								0,            0,           1, 0,
 								0,            0,           0, 1);
 		}
-		static Matrix4<T> scale(T x, T y, T z)
+		static Matrix4<T> scale(T x, T y, T z) noexcept
 		{
 			return Matrix4<T>(Vector4<T>(x, 0, 0, 0),
 								Vector4<T>(0, y, 0, 0),
 								Vector4<T>(0, 0, z, 0),
 								Vector4<T>(0, 0, 0, 1));
+		}
+		static Matrix4<T> scale(const Vector3<T>& scale) noexcept
+		{
+			return Matrix4<T>::scale(scale.x, scale.y, scale.z);
 		}
 		
 		//////////////////////////
@@ -177,7 +189,6 @@ namespace ax
 			
 			return out;
 		}
-		
 		
 	private:
 		T m[4][4] = {{0}}; //[columns = y][columns = x]

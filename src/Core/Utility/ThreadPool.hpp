@@ -26,10 +26,10 @@ namespace ax
         ThreadPool();
         ~ThreadPool();
 
-        Task createTask();
-        bool isTaskFinished(Task task) const;
-        void performTask(Task task, const Job& job);
-        void waitTask(Task task);
+        Task createTask() noexcept;
+        bool isTaskFinished(Task task) const noexcept;
+        void performTask(Task task, const Job& job) noexcept;
+        void waitTask(Task task) noexcept;
 
     private:
         void worker_main();

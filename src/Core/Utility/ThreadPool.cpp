@@ -32,7 +32,7 @@ ThreadPool::~ThreadPool()
     std::cout << "[" << m_thread_count << " threads destroyed]" << std::endl;
 }
 
-ThreadPool::Task ThreadPool::createTask()
+ThreadPool::Task ThreadPool::createTask() noexcept
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     Task task;
@@ -52,13 +52,13 @@ ThreadPool::Task ThreadPool::createTask()
 
     return task;
 }
-bool ThreadPool::isTaskFinished(Task task) const
+bool ThreadPool::isTaskFinished(Task task) const noexcept
 {
     std::lock_guard<std::mutex> lock(m_mutex);
 
     return m_task_pending_count[task] == 0;
 }
-void ThreadPool::performTask(Task task, const Job& job)
+void ThreadPool::performTask(Task task, const Job& job) noexcept
 {
     std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -68,7 +68,7 @@ void ThreadPool::performTask(Task task, const Job& job)
     m_job_size++;
     m_cv_worker.notify_one();
 }
-void ThreadPool::waitTask(Task task)
+void ThreadPool::waitTask(Task task) noexcept
 {
     std::unique_lock<std::mutex> lock(m_mutex);
 

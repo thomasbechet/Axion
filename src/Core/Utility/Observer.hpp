@@ -9,8 +9,6 @@
 
 namespace ax
 {
-	using ID = unsigned int;
-
 	class AXION_CORE_API Observable;
 
 	class AXION_CORE_API IObserver
@@ -24,19 +22,20 @@ namespace ax
 	{
 	public:
 		friend class Observable;
+		using Id = unsigned;
 
 	public:
-		inline Observer() = default;
-		inline Observer(T* observable)
+		Observer() = default;
+		Observer(T* observable)
 		{
 			this->operator=(observable);
 		}
-		inline ~Observer()
+		~Observer()
 		{
 			reset();
 		}
 
-		inline Observer<T>& operator=(T* observable)
+		Observer<T>& operator=(T* observable)
 		{
 			if(observable != nullptr)
 			{
@@ -50,7 +49,7 @@ namespace ax
 
 			return *this;
 		}
-		inline Observer<T>& operator=(Observer<T>& observer)
+		Observer<T>& operator=(Observer<T>& observer)
 		{
 			if(observer.isValid())
 			{
@@ -60,17 +59,17 @@ namespace ax
 			
 			return *this;
 		}
-		inline T* operator->()
+		T* operator->()
 		{
 			return m_ptr;	
 		}
 
-		inline T& get() const
+		T& get() const noexcept
 		{
 			return *m_ptr;
 		}
 
-		inline void reset() override
+		void reset() override
 		{
 			if(isValid())
 			{
@@ -79,7 +78,7 @@ namespace ax
 			}
 		}
 
-		inline size_t observerCount() const noexcept
+		size_t observerCount() const noexcept
 		{
 			if(isValid())
 			{
@@ -88,7 +87,7 @@ namespace ax
 			else return 0;
 		}
 
-		inline bool isValid() const noexcept
+		bool isValid() const noexcept
 		{
 			if(m_ptr == nullptr) return false;
 			else return true;
@@ -96,7 +95,7 @@ namespace ax
 
 	private:
 		T* m_ptr = nullptr;
-		ID m_id;
+		Id m_id;
 	};
 
 	class AXION_CORE_API Observable
@@ -105,7 +104,7 @@ namespace ax
 		template<typename T> friend class Observer;
 
 	public:
-		inline ~Observable()
+		~Observable()
 		{
 			for(auto it : m_observers)
 			{
@@ -113,25 +112,25 @@ namespace ax
 			}
 		}
 
-		inline size_t observerCount() const noexcept
+		size_t observerCount() const noexcept
 		{
 			return m_observers.size();
 		}
 	private:
-		inline ID addObserver(IObserver& observer)
+		Id addObserver(IObserver& observer) noexcept
 		{
-			ID id = m_idCounter++;
+			Id id = m_idCounter++;
 			m_observers[id] = &observer;
 
 			return id;
 		}
-		inline void removeObserver(ID id)
+		void removeObserver(Id id) noexcept
 		{
 			m_observers.erase(id);
 		}
 
 	private:
-		std::map<ID, IObserver*> m_observers;
-		ID m_idCounter = 0;
+		std::map<Id, IObserver*> m_observers;
+		Id m_idCounter = 0;
 	};
 }

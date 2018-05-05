@@ -1,0 +1,6 @@
+Cache Friendly Access:
+    -iteration
+
+Non Cache Friendly Access:
+    -creation
+    -destruction

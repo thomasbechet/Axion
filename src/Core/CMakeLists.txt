@@ -16,6 +16,10 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
     Utility/ThreadPool.cpp
+    Utility/Time.cpp
+    Utility/Timer.cpp
+    Utility/Color.cpp
+    Math/Transform.cpp
     Math/Math.cpp
     Context/GameContext.cpp
 )

@@ -12,9 +12,9 @@ namespace ax
     {
     public:
         void start();
-        virtual void onStart() = 0;
+        virtual void onStart() noexcept = 0;
         void stop();
-        virtual void onStop() = 0;
+        virtual void onStop() noexcept = 0;
 
     private:
 
