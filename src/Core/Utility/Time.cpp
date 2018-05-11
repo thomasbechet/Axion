@@ -23,13 +23,18 @@ long Time::asNanoseconds() const noexcept
 }
 float Time::asMicroseconds() const noexcept
 {
-    return (float)m_time / 1000000.0f; 
+    return (float)m_time / 1000.0f; 
 }
 float Time::asMilliseconds() const noexcept
 {
-    return (float)m_time / 1000.0f;
+    return (float)m_time / 1000000.0f;
 }
 double Time::asSeconds() const noexcept
 {
     return (double)m_time / 1000000000.0;
+}
+
+float Time::asPercentage(unsigned frame) const noexcept
+{
+    return ((float)asSeconds() * (float)frame) * 100.0f; //=(seconds / (1/frame)) * 100
 }

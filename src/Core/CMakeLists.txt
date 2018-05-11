@@ -19,9 +19,12 @@ ADD_LIBRARY(
     Utility/Time.cpp
     Utility/Timer.cpp
     Utility/Color.cpp
+    Utility/Memory.cpp
+    Logger/ConsoleLogger.cpp
     Math/Transform.cpp
     Math/Math.cpp
-    Context/GameContext.cpp
+    Context/Game.cpp
+    Entity/EntityManager.cpp
 )
 
 #Adding pthread dependency

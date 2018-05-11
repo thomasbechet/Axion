@@ -1,6 +1,4 @@
-Cache Friendly Access:
-    -iteration
-
-Non Cache Friendly Access:
-    -creation
-    -destruction
+TODO:
+    -Basic monothreadsystem
+    -Static assert ?
+    -Log system

@@ -20,6 +20,8 @@ namespace ax
         float asMicroseconds() const noexcept;
         float asMilliseconds() const noexcept;
         double asSeconds() const noexcept;
+
+        float asPercentage(unsigned frame = 60) const noexcept;
         
     private:
         long m_time = 0;

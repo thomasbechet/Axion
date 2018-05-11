@@ -19,7 +19,6 @@ namespace ax
     {
     public:
         using Task = unsigned;
-    private:
         using Job = std::function<void(void)>;
 
     public:
