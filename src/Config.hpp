@@ -21,3 +21,14 @@
     #define AXION_IMPORT
     #pragma warning Unknown linkage directive import/export semantics.
 #endif
+
+/////////////////////////////
+//PLATFORM SUPPORT
+/////////////////////////////
+#if defined (_WIN32)
+    #define AXION_PLATFORM_WINDOWS
+#elif defined(__APPLE__)
+    #define AXION_PLATFORM_APPLE
+#elif defined(__linux__) || defined(__unix__)
+    #define AXION_PLATFORM_UNIX
+#endif

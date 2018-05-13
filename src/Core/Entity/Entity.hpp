@@ -20,7 +20,7 @@ namespace ax
         C& addComponent(Args&&... args) noexcept
         {
             if(hasComponent<C>())
-                Game::interrupt("Entity with id " + std::to_string(m_id) + " already owns component <" + C::name() + ">");
+                Game::interrupt("Entity [id " + std::to_string(m_id) + "] already owns component <" + C::name() + ">");
 
             ComponentHandle handle = Game::components().createComponent<C>(args...);
             m_handles.emplace_back(handle);
@@ -36,9 +36,10 @@ namespace ax
                 {
                     Game::components().destroyComponent(*it);
                     m_handles.erase(it);
+                    break;
                 }
 
-            ax::Game::logger().log("Try to remove not existing component <" + C::name() + ">", Logger::WARNING);
+            ax::Game::logger().log("Try to remove nonexistent component <" + C::name() + "> from Entity [id=" + std::to_string(m_id) + "]", Logger::WARNING);
         }
         void removeAll() noexcept
         {
@@ -57,7 +58,7 @@ namespace ax
                 if(it->section == section) return Game::components().getComponent<C>(*it);
             }
 
-            Game::interrupt("Component <" + C::name() + "> from entity with id " + std::to_string(m_id) + " doesn't exist");
+            Game::interrupt("Component <" + C::name() + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");
         }
 
         template<typename C>

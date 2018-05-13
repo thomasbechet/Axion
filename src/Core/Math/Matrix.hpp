@@ -73,11 +73,11 @@ namespace ax
 		Matrix4<T> operator*(const Matrix4<T>& mat)
 		{
 			Matrix4<T> result;
-			for(uint i = 0; i < 4; i++)
+			for(unsigned i = 0; i < 4; i++)
 			{
-				for(uint j = 0; j < 4; j++)
+				for(unsigned j = 0; j < 4; j++)
 				{
-					for(uint k = 0; k < 4; k++)
+					for(unsigned k = 0; k < 4; k++)
 					{
 						result.m[i][j] += m[i][k] * mat.m[k][j]; 
 					}
@@ -177,10 +177,10 @@ namespace ax
 		//////////////////////////
 		friend std::ostream& operator<<(std::ostream& out, const Matrix4<T>& mat)
 		{
-			for(uint y = 0; y < 4; y++)
+			for(unsigned y = 0; y < 4; y++)
 			{
 				out << "{";
-				for(uint x = 0; x < 4; x++)
+				for(unsigned x = 0; x < 4; x++)
 				{
 					out << " " << mat.m[y][x] << " "; 
 				}

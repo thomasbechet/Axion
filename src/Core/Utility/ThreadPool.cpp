@@ -1,5 +1,8 @@
 #include <Core/Utility/ThreadPool.hpp>
+
 #include <iostream>
+#include <Core/Logger/Logger.hpp>
+#include <Core/Context/Game.hpp>
 
 using namespace ax;
 
@@ -13,7 +16,7 @@ ThreadPool::ThreadPool() : m_running(true), m_task_size(0), m_job_size(0)
         m_threads.push_back(std::thread(&ThreadPool::worker_main, this));
     }
 
-    std::cout << "[" << m_thread_count << " threads created]" << std::endl;
+    Game::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads created", Logger::INFO);
 }
 ThreadPool::~ThreadPool()
 {
@@ -29,7 +32,7 @@ ThreadPool::~ThreadPool()
         it->join();
     }
 
-    std::cout << "[" << m_thread_count << " threads destroyed]" << std::endl;
+    Game::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads destroyed", Logger::INFO);
 }
 
 ThreadPool::Task ThreadPool::createTask() noexcept

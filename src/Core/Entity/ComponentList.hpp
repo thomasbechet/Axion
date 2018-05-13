@@ -5,8 +5,11 @@
 ///////////////
 #include <memory>
 #include <Core/Export.hpp>
+#include <Core/Context/Game.hpp>
 #include <Core/Utility/NonCopyable.hpp>
 #include <Core/Utility/Memory.hpp>
+
+#include <Core/Logger/Logger.hpp>
 
 namespace ax
 {
@@ -46,6 +49,8 @@ namespace ax
             {
                 m_length++;
 
+                Game::logger().log("YES");
+
                 if((m_length / COMPONENT_CHUNK_SIZE) + 1 > m_components.size()) //Need to allocate a new chunk
                 {
                     m_components.emplace_back(std::make_unique<Chunk>());
@@ -77,6 +82,9 @@ namespace ax
 
         C& get(unsigned offset) noexcept
         {
+            if(offset >= m_length)
+                Game::interrupt("Tried to access non valid component <" + C::name() + "> from list with [id=" + std::to_string(offset) + "]");
+
             return (*m_components[offset / COMPONENT_CHUNK_SIZE].get())[offset % COMPONENT_CHUNK_SIZE].first;
         }
 

@@ -3,6 +3,11 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
+#include <chrono>
+
+#if defined(AXION_PLATFORM_WINDOWS)
+    #include <windows.h>
+#endif
 
 using namespace ax;
 
@@ -10,53 +15,86 @@ void ConsoleLogger::log(std::string message, Severity severity) noexcept
 {
     if(message != "")
     {   
-        std::string color;
+        std::string color = "";
+        std::string endColor = "";
 
-        switch(severity)
-        {
-        case INFO:
-            color = "\033[36m";
-        break;
-        case WARNING:
-            color = "\033[33m";
-        break;
-        case ERROR:
-            color = "\033[31m";
-        break;
-        case FATAL:
-            color = "\033[31m";
-        break;
-        }
+        std::cout << severity << std::endl;
+        std::cout << Severity::NONE << std::endl;
+
+        #if defined(AXION_PLATFORM_UNIX)
+            endColor = "\033[0m";
+
+            switch(severity)
+            {
+                case Severity::NONE:
+                break;
+                case Severity::INFO:
+                    color = "\033[36m";
+                break;
+                case Severity::WARNING:
+                    color = "\033[33m";
+                break;
+                case Severity::ERROR:
+                    color = "\033[31m";
+                break;
+                case Severity::FATAL:
+                    color = "\033[31m";
+                break;
+            }
+        #elif defined(AXION_PLATFORM_WINDOWS)
+            switch(severity)
+            {
+                case Severity::NONE:
+                break;
+                case Severity::INFO:
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+                break;
+                case Severity::WARNING:
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+                break;
+                case Severity::ERROR:
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+                break;
+                case Severity::FATAL:
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
+                break;
+            }
+        #endif
 
         std::string sever = " ";
 
         switch(severity)
         {
-        case INFO:
-            sever = "[INFOS] ";
-        break;
-        case WARNING:
-            sever = "[WARNING] ";
-        break;
-        case ERROR:
-            sever = "[ERROR] ";
-        break;
-        case FATAL:
-            sever = "[FATAL] ";
-        break;
+            case Severity::NONE:
+            break;
+            case Severity::INFO:
+                sever = "[INFO] ";
+            break;
+            case Severity::WARNING:
+                sever = "[WARNING] ";
+            break;
+            case Severity::ERROR:
+                sever = "[ERROR] ";
+            break;
+            case Severity::FATAL:
+                sever = "[FATAL] ";
+            break;
         }
 
         if(m_date)
         {
-            auto t = std::time(nullptr);
-            std::tm tm = *std::localtime(&t);
-
-            std::cout << color << "[" << std::put_time(&tm, "%r") << "]" << sever << message << "\033[0m" << std::endl;
+            std::time_t tt = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            struct std::tm* ptm = std::localtime(&tt);
+            std::cout << color << "[" << std::put_time(ptm, "%X") << "]" << sever << message << endColor << std::endl;
         }
         else
         {
-            std::cout << color << sever << message << "\033[0m" << std::endl;
+            std::cout << color << sever << message << endColor << std::endl;
         }
+
+        #if defined(AXION_PLATFORM_WINDOWS)
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+        #endif
     }
 }
 void ConsoleLogger::displayDate(bool toggle) noexcept

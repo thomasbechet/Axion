@@ -35,10 +35,14 @@ struct StaticMesh : public ax::Component
 {
     void load(const ax::Entity& e) noexcept
     {
+        ax::Game::logger().log("load", ax::Logger::INFO);
         position = &e.getComponent<Position>();
         
     }
-    void unload() noexcept {}
+    void unload() noexcept 
+    {
+        ax::Game::logger().log("load", ax::Logger::INFO);
+    }
     static std::string name() {return "StaticMesh";}
 
     ax::Renderer::Id id;
@@ -65,7 +69,7 @@ int main(int argc, char* argv[])
 
     ax::Entity& e = ax::Game::entities().createEntity();
     e.addComponent<Position>();
-    e.removeComponent<StaticMesh>();
+    e.removeComponent<Position>();
 
     ax::Game::terminate();
 
