@@ -15,11 +15,14 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
+    Context/GameContext.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp
     Utility/Color.cpp
     Utility/Memory.cpp
+    Utility/ConfigParser.cpp
+    Logger/Logger.cpp
     Logger/ConsoleLogger.cpp
     Math/Transform.cpp
     Math/Math.cpp

@@ -22,10 +22,10 @@ namespace ax
             if(hasComponent<C>())
                 Game::interrupt("Entity [id " + std::to_string(m_id) + "] already owns component <" + C::name() + ">");
 
-            ComponentHandle handle = Game::components().createComponent<C>(args...);
+            ComponentHandle handle = Game::components().create<C>(args...);
             m_handles.emplace_back(handle);
 
-            return Game::components().getComponent<C>(handle);
+            return Game::components().get<C>(handle);
         }
         template<typename C>
         void removeComponent() noexcept
@@ -36,7 +36,7 @@ namespace ax
                 {
                     Game::components().destroyComponent(*it);
                     m_handles.erase(it);
-                    break;
+                    return;
                 }
 
             ax::Game::logger().log("Try to remove nonexistent component <" + C::name() + "> from Entity [id=" + std::to_string(m_id) + "]", Logger::WARNING);
@@ -55,7 +55,7 @@ namespace ax
         {
             unsigned section = Game::components().componentSection<C>();
             for(auto it = m_handles.begin(); it != m_handles.end(); it++){
-                if(it->section == section) return Game::components().getComponent<C>(*it);
+                if(it->section == section) return Game::components().get<C>(*it);
             }
 
             Game::interrupt("Component <" + C::name() + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");

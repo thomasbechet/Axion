@@ -4,12 +4,11 @@
 //HEADERS
 ///////////////
 #include <memory>
+#include <vector>
 #include <Core/Export.hpp>
 #include <Core/Context/Game.hpp>
 #include <Core/Utility/NonCopyable.hpp>
 #include <Core/Utility/Memory.hpp>
-
-#include <Core/Logger/Logger.hpp>
 
 namespace ax
 {
@@ -48,8 +47,6 @@ namespace ax
             else
             {
                 m_length++;
-
-                Game::logger().log("YES");
 
                 if((m_length / COMPONENT_CHUNK_SIZE) + 1 > m_components.size()) //Need to allocate a new chunk
                 {

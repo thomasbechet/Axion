@@ -17,6 +17,8 @@ namespace ax
         using Id = unsigned;
 
     public:
+        virtual ~Renderer(){}
+
         virtual void init() noexcept = 0;
         virtual void terminate() noexcept = 0;
         virtual void draw() noexcept = 0;

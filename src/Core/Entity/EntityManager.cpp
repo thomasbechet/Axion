@@ -4,7 +4,7 @@ using namespace ax;
 
 EntityManager::EntityManager(ComponentManager& manager) : m_componentManager(manager){}
 
-Entity& EntityManager::createEntity() noexcept
+Entity& EntityManager::create() noexcept
 {
     if(!m_free.empty())
     {
@@ -31,27 +31,27 @@ Entity& EntityManager::createEntity() noexcept
         return (*m_entities[m_size / ENTITY_CHUNK_SIZE].get())[m_size % ENTITY_CHUNK_SIZE].first;
     }
 }
-Entity& EntityManager::createEntity(std::string name) noexcept
+Entity& EntityManager::create(std::string name) noexcept
 {
-    Entity& entity = createEntity();
+    Entity& entity = create();
     m_tagTable[name] = &entity;
 
     return entity;
 }
 
-void EntityManager::destroyEntity(Entity& entity) noexcept
+void EntityManager::destroy(Entity& entity) noexcept
 {
     unsigned id = entity.m_id;
     (*m_entities[id / ENTITY_CHUNK_SIZE].get())[id % ENTITY_CHUNK_SIZE].first.removeAll();
     (*m_entities[id / ENTITY_CHUNK_SIZE].get())[id % ENTITY_CHUNK_SIZE].second = false;
     m_free.emplace_back(id);
 }
-void EntityManager::destroyEntity(std::string& name) noexcept
+void EntityManager::destroy(std::string& name) noexcept
 {
-    destroyEntity(*m_tagTable[name]);
+    destroy(*m_tagTable[name]);
 }
 
-Entity& EntityManager::getEntity(std::string& name) noexcept
+Entity& EntityManager::get(std::string& name) noexcept
 {
     return *m_tagTable[name];
 }

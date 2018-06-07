@@ -4,15 +4,21 @@
 //HEADERS
 /////////////////
 #include <Core/Export.hpp>
-#include <Core/Utility/NonCopyable.hpp>
 #include <Core/Entity/ComponentIterator.hpp>
 
 namespace ax
 {
     template<typename C>
-    class AXION_CORE_API MonothreadSystem : public NonCopyable
-    {
+    class AXION_CORE_API MonothreadSystem
+    {   
     public:
+        friend class SystemManager;
+    private:
+        unsigned m_id;
+
+    public:
+        virtual ~MonothreadSystem(){}
+
         virtual void onStart() noexcept {};
         virtual void onStop() noexcept {};
 

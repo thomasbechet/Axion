@@ -1,4 +1,3 @@
 TODO:
     -Basic monothreadsystem
-    -Static assert ?
-    -Log system
+    -ThreadCount controller

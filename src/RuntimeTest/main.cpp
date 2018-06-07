@@ -14,6 +14,7 @@
 #include <Core/Entity/ComponentIterator.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/Utility/Memory.hpp>
+#include <Core/Context/GameContext.hpp>
 
 struct Position : public ax::Component
 {
@@ -23,7 +24,10 @@ struct Position : public ax::Component
         y = _y;
         z = _z;
     }
-    void unload(){}
+    void unload()
+    {
+        
+    }
     static std::string name(){return "Position";};
 
     float x;
@@ -35,15 +39,15 @@ struct StaticMesh : public ax::Component
 {
     void load(const ax::Entity& e) noexcept
     {
-        ax::Game::logger().log("load", ax::Logger::INFO);
+        
         position = &e.getComponent<Position>();
         
     }
     void unload() noexcept 
     {
-        ax::Game::logger().log("load", ax::Logger::INFO);
+        
     }
-    static std::string name() {return "StaticMesh";}
+    static std::string name(){return "StaticMesh";}
 
     ax::Renderer::Id id;
     Position* position;
@@ -54,23 +58,21 @@ struct StaticMesh : public ax::Component
 int main(int argc, char* argv[])
 {
     ax::Game::initialize();
+    ax::Game::start();
 
-    /*ax::Entity& e = ax::Game::entities().createEntity();
-    e.addComponent<Position>(1.0f, 1.0f, 1.0f);
-
-    auto& cmp = e.getComponent<StaticMesh>();
-
-    auto& list = ax::Game::components().getComponentList<Position>();
-    ax::ComponentIterator<Position> it(list, 0, list.length());
-    while(it.next())
+    for(int i = 0; i < 1000; i++)
     {
-        ax::Game::logger().log(std::to_string(it->x), ax::Logger::NONE);
-    }*/
+        ax::Entity& e = ax::Game::entities().create();
+        e.addComponent<Position>();
+    }
 
-    ax::Entity& e = ax::Game::entities().createEntity();
-    e.addComponent<Position>();
-    e.removeComponent<Position>();
+    auto& l = ax::Game::components().getList<Position>();
+    ax::Game::logger().log((unsigned)l.size());
+    ax::Game::logger().log((unsigned)l.memory().asBytes());
 
+    ax::Game::logger().log(ax::Game::engine().config().getUnsigned("default", "version_major", 43));
+
+    ax::Game::stop();
     ax::Game::terminate();
 
     return 0;

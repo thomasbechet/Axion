@@ -6,33 +6,52 @@
 
 using namespace ax;
 
-ThreadPool::ThreadPool() : m_running(true), m_task_size(0), m_job_size(0)
-{
-    int proc_count = std::thread::hardware_concurrency();
-    m_thread_count = (proc_count > 0) ? proc_count : 1;
-
-    for(size_t i = 0; i < m_thread_count; i++)
-    {
-        m_threads.push_back(std::thread(&ThreadPool::worker_main, this));
-    }
-
-    Game::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads created", Logger::INFO);
-}
 ThreadPool::~ThreadPool()
 {
-    std::unique_lock<std::mutex> lock(m_mutex);
-
-    m_running = false;
-
-    m_cv_worker.notify_all();
-    lock.unlock();
-
-    for(std::vector<std::thread>::iterator it = m_threads.begin(); it != m_threads.end(); it++)
+    if(m_running)
     {
-        it->join();
+        stop();
     }
+}
 
-    Game::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads destroyed", Logger::INFO);
+void ThreadPool::start(unsigned workerCount) noexcept
+{
+    if(!m_running)
+    {
+        m_running = true;
+
+        m_task_size = 0;
+        m_job_size = 0;
+
+        int proc_count = (workerCount == 0) ? std::thread::hardware_concurrency() : workerCount;
+        m_thread_count = (proc_count > 0) ? proc_count : 1;
+
+        for(size_t i = 0; i < m_thread_count; i++)
+        {
+            m_threads.push_back(std::thread(&ThreadPool::worker_main, this));
+        }
+
+        Game::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads created", Logger::INFO);
+    }
+}
+void ThreadPool::stop() noexcept
+{
+    if(m_running)
+    {
+        m_running = false;
+
+        std::unique_lock<std::mutex> lock(m_mutex);
+
+        m_cv_worker.notify_all();
+        lock.unlock();
+
+        for(std::vector<std::thread>::iterator it = m_threads.begin(); it != m_threads.end(); it++)
+        {
+            it->join();
+        }
+
+        Game::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads destroyed", Logger::INFO);
+    }
 }
 
 ThreadPool::Task ThreadPool::createTask() noexcept

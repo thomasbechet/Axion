@@ -22,8 +22,10 @@ namespace ax
         using Job = std::function<void(void)>;
 
     public:
-        ThreadPool();
         ~ThreadPool();
+
+        void start(unsigned workerCount) noexcept;
+        void stop() noexcept;
 
         Task createTask() noexcept;
         bool isTaskFinished(Task task) const noexcept;
@@ -33,7 +35,7 @@ namespace ax
     private:
         void worker_main();
 
-        bool m_running;
+        bool m_running = false;
         mutable std::mutex m_mutex;
         std::vector<std::thread> m_threads;
         size_t m_thread_count;

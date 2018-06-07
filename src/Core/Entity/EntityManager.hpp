@@ -22,13 +22,13 @@ namespace ax
     public:
         EntityManager(ComponentManager& manager);
 
-        Entity& createEntity() noexcept;
-        Entity& createEntity(std::string name) noexcept;
+        Entity& create() noexcept;
+        Entity& create(std::string name) noexcept;
 
-        void destroyEntity(Entity& entity) noexcept;
-        void destroyEntity(std::string& name) noexcept;
+        void destroy(Entity& entity) noexcept;
+        void destroy(std::string& name) noexcept;
 
-        Entity& getEntity(std::string& name) noexcept;
+        Entity& get(std::string& name) noexcept;
 
     private:
         std::vector<std::unique_ptr<Chunk>> m_entities;

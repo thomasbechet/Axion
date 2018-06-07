@@ -33,7 +33,7 @@ namespace ax
         }
 
         template<typename C, typename... Args>
-        ComponentHandle createComponent(Args&&... args) noexcept
+        ComponentHandle create(Args&&... args) noexcept
         {
             ComponentHandle handle;
             unsigned section = componentSection<C>();
@@ -49,13 +49,13 @@ namespace ax
         }
 
         template<typename C>
-        C& getComponent(ComponentHandle handle) noexcept
+        C& get(ComponentHandle handle) noexcept
         {
             return static_cast<ComponentList<C>&>(*m_componentLists[handle.section].get()).get(handle.offset);
         }
 
         template<typename C>
-        ComponentList<C>& getComponentList() noexcept
+        ComponentList<C>& getList() noexcept
         {
             return static_cast<ComponentList<C>&>(*m_componentLists[componentSection<C>()].get());
         }
