@@ -1,4 +1,4 @@
-#pragma onace
+#pragma once
 
 ///////////////////
 //HEADERS
@@ -13,7 +13,12 @@ namespace ax
     public:
         ConfigParser& config() noexcept;
 
+        bool isRunning() const noexcept;
+        void start() noexcept;
+        void stop() noexcept;
+
     private:
         ConfigParser m_configParser;
+        bool m_running = false;
     };
 }

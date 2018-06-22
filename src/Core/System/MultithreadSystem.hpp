@@ -11,12 +11,17 @@ namespace ax
     {
     public:
         friend class SystemManager;
-    private:
-        unsigned m_id;
 
     public:
+        virtual ~MultithreadSystem(){}
 
-    private:
+        virtual std::string name(){return "Multithread";}
 
+        virtual void initialize(){}
+        virtual void terminate(){}
+
+        virtual void start(){}
+        virtual void stop(){}
+        virtual void update(){}
     };
 }

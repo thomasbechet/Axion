@@ -29,6 +29,7 @@ namespace ax
 
     struct AXION_CORE_API Component
     {
-
+    public:
+        
     };
 }

@@ -13,7 +13,7 @@ namespace ax
     public:
         void init() noexcept override {};
         void terminate() noexcept override {};
-        void draw() noexcept override {};
+        void update() noexcept override {};
 
         //Staticmesh
         Id createStaticmesh() noexcept override {return 0;};

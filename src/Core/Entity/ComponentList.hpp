@@ -3,8 +3,11 @@
 ///////////////
 //HEADERS
 ///////////////
+#include <string>
 #include <memory>
 #include <vector>
+#include <algorithm>
+#include <functional>
 #include <Core/Export.hpp>
 #include <Core/Context/Game.hpp>
 #include <Core/Utility/NonCopyable.hpp>
@@ -20,6 +23,7 @@ namespace ax
     public:
         virtual ~IComponentList() = default; //Make sure the component list will be released
         virtual void destroy(unsigned offset) noexcept = 0;
+        virtual std::string name() const noexcept = 0;
     };
 
     constexpr unsigned COMPONENT_CHUNK_SIZE = 128;
@@ -30,6 +34,12 @@ namespace ax
     public:
         friend class ComponentIterator<C>;
         using Chunk = std::array<std::pair<C, bool>, COMPONENT_CHUNK_SIZE>;
+
+    public:
+        std::string name() const noexcept
+        {
+            return C::name();
+        }
 
     public:
         template<typename... Args>
@@ -103,9 +113,41 @@ namespace ax
             return m_components.size() * COMPONENT_CHUNK_SIZE * sizeof(C);
         }
 
+        void addCreationCallback(std::function<void(C&)> function)
+        {
+            m_createFunctions.emplace_back(function);
+        }
+        void removeCreationCallback(std::function<void(C&)> function)
+        {
+            m_createFunctions.erase(std::remove_if(
+                m_createFunctions.begin(),
+                m_createFunctions.end(),
+                [&](const std::function<void(C&)>& f){
+                    return f.target() == function.target();
+                }
+            ), m_createFunctions.end());
+        }
+        void addDestructionCallback(std::function<void(C&)> function)
+        {
+            m_destroyFunctions.emplace_back(function);
+        }
+        void removeDestructionCallback(std::function<void(C&)> function)
+        {
+            m_destroyFunctions.erase(std::remove_if(
+                m_destroyFunctions.begin(),
+                m_destroyFunctions.end(),
+                [&](const std::function<void(C&)>& f){
+                    return f.target() == function.target();
+                }
+            ), m_destroyFunctions.end());
+        }
+
     private:
         std::vector<std::unique_ptr<Chunk>> m_components;
         std::vector<unsigned> m_free;
         unsigned m_length = 0;
+
+        std::vector<std::function<void(C&)>> m_createFunctions;
+        std::vector<std::function<void(C&)>> m_destroyFunctions;    
     };
 }

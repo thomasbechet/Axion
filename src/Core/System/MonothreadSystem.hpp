@@ -8,22 +8,21 @@
 
 namespace ax
 {
-    template<typename C>
     class AXION_CORE_API MonothreadSystem
-    {   
+    {
     public:
         friend class SystemManager;
-    private:
-        unsigned m_id;
 
     public:
         virtual ~MonothreadSystem(){}
 
-        virtual void onStart() noexcept {};
-        virtual void onStop() noexcept {};
+        virtual std::string name(){return "Monothread";}
 
-        virtual void onCreate(C& entity) noexcept {};
-        virtual void onUpdate(ComponentIterator<C>& it) noexcept {};
-        virtual void onDestroy(C& entity) noexcept {};
+        virtual void initialize(){}
+        virtual void terminate(){}
+
+        virtual void start(){}
+        virtual void stop(){}
+        virtual void update(){}
     };
 }

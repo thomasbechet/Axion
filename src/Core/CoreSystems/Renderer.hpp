@@ -21,7 +21,7 @@ namespace ax
 
         virtual void init() noexcept = 0;
         virtual void terminate() noexcept = 0;
-        virtual void draw() noexcept = 0;
+        virtual void update() noexcept = 0;
 
         //Staticmesh
         virtual Id createStaticmesh() noexcept = 0;

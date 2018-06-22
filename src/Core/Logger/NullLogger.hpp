@@ -12,5 +12,6 @@ namespace ax
     {
     public:
         void log(std::string message, Severity severity) noexcept override {}
+        void displayDate(bool toggle) noexcept override {};
     };
 }

@@ -15,6 +15,9 @@
 #include <Core/Logger/Logger.hpp>
 #include <Core/Utility/Memory.hpp>
 #include <Core/Context/GameContext.hpp>
+#include <Core/System/MonothreadSystem.hpp>
+#include <Core/System/MultithreadSystem.hpp>
+#include <Core/System/SystemManager.hpp>
 
 struct Position : public ax::Component
 {
@@ -39,41 +42,33 @@ struct StaticMesh : public ax::Component
 {
     void load(const ax::Entity& e) noexcept
     {
-        
-        position = &e.getComponent<Position>();
-        
+        position = &e.getComponent<Position>();       
     }
     void unload() noexcept 
     {
         
     }
-    static std::string name(){return "StaticMesh";}
+    static constexpr const char* name(){return "StaticMesh";}
 
     ax::Renderer::Id id;
     Position* position;
 };
 
-
+class StaticMeshSystem : public ax::MonothreadSystem
+{
+public:
+    unsigned func(){return 5;}
+};
 
 int main(int argc, char* argv[])
 {
     ax::Game::initialize();
-    ax::Game::start();
-
-    for(int i = 0; i < 1000; i++)
-    {
-        ax::Entity& e = ax::Game::entities().create();
-        e.addComponent<Position>();
-    }
-
-    auto& l = ax::Game::components().getList<Position>();
-    ax::Game::logger().log((unsigned)l.size());
-    ax::Game::logger().log((unsigned)l.memory().asBytes());
-
-    ax::Game::logger().log(ax::Game::engine().config().getUnsigned("default", "version_major", 43));
-
-    ax::Game::stop();
+    ax::Game::engine().start();
     ax::Game::terminate();
+
+    //ax::Game::systems().add<StaticMeshSystem>();
+    //ax::Game::logger().log(ax::Game::systems().get<StaticMeshSystem>().func());
+    //ax::Game::stop();
 
     return 0;
 }

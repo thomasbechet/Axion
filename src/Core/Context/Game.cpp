@@ -9,6 +9,8 @@
 #include <Core/Utility/ThreadPool.hpp>
 #include <Core/Context/GameContext.hpp>
 
+#include <Core/Utility/Timer.hpp>
+
 using namespace ax;
 
 Renderer* Game::m_renderer = nullptr;
@@ -32,7 +34,9 @@ void Game::initialize() noexcept
     m_entityManager = new EntityManager(*m_componentManager);
 
     //Logger
-    m_logger = new ConsoleLogger();
+    std::string typeLogger = Game::engine().config().getString("Logger", "type", "none");
+    if(typeLogger == "none") m_logger = new NullLogger();
+    else if(typeLogger == "console") m_logger = new ConsoleLogger();
 
     //ThreadPool
     m_threadPool = new ThreadPool();
@@ -56,7 +60,7 @@ void Game::interrupt(std::string message) noexcept
     std::abort();
 }
 
-void Game::start() noexcept
+void Game::run() noexcept
 {
     //Configure Logger
     logger().displayDate(Game::engine().config().getBoolean("Logger", "show_time", true));
@@ -65,9 +69,14 @@ void Game::start() noexcept
     bool forceThread = Game::engine().config().getBoolean("Default", "force_thread_count", false);
     unsigned threadCount = (forceThread) ? Game::engine().config().getUnsigned("Default", "thread_count", 0) : 0;
     Game::threads().start(threadCount);
-}
-void Game::stop() noexcept
-{
+
+    //Game running
+    while(Game::engine().isRunning())
+    {
+        
+    }
+
+    //Stopping threads
     Game::threads().stop();
 }
 

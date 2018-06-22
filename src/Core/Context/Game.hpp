@@ -24,8 +24,7 @@ namespace ax
         static void terminate() noexcept;
         static void interrupt(std::string message = "") noexcept;
 
-        static void start() noexcept;
-        static void stop() noexcept;
+        static void run() noexcept;
         
         static Renderer& renderer() noexcept;
         static SystemManager& systems() noexcept;
