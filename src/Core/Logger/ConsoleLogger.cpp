@@ -22,21 +22,21 @@ void ConsoleLogger::log(std::string message, Severity severity) noexcept
 
             switch(severity)
             {
-                case Severity::NONE:
+                case Severity::None:
                 break;
-                case Severity::INFO:
+                case Severity::Info:
                     color = "\033[36m";
                     sever = "[INFO] ";
                 break;
-                case Severity::WARNING:
+                case Severity::Warning:
                     color = "\033[33m";
                     sever = "[WARNING] ";
                 break;
-                case Severity::ERROR:
+                case Severity::Error:
                     color = "\033[31m";
                     sever = "[ERROR] ";
                 break;
-                case Severity::FATAL:
+                case Severity::Fatal:
                     color = "\033[31m";
                     sever = "[FATAL] ";
                 break;
@@ -60,21 +60,21 @@ void ConsoleLogger::log(std::string message, Severity severity) noexcept
 
             switch(severity)
             {
-                case Severity::NONE:
+                case Severity::None:
                 break;
-                case Severity::INFO:
+                case Severity::Info:
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
                     sever = "[INFO] ";
                 break;
-                case Severity::WARNING:
+                case Severity::Warning:
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
                     sever = "[WARNING] ";
                 break;
-                case Severity::ERROR:
+                case Severity::Error:
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
                     sever = "[ERROR] ";
                 break;
-                case Severity::FATAL:
+                case Severity::Fatal:
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 4);
                     sever = "[FATAL] ";
                 break;

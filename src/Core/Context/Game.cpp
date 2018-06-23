@@ -56,7 +56,7 @@ void Game::terminate() noexcept
 }
 void Game::interrupt(std::string message) noexcept
 {
-    Game::logger().log(message, Logger::FATAL);
+    Game::logger().log(message, Logger::Fatal);
     std::abort();
 }
 

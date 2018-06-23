@@ -39,7 +39,7 @@ namespace ax
                     return;
                 }
 
-            ax::Game::logger().log("Try to remove nonexistent component <" + C::name() + "> from Entity [id=" + std::to_string(m_id) + "]", Logger::WARNING);
+            ax::Game::logger().log("Try to remove nonexistent component <" + C::name() + "> from Entity [id=" + std::to_string(m_id) + "]", Logger::Warning);
         }
         void removeAll() noexcept
         {
