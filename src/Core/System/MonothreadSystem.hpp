@@ -16,7 +16,7 @@ namespace ax
     public:
         virtual ~MonothreadSystem(){}
 
-        virtual std::string name(){return "Monothread";}
+        //virtual std::string name(){return "Monothread";}
 
         virtual void initialize(){}
         virtual void terminate(){}

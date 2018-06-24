@@ -10,6 +10,7 @@
 #include <Core/Context/GameContext.hpp>
 
 #include <Core/Utility/Timer.hpp>
+#include <RuntimeTest/CustomSystem.hpp>
 
 using namespace ax;
 
@@ -70,10 +71,12 @@ void Game::run() noexcept
     unsigned threadCount = (forceThread) ? Game::engine().config().getUnsigned("Default", "thread_count", 0) : 0;
     Game::threads().start(threadCount);
 
+    Game::systems().get<CustomSystem>();
+
     //Game running
     while(Game::engine().isRunning())
     {
-        
+        //Game::systems().update();
     }
 
     //Stopping threads

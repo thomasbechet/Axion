@@ -6,6 +6,7 @@
 #include <Core/Export.hpp>
 #include <Core/System/MonothreadSystem.hpp>
 #include <Core/System/MultithreadSystem.hpp>
+#include <Core/Logger/Logger.hpp>
 
 #include <vector>
 #include <memory>
@@ -24,13 +25,13 @@ namespace ax
         template<typename S>
         size_t generateMonothreadLocation() noexcept
         {
-            m_monothread.emplace_back(std::make_pair(true, std::make_unique<MonothreadSystem>()));
+            m_monothread.emplace_back(std::make_pair(false, std::make_unique<MonothreadSystem>()));
             return m_monothread.size() - 1;
         }
         template<typename S>
         size_t generateMultithreadLocation() noexcept
         {
-            m_multithread.emplace_back(std::make_pair(true, std::make_unique<MultithreadSystem>()));
+            m_multithread.emplace_back(std::make_pair(false, std::make_unique<MultithreadSystem>()));
             return m_multithread.size() - 1;
         }
         template<typename S>
@@ -70,28 +71,48 @@ namespace ax
         typename std::enable_if<std::is_base_of<MonothreadSystem, S>::value, S>::type remove() noexcept
         {
             size_t location = getMonothreadLocation<S>();
-            m_monothread.at(location).first = false;
-            m_monothread.at(location).second.reset();
+            if(m_monothread.at(location).first)
+            {
+                m_monothread.at(location).first = false;
+                m_monothread.at(location).second.reset();
+            }
+            else
+            {
+                Game::logger().log("Try to remove nonexistent system <" + S::name() + ">", Logger::Warning);
+            }
         }
         template<typename S>
         typename std::enable_if<std::is_base_of<MultithreadSystem, S>::value, S>::type remove() noexcept
         {
             size_t location = getMultithreadLocation<S>();
-            m_multithread.at(location).first = false;
-            m_multithread.at(location).second.reset();
+            if(m_monothread.at(location).first)
+            {
+                m_multithread.at(location).first = false;
+                m_multithread.at(location).second.reset();
+            }
+            else
+            {
+                Game::logger().log("Try to remove nonexistent system <" + S::name() + ">", Logger::Warning);
+            }
         }
         
         template<typename S>
         typename std::enable_if<std::is_base_of<MonothreadSystem, S>::value, S>::type& get() noexcept
         {
             size_t location = getMonothreadLocation<S>();
-            return static_cast<S&>(*m_monothread.back().second.get());
+            if(m_monothread.at(location).first)
+                return static_cast<S&>(*m_monothread.at(location).second.get());
+            else
+                Game::interrupt("Try to access nonexistent system <" + S::name() + ">");
         }
         template<typename S>
         typename std::enable_if<std::is_base_of<MultithreadSystem, S>::value, S>::type& get() noexcept
         {
             size_t location = getMultithreadLocation<S>();
-            return static_cast<S&>(*m_multithread.back().second.get());
+            if(m_multithread.at(location).first)
+                return static_cast<S&>(*m_multithread.at(location).second.get());
+            else
+                Game::interrupt("Try to access nonexistent system <" + S::name() + ">");
         }
         
     private:

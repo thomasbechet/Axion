@@ -48,7 +48,7 @@ struct StaticMesh : public ax::Component
     {
         
     }
-    static constexpr const char* name(){return "StaticMesh";}
+    static std::string name(){return "StaticMesh";}
 
     ax::Renderer::Id id;
     Position* position;
@@ -58,6 +58,8 @@ class StaticMeshSystem : public ax::MonothreadSystem
 {
 public:
     unsigned func(){return 5;}
+
+    static std::string name(){return "StaticMeshSystem";}
 };
 
 int main(int argc, char* argv[])

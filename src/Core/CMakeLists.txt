@@ -26,6 +26,7 @@ ADD_LIBRARY(
     Logger/ConsoleLogger.cpp
     Math/Transform.cpp
     Math/Math.cpp
+    System/SystemManager.cpp
     Context/Game.cpp
     Entity/EntityManager.cpp
 )

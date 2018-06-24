@@ -4,5 +4,6 @@ build/*
 bin/*
 !bin/README.txt
 !bin/run.sh
+!bin/Engine.ini
 lib/*
 !lib/README.txt
