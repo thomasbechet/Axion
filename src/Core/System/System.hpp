@@ -8,21 +8,27 @@
 
 namespace ax
 {
-    class AXION_CORE_API MonothreadSystem
+    class AXION_CORE_API System
     {
     public:
         friend class SystemManager;
 
     public:
-        virtual ~MonothreadSystem(){}
-
-        //virtual std::string name(){return "Monothread";}
+        virtual ~System(){}
 
         virtual void initialize(){}
         virtual void terminate(){}
 
         virtual void start(){}
         virtual void stop(){}
-        virtual void update(){}
+        virtual void tick(){}
+
+    public:
+        void active() noexcept;
+        void disable() noexcept;
+        bool isActive() const noexcept;
+    
+    private:
+        bool m_active = true;
     };
 }

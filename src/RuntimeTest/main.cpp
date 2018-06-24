@@ -15,8 +15,7 @@
 #include <Core/Logger/Logger.hpp>
 #include <Core/Utility/Memory.hpp>
 #include <Core/Context/GameContext.hpp>
-#include <Core/System/MonothreadSystem.hpp>
-#include <Core/System/MultithreadSystem.hpp>
+#include <Core/System/System.hpp>
 #include <Core/System/SystemManager.hpp>
 
 struct Position : public ax::Component
@@ -54,7 +53,7 @@ struct StaticMesh : public ax::Component
     Position* position;
 };
 
-class StaticMeshSystem : public ax::MonothreadSystem
+class StaticMeshSystem : public ax::System
 {
 public:
     unsigned func(){return 5;}

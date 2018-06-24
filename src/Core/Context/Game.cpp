@@ -71,7 +71,10 @@ void Game::run() noexcept
     unsigned threadCount = (forceThread) ? Game::engine().config().getUnsigned("Default", "thread_count", 0) : 0;
     Game::threads().start(threadCount);
 
-    Game::systems().get<CustomSystem>();
+    Game::systems().add<CustomSystem>();
+    Game::systems().get<CustomSystem>().disable();
+    
+    Game::systems().logStates();
 
     //Game running
     while(Game::engine().isRunning())
