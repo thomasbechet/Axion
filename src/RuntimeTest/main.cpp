@@ -6,12 +6,11 @@
 #include <Core/Math/Transform.hpp>
 #include <Core/Utility/ThreadPool.hpp>
 #include <Core/Utility/Timer.hpp>
-#include <Core/Entity/ComponentManager.hpp>
-#include <Core/Entity/Entity.hpp>
-#include <Core/Entity/EntityManager.hpp>
+#include <Core/World/Entity/Entity.hpp>
+#include <Core/World/Entity/EntityManager.hpp>
 #include <Core/Context/Game.hpp>
 #include <Core/CoreSystems/Renderer.hpp>
-#include <Core/Entity/ComponentIterator.hpp>
+#include <Core/World/Entity/ComponentIterator.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/Utility/Memory.hpp>
 #include <Core/Context/GameContext.hpp>

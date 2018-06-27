@@ -4,6 +4,8 @@
 //HEADERS
 ////////////////////////
 #include <Core/Export.hpp>
+#include <Core/Context/GameMode.hpp>
+#include <Core/Context/GameState.hpp>
 
 #include <memory>
 
@@ -26,33 +28,45 @@ namespace ax
         EntityManager& entities() noexcept;
         ComponentManager& components() noexcept;
 
+    public:
         template<typename G>
-        void setGameMode()
+        void setGameMode() noexcept
+        {
+            if(hasNextGameMode()) return;
+            m_nextGameMode = new G();
+        }
+        template<typename G>
+        G& getGameMode() const noexcept
+        {
+            return static_cast<G&>(*m_gameMode);
+        }
+        GameMode& getGameMode() const noexcept;
+
+    private:
+        bool hasNextGameMode() const noexcept;
+        void nextGameMode() noexcept;
+
+    public:
+        /*template<typename G>
+        void setGameState() noexcept
         {
             
         }
         template<typename G>
-        void setGameState()
+        G& getGameState() const noexcept
         {
 
         }
-
-        template<typename G>
-        G& getGameMode()
-        {
-
-        }
-        template<typename G>
-        G& getGameState()
-        {
-
-        }
+        GameState& getGameState() const noexcept;*/
 
     
     private:
         EntityManager* m_entityManager;
         ComponentManager* m_componentManager;
-        GameMode* m_gameMode;
-        GameState* m_gameState;
+
+        std::unique_ptr<GameMode> m_gameMode;
+        GameMode* m_nextGameMode = nullptr;
+
+        std::unique_ptr<GameState> m_gameState;
     };
 }

@@ -11,7 +11,7 @@ namespace ax
     class AXION_CORE_API GameState : public NonCopyable
     {
     public:
-
+        
     private:
         
     };

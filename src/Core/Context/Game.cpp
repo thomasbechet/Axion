@@ -36,15 +36,20 @@ void Game::run() noexcept
     {
         restart = false;
 
+        if(Game::world().hasNextGameMode())
+            Game::world().nextGameMode();
+
         //Game loop
-        m_gameMode->onStart();
+        Game::world().getGameMode().onStart();
         Game::systems().start();
-        while(Game::engine().isRunning())
+        while(Game::engine().isRunning() && !Game::world().hasNextGameMode())
         {
             Game::systems().update();
         }
         Game::systems().stop();
-        m_gameMode->onStop();
+        Game::world().getGameMode().onStop();
+    
+        if(Game::world().hasNextGameMode()) restart = true;
     }
 
     //Stopping threads

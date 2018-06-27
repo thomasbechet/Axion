@@ -11,7 +11,7 @@ namespace ax
     class AXION_CORE_API GameMode : public NonCopyable
     {
     public:
-        virtual ~GameMode();
+        virtual ~GameMode(){};
 
         virtual void onStart(){}
         virtual void onStop(){}
