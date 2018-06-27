@@ -8,7 +8,7 @@
 #include <array>
 #include <Core/Export.hpp>
 #include <Core/Utility/NonCopyable.hpp>
-#include <Core/Entity/Entity.hpp>
+#include <Core/World/Entity/Entity.hpp>
 
 namespace ax
 {

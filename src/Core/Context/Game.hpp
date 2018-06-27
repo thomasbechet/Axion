@@ -9,10 +9,10 @@
 
 namespace ax
 {
+    class GameMode;
     class Renderer;
     class SystemManager;
-    class EntityManager;
-    class ComponentManager;
+    class World;
     class Logger;
     class ThreadPool;
     class GameContext;
@@ -20,16 +20,19 @@ namespace ax
     class AXION_CORE_API Game
     {
     public:
+        friend class GameContext;
+
+    private:
+        static void run() noexcept;
+
+    public:
         static void initialize() noexcept;
         static void terminate() noexcept;
         static void interrupt(std::string message = "") noexcept;
-
-        static void run() noexcept;
         
         static Renderer& renderer() noexcept;
         static SystemManager& systems() noexcept;
-        static EntityManager& entities() noexcept;
-        static ComponentManager& components() noexcept;
+        static World& world() noexcept;
         static Logger& logger() noexcept;
         static ThreadPool& threads() noexcept;
         static GameContext& engine() noexcept;
@@ -37,8 +40,7 @@ namespace ax
     private:        
         static Renderer* m_renderer;
         static SystemManager* m_systemManager;
-        static EntityManager* m_entityManager;
-        static ComponentManager* m_componentManager;
+        static World* m_world;
         static Logger* m_logger;
         static ThreadPool* m_threadPool;
         static GameContext* m_context;

@@ -4,7 +4,7 @@
 //HEADERS
 //////////////
 #include <Core/Export.hpp>
-#include <Core/Entity/ComponentList.hpp>
+#include <Core/World/Entity/ComponentList.hpp>
 
 namespace ax
 {

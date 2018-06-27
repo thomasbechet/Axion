@@ -7,8 +7,8 @@
 #include <memory>
 #include <Core/Export.hpp>
 #include <Core/Utility/NonCopyable.hpp>
-#include <Core/Entity/Component.hpp>
-#include <Core/Entity/ComponentList.hpp>
+#include <Core/World/Entity/Component.hpp>
+#include <Core/World/Entity/ComponentList.hpp>
 
 #include <iostream>
 

@@ -8,7 +8,31 @@ public:
     static std::string name(){return "CustomSystem";}
 
 private:
-    void tick() override
+    void onTick() override
+    {
+        std::cout << "RIP" << std::endl;
+    }
+};
+
+class CustomSystem2 : public ax::System
+{
+public:
+    static std::string name(){return "CustomSystem2";}
+
+private:
+    void onTick() override
+    {
+        std::cout << "RIP" << std::endl;
+    }
+};
+
+class CustomSystem3 : public ax::System
+{
+public:
+    static std::string name(){return "CustomSystem3";}
+
+private:
+    void onTick() override
     {
         std::cout << "RIP" << std::endl;
     }

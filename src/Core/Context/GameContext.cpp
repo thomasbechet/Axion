@@ -13,11 +13,13 @@ bool GameContext::isRunning() const noexcept
 {
     return m_running;
 }
-
 void GameContext::start() noexcept
 {
-    m_running = true;
-    Game::run();
+    if(!isRunning())
+    {
+        m_running = true;
+        Game::run();
+    }
 }
 void GameContext::stop() noexcept
 {

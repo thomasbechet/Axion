@@ -29,7 +29,8 @@ ADD_LIBRARY(
     System/System.cpp
     System/SystemManager.cpp
     Context/Game.cpp
-    Entity/EntityManager.cpp
+    World/Entity/EntityManager.cpp
+    World/World.cpp
 )
 
 #Adding pthread dependency

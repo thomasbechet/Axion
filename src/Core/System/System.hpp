@@ -4,11 +4,11 @@
 //HEADERS
 /////////////////
 #include <Core/Export.hpp>
-#include <Core/Entity/ComponentIterator.hpp>
+#include <Core/Utility/NonCopyable.hpp>
 
 namespace ax
 {
-    class AXION_CORE_API System
+    class AXION_CORE_API System : public NonCopyable
     {
     public:
         friend class SystemManager;
@@ -16,12 +16,13 @@ namespace ax
     public:
         virtual ~System(){}
 
-        virtual void initialize(){}
-        virtual void terminate(){}
-
-        virtual void start(){}
-        virtual void stop(){}
-        virtual void tick(){}
+        virtual void onInitialize(){}
+        virtual void onTerminate(){}
+        virtual void onStart(){}
+        virtual void onStop(){}
+        virtual void onTick(){}
+        virtual void onActive(){}
+        virtual void onDisable(){}
 
     public:
         void active() noexcept;

@@ -4,11 +4,12 @@
 //HEADERS
 ///////////////////
 #include <Core/Export.hpp>
+#include <Core/Utility/NonCopyable.hpp>
 #include <Core/Utility/ConfigParser.hpp>
 
 namespace ax
 {
-    class AXION_CORE_API GameContext
+    class AXION_CORE_API GameContext : public NonCopyable
     {
     public:
         ConfigParser& config() noexcept;
