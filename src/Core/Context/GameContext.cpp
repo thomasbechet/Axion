@@ -39,7 +39,7 @@ void GameContext::start() noexcept
     {
         restart = false;
 
-        double lol = 3.434;
+        double test = 3.434;
 
         if(Game::world().hasNextGameMode())
             Game::world().nextGameMode();
@@ -61,17 +61,17 @@ void GameContext::start() noexcept
             {   
                 accumulator -= dt;
 
-                /*for(unsigned i = 0; i < 3135153; i++)
-                {
-                    lol = i / lol + i * lol;
-                }*/
-
                 m_deltaTime = Time((unsigned long long)(dt * 1000000000));
+
+                for(unsigned i = 0; i < 103135153; i++)
+                {
+                    test = i / test + i * test;
+                }
 
                 Game::systems().update();
             }
 
-            ax::Game::logger().log("rendering");
+            //ax::Game::logger().log("rendering");
         }
 
 

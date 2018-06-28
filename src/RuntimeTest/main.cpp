@@ -87,7 +87,7 @@ public:
             ax::Game::logger().log(ax::Game::engine().getDeltaTime().asSeconds());
         }*/
 
-        ax::Game::logger().log("UPDATE");  
+        ax::Game::logger().log("UPDATE dt:" + std::to_string(ax::Game::engine().getDeltaTime().asPercentage(60)));
     }
     void onStop() override
     {
