@@ -19,7 +19,7 @@ namespace ax
     class AXION_CORE_API World
     {
     public:
-        friend class Game;
+        friend class GameContext;
 
     public:
         World();
@@ -47,17 +47,17 @@ namespace ax
         void nextGameMode() noexcept;
 
     public:
-        /*template<typename G>
+        template<typename G>
         void setGameState() noexcept
         {
-            
+            m_gameState.reset(new G());
         }
         template<typename G>
         G& getGameState() const noexcept
         {
-
+            return static_cast<G&>(*m_gameState.get());
         }
-        GameState& getGameState() const noexcept;*/
+        GameState& getGameState() const noexcept;
 
     
     private:

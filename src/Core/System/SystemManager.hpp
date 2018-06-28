@@ -17,7 +17,7 @@ namespace ax
     class AXION_CORE_API SystemManager : public NonCopyable
     {
     public:
-        friend class Game;
+        friend class GameContext;
 
         ~SystemManager();
 
@@ -63,10 +63,10 @@ namespace ax
             size_t location = getLocation<S>();
             if(m_systems.at(location).first)
             {
+                m_systems.at(location).second->onTerminate();
+
                 m_systems.at(location).first = false;
                 m_systems.at(location).second.reset();
-
-                m_systems.at(location).second->onTerminate();
 
                 m_sequence.erase(std::remove(m_sequence.begin(), m_sequence.end(), location));
             }

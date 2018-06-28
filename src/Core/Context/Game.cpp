@@ -21,45 +21,8 @@ Logger* Game::m_logger = nullptr;
 ThreadPool* Game::m_threadPool = nullptr;
 GameContext* Game::m_context = nullptr;
 
-void Game::run() noexcept
-{
-    //Configure Logger
-    logger().displayDate(Game::engine().config().getBoolean("Logger", "show_time", true));
-
-    //Configure and start threadPool
-    bool forceThread = Game::engine().config().getBoolean("Default", "force_thread_count", false);
-    unsigned threadCount = (forceThread) ? Game::engine().config().getUnsigned("Default", "thread_count", 0) : 0;
-    Game::threads().start(threadCount);
-
-    bool restart = true;
-    while(restart)
-    {
-        restart = false;
-
-        if(Game::world().hasNextGameMode())
-            Game::world().nextGameMode();
-
-        //Game loop
-        Game::world().getGameMode().onStart();
-        Game::systems().start();
-        while(Game::engine().isRunning() && !Game::world().hasNextGameMode())
-        {
-            Game::systems().update();
-        }
-        Game::systems().stop();
-        Game::world().getGameMode().onStop();
-    
-        if(Game::world().hasNextGameMode()) restart = true;
-    }
-
-    //Stopping threads
-    Game::threads().stop();
-}
-
 void Game::initialize() noexcept
 {
-    if(Game::engine().isRunning()) return;
-
     //Context
     m_context = new GameContext();
     m_context->config().parse("Engine.ini");

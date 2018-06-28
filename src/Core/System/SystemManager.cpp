@@ -45,8 +45,8 @@ void SystemManager::removeAll() noexcept
     for(auto it = m_sequence.begin(); it != m_sequence.end(); it++)
     {
         m_systems.at(*it).first = false;
-        m_systems.at(*it).second.reset();
         m_systems.at(*it).second->onTerminate();
+        m_systems.at(*it).second.reset();
     }
     m_sequence.clear();
 }

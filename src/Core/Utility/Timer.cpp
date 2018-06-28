@@ -2,6 +2,8 @@
 
 #include <chrono>
 
+#include <iostream>
+
 using namespace ax;
 
 using systemClock = std::chrono::high_resolution_clock;

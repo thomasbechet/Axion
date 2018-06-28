@@ -11,12 +11,12 @@ namespace ax
     {
     public:
         Time();
-        Time(long time);
+        Time(unsigned long long time);
 
         Time operator+(const Time& time);
         Time operator-(const Time& time);
 
-        long asNanoseconds() const noexcept;
+        unsigned long long asNanoseconds() const noexcept;
         float asMicroseconds() const noexcept;
         float asMilliseconds() const noexcept;
         double asSeconds() const noexcept;
@@ -24,6 +24,6 @@ namespace ax
         float asPercentage(unsigned frame = 60) const noexcept;
         
     private:
-        long m_time = 0;
+        unsigned long long m_time = 0;
     };
 }

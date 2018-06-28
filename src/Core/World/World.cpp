@@ -8,6 +8,7 @@ using namespace ax;
 World::World()
 {
     m_gameMode = std::make_unique<GameMode>();
+    m_gameState = std::make_unique<GameState>();
 
     m_componentManager = new ComponentManager();
     m_entityManager = new EntityManager(*m_componentManager);
@@ -42,4 +43,9 @@ void World::nextGameMode() noexcept
 
     m_gameMode.reset(m_nextGameMode);
     m_nextGameMode = nullptr;
+}
+
+GameState& World::getGameState() const noexcept
+{
+    return *m_gameState.get();
 }

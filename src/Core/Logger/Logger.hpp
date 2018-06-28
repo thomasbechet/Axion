@@ -32,5 +32,9 @@ namespace ax
         void log(int value, Severity severity = Severity::None) noexcept;
         void log(float value, Severity severity = Severity::None) noexcept;
         void log(double value, Severity severity = Severity::None) noexcept;
+        void log(long value, Severity severity = Severity::None) noexcept;
+        void log(unsigned long value, Severity severity = Severity::None) noexcept;
+        void log(long long value, Severity severity = Severity::None) noexcept;
+        void log(unsigned long long value, Severity severity = Severity::None) noexcept;
     };
 }

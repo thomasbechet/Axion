@@ -3,7 +3,7 @@
 using namespace ax;
 
 Time::Time(){}
-Time::Time(long time)
+Time::Time(unsigned long long time)
 {
     m_time = time;
 }
@@ -17,13 +17,13 @@ Time Time::operator-(const Time& time)
     return Time(m_time - time.m_time);
 }
 
-long Time::asNanoseconds() const noexcept
+unsigned long long Time::asNanoseconds() const noexcept
 {
     return m_time;
 }
 float Time::asMicroseconds() const noexcept
 {
-    return (float)m_time / 1000.0f; 
+    return (float)m_time / 1000.0f;
 }
 float Time::asMilliseconds() const noexcept
 {
@@ -36,5 +36,5 @@ double Time::asSeconds() const noexcept
 
 float Time::asPercentage(unsigned frame) const noexcept
 {
-    return ((float)asSeconds() * (float)frame) * 100.0f; //=(seconds / (1/frame)) * 100
+    return (float)((asSeconds() * (double)frame) * 100.0); //=(seconds / (1/frame)) * 100
 }
