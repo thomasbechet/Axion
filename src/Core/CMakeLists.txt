@@ -19,6 +19,7 @@ ADD_LIBRARY(
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp
+    Utility/TimeRecorder.cpp
     Utility/Color.cpp
     Utility/Memory.cpp
     Utility/ConfigParser.cpp

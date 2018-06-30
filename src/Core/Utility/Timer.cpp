@@ -19,5 +19,5 @@ void Timer::restart() noexcept
 Time Timer::getElapsedTime() const noexcept
 {
     std::chrono::time_point<std::chrono::system_clock> stop = systemClock::now();
-    return Time(std::chrono::duration_cast<std::chrono::nanoseconds>(stop - m_start).count());
+    return Time((unsigned long long)std::chrono::duration_cast<std::chrono::nanoseconds>(stop - m_start).count());
 }

@@ -4,6 +4,7 @@
 #include <Core/System/SystemManager.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/Utility/ThreadPool.hpp>
+#include <Core/Utility/TimeRecorder.hpp>
 #include <Core/World/World.hpp>
 
 using namespace ax;
@@ -31,6 +32,11 @@ void GameContext::start() noexcept
     unsigned threadCount = (forceThread) ? Game::engine().config().getUnsigned("Default", "thread_count", 0) : 0;
     Game::threads().start(threadCount);
 
+    //Frame recorder
+    TimeRecorder frameRecorder = TimeRecorder(10);
+    Timer frameRecorderTimer;
+    frameRecorderTimer.start();
+
     //Starting clock
     m_timer.start();
 
@@ -39,8 +45,6 @@ void GameContext::start() noexcept
     {
         restart = false;
 
-        double test = 3.434;
-
         if(Game::world().hasNextGameMode())
             Game::world().nextGameMode();
 
@@ -48,30 +52,52 @@ void GameContext::start() noexcept
         Game::world().getGameMode().onStart();
         Game::systems().start();
 
-        const double dt = 1.0 / 60.0;
-        double accumulator = 0.0;
+        double fixed_timestep = Game::engine().config().getDouble("Time", "fixed_timestep", 1.0 / 50.0);
+        double maximum_timestep = Game::engine().config().getDouble("Time", "maximum_timestep", 1.0 / 10.0);
+        const Time FIXED_TIMESTEP = Time::make_seconds(fixed_timestep);
+        const Time MAXIMUM_TIMESTEP = Time::make_seconds(maximum_timestep);
+
+        if(FIXED_TIMESTEP > MAXIMUM_TIMESTEP)
+            Game::interrupt("Fixed-Timestep (" + std::to_string(FIXED_TIMESTEP.asSeconds()) + ") higher than Maximum-Timestep (" + std::to_string(MAXIMUM_TIMESTEP.asSeconds()) + ")");
+
+
+        Time accumulator = Time::make_seconds(0.0);
         m_timer.restart();
         while(Game::engine().isRunning() && !Game::world().hasNextGameMode())
         {
             Time delta = m_timer.getElapsedTime();
+            
             m_timer.restart();
 
-            accumulator += delta.asSeconds();
-            while(accumulator >= dt)
-            {   
-                accumulator -= dt;
-
-                m_deltaTime = Time((unsigned long long)(dt * 1000000000));
-
-                for(unsigned i = 0; i < 103135153; i++)
-                {
-                    test = i / test + i * test;
-                }
-
-                Game::systems().update();
+            if(delta > MAXIMUM_TIMESTEP)
+            {
+                delta = MAXIMUM_TIMESTEP;
+                std::cout << "maximum reached" << std::endl;
             }
 
-            //ax::Game::logger().log("rendering");
+            accumulator += delta;
+
+            while(accumulator >= FIXED_TIMESTEP)
+            {   
+                Timer test_logic_timer;
+                test_logic_timer.start();
+                while(test_logic_timer.getElapsedTime().asSeconds() <= (1 / 100.0)){}
+
+                Game::systems().update();
+
+                accumulator -= FIXED_TIMESTEP;
+            }
+            
+            const double alpha = accumulator.asSeconds() / FIXED_TIMESTEP.asSeconds();
+
+
+            frameRecorder.record(delta);
+            if(frameRecorderTimer.getElapsedTime().asSeconds() > 1.0)
+            {
+                frameRecorderTimer.restart();
+                Game::logger().log("AVG: " + std::to_string(1.0 / frameRecorder.getAverage().asSeconds()));
+            }
+            
         }
 
 
