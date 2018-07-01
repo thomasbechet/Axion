@@ -23,6 +23,7 @@ namespace ax
         Time operator-(const Time& time);
         Time operator*(const Time& time);
         Time operator/(const Time& time);
+        Time operator/(unsigned k);
         Time& operator+=(const Time& time);
         Time& operator-=(const Time& time);
         bool operator>(const Time& t) const;

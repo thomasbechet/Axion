@@ -28,9 +28,27 @@ void GameContext::start() noexcept
     Game::logger().displayDate(Game::engine().config().getBoolean("Logger", "show_time", true));
 
     //Configure and start threadPool
-    bool forceThread = Game::engine().config().getBoolean("Default", "force_thread_count", false);
-    unsigned threadCount = (forceThread) ? Game::engine().config().getUnsigned("Default", "thread_count", 0) : 0;
+    bool forceThread = Game::engine().config().getBoolean("System", "force_thread_count", false);
+    unsigned threadCount = (forceThread) ? Game::engine().config().getUnsigned("System", "thread_count", 0) : 0;
     Game::threads().start(threadCount);
+
+    double fixed_timestep, maximum_timestep;
+    if(Game::engine().config().getBoolean("Tick", "use_frequency", false))
+    {   
+        fixed_timestep = 1.0 / Game::engine().config().getDouble("Tick", "fixed_timestep_frequency", 50.0);
+        maximum_timestep = 1.0 / Game::engine().config().getDouble("Tick", "maximum_timestep_frequency", 10.0);
+    }
+    else
+    {
+        fixed_timestep = Game::engine().config().getDouble("Tick", "fixed_timestep", 1.0 / 50.0);
+        maximum_timestep = Game::engine().config().getDouble("Tick", "maximum_timestep", 1.0 / 10.0);
+    }
+    const Time FIXED_TIMESTEP = Time::make_seconds(fixed_timestep);
+    const Time MAXIMUM_TIMESTEP = Time::make_seconds(maximum_timestep);
+    
+    //Tick recorder
+    unsigned delta_average_tick = Game::engine().config().getUnsigned("Tick", "delta_average_tick", 10);
+    TimeRecorder tickRecorder = TimeRecorder(delta_average_tick);
 
     //Frame recorder
     TimeRecorder frameRecorder = TimeRecorder(10);
@@ -52,15 +70,6 @@ void GameContext::start() noexcept
         Game::world().getGameMode().onStart();
         Game::systems().start();
 
-        double fixed_timestep = Game::engine().config().getDouble("Time", "fixed_timestep", 1.0 / 50.0);
-        double maximum_timestep = Game::engine().config().getDouble("Time", "maximum_timestep", 1.0 / 10.0);
-        const Time FIXED_TIMESTEP = Time::make_seconds(fixed_timestep);
-        const Time MAXIMUM_TIMESTEP = Time::make_seconds(maximum_timestep);
-
-        if(FIXED_TIMESTEP > MAXIMUM_TIMESTEP)
-            Game::interrupt("Fixed-Timestep (" + std::to_string(FIXED_TIMESTEP.asSeconds()) + ") higher than Maximum-Timestep (" + std::to_string(MAXIMUM_TIMESTEP.asSeconds()) + ")");
-
-
         Time accumulator = Time::make_seconds(0.0);
         m_timer.restart();
         while(Game::engine().isRunning() && !Game::world().hasNextGameMode())
@@ -79,16 +88,24 @@ void GameContext::start() noexcept
 
             while(accumulator >= FIXED_TIMESTEP)
             {   
+                accumulator -= FIXED_TIMESTEP;
+
+                std::cout << "UPDATE" << std::endl;
+
                 Timer test_logic_timer;
                 test_logic_timer.start();
                 while(test_logic_timer.getElapsedTime().asSeconds() <= (1 / 100.0)){}
 
                 Game::systems().update();
-
-                accumulator -= FIXED_TIMESTEP;
             }
             
             const double alpha = accumulator.asSeconds() / FIXED_TIMESTEP.asSeconds();
+
+            //Frame rendering
+            std::cout << "RENDER" << std::endl;
+            Timer test_render_timer;
+            test_render_timer.start();
+            while(test_render_timer.getElapsedTime().asSeconds() <= (1 / 10.0)){}
 
 
             frameRecorder.record(delta);

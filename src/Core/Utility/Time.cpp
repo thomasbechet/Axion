@@ -41,6 +41,10 @@ Time Time::operator/(const Time& time)
 {
     return Time(m_time / time.m_time);
 }
+Time Time::operator/(unsigned k)
+{
+    return Time(m_time / k);
+}
 Time& Time::operator+=(const Time& time)
 {
     this->m_time += time.m_time;
