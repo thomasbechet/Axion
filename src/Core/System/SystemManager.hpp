@@ -25,6 +25,7 @@ namespace ax
         void start() noexcept;
         void stop() noexcept;
         void update() noexcept;
+        void fixedUpdate() noexcept;
 
     private:
         template<typename S>

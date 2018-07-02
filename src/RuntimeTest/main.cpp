@@ -9,13 +9,14 @@
 #include <Core/World/Entity/Entity.hpp>
 #include <Core/World/Entity/EntityManager.hpp>
 #include <Core/Context/Game.hpp>
-#include <Core/CoreSystems/Renderer.hpp>
+#include <Core/Renderer/Renderer.hpp>
 #include <Core/World/Entity/ComponentIterator.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/Utility/Memory.hpp>
 #include <Core/Context/GameContext.hpp>
 #include <Core/System/System.hpp>
 #include <Core/System/SystemManager.hpp>
+#include <Core/Input/Input.hpp>
 
 struct Position : public ax::Component
 {
@@ -71,30 +72,36 @@ public:
 
     void onStart() override
     {
-        timer.start();
+        
     }
-    void onTick() override
+    void onUpdate() override
     {
-        /*if(timer.getElapsedTime().asSeconds() > 1.0f)
-        {
-            timer.restart();
-
-            ax::Game::logger().log(std::to_string(
-                ax::Game::engine().getDeltaTime().asPercentage(60)
-            ) + "%");
-            
-            ax::Game::logger().log(ax::Game::engine().getDeltaTime().asNanoseconds());
-            ax::Game::logger().log(ax::Game::engine().getDeltaTime().asSeconds());
-        }*/
-
-        //ax::Game::logger().log("UPDATE dt:" + std::to_string(1.0 / ax::Game::engine().getDeltaTime().asSeconds()));
+        //m_timer.start();
+        //while(m_timer.getElapsedTime().asSeconds() < 1. / 1000.){}
     }
+    void onFixedUpdate() override
+    {
+        m_timer.start();
+        while(m_timer.getElapsedTime().asSeconds() < 1. / 140.){}
+    }   
     void onStop() override
     {
 
     }
 
-    ax::Timer timer;
+    ax::Timer m_timer;
+};
+
+class LolInput : public ax::Input
+{
+protected:
+    void initialize() noexcept {};
+    void terminate() noexcept {};
+
+public:
+    ax::KeyboardManager& keyboard() noexcept {};
+    ax::MouseManager& mouse() noexcept {};
+    ax::JoystickManager& joystick() noexcept {};
 };
 
 class MyGameMode : public ax::GameMode
@@ -103,6 +110,8 @@ public:
     void onStart() override
     {
         ax::Game::systems().add<StaticMeshSystem>();
+
+        LolInput& lol = static_cast<LolInput&>(ax::Game::input());
     }
     void onStop() override
     {

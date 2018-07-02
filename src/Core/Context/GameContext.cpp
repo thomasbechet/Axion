@@ -3,6 +3,7 @@
 #include <Core/Context/Game.hpp>
 #include <Core/System/SystemManager.hpp>
 #include <Core/Logger/Logger.hpp>
+#include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/ThreadPool.hpp>
 #include <Core/Utility/TimeRecorder.hpp>
 #include <Core/World/World.hpp>
@@ -47,13 +48,11 @@ void GameContext::start() noexcept
     const Time MAXIMUM_TIMESTEP = Time::make_seconds(maximum_timestep);
     
     //Tick recorder
-    unsigned delta_average_tick = Game::engine().config().getUnsigned("Tick", "delta_average_tick", 10);
-    TimeRecorder tickRecorder = TimeRecorder(delta_average_tick);
+    unsigned average_update_count = Game::engine().config().getUnsigned("Tick", "average_update_count", 10);
+    TimeRecorder updateRecorder = TimeRecorder(average_update_count);
 
-    //Frame recorder
-    TimeRecorder frameRecorder = TimeRecorder(10);
-    Timer frameRecorderTimer;
-    frameRecorderTimer.start();
+    Timer displayInfoTimer;
+    displayInfoTimer.start();
 
     //Starting clock
     m_timer.start();
@@ -63,6 +62,7 @@ void GameContext::start() noexcept
     {
         restart = false;
 
+        //Apply gamemode modification
         if(Game::world().hasNextGameMode())
             Game::world().nextGameMode();
 
@@ -70,53 +70,44 @@ void GameContext::start() noexcept
         Game::world().getGameMode().onStart();
         Game::systems().start();
 
-        Time accumulator = Time::make_seconds(0.0);
+        Time accumulator, delta;
         m_timer.restart();
         while(Game::engine().isRunning() && !Game::world().hasNextGameMode())
         {
-            Time delta = m_timer.getElapsedTime();
-            
+            delta = m_timer.getElapsedTime();
+            updateRecorder.record(delta);
             m_timer.restart();
 
             if(delta > MAXIMUM_TIMESTEP)
-            {
-                delta = MAXIMUM_TIMESTEP;
-                std::cout << "maximum reached" << std::endl;
-            }
+                delta = MAXIMUM_TIMESTEP; //slowing down
 
             accumulator += delta;
 
+            //------> PROCESS INPUTS
+
+            m_deltaTime = FIXED_TIMESTEP;
             while(accumulator >= FIXED_TIMESTEP)
             {   
                 accumulator -= FIXED_TIMESTEP;
 
-                std::cout << "UPDATE" << std::endl;
-
-                Timer test_logic_timer;
-                test_logic_timer.start();
-                while(test_logic_timer.getElapsedTime().asSeconds() <= (1 / 100.0)){}
-
-                Game::systems().update();
+                //-----> PHYSIC UPDATE
+                Game::systems().fixedUpdate();     
             }
+
+            m_deltaTime = delta;
+            Game::systems().update();
             
             const double alpha = accumulator.asSeconds() / FIXED_TIMESTEP.asSeconds();
 
-            //Frame rendering
-            std::cout << "RENDER" << std::endl;
-            Timer test_render_timer;
-            test_render_timer.start();
-            while(test_render_timer.getElapsedTime().asSeconds() <= (1 / 10.0)){}
+            //Render update
+            Game::renderer().update(alpha);
 
-
-            frameRecorder.record(delta);
-            if(frameRecorderTimer.getElapsedTime().asSeconds() > 1.0)
+            if(displayInfoTimer.getElapsedTime().asSeconds() > 1.0)
             {
-                frameRecorderTimer.restart();
-                Game::logger().log("AVG: " + std::to_string(1.0 / frameRecorder.getAverage().asSeconds()));
+                displayInfoTimer.restart();
+                Game::logger().log("FPS: " + std::to_string(1.0 / updateRecorder.getAverage().asSeconds()));
             }
-            
         }
-
 
         Game::systems().stop();
         Game::world().getGameMode().onStop();

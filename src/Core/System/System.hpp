@@ -20,7 +20,8 @@ namespace ax
         virtual void onTerminate(){}
         virtual void onStart(){}
         virtual void onStop(){}
-        virtual void onTick(){}
+        virtual void onUpdate(){}
+        virtual void onFixedUpdate(){}
         virtual void onActive(){}
         virtual void onDisable(){}
 

@@ -16,6 +16,8 @@ namespace ax
     class Logger;
     class ThreadPool;
     class GameContext;
+    class Window;
+    class Input;
 
     class AXION_CORE_API Game
     {
@@ -36,6 +38,8 @@ namespace ax
         static Logger& logger() noexcept;
         static ThreadPool& threads() noexcept;
         static GameContext& engine() noexcept;
+        static Window& window() noexcept;
+        static Input& input() noexcept;
 
     private:        
         static Renderer* m_renderer;
@@ -44,5 +48,7 @@ namespace ax
         static Logger* m_logger;
         static ThreadPool* m_threadPool;
         static GameContext* m_context;
+        static Window* m_window;
+        static Input* m_input;
     };
 }

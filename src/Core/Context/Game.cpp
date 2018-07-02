@@ -1,6 +1,5 @@
 #include <Core/Context/Game.hpp>
 
-#include <Core/CoreSystems/NullRenderer.hpp>
 #include <Core/System/SystemManager.hpp>
 #include <Core/World/World.hpp>
 #include <Core/Logger/NullLogger.hpp>
@@ -8,9 +7,9 @@
 #include <Core/Utility/ThreadPool.hpp>
 #include <Core/Context/GameContext.hpp>
 #include <Core/Context/GameMode.hpp>
-
-#include <Core/Utility/Timer.hpp>
-#include <RuntimeTest/CustomSystem.hpp>
+#include <Core/Renderer/NullRenderer.hpp>
+#include <Core/Window/NullWindow.hpp>
+#include <Core/Input/NullInput.hpp>
 
 using namespace ax;
 
@@ -20,6 +19,8 @@ World* Game::m_world = nullptr;
 Logger* Game::m_logger = nullptr;
 ThreadPool* Game::m_threadPool = nullptr;
 GameContext* Game::m_context = nullptr;
+Window* Game::m_window = nullptr;
+Input* Game::m_input = nullptr;
 
 void Game::initialize() noexcept
 {
@@ -27,15 +28,38 @@ void Game::initialize() noexcept
     m_context = new GameContext();
     m_context->config().parse("Engine.ini");
 
-    //Systems control
-    m_renderer = new NullRenderer();
-    m_systemManager = new SystemManager();
-    m_world = new World();
-
     //Logger
     std::string typeLogger = Game::engine().config().getString("Logger", "type", "none");
-    if(typeLogger == "none") m_logger = new NullLogger();
-    else if(typeLogger == "console") m_logger = new ConsoleLogger();
+    if(typeLogger == "console") m_logger = new ConsoleLogger();
+    else m_logger = new NullLogger();
+
+    //System
+    m_systemManager = new SystemManager();
+
+    //World
+    m_world = new World();
+
+    //Renderer
+    std::string typeRenderer = Game::engine().config().getString("Renderer", "type", "none");
+    if(typeRenderer == "gl") m_renderer = new NullRenderer();
+    else m_renderer = new NullRenderer();
+
+    //Window
+    std::string typeWindow = Game::engine().config().getString("Window", "type", "none");
+    if(typeWindow == "glfw") m_window = new NullWindow();
+    else m_window = new NullWindow();
+
+    //Input
+    std::string typeInput = Game::engine().config().getString("Input", "type", "none");
+    if(typeInput == "glfw") m_input = new NullInput();
+    else m_input = new NullInput();
+
+
+    //Initialization
+    m_window->initialize();
+    m_input->initialize();
+    m_renderer->initialize();
+
 
     //ThreadPool
     m_threadPool = new ThreadPool();
@@ -44,11 +68,14 @@ void Game::terminate() noexcept
 {
     if(Game::engine().isRunning()) return;
 
-    delete m_renderer;
     delete m_systemManager;
     delete m_world;
 
     delete m_threadPool; //ThreadPool depends on Logger
+
+    delete m_renderer;
+    delete m_input;
+    delete m_window;
 
     delete m_logger;
 
@@ -83,4 +110,12 @@ ThreadPool& Game::threads() noexcept
 GameContext& Game::engine() noexcept
 {
     return *m_context;
+}
+Window& Game::window() noexcept
+{
+    return *m_window;
+}
+Input& Game::input() noexcept
+{
+    return *m_input;
 }

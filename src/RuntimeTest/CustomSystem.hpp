@@ -8,7 +8,7 @@ public:
     static std::string name(){return "CustomSystem";}
 
 private:
-    void onTick() override
+    void onUpdate() override
     {
         std::cout << "RIP" << std::endl;
     }
@@ -20,7 +20,7 @@ public:
     static std::string name(){return "CustomSystem2";}
 
 private:
-    void onTick() override
+    void onUpdate() override
     {
         std::cout << "RIP" << std::endl;
     }
@@ -32,7 +32,7 @@ public:
     static std::string name(){return "CustomSystem3";}
 
 private:
-    void onTick() override
+    void onUpdate() override
     {
         std::cout << "RIP" << std::endl;
     }
