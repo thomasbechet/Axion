@@ -14,7 +14,6 @@ namespace ax
     {
     public:
         friend class GameContext;
-        friend class Game;
 
     protected:
         virtual void initialize() noexcept = 0;

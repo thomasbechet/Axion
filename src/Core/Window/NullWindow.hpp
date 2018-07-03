@@ -17,6 +17,8 @@ namespace ax
         void initialize() noexcept override {}
         void terminate() noexcept override {}
 
+        void swapBuffers() noexcept override {}
+
     public:
         bool requestGLContext() noexcept override {return false;}
         bool requestDXContext() noexcept override {return false;}

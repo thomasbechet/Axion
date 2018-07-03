@@ -25,6 +25,13 @@ void GameContext::start() noexcept
 
     m_running = true;
 
+
+    //Initializes engine
+    Game::window().initialize();
+    Game::input().initialize();
+    Game::renderer().initialize();
+
+
     //Configure Logger
     Game::logger().displayDate(Game::engine().config().getBoolean("Logger", "show_time", true));
 
@@ -120,6 +127,12 @@ void GameContext::start() noexcept
 
     //Stopping threads
     Game::threads().stop();
+
+
+    //Terminates engine
+    Game::renderer().terminate();
+    Game::input().terminate();
+    Game::window().terminate();
 }
 void GameContext::stop() noexcept
 {

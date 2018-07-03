@@ -15,7 +15,6 @@ namespace ax
     {
     public:
         friend class GameContext;
-        friend class Game;
 
         using Id = unsigned;
 

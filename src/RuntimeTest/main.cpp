@@ -95,13 +95,13 @@ public:
 class LolInput : public ax::Input
 {
 protected:
-    void initialize() noexcept {};
-    void terminate() noexcept {};
+    void initialize() noexcept {}
+    void terminate() noexcept {}
 
 public:
-    ax::KeyboardManager& keyboard() noexcept {};
-    ax::MouseManager& mouse() noexcept {};
-    ax::JoystickManager& joystick() noexcept {};
+    ax::KeyboardManager& keyboard() noexcept {}
+    ax::MouseManager& mouse() noexcept {}
+    ax::JoystickManager& joystick() noexcept {}
 };
 
 class MyGameMode : public ax::GameMode

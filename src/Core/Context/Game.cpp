@@ -54,13 +54,6 @@ void Game::initialize() noexcept
     if(typeInput == "glfw") m_input = new NullInput();
     else m_input = new NullInput();
 
-
-    //Initialization
-    m_window->initialize();
-    m_input->initialize();
-    m_renderer->initialize();
-
-
     //ThreadPool
     m_threadPool = new ThreadPool();
 }
