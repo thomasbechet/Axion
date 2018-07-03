@@ -20,6 +20,19 @@ void WindowGLFW::initialize() noexcept
         case "windowed": m_mode = WindowMode::Windowed; break;
         case "borderless": m_mode = WindowMode::Borderless; break;
     }
+
+    if(m_mode == WindowMode::Fullscreen)
+    {
+        
+    }
+    else if(m_mode == WindowMode::Windowed)
+    {
+
+    }
+    else if(m_mode == WindowMode::Borderless)
+    {
+
+    }
 }
 void WindowGLFW::terminate() noexcept
 {
