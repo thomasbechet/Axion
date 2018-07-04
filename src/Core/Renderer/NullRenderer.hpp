@@ -22,5 +22,8 @@ namespace ax
         void setStaticmeshMaterial(Id id, std::string name) noexcept override {}
         void setStaticmeshTransform(Id id, const Transform& transform) noexcept override {}
         void setStaticmeshMesh(Id id, std::string name) noexcept override {}
+
+        //Window resize
+        void updateViewport() noexcept override {}
     };
 }

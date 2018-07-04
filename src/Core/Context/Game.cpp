@@ -9,6 +9,7 @@
 #include <Core/Context/GameMode.hpp>
 #include <Core/Renderer/NullRenderer.hpp>
 #include <Core/Window/NullWindow.hpp>
+#include <AxionGLFW/Window/WindowGLFW.hpp>
 #include <Core/Input/NullInput.hpp>
 
 using namespace ax;
@@ -46,7 +47,7 @@ void Game::initialize() noexcept
 
     //Window
     std::string typeWindow = Game::engine().config().getString("Window", "type", "none");
-    if(typeWindow == "glfw") m_window = new NullWindow();
+    if(typeWindow == "glfw") m_window = new WindowGLFW();
     else m_window = new NullWindow();
 
     //Input

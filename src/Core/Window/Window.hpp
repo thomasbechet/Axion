@@ -27,6 +27,8 @@ namespace ax
         virtual void swapBuffers() noexcept = 0;
 
     public:
+        virtual ~Window(){}
+
         virtual bool requestGLContext() noexcept = 0;
         virtual bool requestDXContext() noexcept = 0;
         virtual bool requestVKContext() noexcept = 0;

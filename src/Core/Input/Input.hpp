@@ -20,6 +20,8 @@ namespace ax
         virtual void terminate() noexcept = 0;
 
     public:
+        virtual ~Input(){}
+
         virtual KeyboardManager& keyboard() noexcept = 0;
         virtual MouseManager& mouse() noexcept = 0;
         virtual JoystickManager& joystick() noexcept = 0;

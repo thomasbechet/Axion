@@ -32,5 +32,8 @@ namespace ax
         virtual void setStaticmeshMaterial(Id id, std::string name) noexcept = 0;
         virtual void setStaticmeshTransform(Id id, const Transform& transform) noexcept = 0;
         virtual void setStaticmeshMesh(Id id, std::string name) noexcept = 0;
+    
+        //Window resize
+        virtual void updateViewport() noexcept = 0;
     };
 }

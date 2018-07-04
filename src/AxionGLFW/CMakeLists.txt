@@ -5,7 +5,7 @@ PROJECT(axion-glfw LANGUAGES CXX VERSION 0.0.1)
 
 #Include headers
 INCLUDE_DIRECTORIES("../")
-INCLUDE_DIRECTORIES("../../extlibs/")
+INCLUDE_DIRECTORIES("../../extlibs/GLFW/include/")
 
 #Using std=c++14
 SET(CMAKE_CXX_STANDARD 14)
@@ -16,7 +16,7 @@ ADD_DEFINITIONS(-DAXION_GLFW_EXPORT)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
-    
+    Window/WindowGLFW.cpp
 )
 
 #Install targets

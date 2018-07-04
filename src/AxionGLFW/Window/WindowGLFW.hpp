@@ -6,10 +6,11 @@
 #include <AxionGLFW/Export.hpp>
 #include <Core/Window/Window.hpp>
 
-#include <GLFW/include/glfw3.h>
-
 namespace ax
 {
+    //Forward declaration
+    class GLFWwindow;
+
     class AXION_GLFW_API WindowGLFW : public Window
     {
     protected:

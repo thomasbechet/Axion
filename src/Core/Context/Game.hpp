@@ -3,9 +3,10 @@
 /////////////////////
 //HEADERS
 /////////////////////
+#include <Core/Export.hpp>
+
 #include <memory>
 #include <string>
-#include <Core/Export.hpp>
 
 namespace ax
 {

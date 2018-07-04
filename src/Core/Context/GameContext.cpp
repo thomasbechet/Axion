@@ -7,6 +7,8 @@
 #include <Core/Utility/ThreadPool.hpp>
 #include <Core/Utility/TimeRecorder.hpp>
 #include <Core/World/World.hpp>
+#include <Core/Window/Window.hpp>
+#include <Core/Input/Input.hpp>
 
 using namespace ax;
 
