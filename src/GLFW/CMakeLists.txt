@@ -17,6 +17,14 @@ ADD_DEFINITIONS(-DAXION_GLFW_EXPORT)
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
     Window/WindowGLFW.cpp
+    Input/InputGLFW.cpp
+    Loader/Loader.cpp
+)
+
+#Adding glfw dependency
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} 
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-mingw-w64/libglfw3.a"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.dll.a"
 )
 
 #Install targets

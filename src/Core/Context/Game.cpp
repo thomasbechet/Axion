@@ -5,11 +5,11 @@
 #include <Core/Logger/NullLogger.hpp>
 #include <Core/Logger/ConsoleLogger.hpp>
 #include <Core/Utility/ThreadPool.hpp>
+#include <Core/Utility/LibraryLoader.hpp>
 #include <Core/Context/GameContext.hpp>
 #include <Core/Context/GameMode.hpp>
 #include <Core/Renderer/NullRenderer.hpp>
 #include <Core/Window/NullWindow.hpp>
-#include <AxionGLFW/Window/WindowGLFW.hpp>
 #include <Core/Input/NullInput.hpp>
 
 using namespace ax;
@@ -22,6 +22,8 @@ ThreadPool* Game::m_threadPool = nullptr;
 GameContext* Game::m_context = nullptr;
 Window* Game::m_window = nullptr;
 Input* Game::m_input = nullptr;
+
+std::map<std::string, LibraryLoader> Game::m_libraryHolder;
 
 void Game::initialize() noexcept
 {
@@ -47,12 +49,32 @@ void Game::initialize() noexcept
 
     //Window
     std::string typeWindow = Game::engine().config().getString("Window", "type", "none");
-    if(typeWindow == "glfw") m_window = new WindowGLFW();
+    typedef Window* (*CreateWindow)();
+
+    if(typeWindow == "glfw")
+    {
+        if(!m_libraryHolder["glfw"].isOpen() && !m_libraryHolder["glfw"].open("axion-glfw"))
+            Game::interrupt("Failed to load dynamic library <axion-glfw>");
+        CreateWindow createWindow;
+        if(!m_libraryHolder["glfw"].getFunction<CreateWindow>(createWindow, "create_window"))
+            Game::interrupt("Failed to access function <create_window>");
+        m_window = createWindow();
+    }
     else m_window = new NullWindow();
 
     //Input
     std::string typeInput = Game::engine().config().getString("Input", "type", "none");
-    if(typeInput == "glfw") m_input = new NullInput();
+    typedef Input* (*CreateInput)();
+
+    if(typeInput == "glfw") 
+    {
+        if(!m_libraryHolder["glfw"].isOpen() && !m_libraryHolder["glfw"].open("axion-glfw"))
+            Game::interrupt("Failed to load dynamic library <axion-glfw>");
+        CreateInput createInput;
+        if(!m_libraryHolder["glfw"].getFunction<CreateInput>(createInput, "create_input"))
+            Game::interrupt("Failed to access function <create_input>");
+        m_input = createInput();
+    }
     else m_input = new NullInput();
 
     //ThreadPool

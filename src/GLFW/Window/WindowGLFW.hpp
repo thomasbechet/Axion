@@ -3,14 +3,14 @@
 //////////////
 //HEADERS
 //////////////
-#include <AxionGLFW/Export.hpp>
+#include <GLFW/Export.hpp>
 #include <Core/Window/Window.hpp>
+
+//Forward declaration
+class GLFWwindow;
 
 namespace ax
 {
-    //Forward declaration
-    class GLFWwindow;
-
     class AXION_GLFW_API WindowGLFW : public Window
     {
     protected:

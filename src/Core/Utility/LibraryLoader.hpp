@@ -6,21 +6,22 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/NonCopyable.hpp>
 
+#include <string>
+
 namespace ax
 {
     class AXION_CORE_API LibraryLoader : public NonCopyable
     {
     public:
-        LibraryLoader(std::string path);
         ~LibraryLoader();
 
-        bool open() noexcept;
+        bool open(std::string path) noexcept;
         void close() noexcept;
         bool isOpen() const noexcept;
         std::string getPath() const noexcept;
 
         template<typename FuncType>
-        bool getFunction(Functype& function, std::string name) noexcept
+        bool getFunction(FuncType& function, std::string name) noexcept
         {
             function = reinterpret_cast<FuncType>(doGetFunction(name));
             return function != nullptr;
@@ -32,7 +33,7 @@ namespace ax
         void* doGetFunction(std::string name) noexcept;
 
     private:
-        void* m_library;
+        void* m_library = nullptr;
         std::string m_path;
     };
 }

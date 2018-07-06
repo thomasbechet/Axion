@@ -4,9 +4,11 @@
 //HEADERS
 /////////////////////
 #include <Core/Export.hpp>
+#include <Core/Utility/LibraryLoader.hpp>
 
 #include <memory>
 #include <string>
+#include <map>
 
 namespace ax
 {
@@ -24,9 +26,6 @@ namespace ax
     {
     public:
         friend class GameContext;
-
-    private:
-        static void run() noexcept;
 
     public:
         static void initialize() noexcept;
@@ -51,5 +50,7 @@ namespace ax
         static GameContext* m_context;
         static Window* m_window;
         static Input* m_input;
+
+        static std::map<std::string, LibraryLoader> m_libraryHolder;
     };
 }

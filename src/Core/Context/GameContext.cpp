@@ -27,12 +27,10 @@ void GameContext::start() noexcept
 
     m_running = true;
 
-
     //Initializes engine
     Game::window().initialize();
     Game::input().initialize();
     Game::renderer().initialize();
-
 
     //Configure Logger
     Game::logger().displayDate(Game::engine().config().getBoolean("Logger", "show_time", true));
@@ -110,6 +108,8 @@ void GameContext::start() noexcept
 
             //Render update
             Game::renderer().update(alpha);
+
+            Game::window().swapBuffers();
 
             if(displayInfoTimer.getElapsedTime().asSeconds() > 1.0)
             {

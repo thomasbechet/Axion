@@ -23,6 +23,7 @@ ADD_LIBRARY(
     Utility/Color.cpp
     Utility/Memory.cpp
     Utility/ConfigParser.cpp
+    Utility/LibraryLoader.cpp
     Input/KeyboardManager.cpp
     Input/NullInput.cpp
     Logger/Logger.cpp

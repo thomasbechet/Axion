@@ -1,10 +1,12 @@
-#include <AxionGLFW/Window/WindowGLFW.hpp>
+#include <GLFW/Window/WindowGLFW.hpp>
 
 #include <Core/Context/Game.hpp>
 #include <Core/Context/GameContext.hpp>
 #include <Core/Renderer/Renderer.hpp>
 
 #include <GLFW/glfw3.h>
+
+#include <iostream>
 
 using namespace ax;
 
