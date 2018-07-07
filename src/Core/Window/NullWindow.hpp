@@ -15,6 +15,7 @@ namespace ax
     protected:
         void initialize() noexcept override {}
         void terminate() noexcept override {}
+        void update() noexcept override {}
 
         void swapBuffers() noexcept override {}
 
@@ -27,9 +28,13 @@ namespace ax
 
         void setTitle(std::string title) noexcept override {}
         std::string getTitle() const noexcept override {return "";}
-        void setSize(Vector2u dimensions) noexcept override {}
+        void setSize(Vector2u size) noexcept override {}
         Vector2u getSize() const noexcept override {return Vector2u(0, 0);}
+        void setPosition(Vector2u position) noexcept override {}
+        Vector2u getPosition() const noexcept override {return Vector2u(0, 0);}
         void setMode(WindowMode mode) noexcept override {}
         WindowMode getMode() noexcept override {return WindowMode::Fullscreen;}
+        void setVerticalSync(bool toggle) noexcept override {}
+        bool getVerticalSync() const noexcept override {return false;}
     };
 }

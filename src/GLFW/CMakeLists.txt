@@ -18,6 +18,7 @@ ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
     Window/WindowGLFW.cpp
     Input/InputGLFW.cpp
+    Input/KeyboardManagerGLFW.cpp
     Loader/Loader.cpp
 )
 

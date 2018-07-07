@@ -17,6 +17,7 @@
 #include <Core/System/System.hpp>
 #include <Core/System/SystemManager.hpp>
 #include <Core/Input/Input.hpp>
+#include <Core/Window/Window.hpp>
 
 struct Position : public ax::Component
 {
@@ -76,13 +77,30 @@ public:
     }
     void onUpdate() override
     {
-        //m_timer.start();
-        //while(m_timer.getElapsedTime().asSeconds() < 1. / 1000.){}
+        if(ax::Game::input().keyboard().isKeyPressed(ax::Keyboard::Escape))
+            ax::Game::engine().stop();
+
+        if(ax::Game::input().keyboard().isKeyPressed(ax::Keyboard::F11))
+        {
+            if(ax::Game::window().getMode() == ax::WindowMode::Windowed)
+                ax::Game::window().setMode(ax::WindowMode::Fullscreen);
+            else
+                ax::Game::window().setMode(ax::WindowMode::Windowed);
+        }
+        else if(ax::Game::input().keyboard().isKeyPressed(ax::Keyboard::F12))
+        {
+            if(ax::Game::window().getMode() == ax::WindowMode::Windowed)
+                ax::Game::window().setMode(ax::WindowMode::Borderless);
+            else
+                ax::Game::window().setMode(ax::WindowMode::Windowed);
+        }
+
+        if(ax::Game::window().shouldClose())
+            ax::Game::engine().stop();
     }
     void onFixedUpdate() override
     {
-        m_timer.start();
-        while(m_timer.getElapsedTime().asSeconds() < 1. / 140.){}
+        
     }   
     void onStop() override
     {
@@ -92,26 +110,12 @@ public:
     ax::Timer m_timer;
 };
 
-class LolInput : public ax::Input
-{
-protected:
-    void initialize() noexcept {}
-    void terminate() noexcept {}
-
-public:
-    ax::KeyboardManager& keyboard() noexcept {}
-    ax::MouseManager& mouse() noexcept {}
-    ax::JoystickManager& joystick() noexcept {}
-};
-
 class MyGameMode : public ax::GameMode
 {
 public:
     void onStart() override
     {
         ax::Game::systems().add<StaticMeshSystem>();
-
-        LolInput& lol = static_cast<LolInput&>(ax::Game::input());
     }
     void onStop() override
     {

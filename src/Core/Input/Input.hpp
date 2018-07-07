@@ -18,6 +18,7 @@ namespace ax
     protected:
         virtual void initialize() noexcept = 0;
         virtual void terminate() noexcept = 0;
+        virtual void update() noexcept = 0;
 
     public:
         virtual ~Input(){}

@@ -15,6 +15,7 @@ namespace ax
     protected:
         void initialize() noexcept override;
         void terminate() noexcept override;
+        void update() noexcept override;
 
     public:
         KeyboardManager& keyboard() noexcept override;

@@ -23,6 +23,7 @@ namespace ax
     protected:
         virtual void initialize() noexcept = 0;
         virtual void terminate() noexcept = 0;
+        virtual void update() noexcept = 0;
 
         virtual void swapBuffers() noexcept = 0;
 
@@ -39,7 +40,11 @@ namespace ax
         virtual std::string getTitle() const noexcept = 0;
         virtual void setSize(Vector2u size) noexcept = 0;
         virtual Vector2u getSize() const noexcept = 0;
+        virtual void setPosition(Vector2u position) noexcept = 0;
+        virtual Vector2u getPosition() const noexcept = 0;
         virtual void setMode(WindowMode mode) noexcept = 0;
         virtual WindowMode getMode() noexcept = 0;
+        virtual void setVerticalSync(bool toggle) noexcept = 0;
+        virtual bool getVerticalSync() const noexcept = 0;
     };
 }

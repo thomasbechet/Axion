@@ -16,6 +16,10 @@ void NullInput::terminate() noexcept
 {
 
 }
+void NullInput::update() noexcept
+{
+    
+}
 
 KeyboardManager& NullInput::keyboard() noexcept
 {

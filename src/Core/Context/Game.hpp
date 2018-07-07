@@ -32,12 +32,12 @@ namespace ax
         static void terminate() noexcept;
         static void interrupt(std::string message = "") noexcept;
         
+        static GameContext& engine() noexcept;
         static Renderer& renderer() noexcept;
         static SystemManager& systems() noexcept;
         static World& world() noexcept;
         static Logger& logger() noexcept;
         static ThreadPool& threads() noexcept;
-        static GameContext& engine() noexcept;
         static Window& window() noexcept;
         static Input& input() noexcept;
 

@@ -32,7 +32,6 @@ void ConfigParser::parse(const std::string& path) noexcept
                     toLower(left);
                     std::string right = line.substr(delimiter + 1, line.length() - delimiter);
                     trim(right);
-                    toLower(right);
 
                     m_sections[currentSection][left] = right;
                 }

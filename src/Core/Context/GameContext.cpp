@@ -90,7 +90,10 @@ void GameContext::start() noexcept
 
             accumulator += delta;
 
+            //------> PROCESS WINDOW
+            Game::window().update();
             //------> PROCESS INPUTS
+            Game::input().update();
 
             m_deltaTime = FIXED_TIMESTEP;
             while(accumulator >= FIXED_TIMESTEP)
@@ -98,17 +101,19 @@ void GameContext::start() noexcept
                 accumulator -= FIXED_TIMESTEP;
 
                 //-----> PHYSIC UPDATE
+                //-----> FIXED SYSTEMS UPDATE
                 Game::systems().fixedUpdate();     
             }
 
             m_deltaTime = delta;
+            //------> FRAME SYSTEMS UPDATE
             Game::systems().update();
             
             const double alpha = accumulator.asSeconds() / FIXED_TIMESTEP.asSeconds();
 
-            //Render update
+            //------> RENDER
             Game::renderer().update(alpha);
-
+            //------> SWAP BUFFERS
             Game::window().swapBuffers();
 
             if(displayInfoTimer.getElapsedTime().asSeconds() > 1.0)
