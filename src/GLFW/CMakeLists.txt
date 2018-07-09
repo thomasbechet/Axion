@@ -23,10 +23,21 @@ ADD_LIBRARY(
 )
 
 #Adding glfw dependency
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} 
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-mingw-w64/libglfw3.a"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.dll.a"
-)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-linux/libglfw.so"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.so"
+    )
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-vc2015/glfw3dll.lib"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/axion-core.lib"
+    )
+endif()
 
 #Install targets
 INSTALL(

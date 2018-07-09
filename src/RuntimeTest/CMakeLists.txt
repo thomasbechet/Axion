@@ -16,7 +16,9 @@ ADD_EXECUTABLE(
 )
 
 #Link executable
-TARGET_LINK_LIBRARIES(RuntimeTest axion-core)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+    axion-core
+)
 
 #Install targets
 INSTALL(

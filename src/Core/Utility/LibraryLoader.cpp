@@ -77,18 +77,36 @@ std::string LibraryLoader::getPath() const noexcept
 
 #elif defined(AXION_PLATFORM_UNIX)
 
-void LibraryLoader::doOpen() noexcept
-{
+    #include <dlfcn.h>
 
-}
-void LibraryLoader::doClose() noexcept
-{
+    void LibraryLoader::doOpen() noexcept
+    {
+        std::string path = "lib" + m_path + ".so";
+        m_library = dlopen(path.c_str(), RTLD_LAZY);
 
-}
-void* doGetFunction(std::string name) noexcept
-{
-
-}
+        if(!m_library)
+            Game::logger().log("Failed to load dynamic library " + path, Logger::Warning);
+    }
+    void LibraryLoader::doClose() noexcept
+    {
+        if(m_library)
+        {
+            dlclose(m_library);
+            m_library = nullptr;
+        }
+    }
+    void* LibraryLoader::doGetFunction(std::string name) noexcept
+    {
+        void* result = nullptr;
+        
+        if(m_library)
+        {
+            result = reinterpret_cast<void*>(dlsym(m_library, name.c_str()));
+        }
+        else Game::logger().log("Failed to load function <" + name + "> because dynamic library is not loaded", Logger::Severity::Warning);
+    
+        return result;
+    }
 
 #elif defined(AXION_PLATFORM_APPLE)
 

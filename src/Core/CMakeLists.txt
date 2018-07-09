@@ -40,7 +40,10 @@ ADD_LIBRARY(
 #Adding pthread dependency
 SET(THREADS_PREFER_PTHREAD_FLAG ON)
 FIND_PACKAGE(Threads REQUIRED)
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} Threads::Threads)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} 
+    Threads::Threads
+    "${CMAKE_DL_LIBS}"
+)
 
 #Install targets
 INSTALL(

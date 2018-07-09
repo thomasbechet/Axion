@@ -73,7 +73,11 @@ public:
 
     void onStart() override
     {
-        
+        ax::Game::input().getButton("up").isPressed();
+        ax::Game::input().getButton("up").isReleased();
+        ax::Game::input().getButton("up").isJustPressed();
+        ax::Game::input().getButton("up").isJustReleased();
+        ax::Game::input().getAxis("X").
     }
     void onUpdate() override
     {

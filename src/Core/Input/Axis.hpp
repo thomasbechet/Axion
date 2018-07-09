@@ -1,14 +1,16 @@
 #pragma once
 
-////////////////
+/////////////
 //HEADERS
-////////////////
+/////////////
 #include <Core/Export.hpp>
 
 namespace ax
 {
-    class AXION_CORE_API MouseManager
+    class AXION_CORE_API Axis
     {
     public:
+
+    
     };
 }

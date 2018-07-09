@@ -147,8 +147,7 @@ void WindowGLFW::setVerticalSync(bool toggle) noexcept
 {
     m_verticalSync = toggle;
     glfwMakeContextCurrent(m_window);
-    if(m_verticalSync) glfwSwapInterval(1);
-    else glfwSwapInterval(0);
+    glfwSwapInterval(m_verticalSync);
 }
 bool WindowGLFW::getVerticalSync() const noexcept
 {
