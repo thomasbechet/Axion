@@ -11,23 +11,31 @@ SystemManager::~SystemManager()
 
 void SystemManager::start() noexcept
 {
-    for(auto it = m_sequence.begin(); it != m_sequence.end(); it++)
+    auto sequence = m_sequence;
+
+    for(auto it = sequence.begin(); it != sequence.end(); it++)
         m_systems.at(*it).second->onStart();
 }
 void SystemManager::stop() noexcept
 {
-    for(auto it = m_sequence.begin(); it != m_sequence.end(); it++)
+    auto sequence = m_sequence;
+
+    for(auto it = sequence.begin(); it != sequence.end(); it++)
         m_systems.at(*it).second->onStop();
 }
 void SystemManager::update() noexcept
 {
-    for(auto it = m_sequence.begin(); it != m_sequence.end(); it++)
-        m_systems.at(*it).second->onUpdate();
+    auto sequence = m_sequence;
+
+    for(auto it = sequence.begin(); it != sequence.end(); it++)
+        if(m_systems.at(*it).second->isActive()) m_systems.at(*it).second->onUpdate();
 }
 void SystemManager::fixedUpdate() noexcept
 {
-    for(auto it = m_sequence.begin(); it != m_sequence.end(); it++)
-        m_systems.at(*it).second->onFixedUpdate();
+    auto sequence = m_sequence;
+
+    for(auto it = sequence.begin(); it != sequence.end(); it++)
+        if(m_systems.at(*it).second->isActive()) m_systems.at(*it).second->onFixedUpdate();
 }
 
 void SystemManager::logStates() const noexcept

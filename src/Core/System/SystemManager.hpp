@@ -32,7 +32,8 @@ namespace ax
         size_t generateLocation() noexcept
         {
             m_systems.emplace_back(std::make_pair(false, std::make_unique<System>()));
-            m_names.emplace_back(S::name());
+            m_names.emplace_back(S::name());;
+
             return m_systems.size() - 1;
         }
         template<typename S>
@@ -49,6 +50,11 @@ namespace ax
         S& add(Args&&... args) noexcept
         {
             size_t location = getLocation<S>();
+
+            //If the systems already exists, return the system (no copy)
+            if(m_systems.at(location).first)
+                return static_cast<S&>(*m_systems.at(location).second.get());
+
             m_systems.at(location).second.reset(new S(args...));
             m_systems.at(location).first = true;
 
@@ -56,7 +62,7 @@ namespace ax
 
             m_systems.at(location).second->onInitialize();
 
-            return static_cast<S&>(*m_systems.back().second.get());
+            return static_cast<S&>(*m_systems.at(location).second.get());
         }
         template<typename S>
         void remove() noexcept

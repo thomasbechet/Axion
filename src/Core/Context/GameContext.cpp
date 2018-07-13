@@ -27,13 +27,13 @@ void GameContext::start() noexcept
 
     m_running = true;
 
+    //Configure Logger
+    Game::logger().displayDate(Game::engine().config().getBoolean("Logger", "show_time", true));
+
     //Initializes engine
     Game::window().initialize();
     Game::input().initialize();
     Game::renderer().initialize();
-
-    //Configure Logger
-    Game::logger().displayDate(Game::engine().config().getBoolean("Logger", "show_time", true));
 
     //Configure and start threadPool
     bool forceThread = Game::engine().config().getBoolean("System", "force_thread_count", false);
@@ -94,6 +94,7 @@ void GameContext::start() noexcept
             Game::window().update();
             //------> PROCESS INPUTS
             Game::input().update();
+            Game::input().updateInputs();
 
             m_deltaTime = FIXED_TIMESTEP;
             while(accumulator >= FIXED_TIMESTEP)

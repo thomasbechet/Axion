@@ -12,19 +12,23 @@ namespace ax
 {
     class AXION_CORE_API NullInput : public Input
     {
-    protected:
-        void initialize() noexcept override;
-        void terminate() noexcept override;
-        void update() noexcept override;
-
     public:
-        KeyboardManager& keyboard() noexcept override;
-        MouseManager& mouse() noexcept override;
-        JoystickManager& joystick() noexcept override;
+        bool isButtonPressed(Keyboard key) const noexcept override {return false;}
+        bool isButtonPressed(Mouse::Button button) const noexcept override {return false;}
+        bool isButtonPressed(Gamepad::Button button) const noexcept override {return false;}
+        bool isButtonReleased(Keyboard key) const noexcept override {return false;};
+        bool isButtonReleased(Mouse::Button button) const noexcept override {return false;}
+        bool isButtonReleased(Gamepad::Button button) const noexcept override {return false;}
+        virtual void setCursorMode(CursorMode mode) noexcept override {}
+        virtual CursorMode getCursorMode() const noexcept override {return CursorMode::Normal;}
+        Vector2f getMousePosition() const noexcept override {return Vector2f(0, 0);}
+        Vector2f getMouseMotion() const noexcept override {return Vector2f(0, 0);}
+        Vector2f getMouseScroll() const noexcept override {return Vector2f(0, 0);}
+        virtual float getGamepadAxis(Gamepad::Axis axis) const noexcept override {return 0.0f;}
 
-    private:
-        std::unique_ptr<KeyboardManager> m_keyboard;
-        std::unique_ptr<MouseManager> m_mouse;
-        std::unique_ptr<JoystickManager> m_joystick;
+    protected:
+        void initialize() noexcept override {}
+        void terminate() noexcept override {}
+        void update() noexcept override {}
     };
 }

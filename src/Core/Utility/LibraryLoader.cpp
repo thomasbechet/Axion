@@ -40,10 +40,19 @@ std::string LibraryLoader::getPath() const noexcept
 
     void LibraryLoader::doOpen() noexcept
     {
+        size_t pos = m_path.find_last_of('/');
+        std::string directory = "";
+        std::string file = m_path;
+        if(pos != std::string::npos)
+        {
+            directory = m_path.substr(0, pos);
+            file = m_path.substr(pos, m_path.length());
+        }
+
         #if defined(__MINGW32__)
-        std::string path = "lib" + m_path + ".dll";
+        std::string path = directory + "lib" + file + ".dll";
         #elif defined(_MSC_VER)
-        std::string path = m_path + ".dll";
+        std::string path = directory + file + ".dll";
         #endif
 
         m_library = LoadLibraryA(path.c_str());
@@ -81,7 +90,16 @@ std::string LibraryLoader::getPath() const noexcept
 
     void LibraryLoader::doOpen() noexcept
     {
-        std::string path = "lib" + m_path + ".so";
+        size_t pos = m_path.find_last_of('/');
+        std::string directory = "";
+        std::string file = m_path;
+        if(pos != std::string::npos)
+        {
+            directory = m_path.substr(0, pos);
+            file = m_path.substr(pos, m_path.length());
+        }
+
+        std::string path = directory + "lib" + file + ".so";
         m_library = dlopen(path.c_str(), RTLD_LAZY);
 
         if(!m_library)

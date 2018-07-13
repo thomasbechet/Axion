@@ -30,8 +30,8 @@ namespace ax
         std::string getTitle() const noexcept override {return "";}
         void setSize(Vector2u size) noexcept override {}
         Vector2u getSize() const noexcept override {return Vector2u(0, 0);}
-        void setPosition(Vector2u position) noexcept override {}
-        Vector2u getPosition() const noexcept override {return Vector2u(0, 0);}
+        void setPosition(Vector2i position) noexcept override {}
+        Vector2i getPosition() const noexcept override {return Vector2i(0, 0);}
         void setMode(WindowMode mode) noexcept override {}
         WindowMode getMode() noexcept override {return WindowMode::Fullscreen;}
         void setVerticalSync(bool toggle) noexcept override {}

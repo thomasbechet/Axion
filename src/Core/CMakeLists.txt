@@ -16,6 +16,7 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
     Context/GameContext.cpp
+    Prefabs/System/BasicWindowSystem.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp
@@ -24,8 +25,11 @@ ADD_LIBRARY(
     Utility/Memory.cpp
     Utility/ConfigParser.cpp
     Utility/LibraryLoader.cpp
-    Input/KeyboardManager.cpp
-    Input/NullInput.cpp
+    Input/Input.cpp
+    Input/Button.cpp
+    Input/Axis.cpp
+    Renderer/Renderer.cpp
+    Window/Window.cpp
     Logger/Logger.cpp
     Logger/ConsoleLogger.cpp
     Math/Transform.cpp

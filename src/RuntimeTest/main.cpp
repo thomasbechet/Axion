@@ -18,6 +18,7 @@
 #include <Core/System/SystemManager.hpp>
 #include <Core/Input/Input.hpp>
 #include <Core/Window/Window.hpp>
+#include <Core/Prefabs/System/BasicWindowSystem.hpp>
 
 struct Position : public ax::Component
 {
@@ -71,36 +72,22 @@ class StaticMeshSystem : public ax::System
 public:
     static std::string name(){return "StaticMeshSystem";}
 
+    void onInitialize() override
+    {
+
+    }
+    void onTerminate() override
+    {
+        
+    }
+
     void onStart() override
     {
-        ax::Game::input().getButton("up").isPressed();
-        ax::Game::input().getButton("up").isReleased();
-        ax::Game::input().getButton("up").isJustPressed();
-        ax::Game::input().getButton("up").isJustReleased();
-        ax::Game::input().getAxis("X").
+        m_timer.start();
     }
     void onUpdate() override
     {
-        if(ax::Game::input().keyboard().isKeyPressed(ax::Keyboard::Escape))
-            ax::Game::engine().stop();
-
-        if(ax::Game::input().keyboard().isKeyPressed(ax::Keyboard::F11))
-        {
-            if(ax::Game::window().getMode() == ax::WindowMode::Windowed)
-                ax::Game::window().setMode(ax::WindowMode::Fullscreen);
-            else
-                ax::Game::window().setMode(ax::WindowMode::Windowed);
-        }
-        else if(ax::Game::input().keyboard().isKeyPressed(ax::Keyboard::F12))
-        {
-            if(ax::Game::window().getMode() == ax::WindowMode::Windowed)
-                ax::Game::window().setMode(ax::WindowMode::Borderless);
-            else
-                ax::Game::window().setMode(ax::WindowMode::Windowed);
-        }
-
-        if(ax::Game::window().shouldClose())
-            ax::Game::engine().stop();
+        
     }
     void onFixedUpdate() override
     {
@@ -108,7 +95,7 @@ public:
     }   
     void onStop() override
     {
-
+        
     }
 
     ax::Timer m_timer;
@@ -120,10 +107,14 @@ public:
     void onStart() override
     {
         ax::Game::systems().add<StaticMeshSystem>();
+        ax::Game::systems().add<ax::BasicWindowSystem>();
+        
+        ax::Game::systems().logStates();
     }
     void onStop() override
     {
         ax::Game::systems().remove<StaticMeshSystem>();
+        ax::Game::systems().remove<ax::BasicWindowSystem>();
     }
 };
 

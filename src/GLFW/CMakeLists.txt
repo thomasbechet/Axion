@@ -17,26 +17,38 @@ ADD_DEFINITIONS(-DAXION_GLFW_EXPORT)
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
     Window/WindowGLFW.cpp
+    Window/WrapperWindowGLFW.cpp
     Input/InputGLFW.cpp
-    Input/KeyboardManagerGLFW.cpp
+    Input/WrapperInputGLFW.cpp
     Loader/Loader.cpp
 )
+
+if(MINGW)
+    message(${CMAKE_CXX_COMPILER_ID})
+endif(MINGW)
 
 #Adding glfw dependency
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-        "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-linux/libglfw.so"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.so"
-    )
+    if(MINGW)
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-mingw-w64/libglfw3.a"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.dll.a"
+        )
+    else(MINGW)
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-linux/libglfw.so"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.so"
+        )
+    endif(MINGW)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
         "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-vc2015/glfw3dll.lib"
         "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/axion-core.lib"
-    )
+    ) 
 endif()
 
 #Install targets

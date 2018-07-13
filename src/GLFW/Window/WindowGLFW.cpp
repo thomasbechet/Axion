@@ -3,6 +3,7 @@
 #include <Core/Context/Game.hpp>
 #include <Core/Context/GameContext.hpp>
 #include <Core/Renderer/Renderer.hpp>
+#include <GLFW/Window/WrapperWindowGLFW.hpp>
 
 #include <GLFW/glfw3.h>
 
@@ -46,6 +47,8 @@ void WindowGLFW::initialize() noexcept
     setMode(m_mode);
     setPosition(m_position);
     setVerticalSync(m_verticalSync);
+
+    WrapperWindowGLFW::setWindow(this, m_window);
 }
 void WindowGLFW::terminate() noexcept
 {
@@ -102,12 +105,12 @@ Vector2u WindowGLFW::getSize() const noexcept
 {
     return m_size;
 }
-void WindowGLFW::setPosition(Vector2u position) noexcept
+void WindowGLFW::setPosition(Vector2i position) noexcept
 {
     m_position = position;
     if(m_mode == WindowMode::Windowed) glfwSetWindowPos(m_window, m_position.x, m_position.y);
 }
-Vector2u WindowGLFW::getPosition() const noexcept
+Vector2i WindowGLFW::getPosition() const noexcept
 {
     return m_position;
 }
@@ -133,7 +136,11 @@ void WindowGLFW::setMode(WindowMode mode) noexcept
         case WindowMode::Borderless:
         {
             const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            glfwSetWindowMonitor(m_window, nullptr, 0, 0, mode->width, mode->height, 0);
+            glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+            glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+            glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+            glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+            glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
             Game::renderer().updateViewport();
         }  
         break;
@@ -157,4 +164,13 @@ bool WindowGLFW::getVerticalSync() const noexcept
 GLFWwindow* WindowGLFW::rawWindow() const noexcept
 {
     return m_window;
+}
+
+void WindowGLFW::windowPosCallback(int xpos, int ypos) noexcept
+{
+    if(m_mode == WindowMode::Windowed) m_position = Vector2i(xpos, ypos);
+}
+void WindowGLFW::windowSizeCallback(int width, int height) noexcept
+{
+    if(m_mode == WindowMode::Windowed) m_size = Vector2u(width, height);
 }
