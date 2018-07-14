@@ -1,26 +1,25 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
 
 #Project declaration
-PROJECT(axion-glfw LANGUAGES CXX VERSION 0.0.1)
+PROJECT(axion-opengl LANGUAGES CXX VERSION 0.0.1)
 
 #Include headers
 INCLUDE_DIRECTORIES("../")
-INCLUDE_DIRECTORIES("../../extlibs/GLFW/include/")
+INCLUDE_DIRECTORIES("../../extlibs/GLEW/include/")
 
 #Using std=c++14
 SET(CMAKE_CXX_STANDARD 14)
 
 #Export macro definition
-ADD_DEFINITIONS(-DAXION_GLFW_EXPORT)
+ADD_DEFINITIONS(-DAXION_GL_EXPORT)
+ADD_DEFINITIONS(-DGLEW_STATIC)
 
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
-    Window/WindowGLFW.cpp
-    Window/WrapperWindowGLFW.cpp
-    Input/InputGLFW.cpp
-    Input/WrapperInputGLFW.cpp
+    glew.c
     Loader/Loader.cpp
+    Renderer/RendererGL.cpp
 )
 
 #Adding glfw dependency
@@ -28,22 +27,21 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     if(MINGW)
+        FIND_PACKAGE(OpenGL)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-mingw-w64/libglfw3.a"
-            "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.dll.a"
+           "${OPENGL_gl_LIBRARY}"
+           "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.dll.a"
         )
     else(MINGW)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-linux/libglfw.so"
-            "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.so"
+            
         )
     endif(MINGW)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-        "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-vc2015/glfw3dll.lib"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/axion-core.lib"
+        
     ) 
 endif()
 

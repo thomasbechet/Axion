@@ -171,7 +171,31 @@ namespace ax
 		{
 			return Matrix4<T>::scale(scale.x, scale.y, scale.z);
 		}
-		
+		static Matrix4<T> lookAt(Vector3<T>& eye, Vector3<T>& target, Vector3<T>& up) noexcept
+		{
+			Vector3<T> zaxis = Vector3<T>::normalize(eye - target);
+			Vector3<T> xaxis = Vector3<T>::normalize(Vector3<T>::cross(up, zaxis));
+			Vector3<T> yaxis = Vector3<T>::cross(zaxis, xaxis);
+
+			return Matrix4<T>(
+				xaxis.x, yaxis.x, zaxis.x, 0,
+				xaxis.y, yaxis.y, zaxis.y, 0,
+				xaxis.z, yaxis.z, zaxis.z, 0,
+				-Vector3<T>::dot(xaxis, eye), -Vector3<T>::dot(yaxis, eye), -Vector3<T>::dot(zaxis, eye), 1
+			);
+		}
+		static Matrix4<T> perspective(T fov = 90, T aspect = 1, T near = 0.01, T far = 100) noexcept
+		{
+			T yS = (T)1 / tan(radians(fov) / (T)2);
+			T xS = yS / aspect;
+			T nmf = near - far;
+			return Matrix4<T>(
+				xS, 0, 0, 0,
+				0, yS, 0, 0,
+				0, 0, (far + near) / nmf, -1,
+				0, 0, 2 * far * near / nmf, 0
+			);
+		}
 		//////////////////////////
 		//UTILITY
 		//////////////////////////

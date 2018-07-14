@@ -44,7 +44,17 @@ void Game::initialize() noexcept
 
     //Renderer
     std::string typeRenderer = Game::engine().config().getString("Renderer", "type", "none");
-    if(typeRenderer == "gl") m_renderer = new NullRenderer();
+    typedef Renderer* (*CreateRenderer)();
+
+    if(typeRenderer == "opengl") 
+    {
+        if(!m_libraryHolder["opengl"].isOpen() && !m_libraryHolder["opengl"].open("axion-opengl"))
+            Game::interrupt("Failed to load dynamic library <axion-opengl>");
+        CreateRenderer createRenderer;
+        if(!m_libraryHolder["opengl"].getFunction<CreateRenderer>(createRenderer, "create_renderer"))
+            Game::interrupt("Failed to access function <create_renderer>");
+        m_renderer = createRenderer();
+    }
     else m_renderer = new NullRenderer();
 
     //Window
