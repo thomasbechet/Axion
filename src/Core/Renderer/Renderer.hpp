@@ -25,6 +25,12 @@ namespace ax
     public:
         virtual ~Renderer(){}
 
+        //Camera
+        //virtual Id createCamera() noexcept = 0;
+        //virtual void destroyCamera(Id id) noexcept = 0;
+        //virtual void setCameraTransform(Id id, const Transform& transform) noexcept = 0;
+        //virtual void setCameraSettings(Id id, CameraSettings settings) noexcept = 0;
+
         //Staticmesh
         virtual Id createStaticmesh() noexcept = 0;
         virtual void destroyStaticmesh(Id id) noexcept = 0;

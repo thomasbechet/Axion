@@ -14,5 +14,8 @@ namespace ax
         static std::string name(){return "StaticMesh";}
         void load(const Entity& e) noexcept;
         void unload() noexcept;
+
+    private:
+
     };
 }

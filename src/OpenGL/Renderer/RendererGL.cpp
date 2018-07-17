@@ -17,8 +17,7 @@ void RendererGL::terminate() noexcept
 }
 void RendererGL::update(double alpha) noexcept
 {
-    glViewport(50, 50, 100, 100);
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
