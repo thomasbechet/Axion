@@ -21,6 +21,8 @@ namespace ax
         bool isAttached() const noexcept;
         Entity& getParent() const noexcept;
 
+        
+
         Transform* transform = nullptr;
     
     private:

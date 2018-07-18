@@ -16,5 +16,8 @@ namespace ax
         void onInitialize() override;
         void onUpdate() override;
         void onTerminate() override;
+
+    private:
+        
     };
 }

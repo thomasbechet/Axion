@@ -13,7 +13,14 @@ void AttachmentSystem::onInitialize()
 }
 void AttachmentSystem::onUpdate()
 {
-    auto it = Game:
+    auto it = m_list->iterator();
+    while(it.next())
+    {
+        if(isAttached())
+        {
+            *it->transform = 
+        }
+    }
 }
 void AttachmentSystem::onTerminate()
 {

@@ -113,6 +113,11 @@ namespace ax
             return m_components.size() * COMPONENT_CHUNK_SIZE * sizeof(C);
         }
 
+        ComponentIterator iterator() const noexcept
+        {
+            return ComponentIterator(*this, 0, m_length);
+        }
+
         void addCreationCallback(std::function<void(C&)> function)
         {
             m_createFunctions.emplace_back(function);
