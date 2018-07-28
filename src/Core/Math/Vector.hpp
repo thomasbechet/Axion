@@ -64,19 +64,18 @@ namespace ax
 			return (x * vec.x + y * vec.y);
 		}
 		
-		////////////////////
-		//UTILITY
-		////////////////////
-		friend std::ostream& operator<<(std::ostream& out, const Vector2<T>& vec)
-		{
-			out << "[X=" << vec.x << " Y=" << vec.y << "]";
-			return out;
-		}
-		
 	public:
 		T x = 0;
 		T y = 0;
 	};
+
+	////////////////////////
+	//COMMUTATIVE OPERATORS
+	////////////////////////
+	template<typename T>
+	Vector2<T> operator*(const T& k, const Vector2<T>& vec){return Vector2<T>(vec.x * k, vec.y * k);}
+	template<typename T>
+	Vector2<T> operator*(const Vector2<T>& vec, const T& k){return k * vec;}
 
 	using Vector2f = Vector2<float>;
 	using Vector2u = Vector2<unsigned>;
@@ -126,7 +125,8 @@ namespace ax
 		static Vector3<T> normalize(const Vector3<T>& vec) noexcept
 		{
 			T l = Vector3<T>::length(vec);
-			return Vector3<T>(vec.x / l, vec.y / l, vec.z / l);
+			if(l != 0) return Vector3<T>(vec.x / l, vec.y / l, vec.z / l);
+			return vec;
 		}
 		void normalize() noexcept
 		{
@@ -152,21 +152,43 @@ namespace ax
 								z * vec.x - x * vec.z,
 								x * vec.y - y * vec.x);
 		}
-		
-		////////////////////
-		//UTILITY
-		////////////////////
-		friend std::ostream& operator<<(std::ostream& out, const Vector3<T>& vec)
-		{
-			out << "[X=" << vec.x << " Y=" << vec.y << " Z=" << vec.z << "]";
-			return out;
-		}
+
+		static const Vector3<T> forward;
+		static const Vector3<T> backward;
+		static const Vector3<T> left;
+		static const Vector3<T> right;
+		static const Vector3<T> up;
+		static const Vector3<T> down;
 		
 	public:
 		T x = 0;
 		T y = 0;
 		T z = 0;
 	};
+
+	////////////////////////
+	//COMMUTATIVE OPERATORS
+	////////////////////////
+	template<typename T>
+	Vector3<T> operator*(const T& k, const Vector3<T>& vec){return Vector3<T>(vec.x * k, vec.y * k, vec.z * k);}
+	template<typename T>
+	Vector3<T> operator*(const Vector3<T>& vec, const T& k){return k * vec;}
+
+	//////////////
+	//ENGINE AXIS
+	//////////////
+	template<typename T>
+	const Vector3<T> Vector3<T>::forward = Vector3<T>(0, 0, 1);
+	template<typename T>
+	const Vector3<T> Vector3<T>::backward = Vector3<T>(0, 0, -1);
+	template<typename T>
+	const Vector3<T> Vector3<T>::left = Vector3<T>(1, 0, 0);
+	template<typename T>
+	const Vector3<T> Vector3<T>::right = Vector3<T>(-1, 0, 0);
+	template<typename T>
+	const Vector3<T> Vector3<T>::up = Vector3<T>(0, 1, 0);
+	template<typename T>
+	const Vector3<T> Vector3<T>::down = Vector3<T>(0, -1, 0);
 
 	using Vector3f = Vector3<float>;
 	using Vector3u = Vector3<unsigned>;
@@ -208,7 +230,6 @@ namespace ax
 		Vector4<T> operator+=(const Vector4<T>& vec){return Vector4<T>(x += vec.x, y += vec.y, z += vec.z, w += vec.w);}
 		Vector4<T> operator-=(const Vector4<T>& vec){return Vector4<T>(x -= vec.x, y -= vec.y, z -= vec.z, w -= vec.w);}
 		Vector4<T> operator*(const Vector4<T> vec){return Vector4<T>(x * vec.x, y * vec.y, z * vec.z, w * vec.w);}
-		Vector4<T> operator*(const T& factor){return Vector4<T>(x * factor, y * factor, z * factor, w * factor);}
 		Vector4<T> operator/(const Vector4<T> vec){return Vector4<T>(x / vec.x, y / vec.y, z / vec.z, w / vec.w);}
 		
 		//////////////////////////
@@ -240,21 +261,20 @@ namespace ax
 			return (x * vec.x + y * vec.y + z * vec.z + w * vec.w);
 		}
 		
-		////////////////////
-		//UTILITY
-		////////////////////
-		friend std::ostream& operator<<(std::ostream& out, const Vector4<T>& vec)
-		{
-			out << "[X=" << vec.x << " Y=" << vec.y << " Z=" << vec.z << " W=" << vec.w << "]";
-			return out;
-		}
-		
 	public:
 		T x = 0;
 		T y = 0;
 		T z = 0;
 		T w = 0;
 	};
+
+	////////////////////////
+	//COMMUTATIVE OPERATORS
+	////////////////////////
+	template<typename T>
+	Vector4<T> operator*(const T& k, const Vector4<T>& vec){return Vector4<T>(vec.x * k, vec.y * k, vec.z * k, vec.w * k);}
+	template<typename T>
+	Vector4<T> operator*(const Vector4<T>& vec, const T& k){return k * vec;}
 
 	using Vector4f = Vector4<float>;
 	using Vector4u = Vector4<unsigned>;

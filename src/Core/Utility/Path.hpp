@@ -1,0 +1,36 @@
+#pragma once
+
+//////////////
+//HEADERS
+//////////////
+#include <Core/Export.hpp>
+
+#include <string>
+
+namespace ax
+{
+    class AXION_CORE_API Path
+    {
+    public:
+        Path() = default;
+        Path(const char* path);
+        Path(const std::string& path);
+
+        std::string directory() const noexcept;
+        std::string filename() const noexcept;
+        std::string extension() const noexcept;
+        std::string path() const noexcept;
+        const char* c_str() const noexcept;
+        bool isDirectory() const noexcept;
+        bool isFilename() const noexcept;
+        bool fileExists() const noexcept;
+
+        operator std::string() const;
+        friend Path operator+(const Path& p1, const Path& p2) noexcept;
+
+        static std::string sanitize(std::string path) noexcept;
+
+    private:
+        std::string m_path;
+    };
+}

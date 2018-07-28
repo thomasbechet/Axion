@@ -3,11 +3,13 @@
 ////////////////
 //HEADERS
 ////////////////
+#include <Core/Export.hpp>
+#include <Core/Utility/NonCopyable.hpp>
+#include <Core/Utility/Path.hpp>
+
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include <Core/Export.hpp>
-#include <Core/Utility/NonCopyable.hpp>
 
 namespace ax
 {
@@ -17,7 +19,7 @@ namespace ax
         using section = std::unordered_map<std::string, std::string>;
 
     public:
-        void parse(const std::string& path) noexcept;
+        void parse(const Path& path) noexcept;
         bool isParsed() const noexcept;
         
         bool getBoolean(std::string section, std::string name, bool def = false);

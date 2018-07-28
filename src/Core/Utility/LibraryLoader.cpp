@@ -10,7 +10,7 @@ LibraryLoader::~LibraryLoader()
     if(isOpen()) doClose();
 }
 
-bool LibraryLoader::open(std::string path) noexcept
+bool LibraryLoader::open(Path path) noexcept
 {   
     if(isOpen()) return false;
 
@@ -29,7 +29,7 @@ bool LibraryLoader::isOpen() const noexcept
 {
     return m_library != nullptr;
 }
-std::string LibraryLoader::getPath() const noexcept
+Path LibraryLoader::getPath() const noexcept
 {
     return m_path;
 }
@@ -40,19 +40,10 @@ std::string LibraryLoader::getPath() const noexcept
 
     void LibraryLoader::doOpen() noexcept
     {
-        size_t pos = m_path.find_last_of('/');
-        std::string directory = "";
-        std::string file = m_path;
-        if(pos != std::string::npos)
-        {
-            directory = m_path.substr(0, pos);
-            file = m_path.substr(pos, m_path.length());
-        }
-
         #if defined(__MINGW32__)
-        std::string path = directory + "lib" + file + ".dll";
+        std::string path = m_path.directory() + "lib" + m_path.filename() + ".dll";
         #elif defined(_MSC_VER)
-        std::string path = directory + file + ".dll";
+        std::string path = m_path.directory() + m_path.filename() + ".dll";
         #endif
 
         m_library = LoadLibraryA(path.c_str());
@@ -90,16 +81,7 @@ std::string LibraryLoader::getPath() const noexcept
 
     void LibraryLoader::doOpen() noexcept
     {
-        size_t pos = m_path.find_last_of('/');
-        std::string directory = "";
-        std::string file = m_path;
-        if(pos != std::string::npos)
-        {
-            directory = m_path.substr(0, pos);
-            file = m_path.substr(pos, m_path.length());
-        }
-
-        std::string path = directory + "lib" + file + ".so";
+        std::string path = m_path.directory() + "lib" + m_path.filename() + ".so";
         m_library = dlopen(path.c_str(), RTLD_LAZY);
 
         if(!m_library)

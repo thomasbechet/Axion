@@ -7,13 +7,13 @@
 
 using namespace ax;
 
-void ConfigParser::parse(const std::string& path) noexcept
+void ConfigParser::parse(const Path& path) noexcept
 {
     if(m_parsed) return;
 
     m_sections.emplace("default", std::unordered_map<std::string, std::string>()); //Create default section
 
-    std::ifstream infile(path);
+    std::ifstream infile(path.path());
     if(infile.is_open())
     {
         std::string currentSection = "default";

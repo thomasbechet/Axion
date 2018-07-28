@@ -4,14 +4,16 @@
 //HEADERS
 //////////////////
 #include <Core/Export.hpp>
+#include <Core/Utility/Types.hpp>
+#include <Core/Utility/NonCopyable.hpp>
 
-#include <map>
+#include <vector>
 
 namespace ax
 {
 	class AXION_CORE_API Observable;
 
-	class AXION_CORE_API IObserver
+	class AXION_CORE_API IObserver : public NonCopyable
 	{
 	public:
 		virtual void reset() = 0;
@@ -22,71 +24,38 @@ namespace ax
 	{
 	public:
 		friend class Observable;
-		using Id = unsigned;
 
 	public:
-		Observer() = default;
-		Observer(T* observable)
-		{
-			this->operator=(observable);
-		}
-		~Observer()
-		{
-			reset();
-		}
+		Observer(T* observable) {operator=(observable);}
+		~Observer() {reset();}
 
 		Observer<T>& operator=(T* observable)
 		{
+			reset();
+
 			if(observable != nullptr)
 			{
-				m_id = observable->addObserver(*this);
+				observable->addObserver(*this);
 				m_ptr = observable;
 			}
-			else
-			{
-				reset();
-			}
 
 			return *this;
 		}
-		Observer<T>& operator=(Observer<T>& observer)
-		{
-			if(observer.isValid())
-			{
-				m_id = observer.get().addObserver(*this);
-				m_ptr = &observer.get();
-			}
-			
-			return *this;
-		}
-		T* operator->()
-		{
-			return m_ptr;	
-		}
-
-		T& get() const noexcept
-		{
-			return *m_ptr;
-		}
+		T* operator->() {return m_ptr;}
+		T& operator*() {return *m_ptr;}
+		T& get() const noexcept {return *m_ptr;}
 
 		void reset() override
 		{
-			if(isValid())
-			{
-				m_ptr->removeObserver(m_id);
-				m_ptr = nullptr;
-			}
+			if(isValid()) m_ptr->removeObserver(m_id);
+			m_ptr = nullptr;
 		}
 
 		size_t observerCount() const noexcept
 		{
-			if(isValid())
-			{
-				return get().observerCount();
-			}
+			if(isValid()) return get().observerCount();
 			else return 0;
 		}
-
 		bool isValid() const noexcept
 		{
 			if(m_ptr == nullptr) return false;
@@ -95,10 +64,9 @@ namespace ax
 
 	private:
 		T* m_ptr = nullptr;
-		Id m_id;
 	};
 
-	class AXION_CORE_API Observable
+	class AXION_CORE_API Observable : public NonCopyable
 	{
 	public:
 		template<typename T> friend class Observer;
@@ -107,30 +75,16 @@ namespace ax
 		~Observable()
 		{
 			for(auto it : m_observers)
-			{
-				it.second->reset();
-			}
+				it->reset();
 		}
 
-		size_t observerCount() const noexcept
-		{
-			return m_observers.size();
-		}
-	private:
-		Id addObserver(IObserver& observer) noexcept
-		{
-			Id id = m_idCounter++;
-			m_observers[id] = &observer;
-
-			return id;
-		}
-		void removeObserver(Id id) noexcept
-		{
-			m_observers.erase(id);
-		}
+		size_t observerCount() const noexcept {return m_observers.size();}
 
 	private:
-		std::map<Id, IObserver*> m_observers;
-		Id m_idCounter = 0;
+		void addObserver(IObserver& observer) noexcept {return m_observers.emplace_back(observer);}
+		void removeObserver(IObserver& observer) noexcept {m_observers.erase(observer);}
+
+	private:
+		std::vector<IObserver*> m_observers;
 	};
 }

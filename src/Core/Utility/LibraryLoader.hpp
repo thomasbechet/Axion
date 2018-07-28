@@ -5,6 +5,7 @@
 ///////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/NonCopyable.hpp>
+#include <Core/Utility/Path.hpp>
 
 #include <string>
 
@@ -15,10 +16,10 @@ namespace ax
     public:
         ~LibraryLoader();
 
-        bool open(std::string path) noexcept;
+        bool open(Path path) noexcept;
         void close() noexcept;
         bool isOpen() const noexcept;
-        std::string getPath() const noexcept;
+        Path getPath() const noexcept;
 
         template<typename FuncType>
         bool getFunction(FuncType& function, std::string name) noexcept
@@ -34,6 +35,6 @@ namespace ax
 
     private:
         void* m_library = nullptr;
-        std::string m_path;
+        Path m_path;
     };
 }

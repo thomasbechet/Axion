@@ -7,7 +7,7 @@
 #include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/World/World.hpp>
-#include <Core/World/Entity/ComponentManager.hpp>
+#include <Core/World/Component/ComponentManager.hpp>
 
 namespace ax
 {
@@ -50,7 +50,6 @@ namespace ax
             }
             m_handles.clear();
         }
-
         template<typename C>
         C& getComponent() const noexcept
         {
@@ -61,7 +60,6 @@ namespace ax
 
             Game::interrupt("Component <" + C::name() + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");
         }
-
         template<typename C>
         bool hasComponent() const noexcept
         {

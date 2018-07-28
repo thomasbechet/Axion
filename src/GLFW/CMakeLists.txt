@@ -24,9 +24,7 @@ ADD_LIBRARY(
 )
 
 #Adding glfw dependency
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     if(MINGW)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
             "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-mingw-w64/libglfw3.a"
@@ -34,15 +32,13 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         )
     else(MINGW)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-linux/libglfw.so"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-linux/libglfw.a"
             "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/libaxion-core.so"
         )
     endif(MINGW)
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-        "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-vc2015/glfw3dll.lib"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-vc2015/glfw3.lib"
         "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/axion-core.lib"
     ) 
 endif()
@@ -52,6 +48,6 @@ INSTALL(
     TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../lib"
     LIBRARY DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../lib"
-    RUNTIME DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../bin"
+    RUNTIME DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine/bin"
 )
 

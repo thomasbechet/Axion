@@ -16,11 +16,11 @@ namespace ax
         void update(double alpha) noexcept override;
 
     public:
-        Renderer::Id createStaticmesh() noexcept override;
-        void destroyStaticmesh(Renderer::Id id) noexcept override;
-        void setStaticmeshMaterial(Renderer::Id id, std::string name) noexcept override;
-        void setStaticmeshTransform(Renderer::Id id, const Transform& trans) noexcept override;
-        void setStaticmeshMesh(Renderer::Id id, std::string name) noexcept override;
+        Id createStaticmesh() noexcept override;
+        void destroyStaticmesh(Id id) noexcept override;
+        void setStaticmeshMaterial(Id id, std::string name) noexcept override;
+        void setStaticmeshTransform(Id id, const Transform& trans) noexcept override;
+        void setStaticmeshMesh(Id id, std::string name) noexcept override;
     
         void updateViewport() noexcept override;
     };

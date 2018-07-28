@@ -21,6 +21,7 @@ namespace ax
     class GameContext;
     class Window;
     class Input;
+    class AssetManager;
 
     class AXION_CORE_API Game
     {
@@ -40,6 +41,7 @@ namespace ax
         static ThreadPool& threads() noexcept;
         static Window& window() noexcept;
         static Input& input() noexcept;
+        static AssetManager& assets() noexcept;
 
     private:        
         static Renderer* m_renderer;
@@ -50,6 +52,7 @@ namespace ax
         static GameContext* m_context;
         static Window* m_window;
         static Input* m_input;
+        static AssetManager* m_assets;
 
         static std::map<std::string, LibraryLoader> m_libraryHolder;
     };

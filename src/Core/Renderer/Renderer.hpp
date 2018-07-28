@@ -4,6 +4,7 @@
 //HEADERS
 ///////////////
 #include <Core/Export.hpp>
+#include <Core/Utility/Types.hpp>
 
 #include <string>
 
@@ -15,7 +16,6 @@ namespace ax
     {
     public:
         friend class GameContext;
-        using Id = unsigned;
 
     protected:
         virtual void initialize() noexcept = 0;

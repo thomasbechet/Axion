@@ -17,27 +17,27 @@ void RendererGL::terminate() noexcept
 }
 void RendererGL::update(double alpha) noexcept
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-Renderer::Id RendererGL::createStaticmesh() noexcept
+Id RendererGL::createStaticmesh() noexcept
 {
     return 0;
 }
-void RendererGL::destroyStaticmesh(Renderer::Id id) noexcept
+void RendererGL::destroyStaticmesh(Id id) noexcept
 {
     
 }
-void RendererGL::setStaticmeshMaterial(Renderer::Id id, std::string name) noexcept
+void RendererGL::setStaticmeshMaterial(Id id, std::string name) noexcept
 {
     
 }
-void RendererGL::setStaticmeshTransform(Renderer::Id id, const Transform& trans) noexcept
+void RendererGL::setStaticmeshTransform(Id id, const Transform& trans) noexcept
 {
     
 }
-void RendererGL::setStaticmeshMesh(Renderer::Id id, std::string name) noexcept
+void RendererGL::setStaticmeshMesh(Id id, std::string name) noexcept
 {
     
 }

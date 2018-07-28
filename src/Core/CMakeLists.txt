@@ -5,6 +5,8 @@ PROJECT(axion-core LANGUAGES CXX VERSION 0.0.1)
 
 #Include headers
 INCLUDE_DIRECTORIES("../")
+INCLUDE_DIRECTORIES("../../extlibs/STB/")
+INCLUDE_DIRECTORIES("../../extlibs/TinyObjLoader/")
 
 #Using std=c++14
 SET(CMAKE_CXX_STANDARD 14)
@@ -15,8 +17,12 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
+    Assets/AssetManager.cpp
     Context/GameContext.cpp
     Prefabs/System/BasicWindowSystem.cpp
+    Prefabs/System/BasicControllerSystem.cpp
+    Prefabs/Component/TransformComponent.cpp
+    Prefabs/Component/BasicControllerComponent.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp
@@ -25,6 +31,7 @@ ADD_LIBRARY(
     Utility/Memory.cpp
     Utility/ConfigParser.cpp
     Utility/LibraryLoader.cpp
+    Utility/Path.cpp
     Input/Input.cpp
     Input/Button.cpp
     Input/Axis.cpp
@@ -54,5 +61,5 @@ INSTALL(
     TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../lib"
     LIBRARY DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../lib"
-    RUNTIME DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../bin"
+    RUNTIME DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/../../Engine/bin"
 )

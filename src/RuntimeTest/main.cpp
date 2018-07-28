@@ -10,7 +10,7 @@
 #include <Core/World/Entity/EntityManager.hpp>
 #include <Core/Context/Game.hpp>
 #include <Core/Renderer/Renderer.hpp>
-#include <Core/World/Entity/ComponentIterator.hpp>
+#include <Core/World/Component/ComponentIterator.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/Utility/Memory.hpp>
 #include <Core/Context/GameContext.hpp>
@@ -19,6 +19,12 @@
 #include <Core/Input/Input.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Prefabs/System/BasicWindowSystem.hpp>
+#include <Core/Prefabs/System/BasicControllerSystem.hpp>
+#include <Core/Prefabs/Component/TransformComponent.hpp>
+#include <Core/Utility/Path.hpp>
+#include <Core/Assets/AssetManager.hpp>
+#include <Core/Assets/TextureManager.hpp>
+#include <Core/Utility/Observer.hpp>
 
 struct Position : public ax::Component
 {
@@ -51,7 +57,7 @@ struct StaticMesh : public ax::Component
     }
     static std::string name(){return "StaticMesh";}
 
-    ax::Renderer::Id id;
+    ax::Id id;
     Position* position;
 };
 
@@ -106,14 +112,26 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        ax::Game::systems().add<StaticMeshSystem>();
+        ax::Game::assets().textures.load("../textures/image.png", "image");
+        ax::Game::assets().models.load("../models/sponza/sponza.obj", "sponza");
+
         ax::Game::systems().add<ax::BasicWindowSystem>();
+        ax::Game::systems().add<ax::BasicControllerSystem>();
         
-        ax::Game::systems().logStates();
+        ax::Quaternionf q = ax::Quaternionf(0.0f, ax::Vector3f(0.0f, 1.0f, 0.0f));
+        q *= ax::Quaternionf(ax::radians(90.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
+        ax::Vector3f v = ax::Vector3f::forward;
+        v = q * v;
+        std::cout << v.x << " " << v.y << " " << v.z << std::endl;
+
+        ax::Entity& e = ax::Game::world().entities().create();
+        ax::TransformComponent& trans = e.addComponent<ax::TransformComponent>();
+        ax::BasicControllerComponent& controller = e.addComponent<ax::BasicControllerComponent>(e);
     }
     void onStop() override
     {
-        ax::Game::systems().remove<StaticMeshSystem>();
+        //std::cout << "LENGTH:" << ax::Game::world().components().getList<ax::AttachmentComponent>().length() << std::endl;
+
         ax::Game::systems().remove<ax::BasicWindowSystem>();
     }
 };

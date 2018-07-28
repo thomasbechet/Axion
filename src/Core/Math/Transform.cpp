@@ -51,19 +51,19 @@ void Transform::setScale(const Vector3f& scale) noexcept
     m_computeRequest = true;
 }
 
-Matrix4f Transform::matrix() noexcept
+Matrix4f Transform::getMatrix() noexcept
 {
-    if(m_computeRequest)
-    {
-        computeMatrix();
-    }
-
+    if(m_computeRequest) computeMatrix();
     return m_transform;
+}
+void Transform::setMatrix(const Matrix4f& matrix) noexcept
+{
+    m_transform = matrix;
+    m_computeRequest = false;
 }
 
 void Transform::computeMatrix() noexcept
 {
     m_transform = Matrix4f::scale(m_scale) * Quaternionf::toMatrix(m_rotation) * Matrix4f::translate(m_translation) * Matrix4f::identity();
-
     m_computeRequest = false;
 }

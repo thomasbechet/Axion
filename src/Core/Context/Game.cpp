@@ -11,6 +11,7 @@
 #include <Core/Renderer/NullRenderer.hpp>
 #include <Core/Window/NullWindow.hpp>
 #include <Core/Input/NullInput.hpp>
+#include <Core/Assets/AssetManager.hpp>
 
 using namespace ax;
 
@@ -22,6 +23,7 @@ ThreadPool* Game::m_threadPool = nullptr;
 GameContext* Game::m_context = nullptr;
 Window* Game::m_window = nullptr;
 Input* Game::m_input = nullptr;
+AssetManager* Game::m_assets = nullptr;
 
 std::map<std::string, LibraryLoader> Game::m_libraryHolder;
 
@@ -29,12 +31,15 @@ void Game::initialize() noexcept
 {
     //Context
     m_context = new GameContext();
-    m_context->config().parse("Engine.ini");
+    m_context->config().parse("../Engine.ini");
 
     //Logger
     std::string typeLogger = Game::engine().config().getString("Logger", "type", "none");
     if(typeLogger == "console") m_logger = new ConsoleLogger();
     else m_logger = new NullLogger();
+
+    //Assets
+    m_assets = new AssetManager();
 
     //System
     m_systemManager = new SystemManager();
@@ -96,15 +101,12 @@ void Game::terminate() noexcept
 
     delete m_systemManager;
     delete m_world;
-
+    delete m_assets;
     delete m_threadPool; //ThreadPool depends on Logger
-
     delete m_renderer;
     delete m_input;
     delete m_window;
-
     delete m_logger;
-
     delete m_context;
 }
 void Game::interrupt(std::string message) noexcept
@@ -144,4 +146,8 @@ Window& Game::window() noexcept
 Input& Game::input() noexcept
 {
     return *m_input;
+}
+AssetManager& Game::assets() noexcept
+{
+    return *m_assets;
 }

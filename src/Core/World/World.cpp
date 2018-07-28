@@ -1,7 +1,7 @@
 #include <Core/World/World.hpp>
 
 #include <Core/World/Entity/EntityManager.hpp>
-#include <Core/World/Entity/ComponentManager.hpp>
+#include <Core/World/Component/ComponentManager.hpp>
 
 using namespace ax;
 

@@ -25,7 +25,8 @@ namespace ax
         const Vector3f& getScale() const noexcept;
         void setScale(const Vector3f& scale) noexcept;
 
-        Matrix4f matrix() noexcept;
+        Matrix4f getMatrix() noexcept;
+        void setMatrix(const Matrix4f& matrix) noexcept;
 
     private:
         void computeMatrix() noexcept;
