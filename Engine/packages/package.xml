@@ -1,0 +1,4 @@
+<package name="mypackage" directory="../../resources/">
+	<texture name="image">textures/image.png</texture>
+	<texture name="texture">textures/texture.jpeg</texture>
+</package>

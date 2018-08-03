@@ -4,7 +4,6 @@
 //HEADERS
 //////////////
 #include <Core/Export.hpp>
-#include <Core/Utility/Observer.hpp>
 
 #include <vector>
 #include <unordered_map>
@@ -19,8 +18,8 @@ namespace ax
 
     struct AXION_CORE_API Model
     {
-        std::vector<Observer<Mesh>> meshes;
-        std::vector<Observer<Material>> materials;
+        std::vector<std::shared_ptr<const Mesh>> meshes;
+        std::vector<std::shared_ptr<const Material>> materials;
         size_t mesh_count;
     };
 }

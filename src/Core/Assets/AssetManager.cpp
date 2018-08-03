@@ -12,11 +12,11 @@ using namespace ax;
 
 AssetManager::~AssetManager()
 {
-    for(auto it : m_packages) unloadPackage(it->first);
-    for(auto it : m_models) unloadModel(it->first);
-    for(auto it : m_materials) unloadMaterial(it->first);
-    for(auto it : m_textures) unloadTexture(it->first);
-    for(auto it : m_meshes) unloadMesh(it->first);
+    for(auto it : m_packages) unloadPackage(it.first);
+    for(auto it : m_models) unloadModel(it.first);
+    for(auto it : m_materials) unloadMaterial(it.first);
+    for(auto it : m_textures) unloadTexture(it.first);
+    for(auto it : m_meshes) unloadMesh(it.first);
 }
 
 bool AssetManager::loadPackage(std::string name, Path path) noexcept
@@ -43,12 +43,16 @@ bool AssetManager::packageExists(std::string name) noexcept
 {
     return m_packages.find(name) != m_packages.end();
 }
-std::shared_ptr<const Package>& AssetManager::getPackage(std::string name) noexcept
+std::shared_ptr<const Package> AssetManager::getPackage(std::string name) noexcept
 {
     try
-        return m_packages.at(name).second;
+    {
+        return std::const_pointer_cast<const Package>(m_packages.at(name));
+    }
     catch(std::out_of_range e)
+    {
         Game::interrupt("Failed to access package '" + name + "'");
+    }
 }
 
 bool AssetManager::loadTexture(std::string name, Path path) noexcept
@@ -77,7 +81,7 @@ bool AssetManager::loadTexture(std::string name, Path path) noexcept
     }
     else
     {
-        Game::logger().log("Failed to load texture '" + path.path() "'", Logger::Warning);
+        Game::logger().log("Failed to load texture '" + path.path() + "'", Logger::Warning);
         return false;
     }
 
@@ -100,12 +104,16 @@ bool AssetManager::textureExists(std::string name) noexcept
 {
     return m_textures.find(name) != m_textures.end();
 }
-std::shared_ptr<const Texture>& AssetManager::getTexture(std::string name) noexcept
+std::shared_ptr<const Texture> AssetManager::getTexture(std::string name) noexcept
 {
     try
-        return m_textures.at(name).second;
+    {
+        return std::const_pointer_cast<const Texture>(m_textures.at(name));
+    }
     catch(std::out_of_range e)
+    {
         Game::interrupt("Failed to access texture '" + name + "'");
+    }   
 }
 
 bool AssetManager::loadMesh(std::string name, MeshData& mesh) noexcept
@@ -117,7 +125,7 @@ bool AssetManager::loadMesh(std::string name, MeshData& mesh) noexcept
     }
 
     m_meshes[name] = std::make_shared<Mesh>();
-    Mesh* newMesh = m_meshes[name];
+    Mesh* newMesh = m_meshes[name].get();
 
     newMesh->vertex_count = mesh.vertices.size();
     newMesh->vertices = mesh.vertices;
@@ -158,9 +166,9 @@ bool AssetManager::loadMesh(std::string name, MeshData& mesh) noexcept
         newMesh->tangents.push_back(tangent);
         newMesh->tangents.push_back(tangent);
 
-        newMesh->bitangents.push_back(bitangents);
-        newMesh->bitangents.push_back(bitangents);
-        newMesh->bitangents.push_back(bitangents);
+        newMesh->bitangents.push_back(bitangent);
+        newMesh->bitangents.push_back(bitangent);
+        newMesh->bitangents.push_back(bitangent);
     }
 
     //Upload Mesh --> TODO
@@ -184,15 +192,19 @@ bool AssetManager::meshExists(std::string name) noexcept
 {
     return m_meshes.find(name) != m_meshes.end();
 }
-std::shared_ptr<const Mesh>& AssetManager::getMesh(std::string name) noexcept
+std::shared_ptr<const Mesh> AssetManager::getMesh(std::string name) noexcept
 {
     try
-        return m_meshes.at(name).second;
+    {
+        return std::const_pointer_cast<const Mesh>(m_meshes.at(name));
+    }   
     catch(std::out_of_range e)
+    {
         Game::interrupt("Failed to access mesh '" + name + "'");
+    }
 }
 
-bool loadMaterial(std::string name, MaterialData& material) noexcept
+bool AssetManager::loadMaterial(std::string name, MaterialData& material) noexcept
 {
     if(materialExists(name))
     {
@@ -201,7 +213,7 @@ bool loadMaterial(std::string name, MaterialData& material) noexcept
     }
 
     m_materials[name] = std::make_shared<Material>();
-    Material* newMaterial = m_materials[name];
+    Material* newMaterial = m_materials[name].get();
 
     if(!material.diffuseTexture.empty())
         newMaterial->diffuseTexture = getTexture(material.diffuseTexture);
@@ -217,7 +229,7 @@ bool loadMaterial(std::string name, MaterialData& material) noexcept
 
     return true;
 }
-bool unloadMaterial(std::string name) noexcept
+bool AssetManager::unloadMaterial(std::string name) noexcept
 {
     if(!materialExists(name))
     {
@@ -233,12 +245,16 @@ bool AssetManager::materialExists(std::string name) noexcept
 {
     return m_materials.find(name) != m_materials.end();
 }
-std::shared_ptr<const Material>& getMaterial(std::string name) noexcept
+std::shared_ptr<const Material> AssetManager::getMaterial(std::string name) noexcept
 {
     try
-        return m_materials.at(name).second;
+    {
+        return std::const_pointer_cast<const Material>(m_materials.at(name));
+    }
     catch(std::out_of_range e)
+    {
         Game::interrupt("Failed to access material '" + name + "'");
+    }   
 }
 
 bool AssetManager::loadModel(std::string name, Path path) noexcept
@@ -317,11 +333,15 @@ bool AssetManager::modelExists(std::string name) noexcept
 {
     return m_models.find(name) != m_models.end();
 }
-std::shared_ptr<const Model>& AssetManager::getModel(std::string name) noexcept
+std::shared_ptr<const Model> AssetManager::getModel(std::string name) noexcept
 {
     try
-        return m_models.at(name).second;
+    {
+        return std::const_pointer_cast<const Model>(m_models.at(name));
+    }
     catch(std::out_of_range e)
+    {
         Game::interrupt("Failed to access model '" + name + "'");
+    }   
 }
 

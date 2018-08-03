@@ -26,27 +26,27 @@ namespace ax
         bool loadPackage(std::string, Path path) noexcept;
         bool unloadPackage(std::string name) noexcept;
         bool packageExists(std::string name) noexcept;
-        std::shared_ptr<const Package>& getPackage(std::string name) noexcept;
+        std::shared_ptr<const Package> getPackage(std::string name) noexcept;
 
         bool loadTexture(std::string name, Path path) noexcept;
         bool unloadTexture(std::string name) noexcept;
         bool textureExists(std::string name) noexcept;
-        std::shared_ptr<const Texture>& getTexture(std::string name) noexcept;
+        std::shared_ptr<const Texture> getTexture(std::string name) noexcept;
 
         bool loadMesh(std::string name, MeshData& mesh) noexcept;
         bool unloadMesh(std::string name) noexcept;
         bool meshExists(std::string name) noexcept;
-        std::shared_ptr<const Mesh>& getMesh(std::string name) noexcept;
+        std::shared_ptr<const Mesh> getMesh(std::string name) noexcept;
 
         bool loadMaterial(std::string name, MaterialData& material) noexcept;
         bool unloadMaterial(std::string name) noexcept;
         bool materialExists(std::string name) noexcept;
-        std::shared_ptr<const Material>& getMaterial(std::string name) noexcept;
+        std::shared_ptr<const Material> getMaterial(std::string name) noexcept;
 
         bool loadModel(std::string name, Path path) noexcept;
         bool unloadModel(std::string name) noexcept;
         bool modelExists(std::string name) noexcept;
-        std::shared_ptr<const Model>& getModel(std::string name) noexcept;
+        std::shared_ptr<const Model> getModel(std::string name) noexcept;
 
     private:
         std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;

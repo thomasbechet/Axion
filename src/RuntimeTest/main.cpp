@@ -23,8 +23,7 @@
 #include <Core/Prefabs/Component/TransformComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Assets/AssetManager.hpp>
-#include <Core/Assets/TextureManager.hpp>
-#include <Core/Utility/Observer.hpp>
+#include <Core/Assets/Texture.hpp>
 
 struct Position : public ax::Component
 {
@@ -112,8 +111,8 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        ax::Game::assets().textures.load("../textures/image.png", "image");
-        ax::Game::assets().models.load("../models/sponza/sponza.obj", "sponza");
+        ax::Game::assets().loadTexture("image", "../textures/image.png");
+        //ax::Game::assets().("../models/sponza/sponza.obj", "sponza");
 
         ax::Game::systems().add<ax::BasicWindowSystem>();
         ax::Game::systems().add<ax::BasicControllerSystem>();
