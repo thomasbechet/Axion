@@ -111,8 +111,9 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        ax::Game::assets().loadTexture("image", "../textures/image.png");
+        //ax::Game::assets().loadTexture("image", "../textures/image.png");
         //ax::Game::assets().("../models/sponza/sponza.obj", "sponza");
+        ax::Game::assets().loadPackage("../packages/package.xml");
 
         ax::Game::systems().add<ax::BasicWindowSystem>();
         ax::Game::systems().add<ax::BasicControllerSystem>();

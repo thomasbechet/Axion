@@ -85,8 +85,3 @@ std::string Path::sanitize(std::string path) noexcept
 
     return path;
 }
-
-Path operator+(const Path& p1, const Path& p2) noexcept
-{
-    return Path(p1.directory() + p2.directory() + p2.filename() + p2.extension());
-}

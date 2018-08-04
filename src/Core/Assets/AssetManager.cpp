@@ -7,6 +7,8 @@
 #include <tinyobjloader/tiny_obj_loader.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+#include <rapidxml/rapidxml.hpp>
+#include <rapidxml/rapidxml_utils.hpp>
 
 using namespace ax;
 
@@ -19,15 +21,58 @@ AssetManager::~AssetManager()
     for(auto it : m_meshes) unloadMesh(it.first);
 }
 
-bool AssetManager::loadPackage(std::string name, Path path) noexcept
+bool AssetManager::loadPackage(Path path) noexcept
 {
+    rapidxml::file<> file(path.c_str());
+    rapidxml::xml_document<> doc;
+    try
+    {
+        doc.parse<0>(file.data());
+    }
+    catch(rapidxml::parse_error& e)
+    {   
+        Game::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
+        return false;
+    }
+    
+    rapidxml::xml_node<>* package_node = doc.first_node("package");
+    if(!package_node)
+    {
+        Game::logger().log("Failed to load package " + path.path() + " because it does not contain 'package' node", Logger::Warning);
+        return false;
+    }
+    
+    std::string name = path.filename();
+    if(package_node->first_attribute("name"))
+        name = package_node->first_attribute("name")->value();
+
+    Path directory = "";
+    if(package_node->first_attribute("directory")) 
+        directory = Path(package_node->first_attribute("directory")->value());
+
     if(packageExists(name))
     {
         Game::logger().log("Failed to load package '" + name + "' because it already exists.", Logger::Warning);
         return false;
     }
 
-    return false;
+    for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling())
+    {
+        Path texture_path = directory + texture_node->value();
+        std::string texture_name = texture_path.filename();
+        if(texture_node->first_attribute("name"))
+            texture_name = texture_node->first_attribute("name")->value();
+
+        if(loadTexture(texture_name, texture_path))
+        {
+            
+        }
+    }
+
+    m_packages[name] = std::make_shared<Package>();
+    Package* package = m_packages[name].get();    
+
+    return true;
 }
 bool AssetManager::unloadPackage(std::string name) noexcept
 {
@@ -36,6 +81,8 @@ bool AssetManager::unloadPackage(std::string name) noexcept
         Game::logger().log("Failed to unload package '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
+
+    //m_packages.erase(name);
 
     return false;
 }

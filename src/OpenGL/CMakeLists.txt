@@ -17,7 +17,7 @@ ADD_DEFINITIONS(-DGLEW_STATIC)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
-    glew.c
+    ../../extlibs/GLEW/src/glew.c
     Loader/Loader.cpp
     Renderer/RendererGL.cpp
 )

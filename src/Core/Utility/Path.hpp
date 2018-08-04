@@ -26,7 +26,10 @@ namespace ax
         bool fileExists() const noexcept;
 
         operator std::string() const;
-        friend Path operator+(const Path& p1, const Path& p2) noexcept;
+        friend Path operator+(const Path& p1, const Path& p2) noexcept
+        {
+            return Path(p1.directory() + p2.directory() + p2.filename() + p2.extension());
+        }
 
         static std::string sanitize(std::string path) noexcept;
 

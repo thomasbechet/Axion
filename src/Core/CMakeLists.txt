@@ -5,8 +5,9 @@ PROJECT(axion-core LANGUAGES CXX VERSION 0.0.1)
 
 #Include headers
 INCLUDE_DIRECTORIES("../")
-INCLUDE_DIRECTORIES("../../extlibs/STB/")
-INCLUDE_DIRECTORIES("../../extlibs/TinyObjLoader/")
+INCLUDE_DIRECTORIES("../../extlibs/STB/include/")
+INCLUDE_DIRECTORIES("../../extlibs/TinyObjLoader/include/")
+INCLUDE_DIRECTORIES("../../extlibs/RapidXML/include/")
 
 #Using std=c++14
 SET(CMAKE_CXX_STANDARD 14)

@@ -23,7 +23,7 @@ namespace ax
     public:
         ~AssetManager();
 
-        bool loadPackage(std::string, Path path) noexcept;
+        bool loadPackage(Path path) noexcept;
         bool unloadPackage(std::string name) noexcept;
         bool packageExists(std::string name) noexcept;
         std::shared_ptr<const Package> getPackage(std::string name) noexcept;
