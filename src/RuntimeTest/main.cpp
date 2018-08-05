@@ -143,7 +143,10 @@ int main(int argc, char* argv[])
     ax::Game::initialize();
     ax::Game::world().setGameMode<MyGameMode>();
     ax::Game::engine().start();
+    std::cout << "end reached" << std::endl;
     ax::Game::terminate();
+
+    std::cout << "end reached" << std::endl;
 
     return 0;
 }

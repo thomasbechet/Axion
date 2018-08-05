@@ -56,7 +56,7 @@ bool AssetManager::loadPackage(Path path) noexcept
         return false;
     }
 
-    for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling())
+    for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
     {
         Path texture_path = directory + texture_node->value();
         std::string texture_name = texture_path.filename();
@@ -82,9 +82,9 @@ bool AssetManager::unloadPackage(std::string name) noexcept
         return false;
     }
 
-    //m_packages.erase(name);
+    m_packages.erase(name);
 
-    return false;
+    return true;
 }
 bool AssetManager::packageExists(std::string name) noexcept
 {
@@ -143,7 +143,7 @@ bool AssetManager::unloadTexture(std::string name) noexcept
     }
 
     stbi_image_free(m_textures[name]->data);
-    m_textures.erase(name);
+    //m_textures.erase(name);
 
     return true;
 }
