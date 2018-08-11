@@ -10,20 +10,26 @@
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
 
+#include <iostream>
+
 using namespace ax;
 
 AssetManager::~AssetManager()
 {
-    for(auto it : m_packages) unloadPackage(it.first);
-    for(auto it : m_models) unloadModel(it.first);
-    for(auto it : m_materials) unloadMaterial(it.first);
-    for(auto it : m_textures) unloadTexture(it.first);
-    for(auto it : m_meshes) unloadMesh(it.first);
+    for(auto it = m_packages.begin(); it != m_packages.end(); it++)
+    {
+        std::cout << "name: " << it->first << std::endl;
+        unloadPackage(it->first);
+    }
+    //for(auto it : m_models) unloadModel(it.first);
+    //for(auto it : m_materials) unloadMaterial(it.first);
+    //for(auto it : m_textures) unloadTexture(it.first);
+    //for(auto it : m_meshes) unloadMesh(it.first);
 }
 
 bool AssetManager::loadPackage(Path path) noexcept
 {
-    rapidxml::file<> file(path.c_str());
+    /*rapidxml::file<> file(path.c_str());
     rapidxml::xml_document<> doc;
     try
     {
@@ -33,22 +39,24 @@ bool AssetManager::loadPackage(Path path) noexcept
     {   
         Game::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
         return false;
-    }
+    }*/
     
-    rapidxml::xml_node<>* package_node = doc.first_node("package");
+    /*rapidxml::xml_node<>* package_node = doc.first_node("package");
     if(!package_node)
     {
         Game::logger().log("Failed to load package " + path.path() + " because it does not contain 'package' node", Logger::Warning);
         return false;
-    }
+    }*/
     
     std::string name = path.filename();
-    if(package_node->first_attribute("name"))
+    /*if(package_node->first_attribute("name"))
         name = package_node->first_attribute("name")->value();
+    */
 
-    Path directory = "";
+    /*Path directory = "";
     if(package_node->first_attribute("directory")) 
         directory = Path(package_node->first_attribute("directory")->value());
+    */
 
     if(packageExists(name))
     {
@@ -56,7 +64,7 @@ bool AssetManager::loadPackage(Path path) noexcept
         return false;
     }
 
-    for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
+    /*for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
     {
         Path texture_path = directory + texture_node->value();
         std::string texture_name = texture_path.filename();
@@ -67,10 +75,12 @@ bool AssetManager::loadPackage(Path path) noexcept
         {
             
         }
-    }
+    }*/
 
-    m_packages[name] = std::make_shared<Package>();
-    Package* package = m_packages[name].get();    
+    std::cout << name << std::endl;
+    m_packages.emplace(name, std::make_shared<Package>());
+    //m_packages[name] = std::make_shared<Package>();
+    //Package* package = m_packages.at(name).get();    
 
     return true;
 }
