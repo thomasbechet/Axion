@@ -38,7 +38,7 @@ void SystemManager::fixedUpdate() noexcept
         if(m_systems.at(*it).second->isActive()) m_systems.at(*it).second->onFixedUpdate();
 }
 
-void SystemManager::logStates() const noexcept
+void SystemManager::logInfo() const noexcept
 {
     Game::logger().log("", Logger::Info);
     Game::logger().log("=======SYSTEMS: Sequence=======", Logger::Info);

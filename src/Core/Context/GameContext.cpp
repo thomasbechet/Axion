@@ -55,8 +55,8 @@ void GameContext::start() noexcept
     const Time MAXIMUM_TIMESTEP = Time::make_seconds(maximum_timestep);
     
     //Tick recorder
-    unsigned average_update_count = Game::engine().config().getUnsigned("Tick", "average_update_count", 10);
-    TimeRecorder updateRecorder = TimeRecorder(average_update_count);
+    unsigned tick_measurement_count = Game::engine().config().getUnsigned("Tick", "tick_measurement_count", 10);
+    TimeRecorder updateRecorder = TimeRecorder(tick_measurement_count);
 
     Timer displayInfoTimer;
     displayInfoTimer.start();

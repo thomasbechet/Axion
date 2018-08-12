@@ -44,7 +44,7 @@ namespace ax
         }
 
     public:
-        void logStates() const noexcept;
+        void logInfo() const noexcept;
 
         template<typename S, typename... Args>
         S& add(Args&&... args) noexcept

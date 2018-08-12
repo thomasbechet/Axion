@@ -115,6 +115,8 @@ public:
         //ax::Game::assets().("../models/sponza/sponza.obj", "sponza");
         ax::Game::assets().loadPackage("../packages/package.xml");
 
+        //ax::Game::assets().logInfo();
+
         ax::Game::systems().add<ax::BasicWindowSystem>();
         ax::Game::systems().add<ax::BasicControllerSystem>();
         
@@ -143,7 +145,6 @@ int main(int argc, char* argv[])
     ax::Game::initialize();
     ax::Game::world().setGameMode<MyGameMode>();
     ax::Game::engine().start();
-    std::cout << "end reached" << std::endl;
     ax::Game::terminate();
 
     std::cout << "end reached" << std::endl;

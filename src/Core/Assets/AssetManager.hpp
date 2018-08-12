@@ -23,6 +23,8 @@ namespace ax
     public:
         ~AssetManager();
 
+        void logInfo() const noexcept;
+
         bool loadPackage(Path path) noexcept;
         bool unloadPackage(std::string name) noexcept;
         bool packageExists(std::string name) noexcept;

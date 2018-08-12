@@ -10,26 +10,37 @@
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
 
-#include <iostream>
-
 using namespace ax;
 
 AssetManager::~AssetManager()
 {
+    while(m_packages.size() > 0) unloadPackage(m_packages.begin()->first);
+}
+
+void AssetManager::logInfo() const noexcept
+{
+    Game::logger().log("=======Assets: list=======", Logger::Info);
+    Game::logger().log("Packages:", Logger::Info);
     for(auto it = m_packages.begin(); it != m_packages.end(); it++)
-    {
-        std::cout << "name: " << it->first << std::endl;
-        unloadPackage(it->first);
-    }
-    //for(auto it : m_models) unloadModel(it.first);
-    //for(auto it : m_materials) unloadMaterial(it.first);
-    //for(auto it : m_textures) unloadTexture(it.first);
-    //for(auto it : m_meshes) unloadMesh(it.first);
+        Game::logger().log("    -" + it->first, Logger::Info);
+    Game::logger().log("Textures:", Logger::Info);
+    for(auto it = m_textures.begin(); it != m_textures.end(); it++)
+        Game::logger().log("    -" + it->first, Logger::Info);
+    Game::logger().log("Meshes:", Logger::Info);
+    for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
+        Game::logger().log("    -" + it->first, Logger::Info);
+    Game::logger().log("Materials:", Logger::Info);
+    for(auto it = m_materials.begin(); it != m_materials.end(); it++)
+        Game::logger().log("    -" + it->first, Logger::Info);
+    Game::logger().log("Models:", Logger::Info);
+    for(auto it = m_models.begin(); it != m_models.end(); it++)
+        Game::logger().log("    -" + it->first, Logger::Info);
+    Game::logger().log("===========================", Logger::Info);
 }
 
 bool AssetManager::loadPackage(Path path) noexcept
 {
-    /*rapidxml::file<> file(path.c_str());
+    rapidxml::file<> file(path.c_str());
     rapidxml::xml_document<> doc;
     try
     {
@@ -39,24 +50,23 @@ bool AssetManager::loadPackage(Path path) noexcept
     {   
         Game::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
         return false;
-    }*/
+    }
     
-    /*rapidxml::xml_node<>* package_node = doc.first_node("package");
+    rapidxml::xml_node<>* package_node = doc.first_node("package");
     if(!package_node)
     {
         Game::logger().log("Failed to load package " + path.path() + " because it does not contain 'package' node", Logger::Warning);
         return false;
-    }*/
+    }
     
     std::string name = path.filename();
-    /*if(package_node->first_attribute("name"))
+    if(package_node->first_attribute("name"))
         name = package_node->first_attribute("name")->value();
-    */
-
-    /*Path directory = "";
+    
+    Path directory = "";
     if(package_node->first_attribute("directory")) 
         directory = Path(package_node->first_attribute("directory")->value());
-    */
+    
 
     if(packageExists(name))
     {
@@ -64,7 +74,10 @@ bool AssetManager::loadPackage(Path path) noexcept
         return false;
     }
 
-    /*for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
+    m_packages.emplace(name, std::make_shared<Package>());
+    Package* package = m_packages.at(name).get();
+
+    for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
     {
         Path texture_path = directory + texture_node->value();
         std::string texture_name = texture_path.filename();
@@ -72,15 +85,43 @@ bool AssetManager::loadPackage(Path path) noexcept
             texture_name = texture_node->first_attribute("name")->value();
 
         if(loadTexture(texture_name, texture_path))
-        {
-            
-        }
+            package->textures.push_back(texture_name);
+    }
+
+    std::cout << "log" << std::endl;
+
+    /*for(rapidxml::xml_node<>* mesh_node = package_node->first_node("mesh"); mesh_node; mesh_node = mesh_node->next_sibling("mesh"))
+    {
+        Path mesh_path = directory + mesh_node->value();
+        std::string mesh_name = mesh_path.filename();
+        if(mesh_node->first_attribute("name"))
+            mesh_name = mesh_node->first_attribute("name")->value();
+
+        if(loadMesh(mesh_name, mesh_path))
+            package->meshes.push_back(mesh_name);
     }*/
 
-    std::cout << name << std::endl;
-    m_packages.emplace(name, std::make_shared<Package>());
-    //m_packages[name] = std::make_shared<Package>();
-    //Package* package = m_packages.at(name).get();    
+    /*for(rapidxml::xml_node<>* material_node = package_node->first_node("material"); material_node; material_node = material_node->next_sibling("material"))
+    {
+        Path material_path = directory + material_node->value();
+        std::string material_name = material_path.filename();
+        if(material_node->first_attribute("name"))
+            material_name = material_node->first_attribute("name")->value();
+
+        if(loadMaterial(material_name, material_path))
+            package->materials.push_back(material_name);
+    }*/
+
+    for(rapidxml::xml_node<>* model_node = package_node->first_node("model"); model_node; model_node = model_node->next_sibling("model"))
+    {
+        Path model_path = directory + model_node->value();
+        std::string model_name = model_path.filename();
+        if(model_node->first_attribute("name"))
+            model_name = model_node->first_attribute("name")->value();
+
+        if(loadModel(model_name, model_path))
+            package->models.push_back(model_name);
+    }
 
     return true;
 }
@@ -91,6 +132,21 @@ bool AssetManager::unloadPackage(std::string name) noexcept
         Game::logger().log("Failed to unload package '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
+
+    Package* package = m_packages.at(name).get();
+
+    for(auto it = package->textures.begin(); it != package->textures.end(); it++)
+        unloadTexture(*it);
+    package->textures.clear();
+    for(auto it = package->meshes.begin(); it != package->meshes.end(); it++)
+        unloadMesh(*it);
+    package->meshes.clear();
+    for(auto it = package->materials.begin(); it != package->materials.end(); it++)
+        unloadMaterial(*it);
+    package->materials.clear();
+    for(auto it = package->models.begin(); it != package->models.end(); it++)
+        unloadModel(*it);
+    package->models.clear();
 
     m_packages.erase(name);
 
@@ -124,7 +180,8 @@ bool AssetManager::loadTexture(std::string name, Path path) noexcept
     Byte* data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
     if(data != nullptr)
     {
-        m_textures[name] = std::make_shared<Texture>();
+        //m_textures[name] = std::make_shared<Texture>();
+        m_textures.emplace(name, std::make_shared<Texture>());
         Texture* texture = m_textures[name].get();
 
         texture->data = data;
@@ -181,7 +238,8 @@ bool AssetManager::loadMesh(std::string name, MeshData& mesh) noexcept
         return false;
     }
 
-    m_meshes[name] = std::make_shared<Mesh>();
+    //m_meshes[name] = std::make_shared<Mesh>();
+    m_meshes.emplace(name, std::make_shared<Mesh>());
     Mesh* newMesh = m_meshes[name].get();
 
     newMesh->vertex_count = mesh.vertices.size();
@@ -269,7 +327,8 @@ bool AssetManager::loadMaterial(std::string name, MaterialData& material) noexce
         return false;
     }
 
-    m_materials[name] = std::make_shared<Material>();
+    //m_materials[name] = std::make_shared<Material>();
+    m_materials.emplace(name, std::make_shared<Material>());
     Material* newMaterial = m_materials[name].get();
 
     if(!material.diffuseTexture.empty())
