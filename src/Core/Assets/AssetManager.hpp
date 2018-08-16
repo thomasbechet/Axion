@@ -5,6 +5,7 @@
 ///////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Path.hpp>
+#include <Core/Utility/Vertex.hpp>
 #include <Core/Assets/Texture.hpp>
 #include <Core/Assets/Mesh.hpp>
 #include <Core/Assets/Material.hpp>
@@ -35,7 +36,7 @@ namespace ax
         bool textureExists(std::string name) noexcept;
         std::shared_ptr<const Texture> getTexture(std::string name) noexcept;
 
-        bool loadMesh(std::string name, MeshData& mesh) noexcept;
+        bool loadMesh(std::string name, const std::vector<Vertex>& vertices) noexcept;
         bool unloadMesh(std::string name) noexcept;
         bool meshExists(std::string name) noexcept;
         std::shared_ptr<const Mesh> getMesh(std::string name) noexcept;

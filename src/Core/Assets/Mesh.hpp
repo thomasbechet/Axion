@@ -15,17 +15,9 @@
 
 namespace ax
 {
-    struct AXION_CORE_API MeshData
-    {
-        std::vector<Vector3f> vertices;
-        std::vector<Vector2f> uvs;
-        std::vector<Vector3f> normals;
-        std::vector<Vector3f> colors;
-    };
-
     struct AXION_CORE_API Mesh
     {
-        std::vector<Vector3f> vertices;
+        std::vector<Vector3f> positions;
         std::vector<Vector2f> uvs;
         std::vector<Vector3f> normals;
         std::vector<Vector3f> tangents;

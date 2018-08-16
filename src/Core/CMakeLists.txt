@@ -19,6 +19,11 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
     Assets/AssetManager.cpp
+    Assets/Material.cpp
+    Assets/Mesh.cpp
+    Assets/Model.cpp
+    Assets/Package.cpp
+    Assets/Texture.cpp
     Context/GameContext.cpp
     Prefabs/System/BasicWindowSystem.cpp
     Prefabs/System/BasicControllerSystem.cpp
