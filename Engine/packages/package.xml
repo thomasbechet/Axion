@@ -1,5 +1,6 @@
 <package name="mypackage" directory="../">
 	<texture name="image">textures/image.png</texture>
 	<texture name="texture">textures/texture.jpg</texture>
-	<model name="sponza">models/sponza/sponza.obj</model>
+	<!--model name="sponza">models/sponza/sponza.obj</model-->
+	<model name="cube">models/cube/untitled.obj</model>
 </package>

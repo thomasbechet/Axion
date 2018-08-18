@@ -15,6 +15,7 @@ bool AssetManager::loadMesh(std::string name, const std::vector<Vertex>& vertice
 
     m_meshes.emplace(name, std::make_shared<Mesh>());
     Mesh* newMesh = m_meshes[name].get();
+    newMesh->name = name;
 
     newMesh->vertex_count = vertices.size();
     newMesh->positions.resize(newMesh->vertex_count);
@@ -77,7 +78,9 @@ bool AssetManager::unloadMesh(std::string name) noexcept
 
     //Unload Mesh --> TODO
 
-    m_meshes.erase(name);
+    if(m_meshes.at(name).use_count() == 1)
+        m_meshes.erase(name);
+    
     return true;
 }
 bool AssetManager::meshExists(std::string name) noexcept

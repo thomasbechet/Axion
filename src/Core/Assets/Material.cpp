@@ -5,7 +5,7 @@
 
 using namespace ax;
 
-bool AssetManager::loadMaterial(std::string name, MaterialData& material) noexcept
+bool AssetManager::loadMaterial(std::string name, const MaterialData& material) noexcept
 {
     if(materialExists(name))
     {
@@ -15,6 +15,7 @@ bool AssetManager::loadMaterial(std::string name, MaterialData& material) noexce
 
     m_materials.emplace(name, std::make_shared<Material>());
     Material* newMaterial = m_materials[name].get();
+    newMaterial->name = name;
 
     if(!material.diffuseTexture.empty())
         newMaterial->diffuseTexture = getTexture(material.diffuseTexture);
@@ -38,7 +39,24 @@ bool AssetManager::unloadMaterial(std::string name) noexcept
         return false;
     }
 
-    m_materials.erase(name);
+    Material* material = m_materials.at(name).get();
+
+    if(material->diffuseTexture)
+    {
+        std::string diffuseTexName = material->diffuseTexture.get()->name;
+        material->diffuseTexture.reset();
+        unloadTexture(diffuseTexName);
+    }
+    
+    if(material->normalTexture)
+    {
+        std::string normalTexName = material->normalTexture.get()->name;
+        material->normalTexture.reset();
+        unloadTexture(normalTexName);
+    }
+
+    if(m_materials.at(name).use_count() == 1)
+        m_materials.erase(name);
 
     return true;
 }

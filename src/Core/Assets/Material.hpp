@@ -20,6 +20,8 @@ namespace ax
 
     struct AXION_CORE_API Material
     {
+        std::string name;
+
         std::shared_ptr<const Texture> diffuseTexture = nullptr;
         Color diffuseUniform = Color(1.0f, 1.0f, 1.0f, 1.0f);
         

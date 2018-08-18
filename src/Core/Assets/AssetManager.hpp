@@ -41,7 +41,7 @@ namespace ax
         bool meshExists(std::string name) noexcept;
         std::shared_ptr<const Mesh> getMesh(std::string name) noexcept;
 
-        bool loadMaterial(std::string name, MaterialData& material) noexcept;
+        bool loadMaterial(std::string name, const MaterialData& material) noexcept;
         bool unloadMaterial(std::string name) noexcept;
         bool materialExists(std::string name) noexcept;
         std::shared_ptr<const Material> getMaterial(std::string name) noexcept;
@@ -50,6 +50,9 @@ namespace ax
         bool unloadModel(std::string name) noexcept;
         bool modelExists(std::string name) noexcept;
         std::shared_ptr<const Model> getModel(std::string name) noexcept;
+    
+    private:
+        bool loadObjModel(std::string name, Path path) noexcept;
 
     private:
         std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;

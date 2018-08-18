@@ -22,6 +22,7 @@ bool AssetManager::loadTexture(std::string name, Path path) noexcept
     {
         m_textures.emplace(name, std::make_shared<Texture>());
         Texture* texture = m_textures[name].get();
+        texture->name = name;
 
         texture->data = data;
         texture->size.x = (unsigned)width;
@@ -48,8 +49,11 @@ bool AssetManager::unloadTexture(std::string name) noexcept
         return false;
     }
 
-    stbi_image_free(m_textures[name]->data);
-    m_textures.erase(name);
+    if(m_textures.at(name).use_count() == 1)
+    {
+        stbi_image_free(m_textures[name]->data);
+        m_textures.erase(name);
+    }
 
     return true;
 }

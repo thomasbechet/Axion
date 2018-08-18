@@ -25,11 +25,21 @@ namespace ax
     public:
         virtual ~Renderer(){}
 
+        //Mesh
+        virtual Id loadMesh(const Mesh& mesh) noexcept = 0;
+        virtual void unloadMesh(Id mesh) noexcept = 0;
+        //Material
+        virtual Id loadMaterial(const Material& material) noexcept = 0;
+        virtual void unloadMaterial(Id material) noexcept = 0;
+        //Texture
+        virtual Id loadTexture(const Texture& texture) noexcept = 0;
+        virtual void unloadTexture(Id material) noexcept = 0;
+
         //Camera
-        //virtual Id createCamera() noexcept = 0;
-        //virtual void destroyCamera(Id id) noexcept = 0;
-        //virtual void setCameraTransform(Id id, const Transform& transform) noexcept = 0;
-        //virtual void setCameraSettings(Id id, CameraSettings settings) noexcept = 0;
+        virtual Id createCamera() noexcept = 0;
+        virtual void destroyCamera(Id id) noexcept = 0;
+        virtual void setCameraTransform(Id id, const Transform& transform) noexcept = 0;
+        virtual void setCameraSettings(Id id, CameraSettings settings) noexcept = 0;
 
         //Staticmesh
         virtual Id createStaticmesh() noexcept = 0;

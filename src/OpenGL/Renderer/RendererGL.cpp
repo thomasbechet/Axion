@@ -21,6 +21,53 @@ void RendererGL::update(double alpha) noexcept
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+//Mesh
+Id RendererGL::loadMesh(const Mesh& mesh) noexcept
+{
+    return 0;
+}
+void RendererGL::unloadMesh(Id mesh) noexcept
+{
+
+}   
+//Material
+Id RendererGL::loadMaterial(const Material& material) noexcept
+{
+    return 0;
+}
+void RendererGL::unloadMaterial(Id material) noexcept
+{
+
+}
+//Texture
+Id RendererGL::loadTexture(const Texture& texture) noexcept
+{
+    return 0;
+}
+void RendererGL::unloadTexture(Id material) noexcept
+{
+
+}
+
+//Camera
+Id RendererGL::createCamera() noexcept
+{
+
+}
+void RendererGL::destroyCamera(Id id) noexcept
+{
+
+}
+void RendererGL::setCameraTransform(Id id, const Transform& transform) noexcept
+{
+
+}
+void RendererGL::setCameraSettings(Id id, CameraSettings settings) noexcept
+{
+
+}
+
+//Staticmesh
 Id RendererGL::createStaticmesh() noexcept
 {
     return 0;

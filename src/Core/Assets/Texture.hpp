@@ -21,6 +21,8 @@ namespace ax
 
     struct AXION_CORE_API Texture
     {
+        std::string name;
+
         TextureFormat format;
         Vector2u size;
         Byte* data;

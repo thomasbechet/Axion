@@ -17,6 +17,8 @@ namespace ax
 {
     struct AXION_CORE_API Mesh
     {
+        std::string name;
+
         std::vector<Vector3f> positions;
         std::vector<Vector2f> uvs;
         std::vector<Vector3f> normals;

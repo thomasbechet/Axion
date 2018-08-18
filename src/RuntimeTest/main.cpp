@@ -115,8 +115,6 @@ public:
         //ax::Game::assets().("../models/sponza/sponza.obj", "sponza");
         ax::Game::assets().loadPackage("../packages/package.xml");
 
-        //ax::Game::assets().logInfo();
-
         ax::Game::systems().add<ax::BasicWindowSystem>();
         ax::Game::systems().add<ax::BasicControllerSystem>();
         
@@ -124,7 +122,6 @@ public:
         q *= ax::Quaternionf(ax::radians(90.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
         ax::Vector3f v = ax::Vector3f::forward;
         v = q * v;
-        std::cout << v.x << " " << v.y << " " << v.z << std::endl;
 
         ax::Entity& e = ax::Game::world().entities().create();
         ax::TransformComponent& trans = e.addComponent<ax::TransformComponent>();
