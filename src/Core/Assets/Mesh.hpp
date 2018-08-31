@@ -26,6 +26,7 @@ namespace ax
         std::vector<Vector3f> bitangents;
         std::vector<Vector3f> colors;
         size_t vertex_count;
-        Id id;
+        
+        Id handle;
     };
 }

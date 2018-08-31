@@ -5,6 +5,7 @@
 ////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Color.hpp>
+#include <Core/Assets/Texture.hpp>
 
 #include <memory>
 
@@ -26,5 +27,7 @@ namespace ax
         Color diffuseUniform = Color(1.0f, 1.0f, 1.0f, 1.0f);
         
         std::shared_ptr<const Texture> normalTexture = nullptr;
+
+        Id handle;
     };
 }

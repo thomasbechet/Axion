@@ -23,6 +23,7 @@ ADD_LIBRARY(
     Assets/Mesh.cpp
     Assets/Model.cpp
     Assets/Package.cpp
+    Assets/Shader.cpp
     Assets/Texture.cpp
     Context/GameContext.cpp
     Prefabs/System/BasicWindowSystem.cpp
@@ -41,7 +42,6 @@ ADD_LIBRARY(
     Input/Input.cpp
     Input/Button.cpp
     Input/Axis.cpp
-    Renderer/Renderer.cpp
     Window/Window.cpp
     Logger/Logger.cpp
     Logger/ConsoleLogger.cpp

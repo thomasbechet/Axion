@@ -5,6 +5,10 @@
 ///////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
+#include <Core/Assets/Mesh.hpp>
+#include <Core/Assets/Material.hpp>
+#include <Core/Assets/Texture.hpp>
+#include <Core/Renderer/CameraSettings.hpp>
 
 #include <string>
 
@@ -34,6 +38,9 @@ namespace ax
         //Texture
         virtual Id loadTexture(const Texture& texture) noexcept = 0;
         virtual void unloadTexture(Id material) noexcept = 0;
+        //Shader
+        virtual Id loadShader(const std::string& vertex, const std::string& fragment) noexcept = 0;
+        virtual void unloadShader(Id shader) noexcept = 0;
 
         //Camera
         virtual Id createCamera() noexcept = 0;
@@ -48,7 +55,7 @@ namespace ax
         virtual void setStaticmeshTransform(Id id, const Transform& transform) noexcept = 0;
         virtual void setStaticmeshMesh(Id id, std::string name) noexcept = 0;
     
-        //Window resize
+        //Viewport
         virtual void updateViewport() noexcept = 0;
     };
 }

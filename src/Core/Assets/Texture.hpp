@@ -26,5 +26,7 @@ namespace ax
         TextureFormat format;
         Vector2u size;
         Byte* data;
+
+        Id handle;
     };
 }

@@ -11,6 +11,7 @@
 #include <Core/Assets/Material.hpp>
 #include <Core/Assets/Model.hpp>
 #include <Core/Assets/Package.hpp>
+#include <Core/Assets/Shader.hpp>
 
 #include <string>
 #include <vector>
@@ -50,6 +51,11 @@ namespace ax
         bool unloadModel(std::string name) noexcept;
         bool modelExists(std::string name) noexcept;
         std::shared_ptr<const Model> getModel(std::string name) noexcept;
+
+        bool loadShader(std::string name, Path vertex, Path fragment) noexcept;
+        bool unloadShader(std::string name) noexcept;
+        bool shaderExists(std::string name) noexcept;
+        std::shared_ptr<const Shader> getShader(std::string name) noexcept;
     
     private:
         bool loadObjModel(std::string name, Path path) noexcept;
@@ -59,6 +65,7 @@ namespace ax
         std::unordered_map<std::string, std::shared_ptr<Mesh>> m_meshes;
         std::unordered_map<std::string, std::shared_ptr<Material>> m_materials;
         std::unordered_map<std::string, std::shared_ptr<Model>> m_models;
+        std::unordered_map<std::string, std::shared_ptr<Shader>> m_shaders;
         std::unordered_map<std::string, std::shared_ptr<Package>> m_packages;
     };
 }

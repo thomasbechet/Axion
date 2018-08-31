@@ -4,6 +4,10 @@
 //HEADERS
 /////////////
 #include <OpenGL/Export.hpp>
+#include <OpenGL/Renderer/TextureGL.hpp>
+#include <OpenGL/Renderer/MeshGL.hpp>
+#include <OpenGL/Renderer/StaticmeshGL.hpp>
+#include <OpenGL/Renderer/MaterialGL.hpp>
 #include <Core/Renderer/Renderer.hpp>
 
 #include <unordered_map>
@@ -41,13 +45,14 @@ namespace ax
         void setStaticmeshTransform(Id id, const Transform& trans) noexcept override;
         void setStaticmeshMesh(Id id, std::string name) noexcept override;
     
+        //Viewport
         void updateViewport() noexcept override;
 
     private:
         std::unordered_map<Id, TextureGL> m_textures;
         std::unordered_map<Id, MeshGL> m_meshes;
-
         std::unordered_map<Id, StaticmeshGL> m_staticmeshes;
         
+        std::unordered_map<Id, std::pair<MaterialGL, std::vector<Id>>> m_materials;        
     };
 }
