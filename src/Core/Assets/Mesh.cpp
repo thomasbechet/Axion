@@ -64,6 +64,8 @@ bool AssetManager::loadMesh(std::string name, const std::vector<Vertex>& vertice
         newMesh->bitangents.push_back(bitangent);
     }
 
+    Game::renderer().loadMesh(*newMesh);
+
     //Upload Mesh --> TODO
 
     return true;
@@ -78,8 +80,9 @@ bool AssetManager::unloadMesh(std::string name) noexcept
 
     //Unload Mesh --> TODO
 
-    if(m_meshes.at(name).use_count() == 1)
-        m_meshes.erase(name);
+    if(m_meshes.at(name).use_count() != 1) return false;
+        
+    m_meshes.erase(name);
     
     return true;
 }

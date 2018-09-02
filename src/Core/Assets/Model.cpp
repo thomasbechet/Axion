@@ -46,8 +46,9 @@ bool AssetManager::unloadModel(std::string name) noexcept
     }
     model->materials.clear();
 
-    if(m_models.at(name).use_count() == 1)
-        m_models.erase(name);
+    if(m_models.at(name).use_count() != 1) return false;
+
+    m_models.erase(name);
 
     return true;
 }

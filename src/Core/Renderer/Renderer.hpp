@@ -26,21 +26,39 @@ namespace ax
         virtual void terminate() noexcept = 0;
         virtual void update(double alpha) noexcept = 0;
 
+        //Viewport
+        virtual void updateViewport() noexcept = 0;
+
     public:
         virtual ~Renderer(){}
 
         //Mesh
-        virtual Id loadMesh(const Mesh& mesh) noexcept = 0;
-        virtual void unloadMesh(Id mesh) noexcept = 0;
+        virtual Id loadMesh(
+            const std::vector<Vector3f>* positions = nullptr,
+            const std::vector<Vector2f>* uvs = nullptr,
+            const std::vector<Vector3f>* normals = nullptr,
+            const std::vector<Vector3f>* tangents = nullptr,
+            const std::vector<Vector3f>* bitangents = nullptr
+        ) = 0;
+        virtual void unloadMesh(Id id) = 0;
         //Material
-        virtual Id loadMaterial(const Material& material) noexcept = 0;
-        virtual void unloadMaterial(Id material) noexcept = 0;
+        virtual Id loadMaterial(
+            
+        ) = 0;
+        virtual void unloadMaterial(Id id) = 0;
         //Texture
-        virtual Id loadTexture(const Texture& texture) noexcept = 0;
-        virtual void unloadTexture(Id material) noexcept = 0;
+        virtual Id loadTexture(
+            Vector2u dimensions,
+            TextureFormat format,
+            const Byte* data
+        ) = 0;
+        virtual void unloadTexture(Id id) = 0;
         //Shader
-        virtual Id loadShader(const std::string& vertex, const std::string& fragment) noexcept = 0;
-        virtual void unloadShader(Id shader) noexcept = 0;
+        virtual Id loadShader(
+            const std::string* vertex = nullptr
+            const std::string* fragment = nullptr
+        ) = 0;
+        virtual void unloadShader(Id id) = 0;
 
         //Camera
         virtual Id createCamera() noexcept = 0;
@@ -51,11 +69,8 @@ namespace ax
         //Staticmesh
         virtual Id createStaticmesh() noexcept = 0;
         virtual void destroyStaticmesh(Id id) noexcept = 0;
-        virtual void setStaticmeshMaterial(Id id, std::string name) noexcept = 0;
+        virtual void setStaticmeshMaterial(Id id, Id material) noexcept = 0;
         virtual void setStaticmeshTransform(Id id, const Transform& transform) noexcept = 0;
-        virtual void setStaticmeshMesh(Id id, std::string name) noexcept = 0;
-    
-        //Viewport
-        virtual void updateViewport() noexcept = 0;
+        virtual void setStaticmeshMesh(Id id, Id mesh) noexcept = 0;  
     };
 }

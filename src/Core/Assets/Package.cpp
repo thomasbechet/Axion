@@ -133,8 +133,9 @@ bool AssetManager::unloadPackage(std::string name) noexcept
     }  
     package->materials.clear();
 
-    if(m_packages.at(name).use_count() == 1)
-        m_packages.erase(name);
+    if(m_packages.at(name).use_count() == 1) return false;
+
+    m_packages.erase(name);
 
     return true;
 }

@@ -49,11 +49,10 @@ bool AssetManager::unloadTexture(std::string name) noexcept
         return false;
     }
 
-    if(m_textures.at(name).use_count() == 1)
-    {
-        stbi_image_free(m_textures[name]->data);
-        m_textures.erase(name);
-    }
+    if(m_textures.at(name).use_count() != 1) return false;
+
+    stbi_image_free(m_textures[name]->data);
+    m_textures.erase(name);
 
     return true;
 }

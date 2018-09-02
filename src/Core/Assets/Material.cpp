@@ -39,6 +39,8 @@ bool AssetManager::unloadMaterial(std::string name) noexcept
         return false;
     }
 
+    if(m_materials.at(name).use_count() != 1) return false;
+
     Material* material = m_materials.at(name).get();
 
     if(material->diffuseTexture)
@@ -47,16 +49,15 @@ bool AssetManager::unloadMaterial(std::string name) noexcept
         material->diffuseTexture.reset();
         unloadTexture(diffuseTexName);
     }
-    
+
     if(material->normalTexture)
     {
         std::string normalTexName = material->normalTexture.get()->name;
         material->normalTexture.reset();
         unloadTexture(normalTexName);
     }
-
-    if(m_materials.at(name).use_count() == 1)
-        m_materials.erase(name);
+        
+    m_materials.erase(name);
 
     return true;
 }
