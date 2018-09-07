@@ -2,6 +2,8 @@
 
 #include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
+#include <Core/Renderer/Renderer.hpp>
+#include <Core/Renderer/RendererException.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -32,6 +34,24 @@ bool AssetManager::loadTexture(std::string name, Path path) noexcept
             texture->format = TextureFormat::RGB;
         else if(bpp == 4)
             texture->format = TextureFormat::RGBA;
+
+        try
+        {
+            texture->handle = Game::renderer().createTexture(
+                texture->size,
+                texture->format,
+                texture->data
+            );
+        }
+        catch(const RendererException& exception)
+        {
+            Game::logger().log("Failed to load texture '" + name + "' from renderer: ", Logger::Warning);
+            Game::logger().log(exception.what());
+            stbi_image_free(texture->data);
+            m_textures.erase(name);
+
+            return false;
+        }
     }
     else
     {
@@ -60,7 +80,7 @@ bool AssetManager::textureExists(std::string name) noexcept
 {
     return m_textures.find(name) != m_textures.end();
 }
-std::shared_ptr<const Texture> AssetManager::getTexture(std::string name) noexcept
+std::shared_ptr<const Texture> AssetManager::texture(std::string name) noexcept
 {
     try
     {

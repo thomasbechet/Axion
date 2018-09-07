@@ -2,6 +2,8 @@
 
 #include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
+#include <Core/Renderer/Renderer.hpp>
+#include <Core/Renderer/RendererException.hpp>
 
 #include <fstream>
 #include <streambuf>
@@ -20,13 +22,13 @@ bool AssetManager::loadShader(std::string name, Path vertex, Path fragment) noex
     {
         std::ifstream vertexFile(vertex.path());
         if(!vertexFile.is_open()) return false;
-        std::string vertexBuffer(std::istreambuf_iterator<char>(vertexFile), std::istreambuf_iterator<char>());
+        std::string vertexBuffer{std::istreambuf_iterator<char>(vertexFile), std::istreambuf_iterator<char>()};
         
         std::ifstream fragmentFile(fragment.path());
         if(!fragmentFile.is_open()) return false;
-        std::string fragmentBuffer(std::istreambuf_iterator<char>(fragmentFile), std::istreambuf_iterator<char>());
+        std::string fragmentBuffer{std::istreambuf_iterator<char>(fragmentFile), std::istreambuf_iterator<char>()};
 
-        ID handle = Game::renderer().loadShader(vertexBuffer, fragmentBuffer);
+        Id handle = Game::renderer().createShader(&vertexBuffer, &fragmentBuffer);
 
         m_shaders.emplace(name, std::make_shared<Shader>());
         Shader* newShader = m_shaders.at(name).get();
@@ -38,6 +40,7 @@ bool AssetManager::loadShader(std::string name, Path vertex, Path fragment) noex
     catch(const RendererException& exception)
     {
         Game::logger().log("Failed to compile shader '" + name + "'", Logger::Warning);
+        Game::logger().log(exception.what(), Logger::Warning);
         return false;
     }
 
@@ -55,11 +58,14 @@ bool AssetManager::unloadShader(std::string name) noexcept
 
     try
     {
-        Game::renderer().unloadShader(m_textures.at(name).get()->handle);
+        Game::renderer().destroyShader(m_textures.at(name).get()->handle);
         m_textures.erase(name);
     }
     catch(const RendererException& exception)
     {
+        Game::logger().log("Failed to unload shader '" + name + "' from renderer: ", Logger::Warning);
+        Game::logger().log(exception.what(), Logger::Warning);
+        
         return false;
     }
 
@@ -69,7 +75,7 @@ bool AssetManager::shaderExists(std::string name) noexcept
 {
     return m_shaders.find(name) != m_shaders.end();
 }
-std::shared_ptr<const Shader> AssetManager::getShader(std::string name) noexcept
+std::shared_ptr<const Shader> AssetManager::shader(std::string name) noexcept
 {
     try
     {

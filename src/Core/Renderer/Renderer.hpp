@@ -9,6 +9,7 @@
 #include <Core/Assets/Material.hpp>
 #include <Core/Assets/Texture.hpp>
 #include <Core/Renderer/CameraSettings.hpp>
+#include <Core/Renderer/MaterialSettings.hpp>
 
 #include <string>
 
@@ -26,51 +27,48 @@ namespace ax
         virtual void terminate() noexcept = 0;
         virtual void update(double alpha) noexcept = 0;
 
-        //Viewport
-        virtual void updateViewport() noexcept = 0;
-
     public:
         virtual ~Renderer(){}
 
+        //Viewport
+        virtual void updateViewport() noexcept = 0;
+
         //Mesh
-        virtual Id loadMesh(
+        virtual Id createMesh(
             const std::vector<Vector3f>* positions = nullptr,
             const std::vector<Vector2f>* uvs = nullptr,
             const std::vector<Vector3f>* normals = nullptr,
             const std::vector<Vector3f>* tangents = nullptr,
             const std::vector<Vector3f>* bitangents = nullptr
         ) = 0;
-        virtual void unloadMesh(Id id) = 0;
-        //Material
-        virtual Id loadMaterial(
-            
-        ) = 0;
-        virtual void unloadMaterial(Id id) = 0;
+        virtual void destroyMesh(Id id) = 0;
         //Texture
-        virtual Id loadTexture(
-            Vector2u dimensions,
+        virtual Id createTexture(
+            Vector2u size,
             TextureFormat format,
             const Byte* data
         ) = 0;
-        virtual void unloadTexture(Id id) = 0;
+        virtual void destroyTexture(Id id) = 0;
         //Shader
-        virtual Id loadShader(
-            const std::string* vertex = nullptr
+        virtual Id createShader(
+            const std::string* vertex = nullptr,
             const std::string* fragment = nullptr
         ) = 0;
-        virtual void unloadShader(Id id) = 0;
+        virtual void destroyShader(Id id) = 0;
+        //Material
+        virtual Id createMaterial(MaterialSettings settings) = 0;
+        virtual void destroyMaterial(Id id) = 0;
 
         //Camera
-        virtual Id createCamera() noexcept = 0;
-        virtual void destroyCamera(Id id) noexcept = 0;
-        virtual void setCameraTransform(Id id, const Transform& transform) noexcept = 0;
-        virtual void setCameraSettings(Id id, CameraSettings settings) noexcept = 0;
-
+        virtual Id createCamera() = 0;
+        virtual void destroyCamera(Id id) = 0;
+        virtual void setCameraTransform(Id id, const Transform& transform) = 0;
+        virtual void setCameraSettings(Id id, CameraSettings settings) = 0;
         //Staticmesh
-        virtual Id createStaticmesh() noexcept = 0;
-        virtual void destroyStaticmesh(Id id) noexcept = 0;
-        virtual void setStaticmeshMaterial(Id id, Id material) noexcept = 0;
-        virtual void setStaticmeshTransform(Id id, const Transform& transform) noexcept = 0;
-        virtual void setStaticmeshMesh(Id id, Id mesh) noexcept = 0;  
+        virtual Id createStaticmesh() = 0;
+        virtual void destroyStaticmesh(Id id) = 0;
+        virtual void setStaticmeshMaterial(Id id, Id material) = 0;
+        virtual void setStaticmeshTransform(Id id, const Transform& transform) = 0;
+        virtual void setStaticmeshMesh(Id id, Id mesh) = 0;
     };
 }

@@ -2,6 +2,9 @@
 
 #include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
+#include <Core/Renderer/Renderer.hpp>
+#include <Core/Renderer/RendererException.hpp>
+#include <Core/Renderer/MaterialSettings.hpp>
 
 using namespace ax;
 
@@ -18,16 +21,36 @@ bool AssetManager::loadMaterial(std::string name, const MaterialData& material) 
     newMaterial->name = name;
 
     if(!material.diffuseTexture.empty())
-        newMaterial->diffuseTexture = getTexture(material.diffuseTexture);
+        newMaterial->diffuseTexture = texture(material.diffuseTexture);
     else
         newMaterial->diffuseTexture = nullptr;
 
     newMaterial->diffuseUniform = material.diffuseUniform;
 
     if(!material.normalTexture.empty())
-        newMaterial->normalTexture = getTexture(material.normalTexture);
+        newMaterial->normalTexture = texture(material.normalTexture);
     else
         newMaterial->normalTexture = nullptr;
+
+    MaterialSettings settings;
+    settings.diffuseTexture = (newMaterial->diffuseTexture) ? newMaterial->diffuseTexture->handle : 0;
+    settings.diffuseColor = newMaterial->diffuseUniform;
+    settings.useDiffuseTexture = (newMaterial->diffuseTexture != nullptr);
+    settings.normalTexture = (newMaterial->normalTexture) ? newMaterial->normalTexture->handle : 0;
+    settings.useNormalTexture = (newMaterial->normalTexture != nullptr);
+
+    try
+    {
+        newMaterial->handle = Game::renderer().createMaterial(settings);
+    }
+    catch(const RendererException& exception)
+    {
+        Game::logger().log("Failed to load material '" + name + "' to renderer: ", Logger::Warning);
+        Game::logger().log(exception.what(), Logger::Warning);
+        m_materials.erase(name);
+
+        return false;
+    }
 
     return true;
 }
@@ -42,6 +65,18 @@ bool AssetManager::unloadMaterial(std::string name) noexcept
     if(m_materials.at(name).use_count() != 1) return false;
 
     Material* material = m_materials.at(name).get();
+
+    try
+    {
+        Game::renderer().destroyMaterial(material->handle);
+    }
+    catch(const RendererException& exception)
+    {
+        Game::logger().log("Failed to unload material '" + name + "' from renderer:", Logger::Warning);
+        Game::logger().log(exception.what(), Logger::Warning);
+
+        return false;
+    }
 
     if(material->diffuseTexture)
     {
@@ -65,7 +100,7 @@ bool AssetManager::materialExists(std::string name) noexcept
 {
     return m_materials.find(name) != m_materials.end();
 }
-std::shared_ptr<const Material> AssetManager::getMaterial(std::string name) noexcept
+std::shared_ptr<const Material> AssetManager::material(std::string name) noexcept
 {
     try
     {

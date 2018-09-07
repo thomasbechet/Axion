@@ -56,7 +56,7 @@ bool AssetManager::loadPackage(Path path) noexcept
             texture_name = texture_node->first_attribute("name")->value();
 
         if(loadTexture(texture_name, texture_path))
-            package->textures.emplace_back(getTexture(texture_name));
+            package->textures.emplace_back(texture(texture_name));
     }
 
     /*for(rapidxml::xml_node<>* mesh_node = package_node->first_node("mesh"); mesh_node; mesh_node = mesh_node->next_sibling("mesh"))
@@ -89,7 +89,7 @@ bool AssetManager::loadPackage(Path path) noexcept
             model_name = model_node->first_attribute("name")->value();
 
         if(loadModel(model_name, model_path))
-            package->models.emplace_back(getModel(model_name));
+            package->models.emplace_back(model(model_name));
     }
 
     return true;
@@ -133,7 +133,7 @@ bool AssetManager::unloadPackage(std::string name) noexcept
     }  
     package->materials.clear();
 
-    if(m_packages.at(name).use_count() == 1) return false;
+    if(m_packages.at(name).use_count() != 1) return false;
 
     m_packages.erase(name);
 
@@ -143,7 +143,7 @@ bool AssetManager::packageExists(std::string name) noexcept
 {
     return m_packages.find(name) != m_packages.end();
 }
-std::shared_ptr<const Package> AssetManager::getPackage(std::string name) noexcept
+std::shared_ptr<const Package> AssetManager::package(std::string name) noexcept
 {
     try
     {

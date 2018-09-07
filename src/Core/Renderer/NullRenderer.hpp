@@ -16,34 +16,46 @@ namespace ax
         void terminate() noexcept override {}
         void update(double alpha) noexcept override {}
 
+    public:
         //Viewport
         void updateViewport() noexcept override {}
 
-    public:
         //Mesh
-        bool loadMesh(Mesh& mesh) noexcept override {return true;}
-        bool unloadMesh(Mesh& mesh) noexcept override {return true;}
-        //Material
-        bool loadMaterial(Material& material) noexcept override {return true;}
-        bool unloadMaterial(Material& material) noexcept override {return true;}
+        Id createMesh(
+            const std::vector<Vector3f>* positions = nullptr,
+            const std::vector<Vector2f>* uvs = nullptr,
+            const std::vector<Vector3f>* normals = nullptr,
+            const std::vector<Vector3f>* tangents = nullptr,
+            const std::vector<Vector3f>* bitangents = nullptr
+        ) override {return 0;}
+        void destroyMesh(Id id) override {}
         //Texture
-        bool loadTexture(Texture& texture) noexcept override {return true;}
-        bool unloadTexture(Texture& texture) noexcept override {return true;}
+        Id createTexture(
+            Vector2u size,
+            TextureFormat format,
+            const Byte* data
+        ) override {return 0;}
+        void destroyTexture(Id id) override {}
         //Shader
-        bool loadShader(Shader& shader) noexcept override {return true;}
-        bool unloadShader(Shader& shader) noexcept override {return true;}
-
+        Id createShader(
+            const std::string* vertex = nullptr,
+            const std::string* fragment = nullptr
+        ) override {return 0;}
+        void destroyShader(Id id) override {}
+        //Material
+        Id createMaterial(MaterialSettings settings) override {return 0;}
+        void destroyMaterial(Id id) override {}
+        
         //Camera
-        Id createCamera() noexcept override {return 0;}
-        void destroyCamera(Id id) noexcept override {}
-        void setCameraTransform(Id id, const Transform& transform) noexcept override {}
-        void setCameraSettings(Id id, CameraSettings settings) noexcept override {}
-
+        Id createCamera() override {return 0;}
+        void destroyCamera(Id id) override {}
+        void setCameraTransform(Id id, const Transform& transform) override {}
+        void setCameraSettings(Id id, CameraSettings settings) override {}
         //Staticmesh
-        Id createStaticmesh() noexcept override {}
-        void destroyStaticmesh(Id id) noexcept override {}
-        void setStaticmeshMaterial(Id id, std::string name) noexcept override {}
-        void setStaticmeshTransform(Id id, const Transform& transform) noexcept override {}
-        void setStaticmeshMesh(Id id, std::string name) noexcept override {}
+        Id createStaticmesh() override {return 0;}
+        void destroyStaticmesh(Id id) override {}
+        void setStaticmeshMaterial(Id id, Id material) override {}
+        void setStaticmeshTransform(Id id, const Transform& transform) override {}
+        void setStaticmeshMesh(Id id, Id mesh) override {}
     };
 }

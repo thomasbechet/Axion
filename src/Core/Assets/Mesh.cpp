@@ -2,6 +2,8 @@
 
 #include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
+#include <Core/Renderer/Renderer.hpp>
+#include <Core/Renderer/RendererException.hpp>
 
 using namespace ax;
 
@@ -64,9 +66,24 @@ bool AssetManager::loadMesh(std::string name, const std::vector<Vertex>& vertice
         newMesh->bitangents.push_back(bitangent);
     }
 
-    Game::renderer().loadMesh(*newMesh);
+    try
+    {
+        newMesh->handle = Game::renderer().createMesh(
+            &newMesh->positions,
+            &newMesh->uvs,
+            &newMesh->normals,
+            &newMesh->tangents,
+            &newMesh->bitangents
+        );
+    }
+    catch(const RendererException& exception)
+    {
+        Game::logger().log("Failed to load mesh '" + name + "' from renderer: ", Logger::Warning);
+        Game::logger().log(exception.what(), Logger::Warning);
+        m_meshes.erase(name);
 
-    //Upload Mesh --> TODO
+        return false;
+    }
 
     return true;
 }
@@ -78,10 +95,20 @@ bool AssetManager::unloadMesh(std::string name) noexcept
         return false;
     }
 
-    //Unload Mesh --> TODO
-
     if(m_meshes.at(name).use_count() != 1) return false;
-        
+
+    try
+    {
+        Game::renderer().destroyMesh(m_meshes.at(name).get()->handle);
+    }
+    catch(const RendererException& exception)
+    {
+        Game::logger().log("Failed to unload mesh '" + name + "' from renderer: ", Logger::Warning);
+        Game::logger().log(exception.what(), Logger::Warning);
+
+        return false;
+    }
+    
     m_meshes.erase(name);
     
     return true;
@@ -90,7 +117,7 @@ bool AssetManager::meshExists(std::string name) noexcept
 {
     return m_meshes.find(name) != m_meshes.end();
 }
-std::shared_ptr<const Mesh> AssetManager::getMesh(std::string name) noexcept
+std::shared_ptr<const Mesh> AssetManager::mesh(std::string name) noexcept
 {
     try
     {

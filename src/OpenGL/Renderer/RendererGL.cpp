@@ -21,78 +21,97 @@ void RendererGL::update(double alpha) noexcept
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+//Viewport
+void RendererGL::updateViewport() noexcept
+{
+
+}
+
 //Mesh
-Id RendererGL::loadMesh(const Mesh& mesh) noexcept
-{
-    MeshGL mesh;
-    
-
-    return 0;
-}
-void RendererGL::unloadMesh(Id mesh) noexcept
-{
-
-}   
-//Material
-Id RendererGL::loadMaterial(const Material& material) noexcept
+Id RendererGL::createMesh(
+    const std::vector<Vector3f>* positions,
+    const std::vector<Vector2f>* uvs,
+    const std::vector<Vector3f>* normals,
+    const std::vector<Vector3f>* tangents,
+    const std::vector<Vector3f>* bitangents
+)
 {
     return 0;
 }
-void RendererGL::unloadMaterial(Id material) noexcept
+void RendererGL::destroyMesh(Id id)
 {
 
 }
 //Texture
-Id RendererGL::loadTexture(const Texture& texture) noexcept
+Id RendererGL::createTexture(
+    Vector2u size,
+    TextureFormat format,
+    const Byte* data
+)
 {
     return 0;
 }
-void RendererGL::unloadTexture(Id material) noexcept
+void RendererGL::destroyTexture(Id id)
+{
+
+}
+//Shader
+Id RendererGL::createShader(
+    const std::string* vertex,
+    const std::string* fragment
+)
+{
+    return 0;
+}
+void RendererGL::destroyShader(Id id)
+{
+
+}
+//Material
+Id RendererGL::createMaterial(MaterialSettings settings)
+{
+    return 0;
+}
+void RendererGL::destroyMaterial(Id id)
 {
 
 }
 
 //Camera
-Id RendererGL::createCamera() noexcept
-{
-
-}
-void RendererGL::destroyCamera(Id id) noexcept
-{
-
-}
-void RendererGL::setCameraTransform(Id id, const Transform& transform) noexcept
-{
-
-}
-void RendererGL::setCameraSettings(Id id, CameraSettings settings) noexcept
-{
-
-}
-
-//Staticmesh
-Id RendererGL::createStaticmesh() noexcept
+Id RendererGL::createCamera()
 {
     return 0;
 }
-void RendererGL::destroyStaticmesh(Id id) noexcept
+void RendererGL::destroyCamera(Id id)
 {
-    
+
 }
-void RendererGL::setStaticmeshMaterial(Id id, std::string name) noexcept
+void RendererGL::setCameraTransform(Id id, const Transform& transform)
 {
-    
+
 }
-void RendererGL::setStaticmeshTransform(Id id, const Transform& trans) noexcept
+void RendererGL::setCameraSettings(Id id, CameraSettings settings)
 {
-    
+
 }
-void RendererGL::setStaticmeshMesh(Id id, std::string name) noexcept
+//Staticmesh
+Id RendererGL::createStaticmesh()
 {
-    
+    return 0;
 }
-    
-void RendererGL::updateViewport() noexcept
+void RendererGL::destroyStaticmesh(Id id)
 {
-    
+
+}
+void RendererGL::setStaticmeshMaterial(Id id, Id material)
+{
+
+}
+void RendererGL::setStaticmeshTransform(Id id, const Transform& transform)
+{
+
+}
+void RendererGL::setStaticmeshMesh(Id id, Id mesh)
+{
+
 }

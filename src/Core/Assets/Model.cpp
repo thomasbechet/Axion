@@ -56,7 +56,7 @@ bool AssetManager::modelExists(std::string name) noexcept
 {
     return m_models.find(name) != m_models.end();
 }
-std::shared_ptr<const Model> AssetManager::getModel(std::string name) noexcept
+std::shared_ptr<const Model> AssetManager::model(std::string name) noexcept
 {
     try
     {
@@ -153,12 +153,12 @@ bool AssetManager::loadObjModel(std::string name, Path path) noexcept
         
         std::string meshName = name + "_" + std::to_string(i);
         loadMesh(meshName, it->second);
-        newModel->meshes.emplace_back(getMesh(meshName));
+        newModel->meshes.emplace_back(mesh(meshName));
 
         if(it->first != -1)
         {
             std::string materialName = materials[it->first].name;
-            newModel->materials.emplace_back(getMaterial(materialName));
+            newModel->materials.emplace_back(material(materialName));
         }
         else
         {
