@@ -1,6 +1,19 @@
 <package name="mypackage" directory="../">
-	<texture name="image">textures/image.png</texture>
-	<texture name="texture">textures/texture.jpg</texture>
-	<!--model name="sponza">models/sponza/sponza.obj</model-->
-	<model name="cube">models/cube/untitled.obj</model>
+	<texture 
+		name="image" 
+		src="textures/image.png"
+	/>
+	<texture 
+		name="texture" 
+		src="textures/texture.jpg"
+	/>
+	<model 
+		name="cube" 
+		src="models/cube/untitled.obj"
+	/>
+	<shader 
+		name="myshader" 
+		vertex="" 
+		fragment=""
+	/>
 </package>

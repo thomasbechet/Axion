@@ -1,4 +1,4 @@
-#include <Core/Assets/AssetManager.hpp>
+#include <Core/Assets/Texture.hpp>
 
 #include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
@@ -10,12 +10,12 @@
 
 using namespace ax;
 
-bool AssetManager::loadTexture(std::string name, Path path) noexcept
+std::shared_ptr<const Texture> TextureManager::loadTexture(std::string name, Path path) noexcept
 {
     if(textureExists(name))
     {
         Game::logger().log("Failed to load texture '" + name + "' because it already exists.", Logger::Warning);
-        return false;
+        return nullptr;
     }
 
     int width, height, bpp;
@@ -50,18 +50,18 @@ bool AssetManager::loadTexture(std::string name, Path path) noexcept
             stbi_image_free(texture->data);
             m_textures.erase(name);
 
-            return false;
+            return nullptr;
         }
     }
     else
     {
         Game::logger().log("Failed to load texture '" + path.path() + "'", Logger::Warning);
-        return false;
+        return nullptr;
     }
 
     return true;
 }
-bool AssetManager::unloadTexture(std::string name) noexcept
+bool TextureManager::unloadTexture(std::string name) noexcept
 {
     if(!textureExists(name))
     {
@@ -76,11 +76,11 @@ bool AssetManager::unloadTexture(std::string name) noexcept
 
     return true;
 }
-bool AssetManager::textureExists(std::string name) noexcept
+bool TextureManager::textureExists(std::string name) noexcept
 {
     return m_textures.find(name) != m_textures.end();
 }
-std::shared_ptr<const Texture> AssetManager::texture(std::string name) noexcept
+std::shared_ptr<const Texture> TextureManager::texture(std::string name) noexcept
 {
     try
     {

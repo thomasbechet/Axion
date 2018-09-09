@@ -11,7 +11,7 @@
 
 namespace ax
 {
-    struct AXION_CORE_API MaterialData
+    struct AXION_CORE_API MaterialParameters
     {
         std::string diffuseTexture = "";
         Color diffuseUniform = Color(1.0f, 1.0f, 1.0f);

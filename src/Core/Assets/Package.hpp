@@ -8,6 +8,7 @@
 #include <Core/Assets/Mesh.hpp>
 #include <Core/Assets/Material.hpp>
 #include <Core/Assets/Model.hpp>
+#include <Core/Assets/Shader.hpp>
 
 #include <string>
 #include <memory>
@@ -23,5 +24,6 @@ namespace ax
         std::vector<std::shared_ptr<const Mesh>> meshes;
         std::vector<std::shared_ptr<const Material>> materials;
         std::vector<std::shared_ptr<const Model>> models;
+        std::vector<std::shared_ptr<const Shader>> shaders;
     };
 }
