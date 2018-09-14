@@ -26,4 +26,19 @@ namespace ax
         std::vector<std::shared_ptr<const Model>> models;
         std::vector<std::shared_ptr<const Shader>> shaders;
     };
+
+    class AXION_CORE_API PackageManager
+    {
+    public:
+        std::shared_ptr<const Package> operator()(std::string name) const noexcept;
+        std::shared_ptr<const Package> load(Path path) noexcept;
+        bool unload(std::string name) noexcept;
+        bool isLoaded(std::string name) const noexcept;
+
+        void dispose() noexcept;
+        void log() const noexcept;
+
+    private:
+        std::unordered_map<std::string, std::shared_ptr<Package>> m_packages;
+    };
 }

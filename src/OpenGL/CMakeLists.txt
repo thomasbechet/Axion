@@ -20,6 +20,7 @@ ADD_LIBRARY(
     ../../extlibs/GLEW/src/glew.c
     Loader/Loader.cpp
     Renderer/RendererGL.cpp
+    Renderer/ShaderGL.cpp
 )
 
 #Adding glfw dependency

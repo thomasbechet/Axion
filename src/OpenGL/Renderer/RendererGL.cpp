@@ -55,20 +55,8 @@ void RendererGL::destroyTexture(Id id)
 {
 
 }
-//Shader
-Id RendererGL::createShader(
-    const std::string* vertex,
-    const std::string* fragment
-)
-{
-    return 0;
-}
-void RendererGL::destroyShader(Id id)
-{
-
-}
 //Material
-Id RendererGL::createMaterial(MaterialSettings settings)
+Id RendererGL::createMaterial(RendererMaterialParameters settings)
 {
     return 0;
 }
@@ -90,7 +78,7 @@ void RendererGL::setCameraTransform(Id id, const Transform& transform)
 {
 
 }
-void RendererGL::setCameraSettings(Id id, CameraSettings settings)
+void RendererGL::setCameraSettings(Id id, RendererCameraParameters settings)
 {
 
 }

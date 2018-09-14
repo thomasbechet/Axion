@@ -1,4 +1,4 @@
-#include <Core/Assets/AssetManager.hpp>
+#include <Core/Assets/Shader.hpp>
 
 #include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
@@ -10,22 +10,33 @@
 
 using namespace ax;
 
-bool AssetManager::loadShader(std::string name, Path vertex, Path fragment) noexcept
+std::shared_ptr<const Shader> ShaderManager::operator()(std::string name) const noexcept
 {
-    if(shaderExists(name))
+    try
+    {
+        return std::const_pointer_cast<const Shader>(m_shaders.at(name));
+    }
+    catch(std::out_of_range e)
+    {
+        Game::interrupt("Failed to access shader '" + name + "'");
+    }   
+}
+std::shared_ptr<const Shader> ShaderManager::load(std::string name, Path vertex, Path fragment) noexcept
+{
+    if(isLoaded(name))
     {
         Game::logger().log("Failed to load shader '" + name + "' because it already exists.", Logger::Warning);
-        return false;
+        return nullptr;
     }
 
     try
     {
         std::ifstream vertexFile(vertex.path());
-        if(!vertexFile.is_open()) return false;
+        if(!vertexFile.is_open()) return nullptr;
         std::string vertexBuffer{std::istreambuf_iterator<char>(vertexFile), std::istreambuf_iterator<char>()};
         
         std::ifstream fragmentFile(fragment.path());
-        if(!fragmentFile.is_open()) return false;
+        if(!fragmentFile.is_open()) return nullptr;
         std::string fragmentBuffer{std::istreambuf_iterator<char>(fragmentFile), std::istreambuf_iterator<char>()};
 
         Id handle = Game::renderer().createShader(&vertexBuffer, &fragmentBuffer);
@@ -33,6 +44,7 @@ bool AssetManager::loadShader(std::string name, Path vertex, Path fragment) noex
         m_shaders.emplace(name, std::make_shared<Shader>());
         Shader* newShader = m_shaders.at(name).get();
         
+        newShader->name = name;
         newShader->vertex = vertexBuffer;
         newShader->fragment = fragmentBuffer;
         newShader->handle = handle;
@@ -41,25 +53,26 @@ bool AssetManager::loadShader(std::string name, Path vertex, Path fragment) noex
     {
         Game::logger().log("Failed to compile shader '" + name + "'", Logger::Warning);
         Game::logger().log(exception.what(), Logger::Warning);
-        return false;
+        return nullptr;
     }
 
-    return true;
+    return m_shaders.at(name);
 }
-bool AssetManager::unloadShader(std::string name) noexcept
+bool ShaderManager::unload(std::string name) noexcept
 {
-    if(!shaderExists(name))
+    if(!isLoaded(name))
     {
         Game::logger().log("Failed to unload shader '" + name + "' because it does not exists.", Logger::Warning);
+        
         return false;
     }
 
-    if(m_textures.at(name).use_count() != 1) return false;
+    if(m_shaders.at(name).use_count() != 1) return false;
 
     try
     {
-        Game::renderer().destroyShader(m_textures.at(name).get()->handle);
-        m_textures.erase(name);
+        Game::renderer().destroyShader(m_shaders.at(name).get()->handle);
+        m_shaders.erase(name);
     }
     catch(const RendererException& exception)
     {
@@ -71,18 +84,26 @@ bool AssetManager::unloadShader(std::string name) noexcept
 
     return true;
 }
-bool AssetManager::shaderExists(std::string name) noexcept
+bool ShaderManager::isLoaded(std::string name) const noexcept
 {
     return m_shaders.find(name) != m_shaders.end();
 }
-std::shared_ptr<const Shader> AssetManager::shader(std::string name) noexcept
+
+void ShaderManager::dispose() noexcept
 {
-    try
+    std::vector<std::string> keys;
+    keys.reserve(m_shaders.size());
+    for(auto it : m_shaders)
+        keys.emplace_back(it.second->name);
+
+    for(auto it : keys) unload(it);
+}
+void ShaderManager::log() const noexcept
+{
+    Game::logger().log("[    SHADER   ]", Logger::Info);
+    
+    for(auto it = m_shaders.begin(); it != m_shaders.end(); it++)
     {
-        return std::const_pointer_cast<const Shader>(m_shaders.at(name));
+        Game::logger().log("- " + it->second.get()->name, Logger::Info);
     }
-    catch(std::out_of_range e)
-    {
-        Game::interrupt("Failed to access shader '" + name + "'");
-    }   
 }

@@ -8,7 +8,18 @@
 
 using namespace ax;
 
-bool AssetManager::loadPackage(Path path) noexcept
+std::shared_ptr<const Package> PackageManager::operator()(std::string name) const noexcept
+{
+    try
+    {
+        return std::const_pointer_cast<const Package>(m_packages.at(name));
+    }
+    catch(std::out_of_range e)
+    {
+        Game::interrupt("Failed to access package '" + name + "'");
+    }
+}
+std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
 {
     rapidxml::file<> file(path.c_str());
     rapidxml::xml_document<> doc;
@@ -19,14 +30,14 @@ bool AssetManager::loadPackage(Path path) noexcept
     catch(rapidxml::parse_error& e)
     {   
         Game::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
-        return false;
+        return nullptr;
     }
     
     rapidxml::xml_node<>* package_node = doc.first_node("package");
     if(!package_node)
     {
         Game::logger().log("Failed to load package " + path.path() + " because it does not contain 'package' node", Logger::Warning);
-        return false;
+        return nullptr;
     }
     
     std::string name = path.filename();
@@ -38,10 +49,10 @@ bool AssetManager::loadPackage(Path path) noexcept
         directory = Path(package_node->first_attribute("directory")->value());
     
 
-    if(packageExists(name))
+    if(isLoaded(name))
     {
         Game::logger().log("Failed to load package '" + name + "' because it already exists.", Logger::Warning);
-        return false;
+        return nullptr;
     }
 
     m_packages.emplace(name, std::make_shared<Package>());
@@ -50,13 +61,17 @@ bool AssetManager::loadPackage(Path path) noexcept
 
     for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
     {
-        Path texture_path = directory + texture_node->value();
-        std::string texture_name = texture_path.filename();
-        if(texture_node->first_attribute("name"))
-            texture_name = texture_node->first_attribute("name")->value();
+        if(texture_node->first_attribute("src"))
+        {
+            Path texture_path = directory + texture_node->first_attribute("src")->value();
 
-        if(loadTexture(texture_name, texture_path))
-            package->textures.emplace_back(texture(texture_name));
+            std::string texture_name = texture_path.filename();
+            if(texture_node->first_attribute("name"))
+                texture_name = texture_node->first_attribute("name")->value();
+
+            if(Game::assets().texture.load(texture_name, texture_path))
+                package->textures.emplace_back(Game::assets().texture(texture_name));
+        }
     }
 
     /*for(rapidxml::xml_node<>* mesh_node = package_node->first_node("mesh"); mesh_node; mesh_node = mesh_node->next_sibling("mesh"))
@@ -83,20 +98,40 @@ bool AssetManager::loadPackage(Path path) noexcept
 
     for(rapidxml::xml_node<>* model_node = package_node->first_node("model"); model_node; model_node = model_node->next_sibling("model"))
     {
-        Path model_path = directory + model_node->value();
-        std::string model_name = model_path.filename();
-        if(model_node->first_attribute("name"))
-            model_name = model_node->first_attribute("name")->value();
+        if(model_node->first_attribute("src"))
+        {
+            Path model_path = directory + model_node->first_attribute("src")->value();
 
-        if(loadModel(model_name, model_path))
-            package->models.emplace_back(model(model_name));
+            std::string model_name = model_path.filename();
+            if(model_node->first_attribute("name"))
+                model_name = model_node->first_attribute("name")->value();
+
+            if(Game::assets().model.load(model_name, model_path))
+                package->models.emplace_back(Game::assets().model(model_name));
+        }
     }
 
-    return true;
+    for(rapidxml::xml_node<>* shader_node = package_node->first_node("shader"); shader_node; shader_node = shader_node->next_sibling("shader"))
+    {
+        if(shader_node->first_attribute("vertex") && shader_node->first_attribute("fragment"))
+        {
+            Path vertex_path = directory + shader_node->first_attribute("vertex")->value();
+            Path fragment_path = directory + shader_node->first_attribute("fragment")->value();
+
+            if(shader_node->first_attribute("name"))
+            {
+                std::string shader_name = shader_node->first_attribute("name")->value();
+                if(Game::assets().shader.load(shader_name, vertex_path, fragment_path))
+                    package->shaders.emplace_back(Game::assets().shader(shader_name));
+            }
+        }
+    }
+
+    return m_packages.at(name);
 }
-bool AssetManager::unloadPackage(std::string name) noexcept
+bool PackageManager::unload(std::string name) noexcept
 {
-    if(!packageExists(name))
+    if(!isLoaded(name))
     {
         Game::logger().log("Failed to unload package '" + name + "' because it does not exists.", Logger::Warning);
         return false;
@@ -108,28 +143,28 @@ bool AssetManager::unloadPackage(std::string name) noexcept
     {
         std::string modelName = it->get()->name;
         it->reset();
-        unloadModel(modelName);
+        Game::assets().model.unload(modelName);
     }
     package->models.clear();
     for(auto it = package->textures.begin(); it != package->textures.end(); it++)
     {
         std::string textureName = it->get()->name;
         it->reset();
-        unloadTexture(textureName);
+        Game::assets().texture.unload(textureName);
     }
     package->textures.clear();
     for(auto it = package->meshes.begin(); it != package->meshes.end(); it++)
     {
         std::string meshName = it->get()->name;
         it->reset();
-        unloadMesh(meshName);
+        Game::assets().mesh.unload(meshName);
     }
     package->meshes.clear();
     for(auto it = package->materials.begin(); it != package->materials.end(); it++)
     {
         std::string materialName = it->get()->name;
         it->reset();
-        unloadMaterial(materialName);
+        Game::assets().material.unload(materialName);
     }  
     package->materials.clear();
 
@@ -139,18 +174,26 @@ bool AssetManager::unloadPackage(std::string name) noexcept
 
     return true;
 }
-bool AssetManager::packageExists(std::string name) noexcept
+bool PackageManager::isLoaded(std::string name) const noexcept
 {
     return m_packages.find(name) != m_packages.end();
 }
-std::shared_ptr<const Package> AssetManager::package(std::string name) noexcept
+
+void PackageManager::dispose() noexcept
 {
-    try
+    std::vector<std::string> keys;
+    keys.reserve(m_packages.size());
+    for(auto it : m_packages)
+        keys.emplace_back(it.second->name);
+
+    for(auto it : keys) unload(it);
+}
+void PackageManager::log() const noexcept
+{
+    Game::logger().log("[   PACKAGE   ]", Logger::Info);
+    
+    for(auto it = m_packages.begin(); it != m_packages.end(); it++)
     {
-        return std::const_pointer_cast<const Package>(m_packages.at(name));
-    }
-    catch(std::out_of_range e)
-    {
-        Game::interrupt("Failed to access package '" + name + "'");
+        Game::logger().log("- " + it->second.get()->name, Logger::Info);
     }
 }

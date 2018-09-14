@@ -30,4 +30,19 @@ namespace ax
 
         Id handle;
     };
+
+    class AXION_CORE_API MaterialManager
+    {
+    public:
+        std::shared_ptr<const Material> operator()(std::string name) const noexcept;
+        std::shared_ptr<const Material> load(std::string name, const MaterialParameters& params) noexcept;
+        bool unload(std::string name, bool tryUnloadTextures = true) noexcept;
+        bool isLoaded(std::string name) const noexcept;
+
+        void dispose() noexcept;
+        void log() const noexcept;
+
+    private:
+        std::unordered_map<std::string, std::shared_ptr<Material>> m_materials;
+    };
 }

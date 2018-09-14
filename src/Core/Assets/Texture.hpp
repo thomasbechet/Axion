@@ -33,15 +33,15 @@ namespace ax
     class AXION_CORE_API TextureManager
     {
     public:
-        std::shared_ptr<const Texture> operator(std::string name) const noexcept;
+        std::shared_ptr<const Texture> operator()(std::string name) const noexcept;
         std::shared_ptr<const Texture> load(std::string name, Path path) noexcept;
         bool unload(std::string name) noexcept;
-        bool isLoaded(std::string name) noexcept;
+        bool isLoaded(std::string name) const noexcept;
 
         void dispose() noexcept;
-        void clear() noexcept;
+        void log() const noexcept;
 
     private:
-        std::unordered_map<std::string name, std::shared_ptr<Texture>> m_textures;
+        std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
     };
 }

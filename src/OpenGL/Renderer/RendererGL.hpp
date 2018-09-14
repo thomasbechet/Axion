@@ -48,14 +48,14 @@ namespace ax
         ) override;
         void destroyShader(Id id) override;
         //Material
-        Id createMaterial(MaterialSettings settings) override;
+        Id createMaterial(RendererMaterialParameters settings) override;
         void destroyMaterial(Id id) override;
 
         //Camera
         Id createCamera() override;
         void destroyCamera(Id id) override;
         void setCameraTransform(Id id, const Transform& transform) override;
-        void setCameraSettings(Id id, CameraSettings settings) override;
+        void setCameraSettings(Id id, RendererCameraParameters settings) override;
         //Staticmesh
         Id createStaticmesh() override;
         void destroyStaticmesh(Id id) override;

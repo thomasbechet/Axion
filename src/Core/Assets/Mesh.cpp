@@ -1,4 +1,4 @@
-#include <Core/Assets/AssetManager.hpp>
+#include <Core/Assets/Mesh.hpp>
 
 #include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
@@ -7,45 +7,56 @@
 
 using namespace ax;
 
-bool AssetManager::loadMesh(std::string name, const std::vector<Vertex>& vertices) noexcept
+std::shared_ptr<const Mesh> MeshManager::operator()(std::string name) const noexcept
 {
-    if(meshExists(name))
+    try
+    {
+        return std::const_pointer_cast<const Mesh>(m_meshes.at(name));
+    }   
+    catch(std::out_of_range e)
+    {
+        Game::interrupt("Failed to access mesh '" + name + "'");
+    }
+}
+std::shared_ptr<const Mesh> MeshManager::load(std::string name, const std::vector<Vertex>& vertices) noexcept
+{
+    if(isLoaded(name))
     {
         Game::logger().log("Failed to load mesh '" + name + "' because it already exists.", Logger::Warning);
-        return false;
+        return nullptr;
     }
 
     m_meshes.emplace(name, std::make_shared<Mesh>());
-    Mesh* newMesh = m_meshes[name].get();
-    newMesh->name = name;
+    Mesh* mesh = m_meshes[name].get();
+    mesh->name = name;
 
-    newMesh->vertex_count = vertices.size();
-    newMesh->positions.resize(newMesh->vertex_count);
-    newMesh->uvs.resize(newMesh->vertex_count);
-    newMesh->normals.resize(newMesh->vertex_count);
-    newMesh->tangents.resize(newMesh->vertex_count);
-    newMesh->bitangents.resize(newMesh->vertex_count);
-    newMesh->colors.resize(newMesh->vertex_count);
+    mesh->vertex_count = vertices.size();
+    mesh->positions.resize(mesh->vertex_count);
+    mesh->uvs.resize(mesh->vertex_count);
+    mesh->normals.resize(mesh->vertex_count);
+    mesh->tangents.resize(mesh->vertex_count);
+    mesh->bitangents.resize(mesh->vertex_count);
+    mesh->colors.resize(mesh->vertex_count);
 
     //Copy data
     for(size_t i = 0; i < vertices.size(); i++)
     {
-        newMesh->positions[i] = vertices[i].position;
-        newMesh->uvs[i] = vertices[i].uv;
-        newMesh->normals[i] = vertices[i].normal;
-        newMesh->colors[i] = vertices[i].color;
+        mesh->positions[i] = vertices[i].position;
+        mesh->uvs[i] = vertices[i].uv;
+        mesh->normals[i] = vertices[i].normal;
+        mesh->colors[i] = vertices[i].color;
     }
 
     //Compute tangent and bitangent
-    for(size_t i = 0; i < newMesh->vertex_count; i += 3)
+    for(size_t i = 0; i < mesh->vertex_count; i += 3)
     {
-        Vector3f& v0 = newMesh->positions[i + 0];
-        Vector3f& v1 = newMesh->positions[i + 1];
-        Vector3f& v2 = newMesh->positions[i + 2];
+        Vector3f& v0 = mesh->positions[i + 0];
+        Vector3f& v1 = mesh->positions[i + 1];
+        Vector3f& v2 = mesh->positions[i + 2];
 
-        Vector2f& uv0 = newMesh->uvs[i + 0];
-        Vector2f& uv1 = newMesh->uvs[i + 1];
-        Vector2f& uv2 = newMesh->uvs[i + 2];
+        Vector2f& uv0 = mesh->uvs[i + 0];
+        Vector2f& uv1 = mesh->uvs[i + 1];
+        Vector2f& uv2 = mesh->uvs[i + 2];
 
         Vector3f deltaPos1 = v1 - v0;
         Vector3f deltaPos2 = v2 - v0;
@@ -57,23 +68,23 @@ bool AssetManager::loadMesh(std::string name, const std::vector<Vertex>& vertice
         Vector3f tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
         Vector3f bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
     
-        newMesh->tangents.push_back(tangent);
-        newMesh->tangents.push_back(tangent);
-        newMesh->tangents.push_back(tangent);
+        mesh->tangents.push_back(tangent);
+        mesh->tangents.push_back(tangent);
+        mesh->tangents.push_back(tangent);
 
-        newMesh->bitangents.push_back(bitangent);
-        newMesh->bitangents.push_back(bitangent);
-        newMesh->bitangents.push_back(bitangent);
+        mesh->bitangents.push_back(bitangent);
+        mesh->bitangents.push_back(bitangent);
+        mesh->bitangents.push_back(bitangent);
     }
 
     try
     {
-        newMesh->handle = Game::renderer().createMesh(
-            &newMesh->positions,
-            &newMesh->uvs,
-            &newMesh->normals,
-            &newMesh->tangents,
-            &newMesh->bitangents
+        mesh->handle = Game::renderer().createMesh(
+            &mesh->positions,
+            &mesh->uvs,
+            &mesh->normals,
+            &mesh->tangents,
+            &mesh->bitangents
         );
     }
     catch(const RendererException& exception)
@@ -82,14 +93,14 @@ bool AssetManager::loadMesh(std::string name, const std::vector<Vertex>& vertice
         Game::logger().log(exception.what(), Logger::Warning);
         m_meshes.erase(name);
 
-        return false;
+        return nullptr;
     }
 
-    return true;
+    return m_meshes.at(name);
 }
-bool AssetManager::unloadMesh(std::string name) noexcept
+bool MeshManager::unload(std::string name) noexcept
 {
-    if(!meshExists(name))
+    if(!isLoaded(name))
     {
         Game::logger().log("Failed to unload mesh '" + name + "' because it does not exists.", Logger::Warning);
         return false;
@@ -113,18 +124,26 @@ bool AssetManager::unloadMesh(std::string name) noexcept
     
     return true;
 }
-bool AssetManager::meshExists(std::string name) noexcept
+bool MeshManager::isLoaded(std::string name) const noexcept
 {
     return m_meshes.find(name) != m_meshes.end();
 }
-std::shared_ptr<const Mesh> AssetManager::mesh(std::string name) noexcept
+
+void MeshManager::dispose() noexcept
 {
-    try
+    std::vector<std::string> keys;
+    keys.reserve(m_meshes.size());
+    for(auto it : m_meshes)
+        keys.emplace_back(it.second->name);
+
+    for(auto it : keys) unload(it);
+}
+void MeshManager::log() const noexcept
+{
+    Game::logger().log("[     MESH    ]", Logger::Info);
+    
+    for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
     {
-        return std::const_pointer_cast<const Mesh>(m_meshes.at(name));
-    }   
-    catch(std::out_of_range e)
-    {
-        Game::interrupt("Failed to access mesh '" + name + "'");
+        Game::logger().log("- " + it->second.get()->name, Logger::Info);
     }
 }

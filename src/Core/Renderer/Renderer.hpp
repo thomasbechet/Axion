@@ -8,8 +8,8 @@
 #include <Core/Assets/Mesh.hpp>
 #include <Core/Assets/Material.hpp>
 #include <Core/Assets/Texture.hpp>
-#include <Core/Renderer/CameraSettings.hpp>
-#include <Core/Renderer/MaterialSettings.hpp>
+#include <Core/Renderer/RendererCameraParameters.hpp>
+#include <Core/Renderer/RendererMaterialParameters.hpp>
 
 #include <string>
 
@@ -56,14 +56,14 @@ namespace ax
         ) = 0;
         virtual void destroyShader(Id id) = 0;
         //Material
-        virtual Id createMaterial(MaterialSettings settings) = 0;
+        virtual Id createMaterial(RendererMaterialParameters settings) = 0;
         virtual void destroyMaterial(Id id) = 0;
 
         //Camera
         virtual Id createCamera() = 0;
         virtual void destroyCamera(Id id) = 0;
         virtual void setCameraTransform(Id id, const Transform& transform) = 0;
-        virtual void setCameraSettings(Id id, CameraSettings settings) = 0;
+        virtual void setCameraSettings(Id id, RendererCameraParameters settings) = 0;
         //Staticmesh
         virtual Id createStaticmesh() = 0;
         virtual void destroyStaticmesh(Id id) = 0;
