@@ -8,7 +8,9 @@
 #include <OpenGL/Renderer/MeshGL.hpp>
 #include <OpenGL/Renderer/StaticmeshGL.hpp>
 #include <OpenGL/Renderer/MaterialGL.hpp>
+#include <OpenGL/Renderer/ShaderGL.hpp>
 #include <Core/Renderer/Renderer.hpp>
+#include <Core/Utility/IndexVector.hpp>
 
 #include <unordered_map>
 
@@ -16,23 +18,16 @@ namespace ax
 {
     class AXION_GL_API RendererGL : public Renderer
     {
-    protected:
+    public:
         void initialize() noexcept override;
         void terminate() noexcept override;
         void update(double alpha) noexcept override;
-
-    public:
+        
         //Viewport
         void updateViewport() noexcept override;
 
         //Mesh
-        Id createMesh(
-            const std::vector<Vector3f>* positions = nullptr,
-            const std::vector<Vector2f>* uvs = nullptr,
-            const std::vector<Vector3f>* normals = nullptr,
-            const std::vector<Vector3f>* tangents = nullptr,
-            const std::vector<Vector3f>* bitangents = nullptr
-        ) override;
+        Id createMesh(const std::vector<Vertex>& vertices) override;
         void destroyMesh(Id id) override;
         //Texture
         Id createTexture(
@@ -64,10 +59,9 @@ namespace ax
         void setStaticmeshMesh(Id id, Id mesh) override;
 
     private:
-        std::unordered_map<Id, TextureGL> m_textures;
-        std::unordered_map<Id, MeshGL> m_meshes;
-        std::unordered_map<Id, StaticmeshGL> m_staticmeshes;
-        
         std::unordered_map<Id, std::pair<MaterialGL, std::vector<Id>>> m_materials;        
+    
+        IndexVector<MeshGL> m_meshes;
+        IndexVector<ShaderGL> m_shaders;
     };
 }

@@ -20,27 +20,17 @@ namespace ax
     class AXION_CORE_API Renderer
     {
     public:
-        friend class GameContext;
+        virtual ~Renderer(){}
 
-    protected:
         virtual void initialize() noexcept = 0;
         virtual void terminate() noexcept = 0;
         virtual void update(double alpha) noexcept = 0;
-
-    public:
-        virtual ~Renderer(){}
 
         //Viewport
         virtual void updateViewport() noexcept = 0;
 
         //Mesh
-        virtual Id createMesh(
-            const std::vector<Vector3f>* positions = nullptr,
-            const std::vector<Vector2f>* uvs = nullptr,
-            const std::vector<Vector3f>* normals = nullptr,
-            const std::vector<Vector3f>* tangents = nullptr,
-            const std::vector<Vector3f>* bitangents = nullptr
-        ) = 0;
+        virtual Id createMesh(const std::vector<Vertex>& vertices) = 0;
         virtual void destroyMesh(Id id) = 0;
         //Texture
         virtual Id createTexture(

@@ -1,6 +1,6 @@
 #include <Core/Assets/Texture.hpp>
 
-#include <Core/Context/Game.hpp>
+#include <Core/Context/Engine.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Renderer/RendererException.hpp>
@@ -18,14 +18,14 @@ std::shared_ptr<const Texture> TextureManager::operator()(std::string name) cons
     }
     catch(std::out_of_range e)
     {
-        Game::interrupt("Failed to access texture '" + name + "'");
+        Engine::interrupt("Failed to access texture '" + name + "'");
     } 
 }
 std::shared_ptr<const Texture> TextureManager::load(std::string name, Path path) noexcept
 {
     if(isLoaded(name))
     {
-        Game::logger().log("Failed to load texture '" + name + "' because it already exists.", Logger::Warning);
+        Engine::logger().log("Failed to load texture '" + name + "' because it already exists.", Logger::Warning);
         return nullptr;
     }
 
@@ -35,7 +35,7 @@ std::shared_ptr<const Texture> TextureManager::load(std::string name, Path path)
     Byte* data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
     if(!data)
     {
-        Game::logger().log("Failed to load texture '" + path.path() + "'", Logger::Warning);
+        Engine::logger().log("Failed to load texture '" + path.path() + "'", Logger::Warning);
         return nullptr;
     }
 
@@ -46,7 +46,7 @@ std::shared_ptr<const Texture> TextureManager::load(std::string name, Path path)
 
     try
     {
-        handle = Game::renderer().createTexture(
+        handle = Engine::renderer().createTexture(
             Vector2u(width, height),
             format,
             data
@@ -54,8 +54,8 @@ std::shared_ptr<const Texture> TextureManager::load(std::string name, Path path)
     }
     catch(const RendererException& exception)
     {
-        Game::logger().log("Failed to load texture '" + name + "' from renderer: ", Logger::Warning);
-        Game::logger().log(exception.what());
+        Engine::logger().log("Failed to load texture '" + name + "' from renderer: ", Logger::Warning);
+        Engine::logger().log(exception.what());
         stbi_image_free(data);
     }
 
@@ -78,7 +78,7 @@ bool TextureManager::unload(std::string name) noexcept
     }
     catch(const std::out_of_range& exception)
     {
-        Game::logger().log("Failed to unload texture '" + name + "' because it does not exists.", Logger::Warning);
+        Engine::logger().log("Failed to unload texture '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
 
@@ -100,10 +100,10 @@ void TextureManager::dispose() noexcept
 }
 void TextureManager::log() const noexcept
 {
-    Game::logger().log("[   TEXTURE   ]", Logger::Info);
+    Engine::logger().log("[   TEXTURE   ]", Logger::Info);
     
     for(auto it = m_textures.begin(); it != m_textures.end(); it++)
     {
-        Game::logger().log("- " + it->second.get()->name, Logger::Info);
+        Engine::logger().log("- " + it->second.get()->name, Logger::Info);
     }
 }

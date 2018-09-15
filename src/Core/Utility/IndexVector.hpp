@@ -4,6 +4,7 @@
 //HEADERS
 ///////////////////////
 #include <Core/Export.hpp>
+#include <Core/Utility/Types.hpp>
 
 #include <vector>
 #include <exception>
@@ -11,14 +12,13 @@
 namespace ax
 {
 	template<typename C>
-	class AXION_CORE_API index_vector
+	class AXION_CORE_API IndexVector
 	{
 	public:
-		using id = uint;
 		using iterator = typename std::vector<C>::iterator;
 
 	public:
-		id add(C&& element)
+		Id add(C&& element)
 		{
 			if(m_free.empty())
 			{
@@ -29,7 +29,7 @@ namespace ax
 			}
 			else
 			{
-				id freeIndex = m_free.back();
+				Id freeIndex = m_free.back();
 				m_free.pop_back();
 				
 				m_list.push_back(element);
@@ -39,9 +39,9 @@ namespace ax
 				return freeIndex;
 			}
 		}
-		void remove(id index)
+		void remove(Id index)
 		{
-			id element = m_index[index];
+			Id element = m_index[index];
 
 			m_index[m_backList.back()] = element;
 			m_list[element] = std::move(m_list.back());
@@ -59,7 +59,7 @@ namespace ax
 			m_index.clear();
 		}
 
-		C& get(id index)
+		C& get(Id index)
 		{
 			return m_list[m_index[index]];
 		}
@@ -92,9 +92,9 @@ namespace ax
 
 	private:
 		std::vector<C> m_list;
-		std::vector<id> m_backList;
-		std::vector<id> m_index;
-		std::vector<id> m_free;
+		std::vector<Id> m_backList;
+		std::vector<Id> m_index;
+		std::vector<Id> m_free;
 	};
 }
 

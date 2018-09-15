@@ -21,13 +21,7 @@ namespace ax
         void updateViewport() noexcept override {}
 
         //Mesh
-        Id createMesh(
-            const std::vector<Vector3f>* positions = nullptr,
-            const std::vector<Vector2f>* uvs = nullptr,
-            const std::vector<Vector3f>* normals = nullptr,
-            const std::vector<Vector3f>* tangents = nullptr,
-            const std::vector<Vector3f>* bitangents = nullptr
-        ) override {return 0;}
+        Id createMesh(const std::vector<Vertex>& vertices) override {return 0;}
         void destroyMesh(Id id) override {}
         //Texture
         Id createTexture(

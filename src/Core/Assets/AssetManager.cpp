@@ -1,6 +1,5 @@
 #include <Core/Assets/AssetManager.hpp>
 
-#include <Core/Context/Game.hpp>
 #include <Core/Logger/Logger.hpp>
 
 using namespace ax;

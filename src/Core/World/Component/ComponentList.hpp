@@ -4,7 +4,7 @@
 //HEADERS
 ///////////////
 #include <Core/Export.hpp>
-#include <Core/Context/Game.hpp>
+#include <Core/Context/Engine.hpp>
 #include <Core/Utility/NonCopyable.hpp>
 #include <Core/Utility/Memory.hpp>
 
@@ -91,7 +91,7 @@ namespace ax
         C& get(unsigned offset) const noexcept
         {
             if(offset >= m_length)
-                Game::interrupt("Tried to access non valid component <" + C::name() + "> from list with [id=" + std::to_string(offset) + "]");
+                Engine::interrupt("Tried to access non valid component <" + C::name() + "> from list with [id=" + std::to_string(offset) + "]");
 
             return m_components[offset / COMPONENT_CHUNK_SIZE][offset % COMPONENT_CHUNK_SIZE].first;
         }

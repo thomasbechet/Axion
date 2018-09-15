@@ -40,17 +40,17 @@ void SystemManager::fixedUpdate() noexcept
 
 void SystemManager::logInfo() const noexcept
 {
-    Game::logger().log("", Logger::Info);
-    Game::logger().log("=======SYSTEMS: Sequence=======", Logger::Info);
+    Engine::logger().log("", Logger::Info);
+    Engine::logger().log("=======SYSTEMS: Sequence=======", Logger::Info);
     for(size_t i = 0; i < m_sequence.size(); i++)
     {
         size_t location = m_sequence.at(i);
         if(m_systems.at(location).second.get()->isActive())
-            Game::logger().log("[" + std::to_string(i + 1) + "] : ACTIVE  <" + m_names.at(location) + ">", Logger::Info);
+            Engine::logger().log("[" + std::to_string(i + 1) + "] : ACTIVE  <" + m_names.at(location) + ">", Logger::Info);
         else
-            Game::logger().log("[" + std::to_string(i + 1) + "] : DISABLE <" + m_names.at(location) + ">", Logger::Info);
+            Engine::logger().log("[" + std::to_string(i + 1) + "] : DISABLE <" + m_names.at(location) + ">", Logger::Info);
     }
-    Game::logger().log("===============================", Logger::Info);
+    Engine::logger().log("===============================", Logger::Info);
 }
 
 void SystemManager::removeAll() noexcept

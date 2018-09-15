@@ -1,6 +1,8 @@
 #include <OpenGL/Renderer/RendererGL.hpp>
 
-#include <Core/Context/Game.hpp>
+#include <Core/Context/Engine.hpp>
+#include <Core/Window/Window.hpp>
+
 #include <GL/glew.h>
 
 using namespace ax;
@@ -9,7 +11,7 @@ void RendererGL::initialize() noexcept
 {
     glewExperimental = GL_TRUE;
     if(glewInit() != GLEW_OK)
-        Game::interrupt("Failed to initialize GLEW");
+        Engine::interrupt("Failed to initialize GLEW");
 }
 void RendererGL::terminate() noexcept
 {
@@ -17,30 +19,27 @@ void RendererGL::terminate() noexcept
 }
 void RendererGL::update(double alpha) noexcept
 {
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    ShaderGL& shader = m_shaders.get(0);
+    glUseProgram(shader.programId);
+
+    for(auto mesh : m_meshes)
+    {
+        glBindVertexArray(mesh.vao);
+        glDrawArrays(GL_LINES, 0, mesh.size);
+        glBindVertexArray(0);
+    }
+
+    glUseProgram(0);
 }
 
 //Viewport
 void RendererGL::updateViewport() noexcept
 {
-
-}
-
-//Mesh
-Id RendererGL::createMesh(
-    const std::vector<Vector3f>* positions,
-    const std::vector<Vector2f>* uvs,
-    const std::vector<Vector3f>* normals,
-    const std::vector<Vector3f>* tangents,
-    const std::vector<Vector3f>* bitangents
-)
-{
-    return 0;
-}
-void RendererGL::destroyMesh(Id id)
-{
-
+    Vector2u windowSize = Engine::window().getSize();
+    glViewport(0, 0, windowSize.x, windowSize.y);
 }
 //Texture
 Id RendererGL::createTexture(

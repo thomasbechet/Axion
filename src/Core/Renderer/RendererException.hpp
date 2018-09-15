@@ -6,17 +6,18 @@
 #include <Core/Export.hpp>
 
 #include <exception>
+#include <string>
 
 namespace ax
 {
     class AXION_CORE_API RendererException : public std::exception
     {
     public:
-        RendererException() : m_msg(nullptr) {}
-        RendererException(const char* msg) : m_msg(msg) {}
-        const char* what() const throw() {return m_msg;}
+        RendererException() {}
+        RendererException(const std::string msg) : m_msg(msg) {}
+        const char* what() const throw() {return m_msg.c_str();}
 
     private:
-        const char* m_msg;
+        std::string m_msg;
     };
 }

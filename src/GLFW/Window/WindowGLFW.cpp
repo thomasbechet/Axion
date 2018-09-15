@@ -1,7 +1,7 @@
 #include <GLFW/Window/WindowGLFW.hpp>
 
-#include <Core/Context/Game.hpp>
-#include <Core/Context/GameContext.hpp>
+#include <Core/Context/Engine.hpp>
+#include <Core/Context/EngineContext.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <GLFW/Window/WrapperWindowGLFW.hpp>
 
@@ -12,12 +12,12 @@ using namespace ax;
 void WindowGLFW::initialize() noexcept
 {
     if(!glfwInit())
-        Game::interrupt("Failed to init glfw library");
+        Engine::interrupt("Failed to init glfw library");
 
-    unsigned size_x = Game::engine().config().getUnsigned("Window", "default_width", 854);
-    unsigned size_y = Game::engine().config().getUnsigned("Window", "default_height", 480);
-    std::string title = Game::engine().config().getString("Window", "default_title", "AxionEngine");
-    std::string mode = Game::engine().config().getString("Window", "default_mode", "windowed");
+    unsigned size_x = Engine::context().config().getUnsigned("Window", "default_width", 854);
+    unsigned size_y = Engine::context().config().getUnsigned("Window", "default_height", 480);
+    std::string title = Engine::context().config().getString("Window", "default_title", "AxionEngine");
+    std::string mode = Engine::context().config().getString("Window", "default_mode", "windowed");
 
     m_size = Vector2u(size_x, size_y);
     m_title = title;
@@ -30,19 +30,19 @@ void WindowGLFW::initialize() noexcept
         m_mode = WindowMode::Borderless;
 
     m_window = glfwCreateWindow(m_size.x, m_size.y, m_title.c_str(), nullptr, nullptr);
-    if(!m_window) Game::interrupt("Failed to create window");
+    if(!m_window) Engine::interrupt("Failed to create window");
 
-    if(Game::engine().config().getString("Window", "default_position_x", "default") != "default")
-        m_position.x = Game::engine().config().getUnsigned("Window", "default_position_x", 50);
+    if(Engine::context().config().getString("Window", "default_position_x", "default") != "default")
+        m_position.x = Engine::context().config().getUnsigned("Window", "default_position_x", 50);
     else
         glfwGetWindowPos(m_window, (int*)&m_position.x, nullptr);
 
-    if(Game::engine().config().getString("Window", "default_position_y", "default") != "default")
-        m_position.y = Game::engine().config().getUnsigned("Window", "default_position_y", 50);
+    if(Engine::context().config().getString("Window", "default_position_y", "default") != "default")
+        m_position.y = Engine::context().config().getUnsigned("Window", "default_position_y", 50);
     else
         glfwGetWindowPos(m_window, nullptr, (int*)&m_position.y);
 
-    m_verticalSync = Game::engine().config().getBoolean("Window", "vertical_synchronization", true);
+    m_verticalSync = Engine::context().config().getBoolean("Window", "vertical_synchronization", true);
 
     setMode(m_mode);
     setPosition(m_position);
@@ -103,7 +103,11 @@ void WindowGLFW::setSize(Vector2u size) noexcept
 }
 Vector2u WindowGLFW::getSize() const noexcept
 {
-    return m_size;
+    if(m_mode == WindowMode::Windowed) return m_size;
+
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+    return Vector2u(mode->width, mode->height);
 }
 void WindowGLFW::setPosition(Vector2i position) noexcept
 {
@@ -124,13 +128,13 @@ void WindowGLFW::setMode(WindowMode mode) noexcept
         {
             const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
             glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, 0);
-            Game::renderer().updateViewport();
+            Engine::renderer().updateViewport();
         }
         break;
         case WindowMode::Windowed:
         {
             glfwSetWindowMonitor(m_window, nullptr, m_position.x, m_position.y, m_size.x, m_size.y, 0);
-            Game::renderer().updateViewport();
+            Engine::renderer().updateViewport();
         }
         break;
         case WindowMode::Borderless:
@@ -141,7 +145,7 @@ void WindowGLFW::setMode(WindowMode mode) noexcept
             glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
             glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
             glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
-            Game::renderer().updateViewport();
+            Engine::renderer().updateViewport();
         }  
         break;
     }
@@ -173,4 +177,5 @@ void WindowGLFW::windowPosCallback(int xpos, int ypos) noexcept
 void WindowGLFW::windowSizeCallback(int width, int height) noexcept
 {
     if(m_mode == WindowMode::Windowed) m_size = Vector2u(width, height);
+    Engine::renderer().updateViewport();
 }

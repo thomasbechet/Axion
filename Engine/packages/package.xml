@@ -9,6 +9,6 @@
 			vertex="shaders/wireframe.vertex"
 			fragment="shaders/wireframe.fragment"/>
 			
-	<model name="model_sponza"
-		   src="models/sponza/sponza.obj"/>
+	<!--model name="model_sponza"
+		   src="models/sponza/sponza.obj"/-->
 </package>

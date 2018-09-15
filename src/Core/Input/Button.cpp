@@ -1,6 +1,6 @@
 #include <Core/Input/Button.hpp>
 
-#include <Core/Context/Game.hpp>
+#include <Core/Context/Engine.hpp>
 #include <Core/Input/Input.hpp>
 
 using namespace ax;
@@ -64,15 +64,15 @@ void Button::update() noexcept
     switch(m_type)
     {
         case InputType::Keyboard:
-            if(Game::input().isButtonPressed(m_keyboardInput)) m_state = ButtonState::Pressed;
+            if(Engine::input().isButtonPressed(m_keyboardInput)) m_state = ButtonState::Pressed;
             else m_state = ButtonState::Released;
         break;
         case InputType::Mouse:
-            if(Game::input().isButtonPressed(m_mouseInput)) m_state = ButtonState::Pressed;
+            if(Engine::input().isButtonPressed(m_mouseInput)) m_state = ButtonState::Pressed;
             else m_state = ButtonState::Released;
         break;
         case InputType::Gamepad:
-            if(Game::input().isButtonPressed(m_joystickInput)) m_state = ButtonState::Pressed;
+            if(Engine::input().isButtonPressed(m_joystickInput)) m_state = ButtonState::Pressed;
             else m_state = ButtonState::Released;
         break;
     }

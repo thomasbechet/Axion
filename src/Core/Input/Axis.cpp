@@ -1,6 +1,6 @@
 #include <Core/Input/Axis.hpp>
 
-#include <Core/Context/Game.hpp>
+#include <Core/Context/Engine.hpp>
 #include <Core/Input/Input.hpp>
 
 using namespace ax;
@@ -15,17 +15,17 @@ float Axis::delta() noexcept
     if(m_type == InputType::Mouse)
     {
         if(m_mouseInput == Mouse::Axis::X)
-            return (float)Game::input().getMouseMotion().x * m_sensibility;
+            return (float)Engine::input().getMouseMotion().x * m_sensibility;
         else if(m_mouseInput == Mouse::Axis::Y)
-            return (float)Game::input().getMouseMotion().y * m_sensibility;
+            return (float)Engine::input().getMouseMotion().y * m_sensibility;
         else if(m_mouseInput == Mouse::Axis::WheelY)
-            return Game::input().getMouseScroll().y;
+            return Engine::input().getMouseScroll().y;
         else if(m_mouseInput == Mouse::Axis::WheelX)
-            return Game::input().getMouseScroll().x;
+            return Engine::input().getMouseScroll().x;
     }
     else if(m_type == InputType::Gamepad)
     {
-        return Game::input().getGamepadAxis(m_gamepadInput);
+        return Engine::input().getGamepadAxis(m_gamepadInput);
     }
 
     return 0.0f;

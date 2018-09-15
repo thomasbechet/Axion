@@ -25,7 +25,8 @@ ADD_LIBRARY(
     Assets/Package.cpp
     Assets/Shader.cpp
     Assets/Texture.cpp
-    Context/GameContext.cpp
+    Context/EngineContext.cpp
+    Context/Engine.cpp
     Prefabs/System/BasicWindowSystem.cpp
     Prefabs/System/BasicControllerSystem.cpp
     Prefabs/Component/TransformComponent.cpp
@@ -49,7 +50,6 @@ ADD_LIBRARY(
     Math/Math.cpp
     System/System.cpp
     System/SystemManager.cpp
-    Context/Game.cpp
     World/Entity/EntityManager.cpp
     World/World.cpp
 )

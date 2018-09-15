@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <Core/Logger/Logger.hpp>
-#include <Core/Context/Game.hpp>
+#include <Core/Context/Engine.hpp>
 
 using namespace ax;
 
@@ -31,7 +31,7 @@ void ThreadPool::start(unsigned workerCount) noexcept
             m_threads.push_back(std::thread(&ThreadPool::worker_main, this));
         }
 
-        Game::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads created", Logger::Info);
+        Engine::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads created", Logger::Info);
     }
 }
 void ThreadPool::stop() noexcept
@@ -50,7 +50,7 @@ void ThreadPool::stop() noexcept
             it->join();
         }
 
-        Game::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads destroyed", Logger::Info);
+        Engine::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads destroyed", Logger::Info);
     }
 }
 

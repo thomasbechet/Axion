@@ -1,6 +1,6 @@
 #include <Core/Assets/Model.hpp>
 
-#include <Core/Context/Game.hpp>
+#include <Core/Context/Engine.hpp>
 #include <Core/Assets/AssetManager.hpp>
 #include <Core/Logger/Logger.hpp>
 
@@ -17,14 +17,14 @@ std::shared_ptr<const Model> ModelManager::operator()(std::string name) const no
     }
     catch(std::out_of_range e)
     {
-        Game::interrupt("Failed to access model '" + name + "'");
+        Engine::interrupt("Failed to access model '" + name + "'");
     }
 }
 std::shared_ptr<const Model> ModelManager::load(std::string name, Path path) noexcept
 {
     if(isLoaded(name))
     {
-        Game::logger().log("Failed to load model '" + name + "' because it already exists.", Logger::Warning);
+        Engine::logger().log("Failed to load model '" + name + "' because it already exists.", Logger::Warning);
         return nullptr;
     }
 
@@ -37,7 +37,7 @@ bool ModelManager::unload(std::string name, bool tryUnloadMaterials, bool tryUnl
 {
     if(!isLoaded(name))
     {
-        Game::logger().log("Failed to unload model '" + name + "' because it does not exists.", Logger::Warning);
+        Engine::logger().log("Failed to unload model '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
 
@@ -47,14 +47,14 @@ bool ModelManager::unload(std::string name, bool tryUnloadMaterials, bool tryUnl
     {
         std::string meshName = it->get()->name;
         it->reset();
-        Game::assets().mesh.unload(meshName);
+        Engine::assets().mesh.unload(meshName);
     }
     model->meshes.clear();
     for(auto it = model->materials.begin(); it != model->materials.end(); it++)
     {
         std::string materialName = it->get()->name;
         it->reset();
-        Game::assets().material.unload(materialName);
+        Engine::assets().material.unload(materialName);
     }
     model->materials.clear();
 
@@ -79,23 +79,23 @@ std::shared_ptr<const Model> ModelManager::loadObjModel(std::string name, Path p
     bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, path.c_str(), path.directory().c_str(), true);
     if(!ret)
     {
-        Game::logger().log("Failed to load model '" + name + "'", Logger::Warning);
-        Game::logger().log("TINYOBJ Error: " + err);
+        Engine::logger().log("Failed to load model '" + name + "'", Logger::Warning);
+        Engine::logger().log("TINYOBJ Error: " + err);
         return nullptr;
     }
 
     //Loading materials
     for(const auto& material : materials)
     {
-        if(!Game::assets().material.isLoaded(material.name))
+        if(!Engine::assets().material.isLoaded(material.name))
         {
             MaterialParameters data;
 
             //Diffuse Texture
             Path diffusePath = path.directory() + material.diffuse_texname;
             bool hasDiffuseTex = !diffusePath.filename().empty() &&
-                (Game::assets().texture.isLoaded(diffusePath.filename()) ||
-                 Game::assets().texture.load(diffusePath.filename(), diffusePath.path()));
+                (Engine::assets().texture.isLoaded(diffusePath.filename()) ||
+                 Engine::assets().texture.load(diffusePath.filename(), diffusePath.path()));
             
             if(hasDiffuseTex)
                 data.diffuseTexture = diffusePath.filename();  
@@ -106,7 +106,7 @@ std::shared_ptr<const Model> ModelManager::loadObjModel(std::string name, Path p
                 data.diffuseUniform.b = material.diffuse[2];
             }
 
-            Game::assets().material.load(material.name, data);
+            Engine::assets().material.load(material.name, data);
         } 
     }
 
@@ -153,13 +153,13 @@ std::shared_ptr<const Model> ModelManager::loadObjModel(std::string name, Path p
         size_t i = std::distance(meshes.begin(), it);
         
         std::string meshName = name + "_" + std::to_string(i);
-        Game::assets().mesh.load(meshName, it->second);
-        model->meshes.emplace_back(Game::assets().mesh(meshName));
+        Engine::assets().mesh.load(meshName, it->second, true);
+        model->meshes.emplace_back(Engine::assets().mesh(meshName));
 
         if(it->first != -1)
         {
             std::string materialName = materials[it->first].name;
-            model->materials.emplace_back(Game::assets().material(materialName));
+            model->materials.emplace_back(Engine::assets().material(materialName));
         }
         else
         {
@@ -181,10 +181,10 @@ void ModelManager::dispose() noexcept
 }
 void ModelManager::log() const noexcept
 {
-    Game::logger().log("[    MODEL    ]", Logger::Info);
+    Engine::logger().log("[    MODEL    ]", Logger::Info);
     
     for(auto it = m_models.begin(); it != m_models.end(); it++)
     {
-        Game::logger().log("- " + it->second.get()->name, Logger::Info);
+        Engine::logger().log("- " + it->second.get()->name, Logger::Info);
     }
 }

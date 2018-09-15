@@ -34,7 +34,6 @@ namespace ax
         void cursorPositionCallback(double xpos, double ypos) noexcept;
         void cursorScrollCallback(double xaxis, double yaxis) noexcept;
 
-    protected:
         void initialize() noexcept override;
         void terminate() noexcept override;
         void update() noexcept override;

@@ -16,14 +16,12 @@ namespace ax
     public:
         friend class WrapperWindowGLFW;
 
-    protected:
         void initialize() noexcept override;
         void terminate() noexcept override;
         void update() noexcept override;
 
         void swapBuffers() noexcept override;
 
-    public:
         bool requestGLContext() noexcept override;
         bool requestDXContext() noexcept override;
         bool requestVKContext() noexcept override;

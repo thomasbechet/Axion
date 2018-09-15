@@ -20,13 +20,7 @@ namespace ax
     {
         std::string name;
 
-        std::vector<Vector3f> positions;
-        std::vector<Vector2f> uvs;
-        std::vector<Vector3f> normals;
-        std::vector<Vector3f> tangents;
-        std::vector<Vector3f> bitangents;
-        std::vector<Vector3f> colors;
-        size_t vertex_count;
+        std::vector<Vertex> vertices;
         
         Id handle;
     };
@@ -35,7 +29,7 @@ namespace ax
     {
     public:
         std::shared_ptr<const Mesh> operator()(std::string name) const noexcept;
-        std::shared_ptr<const Mesh> load(std::string name, const std::vector<Vertex>& vertices) noexcept;
+        std::shared_ptr<const Mesh> load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent = false) noexcept;
         bool unload(std::string name) noexcept;
         bool isLoaded(std::string name) const noexcept;
 

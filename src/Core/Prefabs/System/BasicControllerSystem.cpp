@@ -3,7 +3,7 @@
 #include <Core/Input/Input.hpp>
 #include <Core/Math/Math.hpp>
 #include <Core/World/Component/ComponentIterator.hpp>
-#include <Core/Context/GameContext.hpp>
+#include <Core/Context/EngineContext.hpp>
 
 using namespace ax;
 
@@ -14,31 +14,31 @@ std::string BasicControllerSystem::name() noexcept
 
 void BasicControllerSystem::onInitialize()
 {
-    m_reset = &Game::input().addButton("basiccontroller_reset");
+    m_reset = &Engine::input().addButton("basiccontroller_reset");
     m_reset->bind(Keyboard::Space);
-    m_forward = &Game::input().addButton("basiccontroller_forward");
+    m_forward = &Engine::input().addButton("basiccontroller_forward");
     m_forward->bind(Keyboard::W);
-    m_backward = &Game::input().addButton("basiccontroller_backward");
+    m_backward = &Engine::input().addButton("basiccontroller_backward");
     m_backward->bind(Keyboard::S);
-    m_left = &Game::input().addButton("basiccontroller_left");
+    m_left = &Engine::input().addButton("basiccontroller_left");
     m_left->bind(Keyboard::A);
-    m_right = &Game::input().addButton("basiccontroller_right");
+    m_right = &Engine::input().addButton("basiccontroller_right");
     m_right->bind(Keyboard::D);
-    m_up = &Game::input().addButton("basiccontroller_up");
+    m_up = &Engine::input().addButton("basiccontroller_up");
     m_up->bind(Keyboard::X);
-    m_down = &Game::input().addButton("basiccontroller_down");
+    m_down = &Engine::input().addButton("basiccontroller_down");
     m_down->bind(Keyboard::Z);
-    m_rotateLeft = &Game::input().addButton("basiccontroller_rotate_left");
+    m_rotateLeft = &Engine::input().addButton("basiccontroller_rotate_left");
     m_rotateLeft->bind(Keyboard::E);
-    m_rotateRight = &Game::input().addButton("basiccontroller_rotate_right");
+    m_rotateRight = &Engine::input().addButton("basiccontroller_rotate_right");
     m_rotateRight->bind(Keyboard::Q);
 
-    m_lookX = &Game::input().addAxis("basiccontroller_look_x");
+    m_lookX = &Engine::input().addAxis("basiccontroller_look_x");
     m_lookX->bind(Mouse::Axis::X);
-    m_lookY = &Game::input().addAxis("basiccontroller_look_y");
+    m_lookY = &Engine::input().addAxis("basiccontroller_look_y");
     m_lookY->bind(Mouse::Axis::Y);
 
-    m_list = &Game::world().components().getList<BasicControllerComponent>();
+    m_list = &Engine::world().components().getList<BasicControllerComponent>();
 }
 void BasicControllerSystem::onUpdate()
 {
@@ -56,7 +56,7 @@ void BasicControllerSystem::onUpdate()
     look.x = m_lookX->delta();
     look.y = m_lookY->delta();
 
-    float delta = Game::engine().getDeltaTime().asSeconds();
+    float delta = Engine::context().getDeltaTime().asSeconds();
 
     auto it = m_list->iterator();
     while(it.next())
@@ -67,21 +67,21 @@ void BasicControllerSystem::onUpdate()
         if(look.y != 0.0f) 
             it->transform.rotate(radians(look.y), it->transform.getRightVector());
 
-        if(Game::input().isButtonPressed(Keyboard::Space))
+        if(Engine::input().isButtonPressed(Keyboard::Space))
             it->transform.setRotation(Quaternionf(0.0f, Vector3f::up));
     }
 }
 void BasicControllerSystem::onTerminate()
 {
-    Game::input().removeButton("basiccontroller_reset");
-    Game::input().removeButton("basiccontroller_forward");
-    Game::input().removeButton("basiccontroller_backward");
-    Game::input().removeButton("basiccontroller_left");
-    Game::input().removeButton("basiccontroller_right");
-    Game::input().removeButton("basiccontroller_up");
-    Game::input().removeButton("basiccontroller_down");
-    Game::input().removeButton("basiccontroller_rotate_left");
-    Game::input().removeButton("basiccontroller_rotate_right");
-    Game::input().removeAxis("basiccontroller_look_x");
-    Game::input().removeAxis("basiccontroller_look_y");
+    Engine::input().removeButton("basiccontroller_reset");
+    Engine::input().removeButton("basiccontroller_forward");
+    Engine::input().removeButton("basiccontroller_backward");
+    Engine::input().removeButton("basiccontroller_left");
+    Engine::input().removeButton("basiccontroller_right");
+    Engine::input().removeButton("basiccontroller_up");
+    Engine::input().removeButton("basiccontroller_down");
+    Engine::input().removeButton("basiccontroller_rotate_left");
+    Engine::input().removeButton("basiccontroller_rotate_right");
+    Engine::input().removeAxis("basiccontroller_look_x");
+    Engine::input().removeAxis("basiccontroller_look_y");
 }

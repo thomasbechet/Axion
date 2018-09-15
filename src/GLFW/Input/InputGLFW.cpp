@@ -1,7 +1,7 @@
 #include <GLFW/Input/InputGLFW.hpp>
 
-#include <Core/Context/Game.hpp>
-#include <Core/Context/GameContext.hpp>
+#include <Core/Context/Engine.hpp>
+#include <Core/Context/EngineContext.hpp>
 #include <GLFW/Window/WindowGLFW.hpp>
 #include <GLFW/Input/WrapperInputGLFW.hpp>
 
@@ -165,17 +165,17 @@ void InputGLFW::cursorScrollCallback(double xaxis, double yaxis) noexcept
 
 void InputGLFW::initialize() noexcept
 {
-    if(Game::engine().config().getString("Window", "type", "none") != "glfw")
-        Game::interrupt("WindowGLFW is required by InputGLFW, please change window's type to 'glfw'");
+    if(Engine::context().config().getString("Window", "type", "none") != "glfw")
+        Engine::interrupt("WindowGLFW is required by InputGLFW, please change window's type to 'glfw'");
 
-    m_window = static_cast<WindowGLFW&>(Game::window()).rawWindow();
+    m_window = static_cast<WindowGLFW&>(Engine::window()).rawWindow();
 
     double xpos, ypos;
     glfwGetCursorPos(m_window, &xpos, &ypos);
     m_mousePosition = Vector2f((float)xpos, (float)ypos);
     m_mouseOldPosition = m_mousePosition;
 
-    std::string cursorMode = Game::engine().config().getString("Input", "default_cursor_mode", "normal");
+    std::string cursorMode = Engine::context().config().getString("Input", "default_cursor_mode", "normal");
     if(cursorMode == "normal")
         setCursorMode(CursorMode::Normal);
     else if(cursorMode == "hidden")

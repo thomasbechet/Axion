@@ -25,7 +25,6 @@ namespace ax
     class AXION_CORE_API Input
     {
     public:
-        friend class GameContext;
         virtual ~Input(){}
 
         virtual bool isButtonPressed(Keyboard key) const noexcept = 0;
@@ -41,13 +40,10 @@ namespace ax
         virtual Vector2f getMouseScroll() const noexcept = 0;
         virtual float getGamepadAxis(Gamepad::Axis axis) const noexcept = 0;
         
-
-    protected:
         virtual void initialize() noexcept = 0;
         virtual void terminate() noexcept = 0;
         virtual void update() noexcept = 0;
-
-    private:
+        
         void updateInputs() noexcept;
 
     public:

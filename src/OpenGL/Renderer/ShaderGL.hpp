@@ -11,8 +11,6 @@ namespace ax
 {
     struct AXION_GL_API ShaderGL
     {
-        GLuint vertexId;
-        GLuint fragmentId;
         GLuint programId;
     };
 }

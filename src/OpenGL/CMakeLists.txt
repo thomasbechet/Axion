@@ -21,6 +21,7 @@ ADD_LIBRARY(
     Loader/Loader.cpp
     Renderer/RendererGL.cpp
     Renderer/ShaderGL.cpp
+    Renderer/MeshGL.cpp
 )
 
 #Adding glfw dependency

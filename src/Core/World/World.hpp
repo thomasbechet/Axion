@@ -19,7 +19,7 @@ namespace ax
     class AXION_CORE_API World
     {
     public:
-        friend class GameContext;
+        friend class EngineContext;
 
     public:
         World();

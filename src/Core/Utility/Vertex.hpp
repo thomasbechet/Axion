@@ -14,5 +14,6 @@ namespace ax
         Vector2f uv;
         Vector3f normal;
         Vector3f color;
+        Vector3f tangent;
     };
 }

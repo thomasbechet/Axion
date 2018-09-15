@@ -18,17 +18,13 @@ namespace ax
     class AXION_CORE_API Window
     {
     public:
-        friend class GameContext;
+        virtual ~Window(){}
 
-    protected:
         virtual void initialize() noexcept = 0;
         virtual void terminate() noexcept = 0;
         virtual void update() noexcept = 0;
 
         virtual void swapBuffers() noexcept = 0;
-
-    public:
-        virtual ~Window(){}
 
         virtual bool requestGLContext() noexcept = 0;
         virtual bool requestDXContext() noexcept = 0;

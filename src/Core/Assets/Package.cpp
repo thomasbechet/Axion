@@ -1,6 +1,6 @@
 #include <Core/Assets/AssetManager.hpp>
 
-#include <Core/Context/Game.hpp>
+#include <Core/Context/Engine.hpp>
 #include <Core/Logger/Logger.hpp>
 
 #include <rapidxml/rapidxml.hpp>
@@ -16,7 +16,7 @@ std::shared_ptr<const Package> PackageManager::operator()(std::string name) cons
     }
     catch(std::out_of_range e)
     {
-        Game::interrupt("Failed to access package '" + name + "'");
+        Engine::interrupt("Failed to access package '" + name + "'");
     }
 }
 std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
@@ -29,14 +29,14 @@ std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
     }
     catch(rapidxml::parse_error& e)
     {   
-        Game::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
+        Engine::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
         return nullptr;
     }
     
     rapidxml::xml_node<>* package_node = doc.first_node("package");
     if(!package_node)
     {
-        Game::logger().log("Failed to load package " + path.path() + " because it does not contain 'package' node", Logger::Warning);
+        Engine::logger().log("Failed to load package " + path.path() + " because it does not contain 'package' node", Logger::Warning);
         return nullptr;
     }
     
@@ -51,7 +51,7 @@ std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
 
     if(isLoaded(name))
     {
-        Game::logger().log("Failed to load package '" + name + "' because it already exists.", Logger::Warning);
+        Engine::logger().log("Failed to load package '" + name + "' because it already exists.", Logger::Warning);
         return nullptr;
     }
 
@@ -69,8 +69,8 @@ std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
             if(texture_node->first_attribute("name"))
                 texture_name = texture_node->first_attribute("name")->value();
 
-            if(Game::assets().texture.load(texture_name, texture_path))
-                package->textures.emplace_back(Game::assets().texture(texture_name));
+            if(Engine::assets().texture.load(texture_name, texture_path))
+                package->textures.emplace_back(Engine::assets().texture(texture_name));
         }
     }
 
@@ -106,8 +106,8 @@ std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
             if(model_node->first_attribute("name"))
                 model_name = model_node->first_attribute("name")->value();
 
-            if(Game::assets().model.load(model_name, model_path))
-                package->models.emplace_back(Game::assets().model(model_name));
+            if(Engine::assets().model.load(model_name, model_path))
+                package->models.emplace_back(Engine::assets().model(model_name));
         }
     }
 
@@ -121,8 +121,8 @@ std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
             if(shader_node->first_attribute("name"))
             {
                 std::string shader_name = shader_node->first_attribute("name")->value();
-                if(Game::assets().shader.load(shader_name, vertex_path, fragment_path))
-                    package->shaders.emplace_back(Game::assets().shader(shader_name));
+                if(Engine::assets().shader.load(shader_name, vertex_path, fragment_path))
+                    package->shaders.emplace_back(Engine::assets().shader(shader_name));
             }
         }
     }
@@ -133,7 +133,7 @@ bool PackageManager::unload(std::string name) noexcept
 {
     if(!isLoaded(name))
     {
-        Game::logger().log("Failed to unload package '" + name + "' because it does not exists.", Logger::Warning);
+        Engine::logger().log("Failed to unload package '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
 
@@ -143,28 +143,28 @@ bool PackageManager::unload(std::string name) noexcept
     {
         std::string modelName = it->get()->name;
         it->reset();
-        Game::assets().model.unload(modelName);
+        Engine::assets().model.unload(modelName);
     }
     package->models.clear();
     for(auto it = package->textures.begin(); it != package->textures.end(); it++)
     {
         std::string textureName = it->get()->name;
         it->reset();
-        Game::assets().texture.unload(textureName);
+        Engine::assets().texture.unload(textureName);
     }
     package->textures.clear();
     for(auto it = package->meshes.begin(); it != package->meshes.end(); it++)
     {
         std::string meshName = it->get()->name;
         it->reset();
-        Game::assets().mesh.unload(meshName);
+        Engine::assets().mesh.unload(meshName);
     }
     package->meshes.clear();
     for(auto it = package->materials.begin(); it != package->materials.end(); it++)
     {
         std::string materialName = it->get()->name;
         it->reset();
-        Game::assets().material.unload(materialName);
+        Engine::assets().material.unload(materialName);
     }  
     package->materials.clear();
 
@@ -190,10 +190,10 @@ void PackageManager::dispose() noexcept
 }
 void PackageManager::log() const noexcept
 {
-    Game::logger().log("[   PACKAGE   ]", Logger::Info);
+    Engine::logger().log("[   PACKAGE   ]", Logger::Info);
     
     for(auto it = m_packages.begin(); it != m_packages.end(); it++)
     {
-        Game::logger().log("- " + it->second.get()->name, Logger::Info);
+        Engine::logger().log("- " + it->second.get()->name, Logger::Info);
     }
 }
