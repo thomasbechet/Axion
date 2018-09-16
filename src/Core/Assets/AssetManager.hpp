@@ -13,11 +13,6 @@
 #include <Core/Assets/Package.hpp>
 #include <Core/Assets/Shader.hpp>
 
-#include <string>
-#include <vector>
-#include <memory>
-#include <unordered_map>
-
 namespace ax
 {
     class AXION_CORE_API AssetManager
