@@ -6,6 +6,8 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Color.hpp>
 #include <Core/Assets/Texture.hpp>
+#include <Core/Assets/AssetReference.hpp>
+#include <Core/Assets/AssetHolder.hpp>
 
 #include <memory>
 
@@ -23,10 +25,10 @@ namespace ax
     {
         std::string name;
 
-        std::shared_ptr<const Texture> diffuseTexture = nullptr;
+        AssetReference<Texture> diffuseTexture;
         Color diffuseUniform = Color(1.0f, 1.0f, 1.0f, 1.0f);
         
-        std::shared_ptr<const Texture> normalTexture = nullptr;
+        AssetReference<Texture> normalTexture;
 
         Id handle;
     };
@@ -34,8 +36,8 @@ namespace ax
     class AXION_CORE_API MaterialManager
     {
     public:
-        std::shared_ptr<const Material> operator()(std::string name) const noexcept;
-        std::shared_ptr<const Material> load(std::string name, const MaterialParameters& params) noexcept;
+        AssetReference<Material> operator()(std::string name) const noexcept;
+        AssetReference<Material> load(std::string name, const MaterialParameters& params) noexcept;
         bool unload(std::string name, bool tryUnloadTextures = true) noexcept;
         bool isLoaded(std::string name) const noexcept;
 
@@ -43,6 +45,6 @@ namespace ax
         void log() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::shared_ptr<Material>> m_materials;
+        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Material>>> m_materials;
     };
 }

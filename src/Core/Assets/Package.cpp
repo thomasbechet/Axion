@@ -8,18 +8,18 @@
 
 using namespace ax;
 
-std::shared_ptr<const Package> PackageManager::operator()(std::string name) const noexcept
+AssetReference<Package> PackageManager::operator()(std::string name) const noexcept
 {
     try
     {
-        return std::const_pointer_cast<const Package>(m_packages.at(name));
+        return m_packages.at(name)->reference();
     }
     catch(std::out_of_range e)
     {
         Engine::interrupt("Failed to access package '" + name + "'");
     }
 }
-std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
+AssetReference<Package> PackageManager::load(Path path) noexcept
 {
     rapidxml::file<> file(path.c_str());
     rapidxml::xml_document<> doc;
@@ -55,7 +55,7 @@ std::shared_ptr<const Package> PackageManager::load(Path path) noexcept
         return nullptr;
     }
 
-    m_packages.emplace(name, std::make_shared<Package>());
+    m_packages.emplace(name, std::make_unique<AssetHolder<Package>>());
     Package* package = m_packages.at(name).get();
     package->name = name;
 
@@ -168,7 +168,7 @@ bool PackageManager::unload(std::string name) noexcept
     }  
     package->materials.clear();
 
-    if(m_packages.at(name).use_count() != 1) return false;
+    if(m_packages.at(name)->referenceCount() > 0) return false;
 
     m_packages.erase(name);
 

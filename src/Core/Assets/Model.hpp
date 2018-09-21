@@ -19,15 +19,15 @@ namespace ax
     {
         std::string name;
 
-        std::vector<std::shared_ptr<const Mesh>> meshes;
-        std::vector<std::shared_ptr<const Material>> materials;
+        std::vector<AssetReference<Mesh>> meshes;
+        std::vector<AssetReference<Material>> materials;
     };
 
     class AXION_CORE_API ModelManager
     {
     public:
-        std::shared_ptr<const Model> operator()(std::string name) const noexcept;
-        std::shared_ptr<const Model> load(std::string name, Path path) noexcept;
+        AssetReference<Model> operator()(std::string name) const noexcept;
+        AssetReference<Model> load(std::string name, Path path) noexcept;
         bool unload(std::string name, bool tryUnloadMaterials = true, bool tryUnloadTextures = true) noexcept;
         bool isLoaded(std::string name) const noexcept;
 
@@ -35,8 +35,8 @@ namespace ax
         void log() const noexcept;
 
     private:
-        std::shared_ptr<const Model> loadObjModel(std::string name, Path path) noexcept;
+        AssetReference<Model> loadObjModel(std::string name, Path path) noexcept;
 
-        std::unordered_map<std::string, std::shared_ptr<Model>> m_models;
+        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Model>>> m_models;
     };
 }

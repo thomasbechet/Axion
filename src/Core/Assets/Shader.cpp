@@ -10,38 +10,38 @@
 
 using namespace ax;
 
-std::shared_ptr<const Shader> ShaderManager::operator()(std::string name) const noexcept
+AssetReference<Shader> ShaderManager::operator()(std::string name) const noexcept
 {
     try
     {
-        return std::const_pointer_cast<const Shader>(m_shaders.at(name));
+        return m_shaders.at(name)->reference();
     }
     catch(std::out_of_range e)
     {
         Engine::interrupt("Failed to access shader '" + name + "'");
     }   
 }
-std::shared_ptr<const Shader> ShaderManager::load(std::string name, Path vertex, Path fragment) noexcept
+AssetReference<Shader> ShaderManager::load(std::string name, Path vertex, Path fragment) noexcept
 {
     if(isLoaded(name))
     {
         Engine::logger().log("Failed to load shader '" + name + "' because it already exists.", Logger::Warning);
-        return nullptr;
+        return AssetReference<Shader>();
     }
 
     try
     {
         std::ifstream vertexFile(vertex.path());
-        if(!vertexFile.is_open()) return nullptr;
+        if(!vertexFile.is_open()) return AssetReference<Shader>();
         std::string vertexBuffer{std::istreambuf_iterator<char>(vertexFile), std::istreambuf_iterator<char>()};
         
         std::ifstream fragmentFile(fragment.path());
-        if(!fragmentFile.is_open()) return nullptr;
+        if(!fragmentFile.is_open()) return AssetReference<Shader>();
         std::string fragmentBuffer{std::istreambuf_iterator<char>(fragmentFile), std::istreambuf_iterator<char>()};
 
         Id handle = Engine::renderer().createShader(&vertexBuffer, &fragmentBuffer);
 
-        m_shaders.emplace(name, std::make_shared<Shader>());
+        m_shaders.emplace(name, std::make_unique<AssetHolder<Shader>>());
         Shader* newShader = m_shaders.at(name).get();
         
         newShader->name = name;
@@ -53,10 +53,10 @@ std::shared_ptr<const Shader> ShaderManager::load(std::string name, Path vertex,
     {
         Engine::logger().log("Failed to compile shader '" + name + "'", Logger::Warning);
         Engine::logger().log(exception.what(), Logger::Warning);
-        return nullptr;
+        return AssetReference<Shader>();
     }
 
-    return m_shaders.at(name);
+    return m_shaders.at(name)->reference();
 }
 bool ShaderManager::unload(std::string name) noexcept
 {
@@ -67,7 +67,7 @@ bool ShaderManager::unload(std::string name) noexcept
         return false;
     }
 
-    if(m_shaders.at(name).use_count() != 1) return false;
+    if(m_shaders.at(name)->reference() > 0) return false;
 
     try
     {

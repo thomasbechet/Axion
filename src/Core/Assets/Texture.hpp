@@ -7,6 +7,7 @@
 #include <Core/Math/Vector.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Path.hpp>
+#include <Core/Assets/AssetReference.hpp>
 
 #include <unordered_map>
 #include <memory>
@@ -33,8 +34,8 @@ namespace ax
     class AXION_CORE_API TextureManager
     {
     public:
-        std::shared_ptr<const Texture> operator()(std::string name) const noexcept;
-        std::shared_ptr<const Texture> load(std::string name, Path path) noexcept;
+        AssetReference<Texture> operator()(std::string name) const noexcept;
+        AssetReference<Texture> load(std::string name, Path path) noexcept;
         bool unload(std::string name) noexcept;
         bool isLoaded(std::string name) const noexcept;
 
@@ -42,6 +43,6 @@ namespace ax
         void log() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
+        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Texture>>> m_textures;
     };
 }

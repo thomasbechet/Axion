@@ -8,6 +8,7 @@
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Vertex.hpp>
+#include <Core/Assets/AssetReference.hpp>
 
 #include <string>
 #include <unordered_map>
@@ -28,8 +29,8 @@ namespace ax
     class AXION_CORE_API MeshManager
     {
     public:
-        std::shared_ptr<const Mesh> operator()(std::string name) const noexcept;
-        std::shared_ptr<const Mesh> load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent = false) noexcept;
+        AssetReference<Mesh> operator()(std::string name) const noexcept;
+        AssetReference<Mesh> load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent = false) noexcept;
         bool unload(std::string name) noexcept;
         bool isLoaded(std::string name) const noexcept;
 
@@ -37,6 +38,6 @@ namespace ax
         void log() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::shared_ptr<Mesh>> m_meshes;
+        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Mesh>>> m_meshes;
     };
 }

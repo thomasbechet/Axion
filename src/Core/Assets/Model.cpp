@@ -9,29 +9,29 @@
 
 using namespace ax;
 
-std::shared_ptr<const Model> ModelManager::operator()(std::string name) const noexcept
+AssetReference<Model> ModelManager::operator()(std::string name) const noexcept
 {
     try
     {
-        return std::const_pointer_cast<const Model>(m_models.at(name));
+        return m_models.at(name)->reference();
     }
     catch(std::out_of_range e)
     {
         Engine::interrupt("Failed to access model '" + name + "'");
     }
 }
-std::shared_ptr<const Model> ModelManager::load(std::string name, Path path) noexcept
+AssetReference<Model> ModelManager::load(std::string name, Path path) noexcept
 {
     if(isLoaded(name))
     {
         Engine::logger().log("Failed to load model '" + name + "' because it already exists.", Logger::Warning);
-        return nullptr;
+        return AssetReference<Model>();
     }
 
     if(path.extension() == ".obj")
         return loadObjModel(name, path);
 
-    return nullptr;
+    return AssetReference<Model>();
 }
 bool ModelManager::unload(std::string name, bool tryUnloadMaterials, bool tryUnloadTextures) noexcept
 {
@@ -41,7 +41,7 @@ bool ModelManager::unload(std::string name, bool tryUnloadMaterials, bool tryUnl
         return false;
     }
 
-    Model* model = m_models.at(name).get();
+    Model* model = m_models.at(name)->get();
 
     for(auto it = model->meshes.begin(); it != model->meshes.end(); it++)
     {
@@ -58,7 +58,7 @@ bool ModelManager::unload(std::string name, bool tryUnloadMaterials, bool tryUnl
     }
     model->materials.clear();
 
-    if(m_models.at(name).use_count() != 1) return false;
+    if(m_models.at(name)->referenceCount() > 0) return false;
 
     m_models.erase(name);
 
@@ -69,7 +69,7 @@ bool ModelManager::isLoaded(std::string name) const noexcept
     return m_models.find(name) != m_models.end();
 }
 
-std::shared_ptr<const Model> ModelManager::loadObjModel(std::string name, Path path) noexcept
+AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) noexcept
 {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
@@ -81,7 +81,7 @@ std::shared_ptr<const Model> ModelManager::loadObjModel(std::string name, Path p
     {
         Engine::logger().log("Failed to load model '" + name + "'", Logger::Warning);
         Engine::logger().log("TINYOBJ Error: " + err);
-        return nullptr;
+        return AssetReference<Model>();
     }
 
     //Loading materials
@@ -163,7 +163,7 @@ std::shared_ptr<const Model> ModelManager::loadObjModel(std::string name, Path p
         }
         else
         {
-            model->materials.emplace_back(nullptr);
+            model->materials.emplace_back(AssetReference<Material>());
         }
     }
 

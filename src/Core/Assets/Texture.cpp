@@ -10,18 +10,18 @@
 
 using namespace ax;
 
-std::shared_ptr<const Texture> TextureManager::operator()(std::string name) const noexcept
+AssetReference<Texture> TextureManager::operator()(std::string name) const noexcept
 {
     try
     {
-        return std::const_pointer_cast<const Texture>(m_textures.at(name));
+        return m_textures.at(name)->reference();
     }
     catch(std::out_of_range e)
     {
         Engine::interrupt("Failed to access texture '" + name + "'");
     } 
 }
-std::shared_ptr<const Texture> TextureManager::load(std::string name, Path path) noexcept
+AssetReference<Texture> TextureManager::load(std::string name, Path path) noexcept
 {
     if(isLoaded(name))
     {
@@ -59,20 +59,20 @@ std::shared_ptr<const Texture> TextureManager::load(std::string name, Path path)
         stbi_image_free(data);
     }
 
-    m_textures.emplace(name, std::make_shared<Texture>());
-    Texture* texture = m_textures.at(name).get();
+    m_textures.emplace(name, std::make_unique<AssetHolder<Texture>>());
+    Texture* texture = m_textures.at(name)->get();
     texture->name = name;
     texture->data = data;
     texture->size.x = (unsigned)width;
     texture->size.y = (unsigned)height;
 
-    return std::const_pointer_cast<const Texture>(m_textures.at(name));
+    return m_textures.at(name)->reference();
 }
 bool TextureManager::unload(std::string name) noexcept
 {
     try
     {
-        if(m_textures.at(name).use_count() != 1) return false;
+        if(m_textures.at(name)->referenceCount() > 0) return false;
         stbi_image_free(m_textures.at(name)->data);
         m_textures.erase(name);
     }

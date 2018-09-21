@@ -7,27 +7,27 @@
 
 using namespace ax;
 
-std::shared_ptr<const Mesh> MeshManager::operator()(std::string name) const noexcept
+AssetReference<Mesh> MeshManager::operator()(std::string name) const noexcept
 {
     try
     {
-        return std::const_pointer_cast<const Mesh>(m_meshes.at(name));
+        return m_meshes.at(name)->reference();
     }   
     catch(std::out_of_range e)
     {
         Engine::interrupt("Failed to access mesh '" + name + "'");
     }
 }
-std::shared_ptr<const Mesh> MeshManager::load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent) noexcept
+AssetReference<Mesh> MeshManager::load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent) noexcept
 {
     if(isLoaded(name))
     {
         Engine::logger().log("Failed to load mesh '" + name + "' because it already exists.", Logger::Warning);
-        return nullptr;
+        return AssetReference<Mesh>();
     }
 
-    m_meshes.emplace(name, std::make_shared<Mesh>());
-    Mesh* mesh = m_meshes[name].get();
+    m_meshes.emplace(name, std::make_unique<AssetReference<Mesh>>());
+    Mesh* mesh = m_meshes.at(name)->get();
     mesh->name = name;
 
     mesh->vertices = vertices;
@@ -71,7 +71,7 @@ std::shared_ptr<const Mesh> MeshManager::load(std::string name, const std::vecto
         Engine::logger().log(exception.what(), Logger::Warning);
         m_meshes.erase(name);
 
-        return nullptr;
+        return AssetReference<Mesh>();
     }
 
     return m_meshes.at(name);
@@ -84,7 +84,7 @@ bool MeshManager::unload(std::string name) noexcept
         return false;
     }
 
-    if(m_meshes.at(name).use_count() != 1) return false;
+    if(m_meshes.at(name)->referenceCount() > 0) return false;
 
     try
     {
