@@ -113,6 +113,8 @@ public:
     {
         ax::Engine::assets().package.load("../packages/package.xml");
         ax::Engine::assets().log();
+        ax::Engine::assets().package.unload("mypackage");
+        ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
         ax::Engine::systems().add<ax::BasicControllerSystem>();

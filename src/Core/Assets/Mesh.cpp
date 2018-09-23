@@ -26,7 +26,7 @@ AssetReference<Mesh> MeshManager::load(std::string name, const std::vector<Verte
         return AssetReference<Mesh>();
     }
 
-    m_meshes.emplace(name, std::make_unique<AssetReference<Mesh>>());
+    m_meshes.emplace(name, std::make_unique<AssetHolder<Mesh>>());
     Mesh* mesh = m_meshes.at(name)->get();
     mesh->name = name;
 
@@ -74,7 +74,7 @@ AssetReference<Mesh> MeshManager::load(std::string name, const std::vector<Verte
         return AssetReference<Mesh>();
     }
 
-    return m_meshes.at(name);
+    return m_meshes.at(name)->reference();
 }
 bool MeshManager::unload(std::string name) noexcept
 {
@@ -88,7 +88,7 @@ bool MeshManager::unload(std::string name) noexcept
 
     try
     {
-        Engine::renderer().destroyMesh(m_meshes.at(name).get()->handle);
+        Engine::renderer().destroyMesh(m_meshes.at(name)->get()->handle);
     }
     catch(const RendererException& exception)
     {
@@ -111,17 +111,17 @@ void MeshManager::dispose() noexcept
 {
     std::vector<std::string> keys;
     keys.reserve(m_meshes.size());
-    for(auto it : m_meshes)
-        keys.emplace_back(it.second->name);
+    for(auto& it : m_meshes)
+        keys.emplace_back(it.first);
 
     for(auto it : keys) unload(it);
 }
 void MeshManager::log() const noexcept
 {
-    Engine::logger().log("[     MESH    ]", Logger::Info);
+    Engine::logger().log("[MESH]", Logger::Info);
     
-    for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
+    for(auto& it : m_meshes)
     {
-        Engine::logger().log("- " + it->second.get()->name, Logger::Info);
+        Engine::logger().log("- " + it.first, Logger::Info);
     }
 }

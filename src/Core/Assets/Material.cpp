@@ -119,10 +119,10 @@ void MaterialManager::dispose() noexcept
 }
 void MaterialManager::log() const noexcept
 {
-    Engine::logger().log("[   MATERIAL  ]", Logger::Info);
+    Engine::logger().log("[MATERIAL]", Logger::Info);
     
     for(auto& it : m_materials)
     {
-        Engine::logger().log("- " + it.second->get()->name, Logger::Info);
+        Engine::logger().log("- " + it.first, Logger::Info);
     }
 }

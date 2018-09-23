@@ -5,6 +5,7 @@
 ////////////
 #include <Core/Export.hpp>
 #include <Core/Context/Engine.hpp>
+#include <Core/Utility/NonCopyable.hpp>
 
 #include <memory>
 
@@ -14,18 +15,20 @@ namespace ax
     class AXION_CORE_API AssetReference;
 
     template<typename T>
-    class AXION_CORE_API AssetHolder
+    class AXION_CORE_API AssetHolder : public NonCopyable
     {
     public:
         friend class AssetReference<T>;
 
         template<typename... Args>
-        AssetHolder(Args&&... args) : m_asset(args...) {}
+        AssetHolder<T>(Args&&... args) : m_asset(args...){}
         ~AssetHolder()
         {
             if(m_referenceCount > 0)
+            {
                 Engine::interrupt("Dangling reference detected with '" + m_asset.name + "' (" + std::to_string(m_referenceCount) + " references)");
-        } 
+            }
+        }
 
         AssetReference<T> reference() noexcept
         {

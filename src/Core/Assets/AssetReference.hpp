@@ -14,24 +14,35 @@ namespace ax
     public:
         friend class AssetHolder<T>;
 
-        AssetReference(){}
-        AssetReference(AssetHolder<T>& holder)
+        AssetReference<T>(){}
+        AssetReference<T>(AssetHolder<T>& holder)
         {
             holder.accessAsset(*this);
         }
-        AssetReference(const AssetReference<T>& reference)
+        AssetReference<T>(const AssetReference<T>& reference)
         {
             operator=(reference);
         }
-        AssetReference<T>& operator=(const AssetReference<T>& other)
+        AssetReference<T>(const AssetReference<T>&& reference)
         {
-            if(isValid()) m_holder->releaseAsset(*this);
-            if(other.isValid()) other.m_holder->accessAsset(*this);
-            return *this;
+            operator=(reference);
         }
         ~AssetReference() {reset();}
 
-        operator bool() const {return isValid();}
+        AssetReference<T>& operator=(const AssetReference<T>& other) noexcept
+        {
+            reset();
+            if(other.isValid()) other.m_holder->accessAsset(*this);
+            return *this;
+        }
+        AssetReference<T>& operator=(AssetReference<T>&& other) noexcept
+        {
+            std::swap(m_asset, other.m_asset);
+            std::swap(m_holder, other.m_holder);
+            return *this;
+        }
+
+        explicit operator bool() const {return isValid();}
         bool isValid() const noexcept {return m_holder != nullptr;}
 
         void reset() noexcept

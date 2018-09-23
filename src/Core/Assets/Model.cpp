@@ -33,7 +33,7 @@ AssetReference<Model> ModelManager::load(std::string name, Path path) noexcept
 
     return AssetReference<Model>();
 }
-bool ModelManager::unload(std::string name, bool tryUnloadMaterials, bool tryUnloadTextures) noexcept
+bool ModelManager::unload(std::string name, bool tryUnloadMeshes, bool tryUnloadMaterials, bool tryUnloadTextures) noexcept
 {
     if(!isLoaded(name))
     {
@@ -41,24 +41,30 @@ bool ModelManager::unload(std::string name, bool tryUnloadMaterials, bool tryUnl
         return false;
     }
 
+    if(m_models.at(name)->referenceCount() > 0) return false;
+
     Model* model = m_models.at(name)->get();
 
-    for(auto it = model->meshes.begin(); it != model->meshes.end(); it++)
+    if(tryUnloadMeshes)
     {
-        std::string meshName = it->get()->name;
-        it->reset();
-        Engine::assets().mesh.unload(meshName);
+        for(auto it = model->meshes.begin(); it != model->meshes.end(); it++)
+        {
+            std::string meshName = it->get()->name;
+            it->reset();
+            Engine::assets().mesh.unload(meshName);
+        }
     }
     model->meshes.clear();
-    for(auto it = model->materials.begin(); it != model->materials.end(); it++)
+    if(tryUnloadMaterials)
     {
-        std::string materialName = it->get()->name;
-        it->reset();
-        Engine::assets().material.unload(materialName);
+        for(auto it = model->materials.begin(); it != model->materials.end(); it++)
+        {
+            std::string materialName = it->get()->name;
+            it->reset();
+            Engine::assets().material.unload(materialName, tryUnloadTextures);
+        }
     }
     model->materials.clear();
-
-    if(m_models.at(name)->referenceCount() > 0) return false;
 
     m_models.erase(name);
 
@@ -144,8 +150,8 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
     }
 
     //Loading models
-    m_models.emplace(name, std::make_shared<Model>());
-    Model* model = m_models[name].get();
+    m_models.emplace(name, std::make_unique<AssetHolder<Model>>());
+    Model* model = m_models.at(name)->get();
     model->name = name;
 
     for(auto it = meshes.begin(); it != meshes.end(); it++)
@@ -167,24 +173,24 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
         }
     }
 
-    return m_models.at(name);
+    return m_models.at(name)->reference();
 }
 
 void ModelManager::dispose() noexcept
 {
     std::vector<std::string> keys;
     keys.reserve(m_models.size());
-    for(auto it : m_models)
-        keys.emplace_back(it.second->name);
+    for(auto& it : m_models)
+        keys.emplace_back(it.second->get()->name);
 
     for(auto it : keys) unload(it, true, true);
 }
 void ModelManager::log() const noexcept
 {
-    Engine::logger().log("[    MODEL    ]", Logger::Info);
+    Engine::logger().log("[MODEL]", Logger::Info);
     
-    for(auto it = m_models.begin(); it != m_models.end(); it++)
+    for(auto& it : m_models)
     {
-        Engine::logger().log("- " + it->second.get()->name, Logger::Info);
+        Engine::logger().log("- " + it.first, Logger::Info);
     }
 }

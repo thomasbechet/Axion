@@ -6,6 +6,7 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Path.hpp>
+#include <Core/Assets/AssetReference.hpp>
 
 #include <string>
 #include <memory>

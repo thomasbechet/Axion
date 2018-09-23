@@ -42,7 +42,7 @@ AssetReference<Shader> ShaderManager::load(std::string name, Path vertex, Path f
         Id handle = Engine::renderer().createShader(&vertexBuffer, &fragmentBuffer);
 
         m_shaders.emplace(name, std::make_unique<AssetHolder<Shader>>());
-        Shader* newShader = m_shaders.at(name).get();
+        Shader* newShader = m_shaders.at(name)->get();
         
         newShader->name = name;
         newShader->vertex = vertexBuffer;
@@ -67,11 +67,11 @@ bool ShaderManager::unload(std::string name) noexcept
         return false;
     }
 
-    if(m_shaders.at(name)->reference() > 0) return false;
+    if(m_shaders.at(name)->referenceCount() > 0) return false;
 
     try
     {
-        Engine::renderer().destroyShader(m_shaders.at(name).get()->handle);
+        Engine::renderer().destroyShader(m_shaders.at(name)->get()->handle);
         m_shaders.erase(name);
     }
     catch(const RendererException& exception)
@@ -93,17 +93,17 @@ void ShaderManager::dispose() noexcept
 {
     std::vector<std::string> keys;
     keys.reserve(m_shaders.size());
-    for(auto it : m_shaders)
-        keys.emplace_back(it.second->name);
+    for(auto& it : m_shaders)
+        keys.emplace_back(it.second->get()->name);
 
     for(auto it : keys) unload(it);
 }
 void ShaderManager::log() const noexcept
 {
-    Engine::logger().log("[    SHADER   ]", Logger::Info);
+    Engine::logger().log("[SHADER]", Logger::Info);
     
-    for(auto it = m_shaders.begin(); it != m_shaders.end(); it++)
+    for(auto& it : m_shaders)
     {
-        Engine::logger().log("- " + it->second.get()->name, Logger::Info);
+        Engine::logger().log("- " + it.first, Logger::Info);
     }
 }

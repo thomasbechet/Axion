@@ -30,14 +30,14 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
     catch(rapidxml::parse_error& e)
     {   
         Engine::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
-        return nullptr;
+        return AssetReference<Package>();
     }
     
     rapidxml::xml_node<>* package_node = doc.first_node("package");
     if(!package_node)
     {
         Engine::logger().log("Failed to load package " + path.path() + " because it does not contain 'package' node", Logger::Warning);
-        return nullptr;
+        return AssetReference<Package>();
     }
     
     std::string name = path.filename();
@@ -52,11 +52,11 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
     if(isLoaded(name))
     {
         Engine::logger().log("Failed to load package '" + name + "' because it already exists.", Logger::Warning);
-        return nullptr;
+        return AssetReference<Package>();
     }
 
     m_packages.emplace(name, std::make_unique<AssetHolder<Package>>());
-    Package* package = m_packages.at(name).get();
+    Package* package = m_packages.at(name)->get();
     package->name = name;
 
     for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
@@ -127,7 +127,7 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
         }
     }
 
-    return m_packages.at(name);
+    return m_packages.at(name)->reference();
 }
 bool PackageManager::unload(std::string name) noexcept
 {
@@ -137,7 +137,9 @@ bool PackageManager::unload(std::string name) noexcept
         return false;
     }
 
-    Package* package = m_packages.at(name).get();
+    if(m_packages.at(name)->referenceCount() > 0) return false;
+
+    Package* package = m_packages.at(name)->get();
 
     for(auto it = package->models.begin(); it != package->models.end(); it++)
     {
@@ -167,8 +169,13 @@ bool PackageManager::unload(std::string name) noexcept
         Engine::assets().material.unload(materialName);
     }  
     package->materials.clear();
-
-    if(m_packages.at(name)->referenceCount() > 0) return false;
+    for(auto it = package->shaders.begin(); it != package->shaders.end(); it++)
+    {
+        std::string shaderName = it->get()->name;
+        it->reset();
+        Engine::assets().shader.unload(shaderName);
+    }
+    package->shaders.clear();
 
     m_packages.erase(name);
 
@@ -183,17 +190,17 @@ void PackageManager::dispose() noexcept
 {
     std::vector<std::string> keys;
     keys.reserve(m_packages.size());
-    for(auto it : m_packages)
-        keys.emplace_back(it.second->name);
+    for(auto& it : m_packages)
+        keys.emplace_back(it.second->get()->name);
 
     for(auto it : keys) unload(it);
 }
 void PackageManager::log() const noexcept
 {
-    Engine::logger().log("[   PACKAGE   ]", Logger::Info);
+    Engine::logger().log("[PACKAGE]", Logger::Info);
     
-    for(auto it = m_packages.begin(); it != m_packages.end(); it++)
+    for(auto& it : m_packages)
     {
-        Engine::logger().log("- " + it->second.get()->name, Logger::Info);
+        Engine::logger().log("- " + it.first, Logger::Info);
     }
 }

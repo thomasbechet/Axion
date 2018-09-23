@@ -39,6 +39,6 @@ namespace ax
         void log() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<AssetReference<Package>>> m_packages;
+        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Package>>> m_packages;
     };
 }

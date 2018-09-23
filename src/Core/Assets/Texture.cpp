@@ -26,7 +26,7 @@ AssetReference<Texture> TextureManager::load(std::string name, Path path) noexce
     if(isLoaded(name))
     {
         Engine::logger().log("Failed to load texture '" + name + "' because it already exists.", Logger::Warning);
-        return nullptr;
+        return AssetReference<Texture>();
     }
 
     int width, height, bpp;
@@ -36,7 +36,7 @@ AssetReference<Texture> TextureManager::load(std::string name, Path path) noexce
     if(!data)
     {
         Engine::logger().log("Failed to load texture '" + path.path() + "'", Logger::Warning);
-        return nullptr;
+        return AssetReference<Texture>();
     }
 
     if(bpp == 3)
@@ -70,17 +70,16 @@ AssetReference<Texture> TextureManager::load(std::string name, Path path) noexce
 }
 bool TextureManager::unload(std::string name) noexcept
 {
-    try
-    {
-        if(m_textures.at(name)->referenceCount() > 0) return false;
-        stbi_image_free(m_textures.at(name)->data);
-        m_textures.erase(name);
-    }
-    catch(const std::out_of_range& exception)
+    if(!isLoaded(name))
     {
         Engine::logger().log("Failed to unload texture '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
+
+    if(m_textures.at(name)->referenceCount() > 0) return false;
+
+    stbi_image_free(m_textures.at(name)->get()->data);
+    m_textures.erase(name);
 
     return true;
 }
@@ -93,17 +92,17 @@ void TextureManager::dispose() noexcept
 {
     std::vector<std::string> keys;
     keys.reserve(m_textures.size());
-    for(auto it : m_textures)
-        keys.emplace_back(it.second->name);
+    for(auto& it : m_textures)
+        keys.emplace_back(it.second->get()->name);
 
     for(auto it : keys) unload(it);
 }
 void TextureManager::log() const noexcept
 {
-    Engine::logger().log("[   TEXTURE   ]", Logger::Info);
+    Engine::logger().log("[TEXTURE]", Logger::Info);
     
-    for(auto it = m_textures.begin(); it != m_textures.end(); it++)
+    for(auto& it : m_textures)
     {
-        Engine::logger().log("- " + it->second.get()->name, Logger::Info);
+        Engine::logger().log("- " + it.first, Logger::Info);
     }
 }

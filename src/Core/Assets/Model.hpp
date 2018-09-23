@@ -28,7 +28,7 @@ namespace ax
     public:
         AssetReference<Model> operator()(std::string name) const noexcept;
         AssetReference<Model> load(std::string name, Path path) noexcept;
-        bool unload(std::string name, bool tryUnloadMaterials = true, bool tryUnloadTextures = true) noexcept;
+        bool unload(std::string name, bool tryUnloadMeshes = true, bool tryUnloadMaterials = true, bool tryUnloadTextures = true) noexcept;
         bool isLoaded(std::string name) const noexcept;
 
         void dispose() noexcept;
