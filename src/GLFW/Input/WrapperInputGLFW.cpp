@@ -15,7 +15,7 @@ void WrapperInputGLFW::setInput(InputGLFW* input, GLFWwindow* window)
 
 void WrapperInputGLFW::cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    m_input->cursorPositionCallback(xpos, xpos);
+    m_input->cursorPositionCallback(xpos, -ypos);
 }
 void WrapperInputGLFW::cursor_scroll_callback(GLFWwindow* window, double xaxis, double yaxis)
 {

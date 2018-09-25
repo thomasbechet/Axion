@@ -31,6 +31,7 @@ ADD_LIBRARY(
     Prefabs/System/BasicControllerSystem.cpp
     Prefabs/Component/TransformComponent.cpp
     Prefabs/Component/BasicControllerComponent.cpp
+    Prefabs/Component/CameraComponent.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp

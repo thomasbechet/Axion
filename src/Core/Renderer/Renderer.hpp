@@ -52,13 +52,13 @@ namespace ax
         //Camera
         virtual Id createCamera() = 0;
         virtual void destroyCamera(Id id) = 0;
-        virtual void setCameraTransform(Id id, const Transform& transform) = 0;
+        virtual void setCameraTransform(Id id, Transform* transform) = 0;
         virtual void setCameraSettings(Id id, RendererCameraParameters settings) = 0;
         //Staticmesh
         virtual Id createStaticmesh() = 0;
         virtual void destroyStaticmesh(Id id) = 0;
         virtual void setStaticmeshMaterial(Id id, Id material) = 0;
-        virtual void setStaticmeshTransform(Id id, const Transform& transform) = 0;
+        virtual void setStaticmeshTransform(Id id, Transform* transform) = 0;
         virtual void setStaticmeshMesh(Id id, Id mesh) = 0;
     };
 }

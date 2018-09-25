@@ -9,6 +9,7 @@
 #include <OpenGL/Renderer/StaticmeshGL.hpp>
 #include <OpenGL/Renderer/MaterialGL.hpp>
 #include <OpenGL/Renderer/ShaderGL.hpp>
+#include <OpenGL/Renderer/CameraGL.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
 
@@ -49,13 +50,13 @@ namespace ax
         //Camera
         Id createCamera() override;
         void destroyCamera(Id id) override;
-        void setCameraTransform(Id id, const Transform& transform) override;
+        void setCameraTransform(Id id, Transform* transform) override;
         void setCameraSettings(Id id, RendererCameraParameters settings) override;
         //Staticmesh
         Id createStaticmesh() override;
         void destroyStaticmesh(Id id) override;
         void setStaticmeshMaterial(Id id, Id material) override;
-        void setStaticmeshTransform(Id id, const Transform& transform) override;
+        void setStaticmeshTransform(Id id, Transform* transform) override;
         void setStaticmeshMesh(Id id, Id mesh) override;
 
     private:
@@ -63,5 +64,6 @@ namespace ax
     
         IndexVector<MeshGL> m_meshes;
         IndexVector<ShaderGL> m_shaders;
+        IndexVector<CameraGL> m_cameras;
     };
 }

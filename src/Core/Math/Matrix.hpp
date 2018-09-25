@@ -4,6 +4,7 @@
 //Headers
 ///////////////////////////////////
 #include <Core/Export.hpp>
+#include <Core/Math/Math.hpp>
 #include <Core/Math/Vector.hpp>
 
 namespace ax
@@ -220,6 +221,11 @@ namespace ax
 			}
 			
 			return out;
+		}
+
+		const T* data() const noexcept
+		{
+			return &m[0][0];
 		}
 		
 	public:

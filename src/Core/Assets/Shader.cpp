@@ -104,6 +104,6 @@ void ShaderManager::log() const noexcept
     
     for(auto& it : m_shaders)
     {
-        Engine::logger().log("- " + it.first, Logger::Info);
+        Engine::logger().log(" \\_ " + it.first, Logger::Info);
     }
 }

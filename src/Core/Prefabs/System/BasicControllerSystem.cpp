@@ -5,6 +5,8 @@
 #include <Core/World/Component/ComponentIterator.hpp>
 #include <Core/Context/EngineContext.hpp>
 
+#include <iostream>
+
 using namespace ax;
 
 std::string BasicControllerSystem::name() noexcept
@@ -42,30 +44,34 @@ void BasicControllerSystem::onInitialize()
 }
 void BasicControllerSystem::onUpdate()
 {
-    Vector3f direction = Vector3f(0.0f, 0.0f, 0.0f);
+    float delta = Engine::context().getDeltaTime().asSeconds();
+
     Vector2f look = Vector2f(0.0f, 0.0f);
-
-    if(m_forward->isPressed()) direction += Vector3f::forward;
-    if(m_backward->isPressed()) direction += Vector3f::backward;
-    if(m_left->isPressed()) direction += Vector3f::left;
-    if(m_right->isPressed()) direction += Vector3f::right;
-    if(m_up->isPressed()) direction += Vector3f::up;
-    if(m_down->isPressed()) direction += Vector3f::down;
-    direction.normalize();
-
     look.x = m_lookX->delta();
     look.y = m_lookY->delta();
-
-    float delta = Engine::context().getDeltaTime().asSeconds();
 
     auto it = m_list->iterator();
     while(it.next())
     {
+        Vector3f direction = Vector3f(0.0f, 0.0f, 0.0f);
+
+        if(m_forward->isPressed()) direction += it->transform.getForwardVector();
+        if(m_backward->isPressed()) direction += it->transform.getBackwardVector();
+        if(m_left->isPressed()) direction += it->transform.getLeftVector();
+        if(m_right->isPressed()) direction += it->transform.getRightVector();
+        if(m_up->isPressed()) direction += it->transform.getUpVector();
+        if(m_down->isPressed()) direction += it->transform.getDownVector();
+        direction.normalize();
+
         it->transform.translate(direction * it->speed * delta);
         if(look.x != 0.0f) 
-            it->transform.rotate(radians(look.x), it->transform.getUpVector());
+            it->transform.rotate(-radians(look.x), Vector3f::up);
         if(look.y != 0.0f) 
-            it->transform.rotate(radians(look.y), it->transform.getRightVector());
+            it->transform.rotate(radians(look.y), Vector3f::right);
+        if(m_rotateLeft->isPressed())
+            it->transform.rotate(radians(50.0f) * delta, Vector3f::forward);
+        if(m_rotateRight->isPressed())
+            it->transform.rotate(-radians(50.0f) * delta, Vector3f::forward);
 
         if(Engine::input().isButtonPressed(Keyboard::Space))
             it->transform.setRotation(Quaternionf(0.0f, Vector3f::up));

@@ -123,6 +123,6 @@ void MaterialManager::log() const noexcept
     
     for(auto& it : m_materials)
     {
-        Engine::logger().log("- " + it.first, Logger::Info);
+        Engine::logger().log(" \\_ " + it.first, Logger::Info);
     }
 }

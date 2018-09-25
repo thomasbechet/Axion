@@ -20,6 +20,7 @@
 #include <Core/Window/Window.hpp>
 #include <Core/Prefabs/System/BasicWindowSystem.hpp>
 #include <Core/Prefabs/System/BasicControllerSystem.hpp>
+#include <Core/Prefabs/Component/CameraComponent.hpp>
 #include <Core/Prefabs/Component/TransformComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Assets/AssetManager.hpp>
@@ -113,8 +114,6 @@ public:
     {
         ax::Engine::assets().package.load("../packages/package.xml");
         ax::Engine::assets().log();
-        ax::Engine::assets().package.unload("mypackage");
-        ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
         ax::Engine::systems().add<ax::BasicControllerSystem>();
@@ -127,6 +126,7 @@ public:
         ax::Entity& e = ax::Engine::world().entities().create();
         ax::TransformComponent& trans = e.addComponent<ax::TransformComponent>();
         ax::BasicControllerComponent& controller = e.addComponent<ax::BasicControllerComponent>(e);
+        ax::CameraComponent& camera = e.addComponent<ax::CameraComponent>(e);
     }
     void onStop() override
     {

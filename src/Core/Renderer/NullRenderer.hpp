@@ -43,13 +43,13 @@ namespace ax
         //Camera
         Id createCamera() override {return 0;}
         void destroyCamera(Id id) override {}
-        void setCameraTransform(Id id, const Transform& transform) override {}
+        void setCameraTransform(Id id, Transform* transform) override {}
         void setCameraSettings(Id id, RendererCameraParameters settings) override {}
         //Staticmesh
         Id createStaticmesh() override {return 0;}
         void destroyStaticmesh(Id id) override {}
         void setStaticmeshMaterial(Id id, Id material) override {}
-        void setStaticmeshTransform(Id id, const Transform& transform) override {}
+        void setStaticmeshTransform(Id id, Transform* transform) override {}
         void setStaticmeshMesh(Id id, Id mesh) override {}
     };
 }

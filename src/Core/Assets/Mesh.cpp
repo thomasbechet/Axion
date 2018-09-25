@@ -122,6 +122,6 @@ void MeshManager::log() const noexcept
     
     for(auto& it : m_meshes)
     {
-        Engine::logger().log("- " + it.first, Logger::Info);
+        Engine::logger().log(" \\_ " + it.first, Logger::Info);
     }
 }
