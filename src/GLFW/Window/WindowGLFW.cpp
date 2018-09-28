@@ -3,6 +3,7 @@
 #include <Core/Context/Engine.hpp>
 #include <Core/Context/EngineContext.hpp>
 #include <Core/Renderer/Renderer.hpp>
+#include <Core/Input/Input.hpp>
 #include <GLFW/Window/WrapperWindowGLFW.hpp>
 
 #include <GLFW/glfw3.h>
@@ -149,6 +150,8 @@ void WindowGLFW::setMode(WindowMode mode) noexcept
         }  
         break;
     }
+
+    Engine::input().resetMouseMotion();
 }
 WindowMode WindowGLFW::getMode() noexcept
 {

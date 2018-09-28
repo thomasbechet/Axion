@@ -28,10 +28,10 @@ ADD_LIBRARY(
     Context/EngineContext.cpp
     Context/Engine.cpp
     Prefabs/System/BasicWindowSystem.cpp
-    Prefabs/System/BasicControllerSystem.cpp
+    Prefabs/System/BasicSpectatorSystem.cpp
     Prefabs/Component/TransformComponent.cpp
-    Prefabs/Component/BasicControllerComponent.cpp
     Prefabs/Component/CameraComponent.cpp
+    Prefabs/Component/BasicSpectatorComponent.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp

@@ -12,6 +12,9 @@ namespace ax
     struct AXION_GL_API CameraGL
     {
         Transform* transform = nullptr;
-        Matrix4f projection = Matrix4f::perspective();
+
+        float fov = 90.0f;
+        float near = 0.01f;
+        float far = 100.0f;
     };
 }

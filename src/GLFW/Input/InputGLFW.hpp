@@ -28,6 +28,7 @@ namespace ax
         CursorMode getCursorMode() const noexcept override;
         Vector2f getMousePosition() const noexcept override;
         Vector2f getMouseMotion() const noexcept override;
+        void resetMouseMotion() noexcept override; //TODO
         Vector2f getMouseScroll() const noexcept override;
         float getGamepadAxis(Gamepad::Axis axis) const noexcept override;
 

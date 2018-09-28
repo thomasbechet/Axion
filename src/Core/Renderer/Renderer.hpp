@@ -53,7 +53,7 @@ namespace ax
         virtual Id createCamera() = 0;
         virtual void destroyCamera(Id id) = 0;
         virtual void setCameraTransform(Id id, Transform* transform) = 0;
-        virtual void setCameraSettings(Id id, RendererCameraParameters settings) = 0;
+        virtual void setCameraParameters(Id id, RendererCameraParameters settings) = 0;
         //Staticmesh
         virtual Id createStaticmesh() = 0;
         virtual void destroyStaticmesh(Id id) = 0;

@@ -44,7 +44,7 @@ namespace ax
         Id createCamera() override {return 0;}
         void destroyCamera(Id id) override {}
         void setCameraTransform(Id id, Transform* transform) override {}
-        void setCameraSettings(Id id, RendererCameraParameters settings) override {}
+        void setCameraParameters(Id id, RendererCameraParameters settings) override {}
         //Staticmesh
         Id createStaticmesh() override {return 0;}
         void destroyStaticmesh(Id id) override {}

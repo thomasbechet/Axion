@@ -18,8 +18,10 @@ void RendererGL::setCameraTransform(Id id, Transform* transform)
     CameraGL& camera = m_cameras.get(id);
     camera.transform = transform;
 }
-void RendererGL::setCameraSettings(Id id, RendererCameraParameters settings)
+void RendererGL::setCameraParameters(Id id, RendererCameraParameters parameters)
 {
     CameraGL& camera = m_cameras.get(id);
-    camera.projection = Matrix4f::perspective();
+    camera.fov = parameters.fov;
+    camera.near = parameters.near;
+    camera.far = parameters.far;
 }

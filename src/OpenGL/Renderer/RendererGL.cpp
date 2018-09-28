@@ -38,7 +38,7 @@ void RendererGL::update(double alpha) noexcept
     Vector3f up = camera.transform->getUpVector();
 
     Matrix4f viewMatrix = Matrix4f::lookAt(eye, target, up);
-    Matrix4f projectionMatrix = Matrix4f::perspective(100.0f, Engine::window().getSize().x / Engine::window().getSize().y);
+    Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, (float)Engine::window().getSize().x / (float)Engine::window().getSize().y, camera.near, camera.far);
 
     glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix.data());
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projectionMatrix.data());

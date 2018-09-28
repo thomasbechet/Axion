@@ -144,6 +144,11 @@ Vector2f InputGLFW::getMouseMotion() const noexcept
 {
     return m_mouseMotion;
 }
+void InputGLFW::resetMouseMotion() noexcept //TODO
+{
+    m_mouseMotion = Vector2f(0.0f, 0.0f);
+    m_mouseOldPosition = m_mousePosition = Vector2f(0.0f, 0.0f);
+}
 Vector2f InputGLFW::getMouseScroll() const noexcept
 {
     return m_mouseScroll;

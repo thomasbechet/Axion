@@ -19,7 +19,7 @@
 #include <Core/Input/Input.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Prefabs/System/BasicWindowSystem.hpp>
-#include <Core/Prefabs/System/BasicControllerSystem.hpp>
+#include <Core/Prefabs/System/BasicSpectatorSystem.hpp>
 #include <Core/Prefabs/Component/CameraComponent.hpp>
 #include <Core/Prefabs/Component/TransformComponent.hpp>
 #include <Core/Utility/Path.hpp>
@@ -116,23 +116,19 @@ public:
         ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
-        ax::Engine::systems().add<ax::BasicControllerSystem>();
-        
-        ax::Quaternionf q = ax::Quaternionf(0.0f, ax::Vector3f(0.0f, 1.0f, 0.0f));
-        q *= ax::Quaternionf(ax::radians(90.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
-        ax::Vector3f v = ax::Vector3f::forward;
-        v = q * v;
+        ax::Engine::systems().add<ax::BasicSpectatorSystem>();
 
         ax::Entity& e = ax::Engine::world().entities().create();
         ax::TransformComponent& trans = e.addComponent<ax::TransformComponent>();
-        ax::BasicControllerComponent& controller = e.addComponent<ax::BasicControllerComponent>(e);
         ax::CameraComponent& camera = e.addComponent<ax::CameraComponent>(e);
+        ax::BasicSpectatorComponent& spectator = e.addComponent<ax::BasicSpectatorComponent>(e);
     }
     void onStop() override
     {
         //std::cout << "LENGTH:" << ax::Engine::world().components().getList<ax::AttachmentComponent>().length() << std::endl;
 
         ax::Engine::systems().remove<ax::BasicWindowSystem>();
+        ax::Engine::systems().remove<ax::BasicSpectatorSystem>();
     }
 };
 
