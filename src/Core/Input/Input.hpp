@@ -37,7 +37,6 @@ namespace ax
         virtual CursorMode getCursorMode() const noexcept = 0;
         virtual Vector2f getMousePosition() const noexcept = 0;
         virtual Vector2f getMouseMotion() const noexcept = 0;
-        virtual void resetMouseMotion() noexcept = 0;
         virtual Vector2f getMouseScroll() const noexcept = 0;
         virtual float getGamepadAxis(Gamepad::Axis axis) const noexcept = 0;
         

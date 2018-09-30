@@ -150,8 +150,6 @@ void WindowGLFW::setMode(WindowMode mode) noexcept
         }  
         break;
     }
-
-    Engine::input().resetMouseMotion();
 }
 WindowMode WindowGLFW::getMode() noexcept
 {

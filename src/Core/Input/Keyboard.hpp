@@ -59,6 +59,8 @@ namespace ax
         Space = Escape + 1,
         Enter = Space + 1,
         Tab = Enter + 1,
-        Backspace = Tab + 1
+        Backspace = Tab + 1,
+        LeftShift = Backspace + 1,
+        LeftControl = LeftShift + 1
     };
 }

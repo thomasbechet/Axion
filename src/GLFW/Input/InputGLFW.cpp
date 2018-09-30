@@ -68,7 +68,9 @@ static int glfw_keyboard_buttons[] =
     GLFW_KEY_SPACE,
     GLFW_KEY_ENTER,
     GLFW_KEY_TAB,
-    GLFW_KEY_BACKSPACE
+    GLFW_KEY_BACKSPACE,
+    GLFW_KEY_LEFT_SHIFT,
+    GLFW_KEY_LEFT_CONTROL
 };
 
 static int glfw_mouse_buttons[] = 
@@ -143,11 +145,6 @@ Vector2f InputGLFW::getMousePosition() const noexcept
 Vector2f InputGLFW::getMouseMotion() const noexcept
 {
     return m_mouseMotion;
-}
-void InputGLFW::resetMouseMotion() noexcept //TODO
-{
-    m_mouseMotion = Vector2f(0.0f, 0.0f);
-    m_mouseOldPosition = m_mousePosition = Vector2f(0.0f, 0.0f);
 }
 Vector2f InputGLFW::getMouseScroll() const noexcept
 {

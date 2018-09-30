@@ -22,7 +22,6 @@ namespace ax
         void onTerminate() override;
 
     private:
-        Button* m_reset = nullptr;
         Button* m_forward = nullptr;
         Button* m_backward = nullptr;
         Button* m_left = nullptr;
@@ -31,6 +30,9 @@ namespace ax
         Button* m_down = nullptr;
         Button* m_rotateLeft = nullptr;
         Button* m_rotateRight = nullptr;
+        Button* m_slowMode = nullptr;
+        Button* m_fastMode = nullptr;
+        Button* m_changeMode = nullptr;
         Axis* m_lookX = nullptr;
         Axis* m_lookY = nullptr;
         Axis* m_zoom = nullptr;
