@@ -94,7 +94,7 @@ Id RendererGL::createStaticmesh()
 }
 void RendererGL::destroyStaticmesh(Id id)
 {
-
+    
 }
 void RendererGL::setStaticmeshMaterial(Id id, Id material)
 {

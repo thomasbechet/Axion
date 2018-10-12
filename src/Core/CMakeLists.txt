@@ -32,6 +32,7 @@ ADD_LIBRARY(
     Prefabs/Component/TransformComponent.cpp
     Prefabs/Component/CameraComponent.cpp
     Prefabs/Component/BasicSpectatorComponent.cpp
+    Prefabs/Component/StaticMeshComponent.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp

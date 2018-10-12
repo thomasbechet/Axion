@@ -23,6 +23,7 @@ ADD_LIBRARY(
     Renderer/CameraGL.cpp
     Renderer/ShaderGL.cpp
     Renderer/MeshGL.cpp
+    Renderer/StaticmeshGL.cpp
 )
 
 #Adding glfw dependency
