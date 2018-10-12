@@ -43,7 +43,27 @@ void RendererGL::update(double alpha) noexcept
     glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix.data());
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projectionMatrix.data());
 
-    for(auto mesh : m_meshes)
+    for(auto materialIt : m_materials)
+    {
+        MaterialGL& material = it->first;
+        for(auto staticmeshIt : it->second)
+        {
+            StaticmeshGL& staticmesh = m_staticmeshes.get(staticmeshIt);
+            if(staticmesh.mesh != -1)
+            {
+                MeshGL& mesh = m_meshes.get(staticmesh.mesh);
+
+                int transformLocation = glGetUniformLocation(shader.programId, "transform");
+                glUniformMatrix4fv(transformLocation, 1, GL_FALSE, staticmesh.transform->data());
+
+                glBindVertexArray(mesh.vao);
+                glDrawArrays(GL_TRIANGLES, 0, mesh.size);
+                glBindVertexArray(0);
+            }
+        }
+    }
+
+    /*for(auto mesh : m_meshes)
     {
         Matrix4f transform = Matrix4f::identity();
 
@@ -53,7 +73,7 @@ void RendererGL::update(double alpha) noexcept
         glBindVertexArray(mesh.vao);
         glDrawArrays(GL_TRIANGLES, 0, mesh.size);
         glBindVertexArray(0);
-    }
+    }*/
 
     glUseProgram(0);
 }
@@ -74,37 +94,6 @@ Id RendererGL::createTexture(
     return 0;
 }
 void RendererGL::destroyTexture(Id id)
-{
-
-}
-//Material
-Id RendererGL::createMaterial(RendererMaterialParameters settings)
-{
-    return 0;
-}
-void RendererGL::destroyMaterial(Id id)
-{
-
-}
-
-//Staticmesh
-Id RendererGL::createStaticmesh()
-{
-    return 0;
-}
-void RendererGL::destroyStaticmesh(Id id)
-{
-    
-}
-void RendererGL::setStaticmeshMaterial(Id id, Id material)
-{
-
-}
-void RendererGL::setStaticmeshTransform(Id id, Transform* transform)
-{
-
-}
-void RendererGL::setStaticmeshMesh(Id id, Id mesh)
 {
 
 }

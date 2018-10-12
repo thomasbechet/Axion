@@ -9,6 +9,6 @@ namespace ax
 {
     struct AXION_GL_API MaterialGL
     {
-
+        
     };
 }
