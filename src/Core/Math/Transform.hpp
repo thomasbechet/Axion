@@ -49,7 +49,7 @@ namespace ax
         Matrix4f getWorldMatrix() noexcept;
         Matrix4f getMatrix() noexcept;
 
-        const Transform* data() const noexcept; 
+        const float* data() const noexcept; 
 
     protected:
         void setParent(Transform* newParent) noexcept;

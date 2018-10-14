@@ -25,7 +25,7 @@ namespace ax
 				m_list.push_back(element);
 				m_index.push_back(m_list.size() - 1);
 				m_backList.push_back(m_index.size() - 1);
-				return m_index.back();
+				return m_index.back() + 1;
 			}
 			else
 			{
@@ -36,11 +36,13 @@ namespace ax
 				m_backList.push_back(freeIndex);
 				m_index[freeIndex] = m_list.size() - 1;
 
-				return freeIndex;
+				return freeIndex + 1;
 			}
 		}
 		void remove(Id index)
 		{
+			index--;
+
 			Id element = m_index[index];
 
 			m_index[m_backList.back()] = element;
@@ -61,6 +63,7 @@ namespace ax
 
 		C& get(Id index)
 		{
+			index--;
 			return m_list[m_index[index]];
 		}
 

@@ -1,4 +1,4 @@
-#include <OpenGL/Renderer/MaterialGL.hpp>
+#include <OpenGL/Renderer/RendererGL.hpp>
 
 using namespace ax;
 

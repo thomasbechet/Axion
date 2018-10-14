@@ -1,4 +1,6 @@
-#include <OpenGL/Renderer/StaticmeshGL.hpp>
+#include <OpenGL/Renderer/RendererGL.hpp>
+
+#include <algorithm>
 
 using namespace ax;
 
@@ -17,7 +19,19 @@ void RendererGL::destroyStaticmesh(Id id)
 }
 void RendererGL::setStaticmeshMaterial(Id id, Id material)
 {
+    StaticmeshGL& staticmesh = m_staticmeshes.get(id);
+    if(staticmesh.material)
+    {
+        std::vector<Id>& meshes = m_materials.at(staticmesh.material).second;
+        meshes.erase(std::remove(meshes.begin(), meshes.end(), id), meshes.end());
+    }
 
+    staticmesh.material = material;
+    if(staticmesh.material)
+    {
+        std::vector<Id>& meshes = m_materials.at(staticmesh.material).second;
+        meshes.push_back(id);
+    }
 }
 void RendererGL::setStaticmeshTransform(Id id, Transform* transform)
 {

@@ -25,10 +25,10 @@ void RendererGL::update(double alpha) noexcept
     glClear(GL_COLOR_BUFFER_BIT);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    ShaderGL& shader = m_shaders.get(0);
+    ShaderGL& shader = m_shaders.get(1);
     glUseProgram(shader.programId);
 
-    CameraGL& camera = m_cameras.get(0);
+    CameraGL& camera = m_cameras.get(1);
 
     int viewLocation = glGetUniformLocation(shader.programId, "camera_view");
     int projectionLocation = glGetUniformLocation(shader.programId, "camera_projection");
@@ -43,18 +43,18 @@ void RendererGL::update(double alpha) noexcept
     glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix.data());
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projectionMatrix.data());
 
-    for(auto materialIt : m_materials)
+    for(auto& materialIt : m_materials)
     {
-        MaterialGL& material = it->first;
-        for(auto staticmeshIt : it->second)
+        MaterialGL& material = materialIt.second.first;
+        for(auto& staticmeshIt : materialIt.second.second)
         {
             StaticmeshGL& staticmesh = m_staticmeshes.get(staticmeshIt);
-            if(staticmesh.mesh != -1)
+            if(staticmesh.mesh)
             {
                 MeshGL& mesh = m_meshes.get(staticmesh.mesh);
 
                 int transformLocation = glGetUniformLocation(shader.programId, "transform");
-                glUniformMatrix4fv(transformLocation, 1, GL_FALSE, staticmesh.transform->data());
+                glUniformMatrix4fv(transformLocation, 1, GL_FALSE, staticmesh.transform->getWorldMatrix().data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);

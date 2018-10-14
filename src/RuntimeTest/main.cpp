@@ -22,6 +22,7 @@
 #include <Core/Prefabs/System/BasicSpectatorSystem.hpp>
 #include <Core/Prefabs/Component/CameraComponent.hpp>
 #include <Core/Prefabs/Component/TransformComponent.hpp>
+#include <Core/Prefabs/Component/MeshComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Assets/AssetManager.hpp>
 #include <Core/Assets/Texture.hpp>
@@ -115,13 +116,24 @@ public:
         ax::Engine::assets().package.load("../packages/package.xml");
         ax::Engine::assets().log();
 
+        
+
         ax::Engine::systems().add<ax::BasicWindowSystem>();
         ax::Engine::systems().add<ax::BasicSpectatorSystem>();
 
         ax::Entity& e = ax::Engine::world().entities().create();
-        ax::TransformComponent& trans = e.addComponent<ax::TransformComponent>();
-        ax::CameraComponent& camera = e.addComponent<ax::CameraComponent>(e);
-        ax::BasicSpectatorComponent& spectator = e.addComponent<ax::BasicSpectatorComponent>(e);
+        e.addComponent<ax::TransformComponent>();
+        e.addComponent<ax::CameraComponent>(e);
+        e.addComponent<ax::BasicSpectatorComponent>(e);
+
+        ax::Entity& mesh = ax::Engine::world().entities().create();
+        mesh.addComponent<ax::TransformComponent>().setTranslation(0.0f, 0.0f, 0.0f);
+        
+        std::string hello = nullptr;
+
+        //mesh.addComponent<ax::MeshComponent>(mesh).setMesh("model_cube_0");
+        std::cout << "temp" << std::endl;
+        mesh.addComponent<ax::MeshComponent>(mesh).setMesh(nullptr);
     }
     void onStop() override
     {
