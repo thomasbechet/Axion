@@ -4,12 +4,13 @@
 //HEADERS
 ////////////
 #include <OpenGL/Export.hpp>
+#include <Core/Utility/Color.hpp>
 
 namespace ax
 {
     struct AXION_GL_API MaterialGL
     {
-        bool diffuseUseTexture;
+        bool useDiffuseTexture;
         Color diffuseColor;
         GLint diffuseTexture;
     };

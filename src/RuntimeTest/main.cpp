@@ -127,7 +127,9 @@ public:
         e.addComponent<ax::BasicSpectatorComponent>(e);
 
         ax::Entity& mesh = ax::Engine::world().entities().create();
-        mesh.addComponent<ax::TransformComponent>().setTranslation(0.0f, 0.0f, 0.0f);
+        ax::TransformComponent& transform = mesh.addComponent<ax::TransformComponent>();
+        transform.setTranslation(0.0f, 0.0f, 0.0f);
+        transform.setRotation(90.0f, ax::Vector3f(1.0f, 0.0f, 0.0f));
         ax::MeshComponent& meshComponent = mesh.addComponent<ax::MeshComponent>(mesh);
         meshComponent.setMesh("model_cube_0");
         meshComponent.setMaterial("default_material");

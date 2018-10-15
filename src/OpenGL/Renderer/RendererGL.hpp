@@ -60,7 +60,7 @@ namespace ax
         void setStaticmeshMesh(Id id, Id mesh) override;
 
     private:
-        IndexVector<std::pair<MaterialGL, std::vector<Id>> m_materials;
+        IndexVector<std::pair<MaterialGL, std::vector<Id>>> m_materials;
         IndexVector<MeshGL> m_meshes;
         IndexVector<ShaderGL> m_shaders;
         IndexVector<CameraGL> m_cameras;

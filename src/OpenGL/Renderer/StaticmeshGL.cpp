@@ -22,14 +22,14 @@ void RendererGL::setStaticmeshMaterial(Id id, Id material)
     StaticmeshGL& staticmesh = m_staticmeshes.get(id);
     if(staticmesh.material)
     {
-        std::vector<Id>& meshes = m_materials.at(staticmesh.material).second;
+        std::vector<Id>& meshes = m_materials.get(staticmesh.material).second;
         meshes.erase(std::remove(meshes.begin(), meshes.end(), id), meshes.end());
     }
 
     staticmesh.material = material;
     if(staticmesh.material)
     {
-        std::vector<Id>& meshes = m_materials.at(staticmesh.material).second;
+        std::vector<Id>& meshes = m_materials.get(staticmesh.material).second;
         meshes.push_back(id);
     }
 }

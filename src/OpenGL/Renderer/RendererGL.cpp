@@ -16,7 +16,6 @@ void RendererGL::initialize() noexcept
 
     MaterialParameters defaultMaterial;
     defaultMaterial.diffuseUniform = Color(1.0f, 1.0f, 1.0f);
-
     Engine::assets().material.load("default_material", defaultMaterial);
 }
 void RendererGL::terminate() noexcept
@@ -49,10 +48,10 @@ void RendererGL::update(double alpha) noexcept
 
     for(auto& materialIt : m_materials)
     {
-        MaterialGL& material = materialIt.second.first;
-        for(auto& staticmeshIt : materialIt.second.second)
+        MaterialGL& material = materialIt.first;
+        for(auto& staticmeshId : materialIt.second)
         {
-            StaticmeshGL& staticmesh = m_staticmeshes.get(staticmeshIt);
+            StaticmeshGL& staticmesh = m_staticmeshes.get(staticmeshId);
             if(staticmesh.mesh)
             {
                 MeshGL& mesh = m_meshes.get(staticmesh.mesh);
