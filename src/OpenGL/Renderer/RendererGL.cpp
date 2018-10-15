@@ -2,10 +2,9 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
+#include <Core/Assets/AssetManager.hpp>
 
 #include <GL/glew.h>
-
-#include <iostream>
 
 using namespace ax;
 
@@ -14,6 +13,11 @@ void RendererGL::initialize() noexcept
     glewExperimental = GL_TRUE;
     if(glewInit() != GLEW_OK)
         Engine::interrupt("Failed to initialize GLEW");
+
+    MaterialParameters defaultMaterial;
+    defaultMaterial.diffuseUniform = Color(1.0f, 1.0f, 1.0f);
+
+    Engine::assets().material.load("default_material", defaultMaterial);
 }
 void RendererGL::terminate() noexcept
 {

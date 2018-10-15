@@ -128,12 +128,10 @@ public:
 
         ax::Entity& mesh = ax::Engine::world().entities().create();
         mesh.addComponent<ax::TransformComponent>().setTranslation(0.0f, 0.0f, 0.0f);
-        
-        std::string hello = nullptr;
-
-        //mesh.addComponent<ax::MeshComponent>(mesh).setMesh("model_cube_0");
-        std::cout << "temp" << std::endl;
-        mesh.addComponent<ax::MeshComponent>(mesh).setMesh(nullptr);
+        ax::MeshComponent& meshComponent = mesh.addComponent<ax::MeshComponent>(mesh);
+        meshComponent.setMesh("model_cube_0");
+        meshComponent.setMaterial("default_material");
+        //mesh.addComponent<ax::MeshComponent>(mesh).setMesh(nullptr);
     }
     void onStop() override
     {

@@ -21,8 +21,10 @@ namespace ax
         MeshComponent(const Entity& entity);
         ~MeshComponent();
 
-        void setMesh(std::string& name) noexcept;
+        void setMesh(std::nullptr_t) noexcept;
+        void setMesh(std::string name) noexcept;
         void setMesh(AssetReference<Mesh> mesh) noexcept;
+        void setMaterial(std::nullptr_t) noexcept;
         void setMaterial(std::string name) noexcept;
         void setMaterial(AssetReference<Material> material) noexcept;
 

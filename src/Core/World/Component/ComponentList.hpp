@@ -14,8 +14,6 @@
 #include <algorithm>
 #include <functional>
 
-#include <iostream>
-
 namespace ax
 {
     template<typename C>
@@ -36,9 +34,15 @@ namespace ax
     {
     public:
         friend class ComponentIterator<C>;
-        using Chunk = std::pair<C, bool>;
+        using Tuple = std::pair<C, bool>;
 
     public:
+        ~ComponentList()
+        {
+            for(auto it : m_components)
+                delete it;
+        }
+
         std::string name() const noexcept
         {
             return C::name();
@@ -62,7 +66,7 @@ namespace ax
                 m_length++;
 
                 if((m_length / COMPONENT_CHUNK_SIZE) + 1 > m_components.size()) //Need to allocate a new chunk
-                    m_components.emplace_back(static_cast<Chunk*>(operator new(sizeof(Chunk) * COMPONENT_CHUNK_SIZE)));
+                    m_components.emplace_back(static_cast<Tuple*>(operator new(sizeof(Tuple) * COMPONENT_CHUNK_SIZE)));
 
                 unsigned id = m_length - 1;
 
@@ -111,7 +115,7 @@ namespace ax
 
         Memory memory() const noexcept
         {
-            return m_components.size() * COMPONENT_CHUNK_SIZE * sizeof(Chunk);
+            return m_components.size() * COMPONENT_CHUNK_SIZE * sizeof(Tuple);
         }
 
         ComponentIterator<C> iterator() const noexcept
@@ -149,7 +153,7 @@ namespace ax
         }
 
     private:
-        std::vector<Chunk*> m_components;
+        std::vector<Tuple*> m_components;
         std::vector<unsigned> m_free;
         unsigned m_length = 0;
 

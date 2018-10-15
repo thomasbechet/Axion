@@ -17,23 +17,29 @@ MeshComponent::~MeshComponent()
 {
     Engine::renderer().destroyStaticmesh(m_handle);
 }
-#include <iostream>
-void MeshComponent::setMesh(std::string& name) noexcept
-{
-    std::cout << "YERA merde" << std::endl;
 
+void MeshComponent::setMesh(std::nullptr_t) noexcept
+{
+    m_mesh.reset();
+    Engine::renderer().setStaticmeshMesh(m_handle, 0);
+}
+void MeshComponent::setMesh(std::string name) noexcept
+{
     m_mesh = Engine::assets().mesh(name);
     Engine::renderer().setStaticmeshMesh(m_handle, m_mesh->handle);
 }
 void MeshComponent::setMesh(AssetReference<Mesh> mesh) noexcept
 {
-    std::cout << "YERA" << std::endl;
-
     m_mesh = mesh;
     if(m_mesh)
         Engine::renderer().setStaticmeshMesh(m_handle, m_mesh->handle);
     else
         Engine::renderer().setStaticmeshMesh(m_handle, 0);
+}
+void MeshComponent::setMaterial(std::nullptr_t) noexcept
+{
+    m_material.reset();
+    Engine::renderer().setStaticmeshMaterial(m_handle, 0);
 }
 void MeshComponent::setMaterial(std::string name) noexcept
 {
