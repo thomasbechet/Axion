@@ -23,6 +23,7 @@
 #include <Core/Prefabs/Component/CameraComponent.hpp>
 #include <Core/Prefabs/Component/TransformComponent.hpp>
 #include <Core/Prefabs/Component/MeshComponent.hpp>
+#include <Core/Prefabs/Component/ModelComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Assets/AssetManager.hpp>
 #include <Core/Assets/Texture.hpp>
@@ -130,10 +131,8 @@ public:
         ax::TransformComponent& transform = mesh.addComponent<ax::TransformComponent>();
         transform.setTranslation(0.0f, 0.0f, 0.0f);
         transform.setRotation(90.0f, ax::Vector3f(1.0f, 0.0f, 0.0f));
-        ax::MeshComponent& meshComponent = mesh.addComponent<ax::MeshComponent>(mesh);
-        meshComponent.setMesh("model_cube_0");
-        meshComponent.setMaterial("default_material");
-        //mesh.addComponent<ax::MeshComponent>(mesh).setMesh(nullptr);
+        //mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel(ax::Engine::assets().mesh("model_cube_0"));
     }
     void onStop() override
     {
