@@ -24,14 +24,15 @@ namespace ax
         void setModel(std::nullptr_t) noexcept;
         void setModel(std::string name) noexcept;
         void setModel(AssetReference<Model> model) noexcept;
+        void setModel(AssetReference<Mesh> mesh) noexcept;
+
+        void setMaterial(std::nullptr_t, Id component = 0) noexcept;
+        void setMaterial(std::string name, Id component = 0) noexcept;
+        void setMaterial(AssetReference<Material> material, Id component = 0) noexcept;
 
         TransformComponent& transform;
 
     private:
-        void loadModelChilds() noexcept;
-        void unloadModelChilds() noexcept;
-
-        AssetReference<Model> m_model;
-        std::vector<Entity*> m_childs;
+        std::vector<std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>> m_elements;
     };
 }
