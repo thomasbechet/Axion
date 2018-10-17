@@ -17,5 +17,5 @@ out vec2 uv;
 void main()
 {
 	gl_Position = camera_projection * camera_view * transform * vec4(in_vertex, 1.0f);
-	normal = in_normal;
+	normal = (camera_view * transform * vec4(in_normal, 0.0f)).xyz;
 }
