@@ -39,7 +39,7 @@ void ModelComponent::setModel(AssetReference<Model> model) noexcept
 
     m_elements.reserve(meshes.size());
 
-    for(size_t it = 0; meshes.size(); it++)
+    for(size_t it = 0; it < meshes.size(); it++)
     {
         Id id = Engine::renderer().createStaticmesh();
         Engine::renderer().setStaticmeshTransform(id, &transform);
@@ -55,12 +55,16 @@ void ModelComponent::setModel(AssetReference<Mesh> mesh) noexcept
 {   
     setModel(nullptr);
 
+    AssetReference<Material> material = Engine::assets().material(Material::Default);
+
     Id id = Engine::renderer().createStaticmesh();
     Engine::renderer().setStaticmeshTransform(id, &transform);
     Engine::renderer().setStaticmeshMesh(id, mesh->handle);
-    Engine::renderer().setStaticmeshMaterial(id, 1);
+    Engine::renderer().setStaticmeshMaterial(id, material->handle);
 
-    
+    m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>(
+        mesh, material, id
+    ));
 }
 
 void ModelComponent::setMaterial(std::nullptr_t ptr, Id component) noexcept

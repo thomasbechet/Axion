@@ -22,11 +22,11 @@
 #include <Core/Prefabs/System/BasicSpectatorSystem.hpp>
 #include <Core/Prefabs/Component/CameraComponent.hpp>
 #include <Core/Prefabs/Component/TransformComponent.hpp>
-#include <Core/Prefabs/Component/MeshComponent.hpp>
 #include <Core/Prefabs/Component/ModelComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Assets/AssetManager.hpp>
 #include <Core/Assets/Texture.hpp>
+#include <RuntimeTest/CustomSystem.hpp>
 
 struct Position : public ax::Component
 {
@@ -129,10 +129,10 @@ public:
 
         ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform = mesh.addComponent<ax::TransformComponent>();
-        transform.setTranslation(0.0f, 0.0f, 0.0f);
-        transform.setRotation(90.0f, ax::Vector3f(1.0f, 0.0f, 0.0f));
-        //mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel(ax::Engine::assets().mesh("model_cube_0"));
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_cube");
+        
+
+        ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
     }
     void onStop() override
     {

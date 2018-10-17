@@ -7,11 +7,6 @@
 
 using namespace ax;
 
-std::string BasicWindowSystem::name() noexcept
-{
-    return "BasicWindowSystem";
-}
-
 void BasicWindowSystem::onInitialize()
 {
     m_fullscreenButton = &Engine::input().addButton("basicwindow_fullscreen");

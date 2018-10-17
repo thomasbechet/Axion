@@ -23,6 +23,8 @@ namespace ax
 
     struct AXION_CORE_API Material
     {
+        static constexpr const char* Default = "default_material";
+
         std::string name;
 
         AssetReference<Texture> diffuseTexture;

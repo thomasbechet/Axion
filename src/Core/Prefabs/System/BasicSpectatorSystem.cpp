@@ -5,14 +5,7 @@
 #include <Core/World/Component/ComponentIterator.hpp>
 #include <Core/Context/EngineContext.hpp>
 
-#include <iostream>
-
 using namespace ax;
-
-std::string BasicSpectatorSystem::name() noexcept
-{
-    return "BasicSpectator";
-}
 
 void BasicSpectatorSystem::onInitialize()
 {

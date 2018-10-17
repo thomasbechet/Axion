@@ -12,6 +12,9 @@ Id RendererGL::createMesh(const std::vector<Vertex>& vertices)
     MeshGL& mesh = m_meshes.get(id);
     mesh.size = vertices.size();
 
+    for(auto& vert : vertices)
+        std::cout << vert.normal.x << " " << vert.normal.y << std::endl;
+
     glGenVertexArrays(1, &mesh.vao);
     glBindVertexArray(mesh.vao);
 

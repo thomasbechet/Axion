@@ -7,33 +7,17 @@ class CustomSystem : public ax::System
 public:
     static std::string name(){return "CustomSystem";}
 
-private:
+    void setTransform(ax::TransformComponent* transform)
+    {
+        m_transform = transform;
+    }
+
     void onUpdate() override
     {
-        std::cout << "RIP" << std::endl;
+        float delta = ax::Engine::context().getDeltaTime().asSeconds();
+        m_transform->rotate(ax::radians(delta * 10.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
     }
-};
-
-class CustomSystem2 : public ax::System
-{
-public:
-    static std::string name(){return "CustomSystem2";}
 
 private:
-    void onUpdate() override
-    {
-        std::cout << "RIP" << std::endl;
-    }
-};
-
-class CustomSystem3 : public ax::System
-{
-public:
-    static std::string name(){return "CustomSystem3";}
-
-private:
-    void onUpdate() override
-    {
-        std::cout << "RIP" << std::endl;
-    }
+    ax::TransformComponent* m_transform;
 };
