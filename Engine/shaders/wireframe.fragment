@@ -11,7 +11,8 @@ void main()
 
 	float diff = max(dot(normal, light_dir), 0.0);
 
+	out_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	//out_color = vec4(1.0f * diff, 1.0f * diff, 1.0f * diff, 1.0f);
 	//out_color = vec4(normal.x, normal.y, normal.z, 1.0f);
-	out_color = vec4(uv.x, uv.y, 0.0f, 1.0f);
+	//out_color = vec4(uv.x, uv.y, 0.0f, 1.0f);
 }

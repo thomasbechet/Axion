@@ -6,6 +6,8 @@
 
 #include <GL/glew.h>
 
+#include <iostream>
+
 using namespace ax;
 
 void RendererGL::initialize() noexcept
@@ -22,7 +24,12 @@ void RendererGL::update(double alpha) noexcept
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    std::cout << glGetError() << std::endl;
 
     ShaderGL& shader = m_shaders.get(1);
     glUseProgram(shader.programId);
