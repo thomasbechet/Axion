@@ -22,4 +22,5 @@ void main()
 	normal = (transform * vec4(in_normal, 1.0f)).xyz;
 	fragPos = vec3(transform * vec4(in_vertex, 1.0));
 	color = in_color;
+	uv = in_uv;
 }

@@ -65,6 +65,7 @@ AssetReference<Texture> TextureManager::load(std::string name, Path path) noexce
     texture->data = data;
     texture->size.x = (unsigned)width;
     texture->size.y = (unsigned)height;
+    texture->handle = handle;
 
     return m_textures.at(name)->reference();
 }

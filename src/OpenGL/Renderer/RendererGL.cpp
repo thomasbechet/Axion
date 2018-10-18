@@ -52,6 +52,22 @@ void RendererGL::update(double alpha) noexcept
     for(auto& materialIt : m_materials)
     {
         MaterialGL& material = materialIt.first;
+
+        if(material.useDiffuseTexture)
+        {
+            glUniform1i(glGetUniformLocation(shader.programId, "useDiffuse"), true);
+
+            int textureLocation = glGetUniformLocation(shader.programId, "texture");
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, m_textures.get(material.diffuseTexture).id);
+        }
+        else
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glUniform1i(glGetUniformLocation(shader.programId, "useDiffuse"), false);   
+        }
+
         for(auto& staticmeshId : materialIt.second)
         {
             StaticmeshGL& staticmesh = m_staticmeshes.get(staticmeshId);

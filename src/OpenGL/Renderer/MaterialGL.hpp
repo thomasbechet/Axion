@@ -12,6 +12,6 @@ namespace ax
     {
         bool useDiffuseTexture;
         Color diffuseColor;
-        GLint diffuseTexture;
+        Id diffuseTexture;
     };
 }
