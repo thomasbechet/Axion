@@ -28,8 +28,8 @@ void RendererGL::update(double alpha) noexcept
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-
-    std::cout << glGetError() << std::endl;
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
 
     ShaderGL& shader = m_shaders.get(1);
     glUseProgram(shader.programId);

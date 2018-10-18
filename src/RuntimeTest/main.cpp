@@ -117,19 +117,18 @@ public:
         ax::Engine::assets().package.load("../packages/package.xml");
         ax::Engine::assets().log();
 
-        
-
         ax::Engine::systems().add<ax::BasicWindowSystem>();
         ax::Engine::systems().add<ax::BasicSpectatorSystem>();
 
         ax::Entity& e = ax::Engine::world().entities().create();
         e.addComponent<ax::TransformComponent>();
-        e.addComponent<ax::CameraComponent>(e);
+        e.addComponent<ax::CameraComponent>(e).setFarPlane(300.0f);
         e.addComponent<ax::BasicSpectatorComponent>(e);
 
         ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform = mesh.addComponent<ax::TransformComponent>();
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_cube");
+        transform.setScale(0.05f, 0.05f, 0.05f);
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
         
 
         ax::Engine::systems().add<CustomSystem>().setTransform(&transform);

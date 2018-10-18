@@ -12,9 +12,6 @@ Id RendererGL::createMesh(const std::vector<Vertex>& vertices)
     MeshGL& mesh = m_meshes.get(id);
     mesh.size = vertices.size();
 
-    for(auto& vert : vertices)
-        std::cout << vert.normal.x << " " << vert.normal.y << std::endl;
-
     glGenVertexArrays(1, &mesh.vao);
     glBindVertexArray(mesh.vao);
 
@@ -22,17 +19,16 @@ Id RendererGL::createMesh(const std::vector<Vertex>& vertices)
     glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-    glEnableVertexAttribArray(4);
-
     glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 2, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(Vector3f)));
+    glEnableVertexAttribArray(1);
     glVertexAttribPointer(2, 3, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(Vector3f) + sizeof(Vector2f)));
+    glEnableVertexAttribArray(2);
     glVertexAttribPointer(3, 3, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(Vector3f) + sizeof(Vector2f) + sizeof(Vector3f)));
+    glEnableVertexAttribArray(3);
     glVertexAttribPointer(4, 3, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(Vector3f) + sizeof(Vector2f) + sizeof(Vector3f) + sizeof(Vector3f)));
+    glEnableVertexAttribArray(4);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);

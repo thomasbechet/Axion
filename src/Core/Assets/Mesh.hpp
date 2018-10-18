@@ -30,7 +30,7 @@ namespace ax
     {
     public:
         AssetReference<Mesh> operator()(std::string name) const noexcept;
-        AssetReference<Mesh> load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent = false) noexcept;
+        AssetReference<Mesh> load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent = false, bool computeNormal = false) noexcept;
         bool unload(std::string name) noexcept;
         bool isLoaded(std::string name) const noexcept;
 

@@ -15,7 +15,8 @@ public:
     void onUpdate() override
     {
         float delta = ax::Engine::context().getDeltaTime().asSeconds();
-        m_transform->rotate(ax::radians(delta * 10.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
+        //m_transform->rotate(ax::radians(delta * 10.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
+        //m_transform->rotate(ax::radians(delta * 10.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
     }
 
 private:

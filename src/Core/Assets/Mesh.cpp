@@ -18,7 +18,7 @@ AssetReference<Mesh> MeshManager::operator()(std::string name) const noexcept
         Engine::interrupt("Failed to access mesh '" + name + "'");
     }
 }
-AssetReference<Mesh> MeshManager::load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent) noexcept
+AssetReference<Mesh> MeshManager::load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent, bool computeNormal) noexcept
 {
     if(isLoaded(name))
     {
@@ -32,9 +32,29 @@ AssetReference<Mesh> MeshManager::load(std::string name, const std::vector<Verte
 
     mesh->vertices = vertices;
 
+    if(computeNormal)
+    {
+        //Compute normal
+        for(size_t i = 0; i < mesh->vertices.size(); i += 3)
+        {
+            Vector3f& v0 = mesh->vertices[i + 0].position;
+            Vector3f& v1 = mesh->vertices[i + 1].position;
+            Vector3f& v2 = mesh->vertices[i + 2].position;
+
+            Vector3f a = v2 - v0;
+            Vector3f b = v1 - v0;
+
+            Vector3f normal = Vector3f::cross(b, a);
+
+            mesh->vertices[i + 0].normal = normal;
+            mesh->vertices[i + 1].normal = normal;
+            mesh->vertices[i + 2].normal = normal;
+        }
+    }
+
     if(computeTangent)
     {
-        //Compute tangent and bitangent
+        //Compute tangent
         for(size_t i = 0; i < mesh->vertices.size(); i += 3)
         {
             Vector3f& v0 = mesh->vertices[i + 0].position;

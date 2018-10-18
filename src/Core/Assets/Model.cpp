@@ -134,17 +134,27 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
                 vertex.position.x = attrib.vertices[3 * idx.vertex_index + 0];
                 vertex.position.y = attrib.vertices[3 * idx.vertex_index + 1];
                 vertex.position.z = attrib.vertices[3 * idx.vertex_index + 2];
-                vertex.normal.x = attrib.vertices[3 * idx.normal_index + 0];
-                vertex.normal.y = attrib.vertices[3 * idx.normal_index + 1];
-                vertex.normal.z = attrib.vertices[3 * idx.normal_index + 2];
-                vertex.uv.x = attrib.vertices[2 * idx.texcoord_index + 0];
-                vertex.uv.y = attrib.vertices[2 * idx.texcoord_index + 1];
+                
+                if(!attrib.texcoords.empty())
+                {
+                    vertex.uv.x = attrib.texcoords[2 * idx.texcoord_index + 0];
+                    vertex.uv.y = attrib.texcoords[2 * idx.texcoord_index + 1];
+                }
+
+                if(!attrib.normals.empty())
+                {
+                    vertex.normal.x = attrib.normals[3 * idx.normal_index + 0];
+                    vertex.normal.y = attrib.normals[3 * idx.normal_index + 1];
+                    vertex.normal.z = attrib.normals[3 * idx.normal_index + 2];                    
+                }
+
                 vertex.color.x = attrib.colors[3 * idx.vertex_index + 0];
                 vertex.color.y = attrib.colors[3 * idx.vertex_index + 1];
                 vertex.color.z = attrib.colors[3 * idx.vertex_index + 2];
 
                 meshes[materialId].push_back(vertex);
             }
+
             index_offset += fv;
         }
     }
@@ -159,7 +169,7 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
         size_t i = std::distance(meshes.begin(), it);
         
         std::string meshName = name + "_" + std::to_string(i);
-        Engine::assets().mesh.load(meshName, it->second, true);
+        Engine::assets().mesh.load(meshName, it->second, true, attrib.normals.empty());
         model->meshes.emplace_back(Engine::assets().mesh(meshName));
 
         if(it->first != -1)

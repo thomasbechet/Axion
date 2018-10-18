@@ -5,17 +5,19 @@ out vec4 out_color;
 in vec3 normal;
 in vec2 uv;
 
+in vec3 fragPos;
+in vec3 color;
+
 void main()
 {
-	vec3 light_dir = vec3(1.0f, 0.0f, 0.0f);
+	vec3 lightPos = vec3(4.0f, 4.0f, 0.0f);
+	float ambientStrength = 0.05f;
 
-	vec3 l = normalize(light_dir);
 	vec3 n = normalize(normal);
+	vec3 l = normalize(lightPos - fragPos);
 
-	float diff = max(dot(n, l), 0.0);
+	float diffuse = max(dot(n, l), 0.0f);
+	vec3 ambient = color * ambientStrength;
 
-	//out_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	out_color = vec4(1.0f * diff, 1.0f * diff, 1.0f * diff, 1.0f);
-	//out_color = vec4(normal.x, normal.y, normal.z, 1.0f);
-	//out_color = vec4(uv.x, uv.y, 0.0f, 1.0f);
+	out_color = vec4((diffuse * color) + ambient, 1.0f);
 }
