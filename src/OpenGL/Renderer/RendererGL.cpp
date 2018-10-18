@@ -78,16 +78,3 @@ void RendererGL::updateViewport() noexcept
     Vector2u windowSize = Engine::window().getSize();
     glViewport(0, 0, windowSize.x, windowSize.y);
 }
-//Texture
-Id RendererGL::createTexture(
-    Vector2u size,
-    TextureFormat format,
-    const Byte* data
-)
-{
-    return 0;
-}
-void RendererGL::destroyTexture(Id id)
-{
-
-}

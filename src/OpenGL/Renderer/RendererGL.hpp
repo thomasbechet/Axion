@@ -65,5 +65,6 @@ namespace ax
         IndexVector<ShaderGL> m_shaders;
         IndexVector<CameraGL> m_cameras;
         IndexVector<StaticmeshGL> m_staticmeshes;
+        IndexVector<TextureGL> m_textures;
     };
 }

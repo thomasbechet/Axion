@@ -25,6 +25,7 @@ ADD_LIBRARY(
     Renderer/MeshGL.cpp
     Renderer/StaticmeshGL.cpp
     Renderer/MaterialGL.cpp
+    Renderer/TextureGL.cpp
 )
 
 #Adding glfw dependency
