@@ -20,6 +20,7 @@
 #include <Core/Window/Window.hpp>
 #include <Core/Prefabs/System/BasicWindowSystem.hpp>
 #include <Core/Prefabs/System/BasicSpectatorSystem.hpp>
+#include <Core/Prefabs/System/RenderModeSystem.hpp>
 #include <Core/Prefabs/Component/CameraComponent.hpp>
 #include <Core/Prefabs/Component/TransformComponent.hpp>
 #include <Core/Prefabs/Component/ModelComponent.hpp>
@@ -119,6 +120,7 @@ public:
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
         ax::Engine::systems().add<ax::BasicSpectatorSystem>();
+        ax::Engine::systems().add<ax::RenderModeSystem>();
 
         ax::Entity& e = ax::Engine::world().entities().create();
         e.addComponent<ax::TransformComponent>();
@@ -139,6 +141,7 @@ public:
 
         ax::Engine::systems().remove<ax::BasicWindowSystem>();
         ax::Engine::systems().remove<ax::BasicSpectatorSystem>();
+        ax::Engine::systems().remove<ax::RenderModeSystem>();
     }
 };
 

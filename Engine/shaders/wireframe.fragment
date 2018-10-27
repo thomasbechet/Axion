@@ -2,32 +2,7 @@
 
 out vec4 out_color;
 
-in vec3 normal;
-in vec2 uv;
-in vec3 fragPos;
-in vec3 color;
-
-uniform sampler2D textureDiffuse;
-uniform bool useDiffuse;
-
 void main()
 {
-	vec3 lightPos = vec3(4.0f, 4.0f, 0.0f);
-	float ambientStrength = 0.05f;
-
-	vec4 colorDiffuse = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	colorDiffuse = vec4(color, 1.0f);
-
-	if(useDiffuse)
-		colorDiffuse = texture(textureDiffuse, vec2(uv.x, 1.0f - uv.y)).xyzw;
-
-	vec3 n = normalize(normal);
-	vec3 l = normalize(lightPos - fragPos);
-
-	float diffuse = max(dot(n, l), 0.0f);
-	vec4 ambient = colorDiffuse * ambientStrength;
-
-	out_color = (diffuse * colorDiffuse) + ambient;
-
-	out_color = vec4((normal + 1.0) / 2.0, 1.0f);
+	out_color = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

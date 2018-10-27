@@ -76,6 +76,11 @@ namespace ax
         void setDirectionalLightParameters(Id id, DirectionalLightParameters parameters) override;
 
     private:
+        void initializeRenderPass() noexcept;
+        void renderRenderPass(double alpha) noexcept;
+        void terminateRenderPass() noexcept;
+
+    private:
         void initializeDefault() noexcept;
         void renderDefault(double alpha) noexcept;
         void terminateDefault() noexcept;
@@ -100,5 +105,9 @@ namespace ax
 
         RenderMode m_renderMode = RenderMode::Default;
         Color m_clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+
+        AssetReference<Shader> m_defaultShader;
+        AssetReference<Shader> m_wireframeShader;
+        AssetReference<Shader> m_debugShader;
     };
 }

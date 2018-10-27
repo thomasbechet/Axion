@@ -29,6 +29,7 @@ ADD_LIBRARY(
     Context/Engine.cpp
     Prefabs/System/BasicWindowSystem.cpp
     Prefabs/System/BasicSpectatorSystem.cpp
+    Prefabs/System/RenderModeSystem.cpp
     Prefabs/Component/TransformComponent.cpp
     Prefabs/Component/CameraComponent.cpp
     Prefabs/Component/BasicSpectatorComponent.cpp

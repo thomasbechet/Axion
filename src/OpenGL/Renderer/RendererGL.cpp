@@ -2,11 +2,8 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
-#include <Core/Assets/AssetManager.hpp>
 
 #include <GL/glew.h>
-
-#include <iostream>
 
 using namespace ax;
 
@@ -15,12 +12,70 @@ void RendererGL::initialize() noexcept
     glewExperimental = GL_TRUE;
     if(glewInit() != GLEW_OK)
         Engine::interrupt("Failed to initialize GLEW");
+
+    m_renderMode = RenderMode::Default;
+    initializeRenderPass();
 }
 void RendererGL::terminate() noexcept
 {
-
+    terminateRenderPass();
 }
 void RendererGL::update(double alpha) noexcept
+{
+    renderRenderPass(alpha);
+}
+
+
+//Viewport
+void RendererGL::updateViewport() noexcept
+{
+    Vector2u windowSize = Engine::window().getSize();
+    glViewport(0, 0, windowSize.x, windowSize.y);
+}
+
+//Rendermode
+void RendererGL::setRenderMode(RenderMode mode)
+{
+    if(m_renderMode != mode)
+    {
+        terminateRenderPass();
+
+        m_renderMode = mode;
+    
+        initializeRenderPass();
+    } 
+}
+RenderMode RendererGL::getRenderMode()
+{
+    return m_renderMode;
+}
+
+void RendererGL::initializeRenderPass() noexcept
+{
+    //Initialize new one
+    switch(m_renderMode)
+    {
+        case RenderMode::Default:
+            initializeDefault();
+        break;
+        case RenderMode::Wireframe:
+            initializeWireframe();
+        break;
+        case RenderMode::Debug0:
+            initializeDebug();
+        break;
+        case RenderMode::Debug1:
+            initializeDebug();
+        break;
+        case RenderMode::Debug2:
+            initializeDebug();
+        break;
+        default:
+            initializeDefault();
+        break;
+    }
+}
+void RendererGL::renderRenderPass(double alpha) noexcept
 {
     switch(m_renderMode)
     {
@@ -44,21 +99,27 @@ void RendererGL::update(double alpha) noexcept
         break;
     }
 }
-
-
-//Viewport
-void RendererGL::updateViewport() noexcept
+void RendererGL::terminateRenderPass() noexcept
 {
-    Vector2u windowSize = Engine::window().getSize();
-    glViewport(0, 0, windowSize.x, windowSize.y);
-}
-
-//Rendermode
-void RendererGL::setRenderMode(RenderMode mode)
-{
-    m_renderMode = mode;
-}
-RenderMode RendererGL::getRenderMode()
-{
-    return m_renderMode;
+    switch(m_renderMode)
+    {
+        case RenderMode::Default:
+            terminateDefault();
+        break;
+        case RenderMode::Wireframe:
+            terminateWireframe();
+        break;
+        case RenderMode::Debug0:
+            terminateDebug();
+        break;
+        case RenderMode::Debug1:
+            terminateDebug();
+        break;
+        case RenderMode::Debug2:
+            terminateDebug();
+        break;
+        default:
+            terminateDefault();
+        break;
+    }
 }
