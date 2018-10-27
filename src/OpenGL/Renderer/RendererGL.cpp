@@ -22,75 +22,43 @@ void RendererGL::terminate() noexcept
 }
 void RendererGL::update(double alpha) noexcept
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
-
-    ShaderGL& shader = m_shaders.get(1);
-    glUseProgram(shader.programId);
-
-    CameraGL& camera = m_cameras.get(1);
-
-    int viewLocation = glGetUniformLocation(shader.programId, "camera_view");
-    int projectionLocation = glGetUniformLocation(shader.programId, "camera_projection");
-
-    Vector3f eye = camera.transform->getTranslation();
-    Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
-    Vector3f up = camera.transform->getUpVector();
-
-    Matrix4f viewMatrix = Matrix4f::lookAt(eye, target, up);
-    Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, (float)Engine::window().getSize().x / (float)Engine::window().getSize().y, camera.near, camera.far);
-
-    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix.data());
-    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projectionMatrix.data());
-
-    for(auto& materialIt : m_materials)
+    switch(m_renderMode)
     {
-        MaterialGL& material = materialIt.first;
-
-        if(material.useDiffuseTexture)
-        {
-            glUniform1i(glGetUniformLocation(shader.programId, "useDiffuse"), true);
-
-            int textureLocation = glGetUniformLocation(shader.programId, "texture");
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, m_textures.get(material.diffuseTexture).id);
-        }
-        else
-        {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glUniform1i(glGetUniformLocation(shader.programId, "useDiffuse"), false);   
-        }
-
-        for(auto& staticmeshId : materialIt.second)
-        {
-            StaticmeshGL& staticmesh = m_staticmeshes.get(staticmeshId);
-            if(staticmesh.mesh)
-            {
-                MeshGL& mesh = m_meshes.get(staticmesh.mesh);
-
-                int transformLocation = glGetUniformLocation(shader.programId, "transform");
-                glUniformMatrix4fv(transformLocation, 1, GL_FALSE, staticmesh.transform->getWorldMatrix().data());
-
-                glBindVertexArray(mesh.vao);
-                glDrawArrays(GL_TRIANGLES, 0, mesh.size);
-                glBindVertexArray(0);
-            }
-        }
+        case RenderMode::Default:
+            renderDefault(alpha);
+        break;
+        case RenderMode::Wireframe:
+            renderWireframe(alpha);
+        break;
+        case RenderMode::Debug0:
+            renderDebug(alpha, 0);
+        break;
+        case RenderMode::Debug1:
+            renderDebug(alpha, 1);
+        break;
+        case RenderMode::Debug2:
+            renderDebug(alpha, 2);
+        break;
+        default:
+            renderDefault(alpha);
+        break;
     }
-
-    glUseProgram(0);
 }
+
 
 //Viewport
 void RendererGL::updateViewport() noexcept
 {
     Vector2u windowSize = Engine::window().getSize();
     glViewport(0, 0, windowSize.x, windowSize.y);
+}
+
+//Rendermode
+void RendererGL::setRenderMode(RenderMode mode)
+{
+    m_renderMode = mode;
+}
+RenderMode RendererGL::getRenderMode()
+{
+    return m_renderMode;
 }

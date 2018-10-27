@@ -8,8 +8,11 @@
 #include <Core/Assets/Mesh.hpp>
 #include <Core/Assets/Material.hpp>
 #include <Core/Assets/Texture.hpp>
+#include <Core/Renderer/RenderMode.hpp>
 #include <Core/Renderer/RendererCameraParameters.hpp>
 #include <Core/Renderer/RendererMaterialParameters.hpp>
+#include <Core/Renderer/Light/PointLightParameters.hpp>
+#include <Core/Renderer/Light/DirectionalLightParameters.hpp>
 
 #include <string>
 
@@ -28,6 +31,10 @@ namespace ax
 
         //Viewport
         virtual void updateViewport() noexcept = 0;
+
+        //Rendermode
+        virtual void setRenderMode(RenderMode mode) = 0;
+        virtual RenderMode getRenderMode() = 0;
 
         //Mesh
         virtual Id createMesh(const std::vector<Vertex>& vertices) = 0;
@@ -60,5 +67,15 @@ namespace ax
         virtual void setStaticmeshMaterial(Id id, Id material) = 0;
         virtual void setStaticmeshTransform(Id id, Transform* transform) = 0;
         virtual void setStaticmeshMesh(Id id, Id mesh) = 0;
+
+        //Light
+        virtual Id createPointLight() = 0;
+        virtual void destroyPointLight(Id id) = 0;
+        virtual void setPointLightTransform(Id id, Transform* transform) = 0;
+        virtual void setPointLightParameters(Id id, PointLightParameters parameters) = 0;
+
+        virtual Id createDirectionalLight() = 0;
+        virtual void destroyDirectionalLight() = 0;
+        virtual void setDirectionalLightParameters(Id id, DirectionalLightParameters parameters) = 0;
     };
 }

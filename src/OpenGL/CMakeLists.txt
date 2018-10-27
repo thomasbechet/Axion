@@ -26,6 +26,11 @@ ADD_LIBRARY(
     Renderer/StaticmeshGL.cpp
     Renderer/MaterialGL.cpp
     Renderer/TextureGL.cpp
+    Renderer/Light/PointLightGL.cpp
+    Renderer/Light/DirectionalLightGL.cpp
+    Renderer/RenderPass/DefaultPass.cpp
+    Renderer/RenderPass/WireframePass.cpp
+    Renderer/RenderPass/DebugPass.cpp
 )
 
 #Adding glfw dependency

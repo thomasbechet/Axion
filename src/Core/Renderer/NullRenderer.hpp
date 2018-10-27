@@ -20,6 +20,10 @@ namespace ax
         //Viewport
         void updateViewport() noexcept override {}
 
+        //Rendermode
+        void setRenderMode(RenderMode mode) override {};
+        RenderMode getRenderMode() override {return RenderMode::Default;};
+
         //Mesh
         Id createMesh(const std::vector<Vertex>& vertices) override {return 0;}
         void destroyMesh(Id id) override {}
@@ -51,5 +55,15 @@ namespace ax
         void setStaticmeshMaterial(Id id, Id material) override {}
         void setStaticmeshTransform(Id id, Transform* transform) override {}
         void setStaticmeshMesh(Id id, Id mesh) override {}
+
+        //Light
+        Id createPointLight() override {return 0;}
+        void destroyPointLight(Id id) override {}
+        void setPointLightTransform(Id id, Transform* transform) override {}
+        void setPointLightParameters(Id id, PointLightParameters parameters) override {}
+
+        Id createDirectionalLight() override {return 0;}
+        void destroyDirectionalLight() override {}
+        void setDirectionalLightParameters(Id id, DirectionalLightParameters parameters) override {}
     };
 }

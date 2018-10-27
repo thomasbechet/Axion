@@ -10,6 +10,8 @@
 #include <OpenGL/Renderer/MaterialGL.hpp>
 #include <OpenGL/Renderer/ShaderGL.hpp>
 #include <OpenGL/Renderer/CameraGL.hpp>
+#include <OpenGL/Renderer/Light/PointLightGL.hpp>
+#include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
 
@@ -26,6 +28,10 @@ namespace ax
         
         //Viewport
         void updateViewport() noexcept override;
+
+        //Rendermode
+        void setRenderMode(RenderMode mode) override;
+        RenderMode getRenderMode() override;
 
         //Mesh
         Id createMesh(const std::vector<Vertex>& vertices) override;
@@ -59,6 +65,29 @@ namespace ax
         void setStaticmeshTransform(Id id, Transform* transform) override;
         void setStaticmeshMesh(Id id, Id mesh) override;
 
+        //Light
+        Id createPointLight() override;
+        void destroyPointLight(Id id) override;
+        void setPointLightTransform(Id id, Transform* transform) override;
+        void setPointLightParameters(Id id, PointLightParameters parameters) override;
+
+        Id createDirectionalLight() override;
+        void destroyDirectionalLight() override;
+        void setDirectionalLightParameters(Id id, DirectionalLightParameters parameters) override;
+
+    private:
+        void initializeDefault() noexcept;
+        void renderDefault(double alpha) noexcept;
+        void terminateDefault() noexcept;
+
+        void initializeWireframe() noexcept;
+        void renderWireframe(double alpha) noexcept;
+        void terminateWireframe() noexcept;
+
+        void initializeDebug() noexcept;
+        void renderDebug(double alpha, int mode) noexcept;
+        void terminateDebug() noexcept;
+
     private:
         IndexVector<std::pair<MaterialGL, std::vector<Id>>> m_materials;
         IndexVector<MeshGL> m_meshes;
@@ -66,5 +95,10 @@ namespace ax
         IndexVector<CameraGL> m_cameras;
         IndexVector<StaticmeshGL> m_staticmeshes;
         IndexVector<TextureGL> m_textures;
+        IndexVector<PointLightGL> m_pointLights;
+        IndexVector<DirectionalLightGL> m_directionalLights;
+
+        RenderMode m_renderMode = RenderMode::Default;
+        Color m_clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
     };
 }

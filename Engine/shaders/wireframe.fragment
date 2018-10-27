@@ -28,4 +28,6 @@ void main()
 	vec4 ambient = colorDiffuse * ambientStrength;
 
 	out_color = (diffuse * colorDiffuse) + ambient;
+
+	out_color = vec4((normal + 1.0) / 2.0, 1.0f);
 }
