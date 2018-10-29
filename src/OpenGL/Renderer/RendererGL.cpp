@@ -25,12 +25,12 @@ void RendererGL::update(double alpha) noexcept
     renderRenderPass(alpha);
 }
 
-
 //Viewport
 void RendererGL::updateViewport() noexcept
 {
-    Vector2u windowSize = Engine::window().getSize();
-    glViewport(0, 0, windowSize.x, windowSize.y);
+    m_windowSize = Engine::window().getSize();
+    glViewport(0, 0, m_windowSize.x, m_windowSize.y);
+    if(m_gbuffer) m_gbuffer.reset(new GBuffer(m_windowSize));
 }
 
 //Rendermode

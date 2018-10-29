@@ -26,6 +26,7 @@ ADD_LIBRARY(
     Renderer/StaticmeshGL.cpp
     Renderer/MaterialGL.cpp
     Renderer/TextureGL.cpp
+    Renderer/GBuffer.cpp
     Renderer/Light/PointLightGL.cpp
     Renderer/Light/DirectionalLightGL.cpp
     Renderer/RenderPass/DefaultPass.cpp

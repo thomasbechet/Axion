@@ -12,6 +12,7 @@
 #include <OpenGL/Renderer/CameraGL.hpp>
 #include <OpenGL/Renderer/Light/PointLightGL.hpp>
 #include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
+#include <OpenGL/Renderer/GBuffer.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
 
@@ -105,9 +106,11 @@ namespace ax
 
         RenderMode m_renderMode = RenderMode::Default;
         Color m_clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+        Vector2u m_windowSize = Vector2u(0, 0);
 
-        AssetReference<Shader> m_defaultShader;
-        AssetReference<Shader> m_wireframeShader;
-        AssetReference<Shader> m_debugShader;
+        GLuint m_shaderProgram0;
+        GLuint m_shaderProgram1;
+
+        std::unique_ptr<GBuffer> m_gbuffer;
     };
 }

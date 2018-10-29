@@ -1,0 +1,23 @@
+#version 330 core
+
+layout(location = 0) out vec3 out_albedo;
+layout(location = 1) out vec3 out_normal;
+layout(location = 2) out vec3 out_position;
+
+in vec3 FragPos;
+in vec2 UV;
+in vec3 Normal;
+in vec3 Color;
+
+uniform sampler2D textureDiffuse;
+uniform bool useDiffuse;
+
+void main()
+{
+	out_albedo = Color;
+	out_normal = Normal;
+	out_position = FragPos;
+	
+	if(useDiffuse)
+		out_albedo = texture(textureDiffuse, vec2(UV.x, 1.0f - UV.y)).xyz;
+}
