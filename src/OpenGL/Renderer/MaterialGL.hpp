@@ -4,6 +4,7 @@
 //HEADERS
 ////////////
 #include <OpenGL/Export.hpp>
+#include <Core/Utility/Types.hpp>
 #include <Core/Utility/Color.hpp>
 
 namespace ax
@@ -13,5 +14,7 @@ namespace ax
         bool useDiffuseTexture;
         Color diffuseColor;
         Id diffuseTexture;
+
+        GLuint uboIndex;
     };
 }

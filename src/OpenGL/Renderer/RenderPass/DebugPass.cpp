@@ -11,26 +11,37 @@ void RendererGL::initializeDebug() noexcept
     Id handle = Engine::assets().shader.load("renderergl_shader_geometry",
         "../shaders/geometry_pass.vertex",
         "../shaders/geometry_pass.fragment")->handle;
-    m_shaderProgram0 = m_shaders.get(handle).programId;
+    m_debugPassData.geometryShader = m_shaders.get(handle).programId;
 
     handle = Engine::assets().shader.load("renderergl_shader_geometry_debug",
         "../shaders/geometry_debug.vertex",
         "../shaders/geometry_debug.fragment")->handle;
-    m_shaderProgram1 = m_shaders.get(handle).programId;
+    m_debugPassData.debugShader = m_shaders.get(handle).programId;
 
-    m_gbuffer = std::make_unique<GBuffer>(m_windowSize);
+    m_debugPassData.viewLocation = glGetUniformLocation(m_debugPassData.geometryShader, "camera_view");
+    m_debugPassData.projectionLocation = glGetUniformLocation(m_debugPassData.geometryShader, "camera_projection");
+    m_debugPassData.transformLocation = glGetUniformLocation(m_debugPassData.geometryShader, "transform");
+
+    m_debugPassData.materialIndexLocation = glGetUniformLocation(m_debugPassData.geometryShader, "material_index");
+    m_debugPassData.diffuseTextureLocation = glGetUniformLocation(m_debugPassData.geometryShader, "diffuseTexture");
+    m_debugPassData.normalTextureLocation = glGetUniformLocation(m_debugPassData.geometryShader, "normalTexture");
+    m_debugPassData.specularTextureLocation = glGetUniformLocation(m_debugPassData.geometryShader, "specularTexture");
+
+    m_debugPassData.gbuffer = std::make_unique<GBuffer>(m_windowSize);
+
+    glDepthFunc(GL_LESS);
+    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 }
 void RendererGL::renderDebug(double alpha, int mode) noexcept
 {
-    glUseProgram(m_shaderProgram0);
-    m_gbuffer->bindForWriting();
+    glUseProgram(m_debugPassData.geometryShader);
+    m_debugPassData.gbuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //Bind camera
     CameraGL& camera = m_cameras.get(1);
-
-    int viewLocation = glGetUniformLocation(m_shaderProgram0, "camera_view");
-    int projectionLocation = glGetUniformLocation(m_shaderProgram0, "camera_projection");
     
     Vector3f eye = camera.transform->getTranslation();
     Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
@@ -39,27 +50,20 @@ void RendererGL::renderDebug(double alpha, int mode) noexcept
     Matrix4f viewMatrix = Matrix4f::lookAt(eye, target, up);
     Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, (float)Engine::window().getSize().x / (float)Engine::window().getSize().y, camera.near, camera.far);
 
-    glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix.data());
-    glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projectionMatrix.data());
+    glUniformMatrix4fv(m_debugPassData.viewLocation, 1, GL_FALSE, viewMatrix.data());
+    glUniformMatrix4fv(m_debugPassData.projectionLocation, 1, GL_FALSE, projectionMatrix.data());
 
     //Draw scene
     for(auto& materialIt : m_materials)
     {
         MaterialGL& material = materialIt.first;
 
+        glUniform1ui(m_debugPassData.materialIndexLocation, material.uboIndex);
+
         if(material.useDiffuseTexture)
         {
-            glUniform1i(glGetUniformLocation(m_shaderProgram0, "useDiffuse"), true);
-
-            int textureLocation = glGetUniformLocation(m_shaderProgram0, "texture");
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_textures.get(material.diffuseTexture).id);
-        }
-        else
-        {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, 0);
-            glUniform1i(glGetUniformLocation(m_shaderProgram0, "useDiffuse"), false);   
         }
 
         for(auto& staticmeshId : materialIt.second)
@@ -69,8 +73,7 @@ void RendererGL::renderDebug(double alpha, int mode) noexcept
             {
                 MeshGL& mesh = m_meshes.get(staticmesh.mesh);
 
-                int transformLocation = glGetUniformLocation(m_shaderProgram0, "transform");
-                glUniformMatrix4fv(transformLocation, 1, GL_FALSE, staticmesh.transform->getWorldMatrix().data());
+                glUniformMatrix4fv(m_debugPassData.transformLocation, 1, GL_FALSE, staticmesh.transform->getWorldMatrix().data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);
@@ -83,15 +86,19 @@ void RendererGL::renderDebug(double alpha, int mode) noexcept
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    GLsizei HalfWidth = (GLsizei)(m_windowSize.x / 2);
-    GLsizei HalfHeight = (GLsizei)(m_windowSize.y / 2);
+    glUseProgram(m_debugPassData.debugShader);
 
-    m_gbuffer->bindBuffer(GBuffer::TextureType::Albedo);
-    glBlitFramebuffer(0, 0, m_windowSize.x, m_windowSize.y, 0, 0, HalfWidth, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    m_debugPassData.gbuffer->bindForReading();
+
+    glBindVertexArray(m_quadVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+
+    glUseProgram(0);
 }
 void RendererGL::terminateDebug() noexcept
 {
-    m_gbuffer.reset();
+    m_debugPassData.gbuffer.reset();
     Engine::assets().shader.unload("renderergl_shader_geometry");
     Engine::assets().shader.unload("renderergl_shader_geometry_debug");
 }

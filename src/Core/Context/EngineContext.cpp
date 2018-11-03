@@ -113,7 +113,7 @@ void EngineContext::run() noexcept
             if(displayInfoTimer.getElapsedTime().asSeconds() > 1.0)
             {
                 displayInfoTimer.restart();
-                Engine::logger().log("FPS: " + std::to_string(1.0 / updateRecorder.getAverage().asSeconds()));
+                Engine::logger().log("Time: " + std::to_string(updateRecorder.getAverage().asMilliseconds()));
             }
         }
 

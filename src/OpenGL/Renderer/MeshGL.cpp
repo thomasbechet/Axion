@@ -8,8 +8,8 @@ using namespace ax;
 
 Id RendererGL::createMesh(const std::vector<Vertex>& vertices)
 {
-    Id id = m_meshes.add(MeshGL());
-    MeshGL& mesh = m_meshes.get(id);
+    Id id = m_content.meshes.add(MeshGL());
+    MeshGL& mesh = m_content.meshes.get(id);
     mesh.size = vertices.size();
 
     glGenVertexArrays(1, &mesh.vao);
@@ -37,10 +37,10 @@ Id RendererGL::createMesh(const std::vector<Vertex>& vertices)
 }
 void RendererGL::destroyMesh(Id id)
 {
-    MeshGL& mesh = m_meshes.get(id);
+    MeshGL& mesh = m_content.meshes.get(id);
 
     glDeleteVertexArrays(1, &mesh.vao);
     glDeleteBuffers(1, &mesh.vbo);
 
-    m_meshes.remove(id);
+    m_content.meshes.remove(id);
 }

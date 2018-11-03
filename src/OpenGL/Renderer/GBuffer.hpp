@@ -26,7 +26,6 @@ namespace ax
 
         void bindForWriting() noexcept;
         void bindForReading() noexcept;
-        void bindBuffer(TextureType buffer) noexcept;
 
     private:
         GLuint m_fbo;

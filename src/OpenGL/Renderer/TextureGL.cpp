@@ -9,15 +9,15 @@ Id RendererGL::createTexture(
     const Byte* data
 )
 {
-    Id id = m_textures.add(TextureGL());
-    TextureGL& texture = m_textures.get(id);
+    Id id = m_content.textures.add(TextureGL());
+    TextureGL& texture = m_content.textures.get(id);
 
     glGenTextures(1, &texture.id);
     glBindTexture(GL_TEXTURE_2D, texture.id);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -27,7 +27,7 @@ Id RendererGL::createTexture(
 }
 void RendererGL::destroyTexture(Id id)
 {
-    TextureGL& texture = m_textures.get(id);
+    TextureGL& texture = m_content.textures.get(id);
     glDeleteTextures(1, &texture.id);
-    m_textures.remove(texture.id);
+    m_content.textures.remove(texture.id);
 }

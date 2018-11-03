@@ -13,11 +13,39 @@ void RendererGL::initialize() noexcept
     if(glewInit() != GLEW_OK)
         Engine::interrupt("Failed to initialize GLEW");
 
-    m_renderMode = RenderMode::Default;
+    //Generate fullscreen quad
+    float vertices[] =
+    {
+        1.0f, 1.0f,
+        -1.0f, 1.0f,
+        -1.0f, -1.0f,
+        1.0f, -1.0f,
+        1.0f, 1.0f,
+        -1.0f, -1.0f
+    };
+
+    glGenVertexArrays(1, &m_quadVAO);
+    glBindVertexArray(m_quadVAO);
+
+    glGenBuffers(1, &m_quadVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(GLfloat), &vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer((GLuint)0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    //Initialize ubo
+    m_materialUBO = std::make_unique<MaterialUBO>();
+
+    //Initialize renderpass
+    m_renderMode = RenderMode::Debug0;
     initializeRenderPass();
 }
 void RendererGL::terminate() noexcept
 {
+    //Terminate renderpass
     terminateRenderPass();
 }
 void RendererGL::update(double alpha) noexcept
@@ -30,7 +58,6 @@ void RendererGL::updateViewport() noexcept
 {
     m_windowSize = Engine::window().getSize();
     glViewport(0, 0, m_windowSize.x, m_windowSize.y);
-    if(m_gbuffer) m_gbuffer.reset(new GBuffer(m_windowSize));
 }
 
 //Rendermode

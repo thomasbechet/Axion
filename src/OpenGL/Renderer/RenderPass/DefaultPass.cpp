@@ -11,7 +11,7 @@ void RendererGL::initializeDefault() noexcept
     Id handle = Engine::assets().shader.load("renderergl_shader_default",
         "../shaders/default.vertex",
         "../shaders/default.fragment")->handle;
-    m_shaderProgram0 = m_shaders.get(handle).programId;
+    m_defaultPassData.geometryShader = m_shaders.get(handle).programId;
 
     glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
 
@@ -24,12 +24,12 @@ void RendererGL::renderDefault(double alpha) noexcept
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(m_shaderProgram0);
+    glUseProgram(m_defaultPassData.geometryShader);
 
     CameraGL& camera = m_cameras.get(1);
 
-    int viewLocation = glGetUniformLocation(m_shaderProgram0, "camera_view");
-    int projectionLocation = glGetUniformLocation(m_shaderProgram0, "camera_projection");
+    int viewLocation = glGetUniformLocation(m_defaultPassData.geometryShader, "camera_view");
+    int projectionLocation = glGetUniformLocation(m_defaultPassData.geometryShader, "camera_projection");
 
     Vector3f eye = camera.transform->getTranslation();
     Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
@@ -47,9 +47,9 @@ void RendererGL::renderDefault(double alpha) noexcept
 
         if(material.useDiffuseTexture)
         {
-            glUniform1i(glGetUniformLocation(m_shaderProgram0, "useDiffuse"), true);
+            glUniform1i(glGetUniformLocation(m_defaultPassData.geometryShader, "useDiffuse"), true);
 
-            int textureLocation = glGetUniformLocation(m_shaderProgram0, "texture");
+            int textureLocation = glGetUniformLocation(m_defaultPassData.geometryShader, "texture");
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, m_textures.get(material.diffuseTexture).id);
         }
@@ -57,7 +57,7 @@ void RendererGL::renderDefault(double alpha) noexcept
         {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
-            glUniform1i(glGetUniformLocation(m_shaderProgram0, "useDiffuse"), false);   
+            glUniform1i(glGetUniformLocation(m_defaultPassData.geometryShader, "useDiffuse"), false);   
         }
 
         for(auto& staticmeshId : materialIt.second)
@@ -67,7 +67,7 @@ void RendererGL::renderDefault(double alpha) noexcept
             {
                 MeshGL& mesh = m_meshes.get(staticmesh.mesh);
 
-                int transformLocation = glGetUniformLocation(m_shaderProgram0, "transform");
+                int transformLocation = glGetUniformLocation(m_defaultPassData.geometryShader, "transform");
                 glUniformMatrix4fv(transformLocation, 1, GL_FALSE, staticmesh.transform->getWorldMatrix().data());
 
                 glBindVertexArray(mesh.vao);

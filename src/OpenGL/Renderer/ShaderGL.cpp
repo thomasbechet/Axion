@@ -13,8 +13,8 @@ Id RendererGL::createShader(
     if(vertex == nullptr || fragment == nullptr)
         throw RendererException("One of the shader source is not given. Both vertex and fragment sources are required for this version.");
 
-    Id id = m_shaders.add(ShaderGL());
-    ShaderGL& shader = m_shaders.get(id);
+    Id id = m_content.shaders.add(ShaderGL());
+    ShaderGL& shader = m_content.shaders.get(id);
 
     GLint vertexId, fragmentId;
     GLint success;
@@ -68,7 +68,7 @@ Id RendererGL::createShader(
 }
 void RendererGL::destroyShader(Id id)
 {
-    ShaderGL& shader = m_shaders.get(id);
+    ShaderGL& shader = m_content.shaders.get(id);
     glDeleteProgram(shader.programId);
-    m_shaders.remove(id);
+    m_content.shaders.remove(id);
 }

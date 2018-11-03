@@ -1,4 +1,4 @@
-#version 330 core
+#version 420 core
 
 layout(location = 0) out vec3 out_albedo;
 layout(location = 1) out vec3 out_normal;
@@ -9,15 +9,39 @@ in vec2 UV;
 in vec3 Normal;
 in vec3 Color;
 
-uniform sampler2D textureDiffuse;
-uniform bool useDiffuse;
+#define USE_MATERIAL_UNIFORM_BLOCK 1 
+#if USE_MATERIAL_UNIFORM_BLOCK
+
+	#define MATERIAL_MAX_NUMBER 50
+	#define MATERIAL_BINDING_POINT 1
+	#define MATERIAL_USE_DIFFUSE_TEXTURE 0x1u
+	#define MATERIAL_USE_NORMAL_TEXTURE 0x2u
+	#define MATERIAL_USE_SPECULAR_TEXTURE 0x4u
+
+	struct Material
+	{
+		uint flags;
+	};
+	layout(binding = MATERIAL_BINDING_POINT) uniform Materials
+	{
+		Material materials[MATERIAL_MAX_NUMBER];	
+	};
+
+	uniform sampler2D diffuseTexture;
+	uniform sampler2D normalTexture;
+	uniform sampler2D specularTexture;
+
+	uniform uint material_index;
+
+#endif
 
 void main()
 {
-	out_albedo = Color;
 	out_normal = Normal;
 	out_position = FragPos;
 	
-	if(useDiffuse)
-		out_albedo = texture(textureDiffuse, vec2(UV.x, 1.0f - UV.y)).xyz;
+	if(bool(materials[material_index].flags & MATERIAL_USE_DIFFUSE_TEXTURE))
+		out_albedo = texture(diffuseTexture, vec2(UV.x, 1.0f - UV.y)).xyz;
+	else
+		out_albedo = Color;
 }
