@@ -92,5 +92,7 @@ void GBuffer::bindForReading() noexcept
     glBindTexture(GL_TEXTURE_2D, m_normalTexture);
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, m_positionTexture);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
 }
 

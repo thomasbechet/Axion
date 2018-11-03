@@ -12,6 +12,9 @@ Id RendererGL::createMaterial(RendererMaterialParameters settings)
     material.diffuseColor = settings.diffuseColor;
     material.diffuseTexture = settings.diffuseTexture;
 
+    material.useNormalTexture = settings.useNormalTexture;
+    material.normalTexture = settings.normalTexture;
+
     m_content.materialUBO->load(material);
 
     return id;

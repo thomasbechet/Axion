@@ -24,11 +24,11 @@ void RendererGL::initialize() noexcept
         -1.0f, -1.0f
     };
 
-    glGenVertexArrays(1, &m_quadVAO);
-    glBindVertexArray(m_quadVAO);
+    glGenVertexArrays(1, &m_content.quadVAO);
+    glBindVertexArray(m_content.quadVAO);
 
-    glGenBuffers(1, &m_quadVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, m_quadVBO);
+    glGenBuffers(1, &m_content.quadVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_content.quadVBO);
     glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(GLfloat), &vertices, GL_STATIC_DRAW);
     glVertexAttribPointer((GLuint)0, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
@@ -36,117 +36,67 @@ void RendererGL::initialize() noexcept
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    //Initialize ubo
-    m_materialUBO = std::make_unique<MaterialUBO>();
+    //Initialize ubos
+    m_content.materialUBO = std::make_unique<MaterialUBO>();
 
     //Initialize renderpass
     m_renderMode = RenderMode::Debug0;
-    initializeRenderPass();
+    createRenderPass();
+    m_renderPass->initialize();
 }
 void RendererGL::terminate() noexcept
 {
-    //Terminate renderpass
-    terminateRenderPass();
+    m_renderPass->terminate();
 }
 void RendererGL::update(double alpha) noexcept
 {
-    renderRenderPass(alpha);
+    m_renderPass->render(alpha);
 }
 
 //Viewport
 void RendererGL::updateViewport() noexcept
 {
-    m_windowSize = Engine::window().getSize();
-    glViewport(0, 0, m_windowSize.x, m_windowSize.y);
+    m_content.windowSize = Engine::window().getSize();
+    if(m_renderPass) m_renderPass->updateViewport();
 }
 
 //Rendermode
 void RendererGL::setRenderMode(RenderMode mode)
 {
-    if(m_renderMode != mode)
-    {
-        terminateRenderPass();
+    m_renderPass->terminate();
 
-        m_renderMode = mode;
-    
-        initializeRenderPass();
-    } 
+    m_renderMode = mode;
+    createRenderPass();
+
+    m_renderPass->initialize();  
 }
 RenderMode RendererGL::getRenderMode()
 {
     return m_renderMode;
 }
 
-void RendererGL::initializeRenderPass() noexcept
+void RendererGL::createRenderPass() noexcept
 {
-    //Initialize new one
+    m_renderPass.reset();
     switch(m_renderMode)
     {
         case RenderMode::Default:
-            initializeDefault();
+            m_renderPass = std::make_unique<DefaultPass>(m_content);
         break;
         case RenderMode::Wireframe:
-            initializeWireframe();
+            m_renderPass = std::make_unique<WireframePass>(m_content);
         break;
         case RenderMode::Debug0:
-            initializeDebug();
+            m_renderPass = std::make_unique<DebugPass>(m_content);
         break;
         case RenderMode::Debug1:
-            initializeDebug();
+            m_renderPass = std::make_unique<DebugPass>(m_content);
         break;
         case RenderMode::Debug2:
-            initializeDebug();
+            m_renderPass = std::make_unique<DebugPass>(m_content);
         break;
         default:
-            initializeDefault();
-        break;
-    }
-}
-void RendererGL::renderRenderPass(double alpha) noexcept
-{
-    switch(m_renderMode)
-    {
-        case RenderMode::Default:
-            renderDefault(alpha);
-        break;
-        case RenderMode::Wireframe:
-            renderWireframe(alpha);
-        break;
-        case RenderMode::Debug0:
-            renderDebug(alpha, 0);
-        break;
-        case RenderMode::Debug1:
-            renderDebug(alpha, 1);
-        break;
-        case RenderMode::Debug2:
-            renderDebug(alpha, 2);
-        break;
-        default:
-            renderDefault(alpha);
-        break;
-    }
-}
-void RendererGL::terminateRenderPass() noexcept
-{
-    switch(m_renderMode)
-    {
-        case RenderMode::Default:
-            terminateDefault();
-        break;
-        case RenderMode::Wireframe:
-            terminateWireframe();
-        break;
-        case RenderMode::Debug0:
-            terminateDebug();
-        break;
-        case RenderMode::Debug1:
-            terminateDebug();
-        break;
-        case RenderMode::Debug2:
-            terminateDebug();
-        break;
-        default:
-            terminateDefault();
+            m_renderPass = std::make_unique<DefaultPass>(m_content);
         break;
     }
 }

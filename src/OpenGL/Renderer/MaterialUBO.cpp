@@ -49,8 +49,13 @@ void MaterialUBO::update(const MaterialGL& material) noexcept
         GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT
     ));
 
+    p->flags = 0;
+
     if(material.useDiffuseTexture)
         p->flags |= MATERIAL_USE_DIFFUSE_TEXTURE;
+
+    if(material.useNormalTexture)
+        p->flags |= MATERIAL_USE_NORMAL_TEXTURE;
 
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 }

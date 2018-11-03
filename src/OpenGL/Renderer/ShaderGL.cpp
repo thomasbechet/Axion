@@ -30,7 +30,7 @@ Id RendererGL::createShader(
     glGetShaderiv(vertexId, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        m_shaders.remove(id);
+        m_content.shaders.remove(id);
         glGetShaderInfoLog(vertexId, 512, nullptr, infoLog);
         throw RendererException(infoLog);
     }
@@ -42,7 +42,7 @@ Id RendererGL::createShader(
     glGetShaderiv(fragmentId, GL_COMPILE_STATUS, &success);
     if(!success)
     {
-        m_shaders.remove(id);
+        m_content.shaders.remove(id);
         glGetShaderInfoLog(fragmentId, 512, nullptr, infoLog);
         throw RendererException(infoLog);
     }

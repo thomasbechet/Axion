@@ -7,13 +7,13 @@
 
 namespace ax
 {
-    class RendererContent;
+    class RenderContent;
 
     class AXION_GL_API RenderPass
     {
     public:
-        RendererPass(RendererContent& content);
-        virtual ~RendererPass() = default;
+        RenderPass(RenderContent& content);
+        virtual ~RenderPass() = default;
 
         virtual void initialize() noexcept = 0;
         virtual void terminate() noexcept = 0;
@@ -21,6 +21,6 @@ namespace ax
         virtual void render(double alpha) noexcept = 0;
 
     protected:
-        RendererContent& content;
+        RenderContent& content;
     };
 }

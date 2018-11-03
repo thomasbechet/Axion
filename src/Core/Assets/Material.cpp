@@ -39,6 +39,7 @@ AssetReference<Material> MaterialManager::load(std::string name, const MaterialP
 
     if(!params.normalTexture.empty())
         material->normalTexture = Engine::assets().texture(params.normalTexture);
+        
 
     RendererMaterialParameters settings;
     settings.diffuseTexture = (material->diffuseTexture) ? material->diffuseTexture->handle : 0;

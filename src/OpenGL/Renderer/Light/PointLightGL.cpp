@@ -4,7 +4,7 @@ using namespace ax;
 
 Id RendererGL::createPointLight()
 {
-    Id id = m_pointLights.add(PointLightGL());
+    Id id = m_content.pointLights.add(PointLightGL());
 
     
 

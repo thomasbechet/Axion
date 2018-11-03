@@ -4,7 +4,7 @@
 
 using namespace ax;
 
-RenderPass::RendererPass(RendererContent& _content) : content(_content)
+RenderPass::RenderPass(RenderContent& _content) : content(_content)
 {
 
 }

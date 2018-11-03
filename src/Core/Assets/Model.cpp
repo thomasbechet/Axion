@@ -112,6 +112,15 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
                 data.diffuseUniform.b = material.diffuse[2];
             }
 
+            //Normal Texture
+            Path normalPath = path.directory() + material.normal_texname;
+            bool hasNormalTex = !normalPath.filename().empty() &&
+                (Engine::assets().texture.isLoaded(normalPath.filename()) ||
+                 Engine::assets().texture.load(normalPath.filename(), normalPath.path()));
+
+            if(hasNormalTex)
+                data.normalTexture = normalPath.filename();
+
             Engine::assets().material.load(material.name, data);
         } 
     }

@@ -1,35 +1,44 @@
 #include <OpenGL/Renderer/RendererGL.hpp>
 
+#include <OpenGL/Renderer/RendererGL.hpp>
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Assets/AssetManager.hpp>
 
 using namespace ax;
 
-void RendererGL::initializeDefault() noexcept
-{
-    Id handle = Engine::assets().shader.load("renderergl_shader_default",
-        "../shaders/default.vertex",
-        "../shaders/default.fragment")->handle;
-    m_defaultPassData.geometryShader = m_shaders.get(handle).programId;
+DefaultPass::DefaultPass(RenderContent& content) : RenderPass(content) {}
 
-    glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+void DefaultPass::initialize() noexcept
+{
+    //Engine::assets().shader.load()
+
+    glClearColor(content.clearColor.r, content.clearColor.g, content.clearColor.b, content.clearColor.a);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
 }
-void RendererGL::renderDefault(double alpha) noexcept
+void DefaultPass::terminate() noexcept
+{
+
+}
+void DefaultPass::updateViewport() noexcept
+{
+    glViewport(0, 0, content.windowSize.x, content.windowSize.y);
+}
+void DefaultPass::render(double alpha) noexcept
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(m_defaultPassData.geometryShader);
+    ShaderGL& shader = content.shaders.get(1);
+    glUseProgram(shader.programId);
 
-    CameraGL& camera = m_cameras.get(1);
+    CameraGL& camera = content.cameras.get(1);
 
-    int viewLocation = glGetUniformLocation(m_defaultPassData.geometryShader, "camera_view");
-    int projectionLocation = glGetUniformLocation(m_defaultPassData.geometryShader, "camera_projection");
+    int viewLocation = glGetUniformLocation(shader.programId, "camera_view");
+    int projectionLocation = glGetUniformLocation(shader.programId, "camera_projection");
 
     Vector3f eye = camera.transform->getTranslation();
     Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
@@ -41,33 +50,33 @@ void RendererGL::renderDefault(double alpha) noexcept
     glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewMatrix.data());
     glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, projectionMatrix.data());
 
-    for(auto& materialIt : m_materials)
+    for(auto& materialIt : content.materials)
     {
         MaterialGL& material = materialIt.first;
 
         if(material.useDiffuseTexture)
         {
-            glUniform1i(glGetUniformLocation(m_defaultPassData.geometryShader, "useDiffuse"), true);
+            glUniform1i(glGetUniformLocation(shader.programId, "useDiffuse"), true);
 
-            int textureLocation = glGetUniformLocation(m_defaultPassData.geometryShader, "texture");
+            int textureLocation = glGetUniformLocation(shader.programId, "texture");
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, m_textures.get(material.diffuseTexture).id);
+            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.diffuseTexture).id);
         }
         else
         {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, 0);
-            glUniform1i(glGetUniformLocation(m_defaultPassData.geometryShader, "useDiffuse"), false);   
+            glUniform1i(glGetUniformLocation(shader.programId, "useDiffuse"), false);   
         }
 
         for(auto& staticmeshId : materialIt.second)
         {
-            StaticmeshGL& staticmesh = m_staticmeshes.get(staticmeshId);
+            StaticmeshGL& staticmesh = content.staticmeshes.get(staticmeshId);
             if(staticmesh.mesh)
             {
-                MeshGL& mesh = m_meshes.get(staticmesh.mesh);
+                MeshGL& mesh = content.meshes.get(staticmesh.mesh);
 
-                int transformLocation = glGetUniformLocation(m_defaultPassData.geometryShader, "transform");
+                int transformLocation = glGetUniformLocation(shader.programId, "transform");
                 glUniformMatrix4fv(transformLocation, 1, GL_FALSE, staticmesh.transform->getWorldMatrix().data());
 
                 glBindVertexArray(mesh.vao);
@@ -78,8 +87,4 @@ void RendererGL::renderDefault(double alpha) noexcept
     }
 
     glUseProgram(0);
-}
-void RendererGL::terminateDefault() noexcept
-{
-    Engine::assets().shader.unload("renderergl_shader_default");
 }

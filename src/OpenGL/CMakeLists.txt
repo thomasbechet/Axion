@@ -30,6 +30,7 @@ ADD_LIBRARY(
     Renderer/MaterialUBO.cpp
     Renderer/Light/PointLightGL.cpp
     Renderer/Light/DirectionalLightGL.cpp
+    Renderer/RenderPass/RenderPass.cpp
     Renderer/RenderPass/DefaultPass.cpp
     Renderer/RenderPass/WireframePass.cpp
     Renderer/RenderPass/DebugPass.cpp

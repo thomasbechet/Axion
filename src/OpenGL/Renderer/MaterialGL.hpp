@@ -15,6 +15,9 @@ namespace ax
         Color diffuseColor;
         Id diffuseTexture;
 
+        bool useNormalTexture;
+        Id normalTexture;
+
         GLuint uboIndex;
     };
 }

@@ -14,9 +14,9 @@
 #include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
 #include <OpenGL/Renderer/GBuffer.hpp>
 #include <OpenGL/Renderer/MaterialUBO.hpp>
-#include <OpenGL/Renderer/RenderPass/DebugPassData.hpp>
-#include <OpenGL/Renderer/RenderPass/DefaultPassData.hpp>
-#include <OpenGL/Renderer/RenderPass/WireframePassData.hpp>
+#include <OpenGL/Renderer/RenderPass/DebugPass.hpp>
+#include <OpenGL/Renderer/RenderPass/DefaultPass.hpp>
+#include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
 
@@ -24,7 +24,7 @@
 
 namespace ax
 {
-    struct AXION_GL_API RendererContent
+    struct AXION_GL_API RenderContent
     {
         IndexVector<std::pair<MaterialGL, std::vector<Id>>> materials;
         IndexVector<MeshGL> meshes;
@@ -41,7 +41,7 @@ namespace ax
         GLuint quadVBO;
         GLuint quadVAO;
 
-        MaterialUBO materialUBO;
+        std::unique_ptr<MaterialUBO> materialUBO;
     };
 
     class AXION_GL_API RendererGL : public Renderer
@@ -101,14 +101,12 @@ namespace ax
         void setDirectionalLightParameters(Id id, DirectionalLightParameters parameters) override;
 
     private:
-        void initializeRenderPass() noexcept;
-        void renderRenderPass(double alpha) noexcept;
-        void terminateRenderPass() noexcept;
+        void createRenderPass() noexcept;
 
     private:
         RenderMode m_renderMode = RenderMode::Default;
         std::unique_ptr<RenderPass> m_renderPass;
 
-        RendererContent m_content;
+        RenderContent m_content;
     };
 }
