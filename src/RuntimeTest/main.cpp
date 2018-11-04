@@ -122,6 +122,18 @@ public:
         ax::Engine::systems().add<ax::BasicSpectatorSystem>();
         ax::Engine::systems().add<ax::RenderModeSystem>();
 
+
+        ax::MaterialParameters parameters;
+        parameters.diffuseUniform = ax::Color(255, 3, 2);
+        ax::Engine::assets().material.load("cube_material", parameters);
+
+        ax::Entity& cube = ax::Engine::world().entities().create();
+        cube.addComponent<ax::TransformComponent>();
+        ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
+        cubeModel.setModel("model_cube");
+        //cubeModel.setMaterial("cube_material");
+
+
         ax::Entity& e = ax::Engine::world().entities().create();
         e.addComponent<ax::TransformComponent>();
         e.addComponent<ax::CameraComponent>(e).setFarPlane(300.0f);
@@ -131,6 +143,12 @@ public:
         ax::TransformComponent& transform = mesh.addComponent<ax::TransformComponent>();
         transform.setScale(0.05f, 0.05f, 0.05f);
         mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+
+
+
+
+        
+
         
 
         ax::Engine::systems().add<CustomSystem>().setTransform(&transform);

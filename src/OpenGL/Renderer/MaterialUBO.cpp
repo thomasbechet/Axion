@@ -8,6 +8,14 @@ using namespace ax;
 
 MaterialUBO::MaterialUBO()
 {
+    GLint alignment;
+    glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &alignment);
+    std::cout << "ALIGNMENT: " << alignment << std::endl;
+
+    GLint maxSize;
+    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxSize);
+    std::cout << "MAX BLOCK SIZE: " << maxSize << std::endl; 
+
     glGenBuffers(1, &m_ubo);
     glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(MaterialUBOData) * MATERIAL_MAX_NUMBER, nullptr, GL_DYNAMIC_COPY);
