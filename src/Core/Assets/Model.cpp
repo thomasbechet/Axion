@@ -57,11 +57,12 @@ bool ModelManager::unload(std::string name, bool tryUnloadMeshes, bool tryUnload
     model->meshes.clear();
     if(tryUnloadMaterials)
     {
-        for(auto it = model->materials.begin(); it != model->materials.end(); it++)
+        for(auto& it : model->materials)
         {
-            std::string materialName = it->get()->name;
+            std::string materialName = it.get()->name;
             std::cout << "unload material: " << materialName << std::endl;
-            it->reset();
+            std::cout << it.referenceCount() << std::endl;
+            it.reset();
             bool success = Engine::assets().material.unload(materialName, tryUnloadTextures);
             std::cout << success << std::endl;
         }

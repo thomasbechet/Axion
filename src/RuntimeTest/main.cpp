@@ -123,6 +123,18 @@ public:
         ax::Engine::systems().add<ax::RenderModeSystem>();
 
 
+        /*ax::Entity& e = ax::Engine::world().entities().create();
+        e.addComponent<ax::TransformComponent>();
+        e.addComponent<ax::CameraComponent>(e).setFarPlane(300.0f);
+        e.addComponent<ax::BasicSpectatorComponent>(e);
+
+        ax::Entity& mesh = ax::Engine::world().entities().create();
+        ax::TransformComponent& transform = mesh.addComponent<ax::TransformComponent>();
+        transform.setScale(0.05f, 0.05f, 0.05f);
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");*/
+        
+
+
         ax::MaterialParameters parameters;
         parameters.diffuseUniform = ax::Color(255, 3, 2);
         ax::Engine::assets().material.load("cube_material", parameters);
@@ -134,24 +146,8 @@ public:
         //cubeModel.setMaterial("cube_material");
 
 
-        ax::Entity& e = ax::Engine::world().entities().create();
-        e.addComponent<ax::TransformComponent>();
-        e.addComponent<ax::CameraComponent>(e).setFarPlane(300.0f);
-        e.addComponent<ax::BasicSpectatorComponent>(e);
 
-        ax::Entity& mesh = ax::Engine::world().entities().create();
-        ax::TransformComponent& transform = mesh.addComponent<ax::TransformComponent>();
-        transform.setScale(0.05f, 0.05f, 0.05f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
-
-
-
-
-        
-
-        
-
-        ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
+        //ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
     }
     void onStop() override
     {

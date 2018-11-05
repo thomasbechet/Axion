@@ -44,6 +44,7 @@ namespace ax
 
         explicit operator bool() const {return isValid();}
         bool isValid() const noexcept {return m_holder != nullptr;}
+        size_t referenceCount() const noexcept {return m_holder->referenceCount();}
 
         void reset() noexcept
         {
