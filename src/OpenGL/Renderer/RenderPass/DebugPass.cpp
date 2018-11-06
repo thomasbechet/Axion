@@ -93,7 +93,7 @@ void DebugPass::render(double alpha) noexcept
             {
                 MeshGL& mesh = content.meshes.get(staticmesh.mesh);
 
-                glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, staticmesh.transform->getWorldMatrix().data());
+                glUniformMatrix4fv(m_transformLocation, 1, GL_TRUE, staticmesh.transform->getWorldMatrix().data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);

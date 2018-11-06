@@ -123,31 +123,38 @@ public:
         ax::Engine::systems().add<ax::RenderModeSystem>();
 
 
-        /*ax::Entity& e = ax::Engine::world().entities().create();
+
+        ax::Entity& mesh = ax::Engine::world().entities().create();
+        ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
+        transform1.setScale(0.05f, 0.05f, 0.05f);
+        transform1.setTranslation(0.0f, 0.0f, 0.0f);
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+        
+
+
+        /*ax::MaterialParameters parameters;
+        parameters.diffuseUniform = ax::Color(255, 3, 2);
+        ax::Engine::assets().material.load("cube_material", parameters);*/
+
+        /*ax::Entity& cube = ax::Engine::world().entities().create();
+        cube.addComponent<ax::TransformComponent>();
+        ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
+        cubeModel.setModel("model_cube");*/
+
+        
+        ax::Entity& cube1 = ax::Engine::world().entities().create();
+        ax::TransformComponent& transform = cube1.addComponent<ax::TransformComponent>();
+        transform.translate(ax::Vector3f(5.0f, 3.0f, 0.0f));
+        ax::ModelComponent& cubeModel1 = cube1.addComponent<ax::ModelComponent>(cube1);
+        cubeModel1.setModel("model_cube");
+
+
+        ax::Entity& e = ax::Engine::world().entities().create();
         e.addComponent<ax::TransformComponent>();
         e.addComponent<ax::CameraComponent>(e).setFarPlane(300.0f);
         e.addComponent<ax::BasicSpectatorComponent>(e);
 
-        ax::Entity& mesh = ax::Engine::world().entities().create();
-        ax::TransformComponent& transform = mesh.addComponent<ax::TransformComponent>();
-        transform.setScale(0.05f, 0.05f, 0.05f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");*/
-        
-
-
-        ax::MaterialParameters parameters;
-        parameters.diffuseUniform = ax::Color(255, 3, 2);
-        ax::Engine::assets().material.load("cube_material", parameters);
-
-        ax::Entity& cube = ax::Engine::world().entities().create();
-        cube.addComponent<ax::TransformComponent>();
-        ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
-        cubeModel.setModel("model_cube");
-        //cubeModel.setMaterial("cube_material");
-
-
-
-        //ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
+        ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
     }
     void onStop() override
     {

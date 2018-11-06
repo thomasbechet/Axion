@@ -15,10 +15,13 @@ public:
     void onUpdate() override
     {
         float delta = ax::Engine::context().getDeltaTime().asSeconds();
-        //m_transform->rotate(ax::radians(delta * 20.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
-        //m_transform->rotate(ax::radians(delta * 10.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
+        m_time += delta;
+        m_transform->rotate(ax::radians(delta * 20.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
+        m_transform->rotate(ax::radians(delta * 10.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
+        m_transform->setTranslation(ax::Vector3f(0.0f, 3.0f + std::cos(m_time), 0.0f));
     }
 
 private:
     ax::TransformComponent* m_transform;
+    float m_time = 0.0f;
 };
