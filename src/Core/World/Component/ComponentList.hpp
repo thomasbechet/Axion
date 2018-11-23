@@ -34,15 +34,9 @@ namespace ax
     {
     public:
         friend class ComponentIterator<C>;
-        using Tuple = std::pair<C, bool>;
+        using Chunk = std::array<std::pair<C, bool>, COMPONENT_CHUNK_SIZE>;
 
     public:
-        ~ComponentList()
-        {
-            for(auto it : m_components)
-                delete it;
-        }
-
         std::string name() const noexcept
         {
             return C::name();
@@ -56,8 +50,8 @@ namespace ax
             {
                 unsigned back = m_free.back();
                 m_free.pop_back();
-                m_components[back / COMPONENT_CHUNK_SIZE][back % COMPONENT_CHUNK_SIZE].second = true;
-                new (&m_components[back / COMPONENT_CHUNK_SIZE][back % COMPONENT_CHUNK_SIZE].first) C(args...);
+                m_components.at(back / COMPONENT_CHUNK_SIZE)->at(back % COMPONENT_CHUNK_SIZE).second = true;
+                new (&m_components.at(back / COMPONENT_CHUNK_SIZE)->at(back % COMPONENT_CHUNK_SIZE).first) C(args...);
 
                 return back;
             }
@@ -66,12 +60,15 @@ namespace ax
                 m_length++;
 
                 if((m_length / COMPONENT_CHUNK_SIZE) + 1 > m_components.size()) //Need to allocate a new chunk
-                    m_components.emplace_back(static_cast<Tuple*>(operator new(sizeof(Tuple) * COMPONENT_CHUNK_SIZE)));
+                    m_components.emplace_back(std::unique_ptr<Chunk>(
+                        static_cast<Chunk*>(malloc(sizeof(Chunk)))
+                        //new Chunk
+                    ));
 
                 unsigned id = m_length - 1;
 
-                m_components[id / COMPONENT_CHUNK_SIZE][id % COMPONENT_CHUNK_SIZE].second = true;
-                new (&m_components[id / COMPONENT_CHUNK_SIZE][id % COMPONENT_CHUNK_SIZE].first) C(args...);
+                m_components.at(id / COMPONENT_CHUNK_SIZE)->at(id % COMPONENT_CHUNK_SIZE).second = true;
+                new (&m_components.at(id / COMPONENT_CHUNK_SIZE)->at(id % COMPONENT_CHUNK_SIZE).first) C(args...);
 
                 return id;
             }
@@ -79,8 +76,8 @@ namespace ax
 
         void destroy(unsigned offset) noexcept override
         {
-            m_components[offset / COMPONENT_CHUNK_SIZE][offset % COMPONENT_CHUNK_SIZE].second = false;
-            m_components[offset / COMPONENT_CHUNK_SIZE][offset % COMPONENT_CHUNK_SIZE].first.~C();
+            m_components.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).second = false;
+            m_components.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first.~C();
             
             if(offset + 1 == m_length)
             {
@@ -97,7 +94,7 @@ namespace ax
             if(offset >= m_length)
                 Engine::interrupt("Tried to access non valid component <" + C::name() + "> from list with [id=" + std::to_string(offset) + "]");
 
-            return m_components[offset / COMPONENT_CHUNK_SIZE][offset % COMPONENT_CHUNK_SIZE].first;
+            return m_components.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first;
         }
 
         unsigned size() const noexcept
@@ -115,7 +112,7 @@ namespace ax
 
         Memory memory() const noexcept
         {
-            return m_components.size() * COMPONENT_CHUNK_SIZE * sizeof(Tuple);
+            return m_components.size() * sizeof(Chunk);
         }
 
         ComponentIterator<C> iterator() const noexcept
@@ -153,7 +150,7 @@ namespace ax
         }
 
     private:
-        std::vector<Tuple*> m_components;
+        std::vector<std::unique_ptr<Chunk>> m_components;
         std::vector<unsigned> m_free;
         unsigned m_length = 0;
 

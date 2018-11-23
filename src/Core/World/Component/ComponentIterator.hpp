@@ -25,7 +25,8 @@ namespace ax
             while(true)
             {
                 if(m_index >= m_end) return false;
-                if(m_list.m_components[m_index / COMPONENT_CHUNK_SIZE][m_index % COMPONENT_CHUNK_SIZE].second) break;
+                //if(m_list.m_components[m_index / COMPONENT_CHUNK_SIZE][m_index % COMPONENT_CHUNK_SIZE].second) break;
+                if(m_list.m_components.at(m_index / COMPONENT_CHUNK_SIZE)->at(m_index % COMPONENT_CHUNK_SIZE).second) break;
                 m_index++; //Next
             }
 

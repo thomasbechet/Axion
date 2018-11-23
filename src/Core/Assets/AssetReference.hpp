@@ -6,6 +6,8 @@
 #include <Core/Export.hpp>
 #include <Core/Assets/AssetHolder.hpp>
 
+#include <iostream>
+
 namespace ax
 {
     template<typename T>
@@ -23,24 +25,27 @@ namespace ax
         {
             operator=(reference);
         }
-        AssetReference<T>(const AssetReference<T>&& reference)
+        /*AssetReference<T>(const AssetReference<T>&& reference)
         {
             operator=(reference);
-        }
+        }*/
         ~AssetReference() {reset();}
 
         AssetReference<T>& operator=(const AssetReference<T>& other) noexcept
         {
             reset();
-            if(other.isValid()) other.m_holder->accessAsset(*this);
+            if(other.isValid())
+            {
+                other.m_holder->accessAsset(*this);
+            }
             return *this;
         }
-        AssetReference<T>& operator=(AssetReference<T>&& other) noexcept
+        /*AssetReference<T>& operator=(AssetReference<T>&& other) noexcept
         {
             std::swap(m_asset, other.m_asset);
             std::swap(m_holder, other.m_holder);
             return *this;
-        }
+        }*/
 
         explicit operator bool() const {return isValid();}
         bool isValid() const noexcept {return m_holder != nullptr;}
@@ -48,7 +53,10 @@ namespace ax
 
         void reset() noexcept
         {
-            if(m_holder) m_holder->releaseAsset(*this); 
+            if(m_holder)
+            {
+                m_holder->releaseAsset(*this);
+            }
         }
 
         T* get() const noexcept {return m_asset;}

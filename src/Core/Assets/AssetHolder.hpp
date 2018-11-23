@@ -9,6 +9,8 @@
 
 #include <memory>
 
+#include <iostream>
+
 namespace ax
 {
     template<typename T>

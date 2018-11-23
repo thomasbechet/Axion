@@ -27,6 +27,7 @@
 #include <Core/Utility/Path.hpp>
 #include <Core/Assets/AssetManager.hpp>
 #include <Core/Assets/Texture.hpp>
+#include <Core/Assets/AssetHolder.hpp>
 #include <RuntimeTest/CustomSystem.hpp>
 
 struct Position : public ax::Component
@@ -123,23 +124,17 @@ public:
         ax::Engine::systems().add<ax::RenderModeSystem>();
 
 
+        ax::Entity& e = ax::Engine::world().entities().create();
+        e.addComponent<ax::TransformComponent>();
+        e.addComponent<ax::CameraComponent>(e).setFarPlane(300.0f);
+        e.addComponent<ax::BasicSpectatorComponent>(e);
 
-        ax::Entity& mesh = ax::Engine::world().entities().create();
+
+        /*ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
         transform1.setScale(0.05f, 0.05f, 0.05f);
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
-        
-
-
-        /*ax::MaterialParameters parameters;
-        parameters.diffuseUniform = ax::Color(255, 3, 2);
-        ax::Engine::assets().material.load("cube_material", parameters);*/
-
-        /*ax::Entity& cube = ax::Engine::world().entities().create();
-        cube.addComponent<ax::TransformComponent>();
-        ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
-        cubeModel.setModel("model_cube");*/
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");*/
 
         
         ax::Entity& cube1 = ax::Engine::world().entities().create();
@@ -147,14 +142,20 @@ public:
         transform.translate(ax::Vector3f(5.0f, 3.0f, 0.0f));
         ax::ModelComponent& cubeModel1 = cube1.addComponent<ax::ModelComponent>(cube1);
         cubeModel1.setModel("model_cube");
+        //cubeModel1.setMaterial(nullptr);
 
+        ax::Entity& cube2 = ax::Engine::world().entities().create();
+        ax::TransformComponent& transform2 = cube2.addComponent<ax::TransformComponent>();
+        transform2.translate(ax::Vector3f(1.0f, 3.0f, 0.0f));
+        ax::ModelComponent& cubeModel2 = cube2.addComponent<ax::ModelComponent>(cube2);
+        cubeModel2.setModel("model_cube");
+        //cubeModel2.setMaterial(nullptr);
 
-        ax::Entity& e = ax::Engine::world().entities().create();
-        e.addComponent<ax::TransformComponent>();
-        e.addComponent<ax::CameraComponent>(e).setFarPlane(300.0f);
-        e.addComponent<ax::BasicSpectatorComponent>(e);
+        ax::Engine::world().entities().destroy(cube1);
+        ax::Engine::world().entities().destroy(cube2);
+        std::cout << "end destroy" << std::endl;
 
-        ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
+        //ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
     }
     void onStop() override
     {
@@ -166,7 +167,124 @@ public:
     }
 };
 
+class MyClass
+{
+public:
+    std::string name = "MyClass";
+};
 
+template<typename T>
+    class AXION_CORE_API AssetReference;
+
+    template<typename T>
+    class AXION_CORE_API AssetHolder : public NonCopyable
+    {
+    public:
+        friend class AssetReference<T>;
+
+        template<typename... Args>
+        AssetHolder<T>(Args&&... args) : m_asset(args...){}
+        ~AssetHolder()
+        {
+            if(m_referenceCount > 0)
+            {
+                ax::Engine::interrupt("Dangling reference detected with '" + m_asset.name + "' (" + std::to_string(m_referenceCount) + " references)");
+            }
+        }
+
+        AssetReference<T> reference() noexcept
+        {
+            AssetReference<T> reference;
+            accessAsset(reference);
+            return reference;
+        }
+
+        T* get() noexcept {return &m_asset;}
+        T* operator->() const noexcept {return &m_asset;}
+        size_t referenceCount() const noexcept {return m_referenceCount;}
+
+    private:
+        void accessAsset(AssetReference<T>& reference) noexcept
+        {
+            reference.m_asset = &m_asset;
+            reference.m_holder = this;
+            m_referenceCount++;
+            std::cout << "+1" << std::endl;
+        }
+        void releaseAsset(AssetReference<T>& reference) noexcept
+        {     
+            reference.m_asset = nullptr;
+            reference.m_holder = nullptr;
+            m_referenceCount--;
+            std::cout << "-1" << std::endl;
+        }
+
+        T m_asset;
+        size_t m_referenceCount = 0;
+    };
+
+template<typename T>
+    class AXION_CORE_API AssetReference
+    {
+    public:
+        friend class AssetHolder<T>;
+
+        AssetReference<T>(){}
+        AssetReference<T>(AssetHolder<T>& holder)
+        {
+            holder.accessAsset(*this);
+        }
+        AssetReference<T>(const AssetReference<T>& reference)
+        {
+            operator=(reference);
+        }
+        AssetReference<T>(const AssetReference<T>&& reference)
+        {
+            operator=(reference);
+        }
+        ~AssetReference() {reset();}
+
+        AssetReference<T>& operator=(const AssetReference<T>& other) noexcept
+        {
+            reset();
+            if(other.isValid())
+            {
+                other.m_holder->accessAsset(*this);
+            }
+            return *this;
+        }
+        AssetReference<T>& operator=(AssetReference<T>&& other) noexcept
+        {
+            std::swap(m_asset, other.m_asset);
+            std::swap(m_holder, other.m_holder);
+            return *this;
+        }
+
+        explicit operator bool() const {return isValid();}
+        bool isValid() const noexcept {return m_holder != nullptr;}
+        size_t referenceCount() const noexcept {return m_holder->referenceCount();}
+
+        void reset() noexcept
+        {
+            if(m_holder)
+            {
+                m_holder->releaseAsset(*this);
+            }
+        }
+
+        T* get() const noexcept {return m_asset;}
+        T* operator->() const noexcept {return get();}
+
+    private:
+        AssetHolder<T>* m_holder = nullptr;
+        T* m_asset = nullptr;
+    };
+
+AssetReference<MyClass> function(AssetHolder<MyClass>& holder){
+    AssetReference<MyClass> ref;
+    ref = holder;
+    return ref;
+}
 
 int main(int argc, char* argv[])
 {
@@ -174,6 +292,9 @@ int main(int argc, char* argv[])
     ax::Engine::world().setGameMode<MyGameMode>();
     ax::Engine::context().run();
     ax::Engine::terminate();
+
+    //AssetHolder<MyClass> holder;
+    //AssetReference<MyClass> ref2 = function(holder);
 
     std::cout << "end reached" << std::endl;
 

@@ -141,6 +141,13 @@ bool PackageManager::unload(std::string name) noexcept
 
     Package* package = m_packages.at(name)->get();
 
+    for(auto it = package->materials.begin(); it != package->materials.end(); it++)
+    {
+        std::string materialName = it->get()->name;
+        it->reset();
+        Engine::assets().material.unload(materialName);
+    }  
+    package->materials.clear();
     for(auto it = package->models.begin(); it != package->models.end(); it++)
     {
         std::string modelName = it->get()->name;
@@ -162,13 +169,6 @@ bool PackageManager::unload(std::string name) noexcept
         Engine::assets().mesh.unload(meshName);
     }
     package->meshes.clear();
-    for(auto it = package->materials.begin(); it != package->materials.end(); it++)
-    {
-        std::string materialName = it->get()->name;
-        it->reset();
-        Engine::assets().material.unload(materialName);
-    }  
-    package->materials.clear();
     for(auto it = package->shaders.begin(); it != package->shaders.end(); it++)
     {
         std::string shaderName = it->get()->name;

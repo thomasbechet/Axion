@@ -10,9 +10,9 @@ Entity& EntityManager::create() noexcept
     {
         unsigned back = m_free.back();
         m_free.pop_back();
-        (*m_entities[back / ENTITY_CHUNK_SIZE].get())[back % ENTITY_CHUNK_SIZE].second = true;
+        m_entities.at(back / ENTITY_CHUNK_SIZE)->at(back % ENTITY_CHUNK_SIZE).second = true;
 
-        return (*m_entities[back / ENTITY_CHUNK_SIZE].get())[back % ENTITY_CHUNK_SIZE].first;
+        return m_entities.at(back / ENTITY_CHUNK_SIZE)->at(back % ENTITY_CHUNK_SIZE).first;
     }
     else
     {
@@ -20,15 +20,18 @@ Entity& EntityManager::create() noexcept
 
         if((m_size / ENTITY_CHUNK_SIZE) + 1 > m_entities.size()) //Need to allocate a new chunk
         {
+            std::cout << "allocate" << std::endl;
             m_entities.emplace_back(std::make_unique<Chunk>());
         }
 
         unsigned id = m_size - 1;
         
-        (*m_entities[id / ENTITY_CHUNK_SIZE].get())[id % ENTITY_CHUNK_SIZE].second = true; //Initialisation
-        (*m_entities[id / ENTITY_CHUNK_SIZE].get())[id % ENTITY_CHUNK_SIZE].first.m_id = id; //Initialisation
+        m_entities.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).second = true; //Initialisation
+        m_entities.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.m_id = id; //Initialisation
 
-        return (*m_entities[m_size / ENTITY_CHUNK_SIZE].get())[m_size % ENTITY_CHUNK_SIZE].first;
+        std::cout << "inserted id: " << id << std::endl;
+
+        return m_entities.at(m_size / ENTITY_CHUNK_SIZE)->at(m_size % ENTITY_CHUNK_SIZE).first;
     }
 }
 Entity& EntityManager::create(std::string name) noexcept
@@ -42,8 +45,9 @@ Entity& EntityManager::create(std::string name) noexcept
 void EntityManager::destroy(Entity& entity) noexcept
 {
     unsigned id = entity.m_id;
-    (*m_entities[id / ENTITY_CHUNK_SIZE].get())[id % ENTITY_CHUNK_SIZE].first.removeAll();
-    (*m_entities[id / ENTITY_CHUNK_SIZE].get())[id % ENTITY_CHUNK_SIZE].second = false;
+    std::cout << "destroyed id: " << id << std::endl;
+    m_entities.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.removeAll();
+    m_entities.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).second = false;
     m_free.emplace_back(id);
 }
 void EntityManager::destroy(std::string& name) noexcept
