@@ -49,7 +49,7 @@ namespace ax
         {
             ComponentHandle handle;
             unsigned section = componentSection<C>();
-            handle.offset = static_cast<ComponentList<C>&>(*m_componentLists[section].get()).create(args...);
+            handle.offset = static_cast<ComponentList<C>&>(*m_componentLists.at(section).get()).create(args...);
             handle.section = section;
 
             return handle;
@@ -57,19 +57,19 @@ namespace ax
 
         void destroyComponent(ComponentHandle handle) noexcept
         {
-            m_componentLists[handle.section].get()->destroy(handle.offset);
+            m_componentLists.at(handle.section).get()->destroy(handle.offset);
         }
 
         template<typename C>
         C& get(ComponentHandle handle) noexcept
         {
-            return static_cast<ComponentList<C>&>(*m_componentLists[handle.section].get()).get(handle.offset);
+            return static_cast<ComponentList<C>&>(*m_componentLists.at(handle.section).get()).get(handle.offset);
         }
 
         template<typename C>
         ComponentList<C>& getList() noexcept
         {
-            return static_cast<ComponentList<C>&>(*m_componentLists[componentSection<C>()].get());
+            return static_cast<ComponentList<C>&>(*m_componentLists.at(componentSection<C>()).get());
         }
 
     private:

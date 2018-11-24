@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <functional>
 
+#include <iostream>
+
 namespace ax
 {
     template<typename C>
@@ -43,6 +45,12 @@ namespace ax
         }
 
     public:
+        ~ComponentList()
+        {
+            for(auto& it : m_chunks)
+                m_allocator.deallocate(it, 1); //Release memory
+        }
+
         template<typename... Args>
         unsigned create(Args&&... args) noexcept
         {
@@ -50,8 +58,8 @@ namespace ax
             {
                 unsigned back = m_free.back();
                 m_free.pop_back();
-                m_components.at(back / COMPONENT_CHUNK_SIZE)->at(back % COMPONENT_CHUNK_SIZE).second = true;
-                new (&m_components.at(back / COMPONENT_CHUNK_SIZE)->at(back % COMPONENT_CHUNK_SIZE).first) C(args...);
+                m_chunks.at(back / COMPONENT_CHUNK_SIZE)->at(back % COMPONENT_CHUNK_SIZE).second = true;
+                new (&m_chunks.at(back / COMPONENT_CHUNK_SIZE)->at(back % COMPONENT_CHUNK_SIZE).first) C(args...);
 
                 return back;
             }
@@ -59,16 +67,13 @@ namespace ax
             {
                 m_length++;
 
-                if((m_length / COMPONENT_CHUNK_SIZE) + 1 > m_components.size()) //Need to allocate a new chunk
-                    m_components.emplace_back(std::unique_ptr<Chunk>(
-                        static_cast<Chunk*>(malloc(sizeof(Chunk)))
-                        //new Chunk
-                    ));
+                if((m_length / COMPONENT_CHUNK_SIZE) + 1 > m_chunks.size()) //Need to allocate a new chunk
+                    m_chunks.push_back(m_allocator.allocate(1));
 
                 unsigned id = m_length - 1;
 
-                m_components.at(id / COMPONENT_CHUNK_SIZE)->at(id % COMPONENT_CHUNK_SIZE).second = true;
-                new (&m_components.at(id / COMPONENT_CHUNK_SIZE)->at(id % COMPONENT_CHUNK_SIZE).first) C(args...);
+                m_chunks.at(id / COMPONENT_CHUNK_SIZE)->at(id % COMPONENT_CHUNK_SIZE).second = true;
+                new (&m_chunks.at(id / COMPONENT_CHUNK_SIZE)->at(id % COMPONENT_CHUNK_SIZE).first) C(args...);
 
                 return id;
             }
@@ -76,8 +81,8 @@ namespace ax
 
         void destroy(unsigned offset) noexcept override
         {
-            m_components.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).second = false;
-            m_components.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first.~C();
+            m_chunks.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).second = false;
+            m_chunks.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first.~C();
             
             if(offset + 1 == m_length)
             {
@@ -94,7 +99,7 @@ namespace ax
             if(offset >= m_length)
                 Engine::interrupt("Tried to access non valid component <" + C::name() + "> from list with [id=" + std::to_string(offset) + "]");
 
-            return m_components.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first;
+            return m_chunks.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first;
         }
 
         unsigned size() const noexcept
@@ -112,7 +117,7 @@ namespace ax
 
         Memory memory() const noexcept
         {
-            return m_components.size() * sizeof(Chunk);
+            return m_chunks.size() * sizeof(Chunk);
         }
 
         ComponentIterator<C> iterator() const noexcept
@@ -150,7 +155,8 @@ namespace ax
         }
 
     private:
-        std::vector<std::unique_ptr<Chunk>> m_components;
+        std::vector<Chunk*> m_chunks;
+        std::allocator<Chunk> m_allocator;
         std::vector<unsigned> m_free;
         unsigned m_length = 0;
 

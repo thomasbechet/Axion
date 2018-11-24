@@ -33,20 +33,22 @@ namespace ax
         {
             unsigned section = Engine::world().components().componentSection<C>();
             for(auto it = m_handles.begin(); it != m_handles.end(); it++)
+            {
                 if(it->section == section)
                 {
                     Engine::world().components().destroyComponent(*it);
                     m_handles.erase(it);
                     return;
                 }
+            }
 
             ax::Engine::logger().log("Try to remove nonexistent component <" + C::name() + "> from Entity [id=" + std::to_string(m_id) + "]", Logger::Warning);
         }
         void removeAll() noexcept
         {
-            for(auto it = m_handles.begin(); it != m_handles.end(); it++)
+            for(auto& it : m_handles)
             {
-                Engine::world().components().destroyComponent(*it);
+                Engine::world().components().destroyComponent(it);
             }
             m_handles.clear();
         }
@@ -54,8 +56,8 @@ namespace ax
         C& getComponent() const noexcept
         {
             unsigned section = Engine::world().components().componentSection<C>();
-            for(auto it = m_handles.begin(); it != m_handles.end(); it++){
-                if(it->section == section) return Engine::world().components().get<C>(*it);
+            for(auto& it : m_handles){
+                if(it.section == section) return Engine::world().components().get<C>(it);
             }
 
             Engine::interrupt("Component <" + C::name() + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");
@@ -64,8 +66,13 @@ namespace ax
         bool hasComponent() const noexcept
         {
             unsigned section = Engine::world().components().componentSection<C>();
-            for(auto it = m_handles.begin(); it != m_handles.end(); it++)
-                if(it->section == section) return true;
+            for(auto& it : m_handles)
+            {
+                std::cout << "section: " << it.section << std::endl;
+
+                if(it.section == section) return true;
+            }
+                
 
             return false;
         }

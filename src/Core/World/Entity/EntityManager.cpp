@@ -3,6 +3,11 @@
 using namespace ax;
 
 EntityManager::EntityManager(ComponentManager& manager) : m_componentManager(manager){}
+EntityManager::~EntityManager()
+{
+    for(auto& it : m_chunks)
+        m_allocator.deallocate(it, 1);
+}
 
 Entity& EntityManager::create() noexcept
 {
@@ -10,28 +15,23 @@ Entity& EntityManager::create() noexcept
     {
         unsigned back = m_free.back();
         m_free.pop_back();
-        m_entities.at(back / ENTITY_CHUNK_SIZE)->at(back % ENTITY_CHUNK_SIZE).second = true;
+        m_chunks.at(back / ENTITY_CHUNK_SIZE)->at(back % ENTITY_CHUNK_SIZE).second = true;
 
-        return m_entities.at(back / ENTITY_CHUNK_SIZE)->at(back % ENTITY_CHUNK_SIZE).first;
+        return m_chunks.at(back / ENTITY_CHUNK_SIZE)->at(back % ENTITY_CHUNK_SIZE).first;
     }
     else
     {
         m_size++;
 
-        if((m_size / ENTITY_CHUNK_SIZE) + 1 > m_entities.size()) //Need to allocate a new chunk
-        {
-            std::cout << "allocate" << std::endl;
-            m_entities.emplace_back(std::make_unique<Chunk>());
-        }
+        if((m_size / ENTITY_CHUNK_SIZE) + 1 > m_chunks.size()) //Need to allocate a new chunk
+            m_chunks.push_back(m_allocator.allocate(1));
 
         unsigned id = m_size - 1;
         
-        m_entities.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).second = true; //Initialisation
-        m_entities.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.m_id = id; //Initialisation
+        m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).second = true; //Initialisation
+        m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.m_id = id; //Initialisation
 
-        std::cout << "inserted id: " << id << std::endl;
-
-        return m_entities.at(m_size / ENTITY_CHUNK_SIZE)->at(m_size % ENTITY_CHUNK_SIZE).first;
+        return m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first;
     }
 }
 Entity& EntityManager::create(std::string name) noexcept
@@ -44,10 +44,10 @@ Entity& EntityManager::create(std::string name) noexcept
 
 void EntityManager::destroy(Entity& entity) noexcept
 {
+    std::cout << "destroy entity: " << entity.m_id << std::endl;
     unsigned id = entity.m_id;
-    std::cout << "destroyed id: " << id << std::endl;
-    m_entities.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.removeAll();
-    m_entities.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).second = false;
+    m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.removeAll();
+    m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).second = false;
     m_free.emplace_back(id);
 }
 void EntityManager::destroy(std::string& name) noexcept
