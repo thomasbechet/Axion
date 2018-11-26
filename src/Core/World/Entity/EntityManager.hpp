@@ -21,7 +21,6 @@ namespace ax
 
     public:
         EntityManager(ComponentManager& manager);
-        ~EntityManager();
 
         Entity& create() noexcept;
         Entity& create(std::string name) noexcept;
@@ -32,8 +31,7 @@ namespace ax
         Entity& get(std::string& name) noexcept;
 
     private:
-        std::vector<Chunk*> m_chunks;
-        std::allocator<Chunk> m_allocator;
+        std::vector<std::unique_ptr<Chunk>> m_chunks;
         std::vector<unsigned> m_free;
         unsigned m_size = 0;
 

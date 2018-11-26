@@ -3,11 +3,6 @@
 using namespace ax;
 
 EntityManager::EntityManager(ComponentManager& manager) : m_componentManager(manager){}
-EntityManager::~EntityManager()
-{
-    for(auto& it : m_chunks)
-        m_allocator.deallocate(it, 1);
-}
 
 Entity& EntityManager::create() noexcept
 {
@@ -24,7 +19,10 @@ Entity& EntityManager::create() noexcept
         m_size++;
 
         if((m_size / ENTITY_CHUNK_SIZE) + 1 > m_chunks.size()) //Need to allocate a new chunk
-            m_chunks.push_back(m_allocator.allocate(1));
+        {
+            //Need to construct chunk to allocate vectors memory
+            m_chunks.emplace_back(std::make_unique<Chunk>());
+        }
 
         unsigned id = m_size - 1;
         
@@ -44,7 +42,6 @@ Entity& EntityManager::create(std::string name) noexcept
 
 void EntityManager::destroy(Entity& entity) noexcept
 {
-    std::cout << "destroy entity: " << entity.m_id << std::endl;
     unsigned id = entity.m_id;
     m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.removeAll();
     m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).second = false;

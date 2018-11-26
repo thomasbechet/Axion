@@ -15,6 +15,7 @@ void RendererGL::destroyStaticmesh(Id id)
 {
     //Unbind material pool
 
+    setStaticmeshMaterial(id, 0); //Reset material
     m_content.staticmeshes.remove(id);
 }
 void RendererGL::setStaticmeshMaterial(Id id, Id material)

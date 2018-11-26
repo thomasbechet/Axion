@@ -120,59 +120,42 @@ public:
         ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
-        //ax::Engine::systems().add<ax::BasicSpectatorSystem>();
-        //ax::Engine::systems().add<ax::RenderModeSystem>();
+        ax::Engine::systems().add<ax::BasicSpectatorSystem>();
+        ax::Engine::systems().add<ax::RenderModeSystem>();
 
 
-        /*ax::Entity& e = ax::Engine::world().entities().create();
-        e.addComponent<ax::TransformComponent>();
-        e.addComponent<ax::CameraComponent>(e).setFarPlane(300.0f);
-        e.addComponent<ax::BasicSpectatorComponent>(e);*/
+        ax::Entity& camera = ax::Engine::world().entities().create();
+        camera.addComponent<ax::TransformComponent>();
+        camera.addComponent<ax::CameraComponent>(camera).setFarPlane(300.0f);
+        camera.addComponent<ax::BasicSpectatorComponent>(camera);
 
 
-        /*ax::Entity& mesh = ax::Engine::world().entities().create();
+        ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
         transform1.setScale(0.05f, 0.05f, 0.05f);
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");*/
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
 
-        std::cout << "end destroy" << std::endl;
-        
-        ax::Entity& cube1 = ax::Engine::world().entities().create();
-        //ax::TransformComponent& transform = cube1.addComponent<ax::TransformComponent>();
-        //transform.translate(ax::Vector3f(5.0f, 3.0f, 0.0f));
-        //ax::ModelComponent& cubeModel1 = cube1.addComponent<ax::ModelComponent>(cube1);
-        //cubeModel1.setModel("model_cube");
-        //cubeModel1.setMaterial(nullptr);
-
-        //ax::Entity& cube2 = ax::Engine::world().entities().create();
-        //ax::TransformComponent& transform2 = cube2.addComponent<ax::TransformComponent>();
-        //transform2.translate(ax::Vector3f(1.0f, 3.0f, 0.0f));
-        //ax::ModelComponent& cubeModel2 = cube2.addComponent<ax::ModelComponent>(cube2);
-        //cubeModel2.setModel("model_cube");
-        //cubeModel2.setMaterial(nullptr);
-
-        ax::Engine::world().entities().destroy(cube1);
-        //ax::Engine::world().entities().destroy(cube2);
-
-        std::cout << "success" << std::endl;
+        /*const int size = 10;
+        for(int x = -size / 2; x < size / 2; x += 1)
+            for(int y = -size / 2; y < size / 2; y += 1)
+                for(int z = -size / 2; z < size / 2; z += 1)
+            {
+                ax::Entity& cube = ax::Engine::world().entities().create();        
+                ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
+                transformCube.translate(ax::Vector3f(x * 4, z * 4, y * 4));
+                ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
+                cubeModel.setModel("model_cube");
+            }*/
 
         //ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
     }
     void onStop() override
     {
-        //std::cout << "LENGTH:" << ax::Engine::world().components().getList<ax::AttachmentComponent>().length() << std::endl;
-
         ax::Engine::systems().remove<ax::BasicWindowSystem>();
         ax::Engine::systems().remove<ax::BasicSpectatorSystem>();
         ax::Engine::systems().remove<ax::RenderModeSystem>();
     }
-};
-
-class MyClass
-{
-public:
-    std::string name = "MyClass";
 };
 
 int main(int argc, char* argv[])
@@ -180,7 +163,6 @@ int main(int argc, char* argv[])
     ax::Engine::initialize();
     ax::Engine::world().setGameMode<MyGameMode>();
     ax::Engine::context().run();
-    std::cout << "terminate" << std::endl;
     ax::Engine::terminate();
 
     std::cout << "end reached" << std::endl;

@@ -47,6 +47,15 @@ namespace ax
     public:
         ~ComponentList()
         {
+            //Destroy every components
+            for(unsigned i = 0; i < m_length; i++)
+            {
+                if(m_chunks.at(i / COMPONENT_CHUNK_SIZE)->at(i % COMPONENT_CHUNK_SIZE).second)
+                    m_chunks.at(i / COMPONENT_CHUNK_SIZE)->at(i % COMPONENT_CHUNK_SIZE).first.~C();
+            }
+            m_length = 0;
+
+            //Release memory
             for(auto& it : m_chunks)
                 m_allocator.deallocate(it, 1); //Release memory
         }

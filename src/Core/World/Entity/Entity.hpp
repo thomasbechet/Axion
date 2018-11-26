@@ -47,9 +47,8 @@ namespace ax
         void removeAll() noexcept
         {
             for(auto& it : m_handles)
-            {
                 Engine::world().components().destroyComponent(it);
-            }
+                
             m_handles.clear();
         }
         template<typename C>
@@ -67,13 +66,8 @@ namespace ax
         {
             unsigned section = Engine::world().components().componentSection<C>();
             for(auto& it : m_handles)
-            {
-                std::cout << "section: " << it.section << std::endl;
-
                 if(it.section == section) return true;
-            }
                 
-
             return false;
         }
 
