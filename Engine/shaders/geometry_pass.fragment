@@ -14,15 +14,17 @@ in vec3 Color;
 
 	#define MATERIAL_MAX_NUMBER 50
 	#define MATERIAL_BINDING_POINT 1
-	#define MATERIAL_USE_DIFFUSE_TEXTURE 0x1u
-	#define MATERIAL_USE_NORMAL_TEXTURE 0x2u
-	#define MATERIAL_USE_SPECULAR_TEXTURE 0x4u
+	#define MATERIAL_USE_DIFFUSE_TEXTURE 1
+	#define MATERIAL_USE_NORMAL_TEXTURE 2
+	#define MATERIAL_USE_BUMP_TEXTURE 4
+	#define MATERIAL_USE_SPECULAR_TEXTURE 8
 
 	struct Material
 	{
 		uint flags;
+		vec4 diffuseUniform;
 	};
-	layout(binding = MATERIAL_BINDING_POINT) uniform Materials
+	layout(std140, binding = MATERIAL_BINDING_POINT) uniform Materials
 	{
 		Material materials[MATERIAL_MAX_NUMBER];	
 	};
@@ -40,12 +42,25 @@ void main()
 	out_position = FragPos;
 	
 	if(bool(materials[material_index].flags & MATERIAL_USE_DIFFUSE_TEXTURE))
-		out_albedo = texture(diffuseTexture, vec2(UV.x, 1.0 - UV.y)).xyz;
+	{
+		//out_albedo = texture(diffuseTexture, vec2(UV.x, 1.0 - UV.y)).xyz;
+		out_albedo = vec3(1, 0, 0);
+	}
 	else
-		out_albedo = Color;
-		
+	{
+		out_albedo = materials[material_index].diffuseUniform.xyz;
+	}
+	
 	if(bool(materials[material_index].flags & MATERIAL_USE_NORMAL_TEXTURE))
+	{
 		out_normal = (texture(normalTexture, vec2(UV.x, 1.0 - UV.y)).xyz * 2.0) - 1.0;
+	}
+	else if(bool(materials[material_index].flags & MATERIAL_USE_BUMP_TEXTURE))
+	{
+		out_normal = (texture(normalTexture, vec2(UV.x, 1.0 - UV.y)).xyz * 2.0) - 1.0;
+	}
 	else
+	{
 		out_normal = Normal;
+	}
 }

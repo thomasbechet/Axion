@@ -104,7 +104,7 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
                  Engine::assets().texture.load(diffusePath.filename(), diffusePath.path()));
             
             if(hasDiffuseTex)
-                data.diffuseTexture = diffusePath.filename();  
+                data.diffuseTexture = diffusePath.filename();
             else
             {
                 data.diffuseUniform.r = material.diffuse[0];
@@ -121,6 +121,16 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
             if(hasNormalTex)
                 data.normalTexture = normalPath.filename();
 
+            //Bump Texture
+            Path bumpPath = path.directory() + material.bump_texname;
+            bool hasBumpTex = !bumpPath.filename().empty() &&
+                (Engine::assets().texture.isLoaded(bumpPath.filename()) ||
+                 Engine::assets().texture.load(bumpPath.filename(), bumpPath.path()));
+
+            if(hasBumpTex)
+                data.bumpTexture = bumpPath.filename();
+
+            //Load material as assets
             Engine::assets().material.load(material.name, data);
         } 
     }

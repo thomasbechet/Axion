@@ -43,6 +43,8 @@ AssetReference<Texture> TextureManager::load(std::string name, Path path) noexce
         format = TextureFormat::RGB;
     else if(bpp == 4)
         format = TextureFormat::RGBA;
+    else if(bpp == 1)
+        format = TextureFormat::R;
 
     try
     {

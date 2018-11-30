@@ -3,6 +3,7 @@
 //////////////
 //HEADERS
 //////////////
+#include <Core/Utility/Color.hpp>
 #include <OpenGL/Export.hpp>
 
 #include <GL/glew.h>
@@ -11,9 +12,10 @@
 
 #define MATERIAL_MAX_NUMBER 50
 #define MATERIAL_BINDING_POINT 1
-#define MATERIAL_USE_DIFFUSE_TEXTURE 0x1u
-#define MATERIAL_USE_NORMAL_TEXTURE 0x2u
-#define MATERIAL_USE_SPECULAR_TEXTURE 0x4u
+#define MATERIAL_USE_DIFFUSE_TEXTURE 1
+#define MATERIAL_USE_NORMAL_TEXTURE 2
+#define MATERIAL_USE_BUMP_TEXTURE 4
+#define MATERIAL_USE_SPECULAR_TEXTURE 8
 
 namespace ax
 {
@@ -25,6 +27,8 @@ namespace ax
         struct MaterialUBOData
         {
             GLuint flags;
+            float pad[3];
+            Color diffuseUniform;
         };
 
     public:

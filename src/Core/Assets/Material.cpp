@@ -34,19 +34,27 @@ AssetReference<Material> MaterialManager::load(std::string name, const MaterialP
 
     if(!params.diffuseTexture.empty())
         material->diffuseTexture = Engine::assets().texture(params.diffuseTexture);
-
     material->diffuseUniform = params.diffuseUniform;
 
     if(!params.normalTexture.empty())
         material->normalTexture = Engine::assets().texture(params.normalTexture);
-        
 
+    if(!params.bumpTexture.empty())
+        material->bumpTexture = Engine::assets().texture(params.bumpTexture);
+
+    //Configure renderer material settings
     RendererMaterialParameters settings;
+
+    //Diffuse
     settings.diffuseTexture = (material->diffuseTexture) ? material->diffuseTexture->handle : 0;
-    settings.diffuseColor = material->diffuseUniform;
+    settings.diffuseUniform = material->diffuseUniform;
     settings.useDiffuseTexture = (material->diffuseTexture.isValid());
+
+    //Normal
     settings.normalTexture = (material->normalTexture) ? material->normalTexture->handle : 0;
     settings.useNormalTexture = (material->normalTexture.isValid());
+    settings.bumpTexture = (material->bumpTexture) ? material->bumpTexture->handle : 0;
+    settings.useBumpTexture = (material->bumpTexture.isValid());
 
     try
     {
@@ -84,6 +92,13 @@ bool MaterialManager::unload(std::string name, bool tryUnloadTexture) noexcept
                 std::string normalTexName = material->normalTexture->name;
                 material->normalTexture.reset();
                 Engine::assets().texture.unload(normalTexName);
+            }
+
+            if(material->bumpTexture)
+            {
+                std::string bumpTexName = material->bumpTexture->name;
+                material->bumpTexture.reset();
+                Engine::assets().texture.unload(bumpTexName);
             }
         }
 

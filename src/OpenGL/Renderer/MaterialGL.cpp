@@ -9,11 +9,13 @@ Id RendererGL::createMaterial(RendererMaterialParameters settings)
     MaterialGL& material = m_content.materials.get(id).first;
 
     material.useDiffuseTexture = settings.useDiffuseTexture;
-    material.diffuseColor = settings.diffuseColor;
+    material.diffuseUniform = settings.diffuseUniform;
     material.diffuseTexture = settings.diffuseTexture;
 
     material.useNormalTexture = settings.useNormalTexture;
     material.normalTexture = settings.normalTexture;
+    material.useBumpTexture = settings.useBumpTexture;
+    material.bumpTexture = settings.bumpTexture;
 
     m_content.materialUBO->load(material);
 

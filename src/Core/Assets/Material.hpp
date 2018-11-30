@@ -19,6 +19,8 @@ namespace ax
         Color diffuseUniform = Color(1.0f, 1.0f, 1.0f);
         
         std::string normalTexture = "";
+
+        std::string bumpTexture = "";
     };
 
     struct AXION_CORE_API Material
@@ -31,6 +33,8 @@ namespace ax
         Color diffuseUniform = Color(1.0f, 1.0f, 1.0f, 1.0f);
         
         AssetReference<Texture> normalTexture;
+
+        AssetReference<Texture> bumpTexture;
 
         Id handle;
     };

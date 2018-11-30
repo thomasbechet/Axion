@@ -85,6 +85,11 @@ void DebugPass::render(double alpha) noexcept
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, content.textures.get(material.normalTexture).id);
         }
+        else if(material.useBumpTexture)
+        {
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.bumpTexture).id);
+        }
 
         for(auto& staticmeshId : materialIt.second)
         {

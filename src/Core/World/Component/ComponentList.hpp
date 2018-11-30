@@ -14,8 +14,6 @@
 #include <algorithm>
 #include <functional>
 
-#include <iostream>
-
 namespace ax
 {
     template<typename C>

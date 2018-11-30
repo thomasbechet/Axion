@@ -132,11 +132,19 @@ public:
 
         ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
-        transform1.setScale(0.05f, 0.05f, 0.05f);
+        //transform1.setScale(0.05f, 0.05f, 0.05f);
+        transform1.setScale(1.0f, 1.0f, 1.0f);
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+        //mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
 
-        /*const int size = 10;
+        ax::MaterialParameters params;
+        params.diffuseUniform = ax::Color(0.233f, 0.531f, 0.13f);
+        ax::Engine::assets().material.load("material_test", params);
+
+        material->getDiffuseTexture();
+        material->setDiffuseTexture();
+
+        const int size = 10;
         for(int x = -size / 2; x < size / 2; x += 1)
             for(int y = -size / 2; y < size / 2; y += 1)
                 for(int z = -size / 2; z < size / 2; z += 1)
@@ -144,11 +152,14 @@ public:
                 ax::Entity& cube = ax::Engine::world().entities().create();        
                 ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
                 transformCube.translate(ax::Vector3f(x * 4, z * 4, y * 4));
+                transformCube.rotate(x, ax::Vector3f(1.0f, 0.0f, 0.0f));
+                transformCube.attachTo(mesh);
                 ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
                 cubeModel.setModel("model_cube");
-            }*/
+                cubeModel.setMaterial("material_test", 0);
+            }
 
-        //ax::Engine::systems().add<CustomSystem>().setTransform(&transform);
+        ax::Engine::systems().add<CustomSystem>().setTransform(&transform1);
     }
     void onStop() override
     {

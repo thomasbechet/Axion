@@ -17,7 +17,10 @@ namespace ax
     enum TextureFormat
     {
         RGB,
-        RGBA
+        RGBA,
+        R,
+        G,
+        B
     };
 
     struct AXION_CORE_API Texture

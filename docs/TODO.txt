@@ -1,3 +1,2 @@
 TODO:
-    -Basic monothreadsystem
-    -ThreadCount controller
+    -Passing assets as Object Oriented Model
