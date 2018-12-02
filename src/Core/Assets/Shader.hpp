@@ -14,28 +14,28 @@
 
 namespace ax
 {
-    struct AXION_CORE_API Shader
-    {
-        std::string name;
-
-        std::string vertex;
-        std::string fragment;
-        
-        Id handle;
-    };
-
-    class AXION_CORE_API ShaderManager
+    class AXION_CORE_API Shader
     {
     public:
-        AssetReference<Shader> operator()(std::string name) const noexcept;
-        AssetReference<Shader> load(std::string name, Path vertex, Path fragment) noexcept;
-        bool unload(std::string name) noexcept;
-        bool isLoaded(std::string name) const noexcept;
+        Shader();
+        Shader(std::string name);
 
-        void dispose() noexcept;
-        void log() const noexcept;
+        bool loadFromFile(Path vertex, Path fragment) noexcept;
+        bool unload() noexcept;
+        bool isLoaded() const noexcept;
+
+        std::string getName() const noexcept;
+        std::string getVertexCode() const noexcept;
+        std::string getFragmentCode() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Shader>>> m_shaders;
+        std::string m_name;
+        
+        bool m_isLoaded = false;
+
+        std::string m_vertex;
+        std::string m_fragment;
+
+        Id m_handle;
     };
 }

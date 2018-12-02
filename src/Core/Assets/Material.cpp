@@ -119,7 +119,7 @@ bool MaterialManager::unload(std::string name, bool tryUnloadTexture) noexcept
 
     return true;
 }
-bool MaterialManager::isLoaded(std::string name) const noexcept
+bool MaterialManager::exists(std::string name) const noexcept
 {
     return m_materials.find(name) != m_materials.end();
 }

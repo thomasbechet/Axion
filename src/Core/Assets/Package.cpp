@@ -8,18 +8,8 @@
 
 using namespace ax;
 
-AssetReference<Package> PackageManager::operator()(std::string name) const noexcept
-{
-    try
-    {
-        return m_packages.at(name)->reference();
-    }
-    catch(std::out_of_range e)
-    {
-        Engine::interrupt("Failed to access package '" + name + "'");
-    }
-}
-AssetReference<Package> PackageManager::load(Path path) noexcept
+Package::Package
+Package::Package(std::string name, Path path)
 {
     rapidxml::file<> file(path.c_str());
     rapidxml::xml_document<> doc;
@@ -30,6 +20,7 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
     catch(rapidxml::parse_error& e)
     {   
         Engine::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
+        
         return AssetReference<Package>();
     }
     
@@ -70,7 +61,7 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
                 texture_name = texture_node->first_attribute("name")->value();
 
             if(Engine::assets().texture.load(texture_name, texture_path))
-                package->textures.emplace_back(Engine::assets().texture(texture_name));
+                m_textures.emplace_back(Engine::assets().texture(texture_name));
         }
     }
 
@@ -82,7 +73,7 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
             mesh_name = mesh_node->first_attribute("name")->value();
 
         if(loadMesh(mesh_name, mesh_path))
-            package->meshes.emplace(mesh_name, getMesh(mesh_name));
+            m_meshes.emplace(mesh_name, getMesh(mesh_name));
     }*/
 
     /*for(rapidxml::xml_node<>* material_node = package_node->first_node("material"); material_node; material_node = material_node->next_sibling("material"))
@@ -93,7 +84,7 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
             material_name = material_node->first_attribute("name")->value();
 
         if(loadMaterial(material_name, material_path))
-            package->materials.emplace(material_name, getMaterial(material_name));
+            m_materials.emplace(material_name, getMaterial(material_name));
     }*/
 
     for(rapidxml::xml_node<>* model_node = package_node->first_node("model"); model_node; model_node = model_node->next_sibling("model"))
@@ -107,7 +98,7 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
                 model_name = model_node->first_attribute("name")->value();
 
             if(Engine::assets().model.load(model_name, model_path))
-                package->models.emplace_back(Engine::assets().model(model_name));
+                m_models.emplace_back(Engine::assets().model(model_name));
         }
     }
 
@@ -122,85 +113,38 @@ AssetReference<Package> PackageManager::load(Path path) noexcept
             {
                 std::string shader_name = shader_node->first_attribute("name")->value();
                 if(Engine::assets().shader.load(shader_name, vertex_path, fragment_path))
-                    package->shaders.emplace_back(Engine::assets().shader(shader_name));
+                    m_shaders.emplace_back(Engine::assets().shader(shader_name));
             }
         }
     }
-
-    return m_packages.at(name)->reference();
 }
-bool PackageManager::unload(std::string name) noexcept
+Package::~Package()
 {
-    if(!isLoaded(name))
-    {
-        Engine::logger().log("Failed to unload package '" + name + "' because it does not exists.", Logger::Warning);
-        return false;
-    }
 
-    if(m_packages.at(name)->referenceCount() > 0) return false;
-
-    Package* package = m_packages.at(name)->get();
-
-    for(auto it = package->materials.begin(); it != package->materials.end(); it++)
-    {
-        std::string materialName = it->get()->name;
-        it->reset();
-        Engine::assets().material.unload(materialName);
-    }  
-    package->materials.clear();
-    for(auto it = package->models.begin(); it != package->models.end(); it++)
-    {
-        std::string modelName = it->get()->name;
-        it->reset();
-        Engine::assets().model.unload(modelName);
-    }
-    package->models.clear();
-    for(auto it = package->textures.begin(); it != package->textures.end(); it++)
-    {
-        std::string textureName = it->get()->name;
-        it->reset();
-        Engine::assets().texture.unload(textureName);
-    }
-    package->textures.clear();
-    for(auto it = package->meshes.begin(); it != package->meshes.end(); it++)
-    {
-        std::string meshName = it->get()->name;
-        it->reset();
-        Engine::assets().mesh.unload(meshName);
-    }
-    package->meshes.clear();
-    for(auto it = package->shaders.begin(); it != package->shaders.end(); it++)
-    {
-        std::string shaderName = it->get()->name;
-        it->reset();
-        Engine::assets().shader.unload(shaderName);
-    }
-    package->shaders.clear();
-
-    m_packages.erase(name);
-
-    return true;
-}
-bool PackageManager::isLoaded(std::string name) const noexcept
-{
-    return m_packages.find(name) != m_packages.end();
 }
 
-void PackageManager::dispose() noexcept
+std::string Package::getName() const noexcept
 {
-    std::vector<std::string> keys;
-    keys.reserve(m_packages.size());
-    for(auto& it : m_packages)
-        keys.emplace_back(it.second->get()->name);
-
-    for(auto it : keys) unload(it);
+    return m_name;
 }
-void PackageManager::log() const noexcept
+
+const std::vector<AssetReference<Texture>> Package::getTextures() const noexcept
 {
-    Engine::logger().log("[PACKAGE]", Logger::Info);
-    
-    for(auto& it : m_packages)
-    {
-        Engine::logger().log(" \\_ " + it.first, Logger::Info);
-    }
+    return m_textures;
+}
+const std::vector<AssetReference<Mesh>> Package::getMeshes() const noexcept
+{
+    return m_meshes;
+}
+const std::vector<AssetReference<Material>> Package::getMaterials() const noexcept
+{
+    return m_materials;
+}
+const std::vector<AssetReference<Model>> Package::getModels() const noexcept
+{
+    return m_models;
+}
+const std::vector<AssetReference<Shader>> Package::getShaders() const noexcept
+{
+    return m_shaders;
 }

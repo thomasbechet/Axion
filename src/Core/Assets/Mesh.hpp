@@ -17,27 +17,28 @@
 
 namespace ax
 {
-    struct AXION_CORE_API Mesh
-    {
-        std::string name;
-
-        std::vector<Vertex> vertices;
-        
-        Id handle;
-    };
-
-    class AXION_CORE_API MeshManager
+    class AXION_CORE_API Mesh
     {
     public:
-        AssetReference<Mesh> operator()(std::string name) const noexcept;
-        AssetReference<Mesh> load(std::string name, const std::vector<Vertex>& vertices, bool computeTangent = false, bool computeNormal = false) noexcept;
-        bool unload(std::string name) noexcept;
-        bool isLoaded(std::string name) const noexcept;
+        Mesh();
+        Mesh(std::string name);
+        ~Mesh();
 
-        void dispose() noexcept;
-        void log() const noexcept;
+        bool loadFromVertices(const std::vector<Vertex>& vertices, bool computeTangent = false, bool computeNormal = false) noexcept;
+        bool unload() noexcept;
+        bool isLoaded() const noexcept;
+
+        std::string getName() const noexcept;
+
+        const std::vector<Vertex>& getVertices() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Mesh>>> m_meshes;
+        std::string m_name;
+
+        bool m_isLoaded = false;
+
+        std::vector<Vertex> m_vertices;
+        
+        Id m_handle;
     };
 }

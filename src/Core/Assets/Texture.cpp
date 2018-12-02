@@ -10,102 +10,95 @@
 
 using namespace ax;
 
-AssetReference<Texture> TextureManager::operator()(std::string name) const noexcept
+Texture::Texture() {}
+Texture::Texture(std::string name)
 {
-    try
-    {
-        return m_textures.at(name)->reference();
-    }
-    catch(std::out_of_range e)
-    {
-        Engine::interrupt("Failed to access texture '" + name + "'");
-    } 
+    m_name = name;
 }
-AssetReference<Texture> TextureManager::load(std::string name, Path path) noexcept
+Texture::~Texture()
 {
-    if(isLoaded(name))
-    {
-        Engine::logger().log("Failed to load texture '" + name + "' because it already exists.", Logger::Warning);
-        return AssetReference<Texture>();
-    }
+    unload();
+}
 
+bool Texture::loadFromFile(Path path) noexcept
+{
     int width, height, bpp;
-    Id handle;
-    TextureFormat format;
-    Byte* data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
+    m_data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
     if(!data)
     {
         Engine::logger().log("Failed to load texture '" + path.path() + "'", Logger::Warning);
-        return AssetReference<Texture>();
-    }
 
-    if(bpp == 3)
-        format = TextureFormat::RGB;
-    else if(bpp == 4)
-        format = TextureFormat::RGBA;
-    else if(bpp == 1)
-        format = TextureFormat::R;
-
-    try
-    {
-        handle = Engine::renderer().createTexture(
-            Vector2u(width, height),
-            format,
-            data
-        );
-    }
-    catch(const RendererException& exception)
-    {
-        Engine::logger().log("Failed to load texture '" + name + "' from renderer: ", Logger::Warning);
-        Engine::logger().log(exception.what());
-        stbi_image_free(data);
-    }
-
-    m_textures.emplace(name, std::make_unique<AssetHolder<Texture>>());
-    Texture* texture = m_textures.at(name)->get();
-    texture->name = name;
-    texture->data = data;
-    texture->size.x = (unsigned)width;
-    texture->size.y = (unsigned)height;
-    texture->handle = handle;
-
-    return m_textures.at(name)->reference();
-}
-bool TextureManager::unload(std::string name) noexcept
-{
-    if(!isLoaded(name))
-    {
-        Engine::logger().log("Failed to unload texture '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
 
-    if(m_textures.at(name)->referenceCount() > 0) return false;
+    m_size.x = width;
+    m_size.y = height;
 
-    stbi_image_free(m_textures.at(name)->get()->data);
-    m_textures.erase(name);
+    if(bpp == 3)
+        m_format = TextureFormat::RGB;
+    else if(bpp == 4)
+        m_format = TextureFormat::RGBA;
+    else if(bpp == 1)
+        m_format = TextureFormat::R;
+
+    try
+    {
+        m_handle = Engine::renderer().createTexture(
+            Vector2u(width, height),
+            m_format,
+            m_data
+        );
+    }
+    catch(RendererException exception)
+    {
+        Engine::logger().log("Failed to load texture '" + name + "' from renderer: ", Logger::Warning);
+        Engine::logger().log(exception.what());
+        stbi_image_free(m_data);
+        
+        return false;
+    }
+
+    m_isLoaded = true;
 
     return true;
 }
-bool TextureManager::isLoaded(std::string name) const noexcept
+bool Texture::unload() noexcept
 {
-    return m_textures.find(name) != m_textures.end();
-}
-
-void TextureManager::dispose() noexcept
-{
-    std::vector<std::string> keys;
-    keys.reserve(m_textures.size());
-    for(auto& it : m_textures)
-        keys.emplace_back(it.second->get()->name);
-
-    for(auto it : keys) unload(it);
-}
-void TextureManager::log() const noexcept
-{
-    Engine::logger().log("[TEXTURE]", Logger::Info);
-    
-    for(auto& it : m_textures)
+    if(isLoaded())
     {
-        Engine::logger().log(" \\_ " + it.first, Logger::Info);
+        stbi_image_free(m_data);
+
+        try
+        {
+            Engine::renderer().destroyTexture(m_handle);
+        }
+        catch(RendererException e)
+        {
+            Engine::logger().log("Failed to unload texture '" + name + "' from renderer: ", Logger::Warning);
+            Engine::logger().log(exception.what());
+
+            return false;
+        }
     }
+
+    m_isLoaded = false;
+
+    return true;
+}
+bool Texture::isLoaded() const noexcept
+{
+    return m_isLoaded;
+}
+
+std::string Texture::getName() const noexcept
+{
+    return m_name;
+}
+Vector2u Texture::getSize() const noexcept
+{
+    return m_size;
+}
+TextureFormat Texture::getFormat() const noexcept
+{
+    return m_format;
 }

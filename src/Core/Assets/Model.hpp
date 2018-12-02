@@ -15,28 +15,30 @@
 
 namespace ax
 {
-    struct AXION_CORE_API Model
-    {
-        std::string name;
-
-        std::vector<AssetReference<Mesh>> meshes;
-        std::vector<AssetReference<Material>> materials;
-    };
-
-    class AXION_CORE_API ModelManager
+    class AXION_CORE_API Model
     {
     public:
-        AssetReference<Model> operator()(std::string name) const noexcept;
-        AssetReference<Model> load(std::string name, Path path) noexcept;
-        bool unload(std::string name, bool tryUnloadMeshes = true, bool tryUnloadMaterials = true, bool tryUnloadTextures = true) noexcept;
-        bool isLoaded(std::string name) const noexcept;
+        Model();
+        Model(std::string name);
+        ~Model();
 
-        void dispose() noexcept;
-        void log() const noexcept;
+        bool loadFromFile(Path path) noexcept;
+        bool unload(bool tryDestroyMeshes = true, bool tryDestroyMaterials = true) noexcept;
+
+        std::string getName() const noexcept;
+
+        const std::vector<AssetReference<Mesh>>& getMeshes() const noexcept;
+        const std::vector<AssetReference<Material>>& getMaterials() const noexcept;
 
     private:
-        AssetReference<Model> loadObjModel(std::string name, Path path) noexcept;
+        bool loadObjModel(std::string name, Path path) noexcept;
 
-        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Model>>> m_models;
+    private:
+        std::string m_name;
+
+        bool m_isLoaded = false;
+
+        std::vector<AssetReference<Mesh>> m_meshes;
+        std::vector<AssetReference<Material>> m_materials;
     };
 }

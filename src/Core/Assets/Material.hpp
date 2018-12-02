@@ -19,38 +19,36 @@ namespace ax
         Color diffuseUniform = Color(1.0f, 1.0f, 1.0f);
         
         std::string normalTexture = "";
-
-        std::string bumpTexture = "";
     };
 
     struct AXION_CORE_API Material
     {
+    public:
         static constexpr const char* Default = "default_material";
 
-        std::string name;
+        Material();
+        Material(std::string name);
+        ~Material();
 
-        AssetReference<Texture> diffuseTexture;
-        Color diffuseUniform = Color(1.0f, 1.0f, 1.0f, 1.0f);
-        
-        AssetReference<Texture> normalTexture;
+        bool load(const MaterialParameters& parameters) noexcept;
+        bool unload() noexcept;
 
-        AssetReference<Texture> bumpTexture;
+        std::string getName() const noexcept;
 
-        Id handle;
-    };
-
-    class AXION_CORE_API MaterialManager
-    {
-    public:
-        AssetReference<Material> operator()(std::string name) const noexcept;
-        AssetReference<Material> load(std::string name, const MaterialParameters& params) noexcept;
-        bool unload(std::string name, bool tryUnloadTextures = true) noexcept;
-        bool isLoaded(std::string name) const noexcept;
-
-        void dispose() noexcept;
-        void log() const noexcept;
+        AssetReference<Texture> getDiffuseTexture() const noexcept;
+        Color getDiffuseColor() const noexcept;
+        AssetReference<Texture> getNormalTexture() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Material>>> m_materials;
+        std::string m_name;
+
+        bool m_isLoaded = false;
+
+        AssetReference<Texture> m_diffuseTexture;
+        Color diffuseUniform = Color(1.0f, 1.0f, 1.0f, 1.0f);
+        
+        AssetReference<Texture> m_normalTexture;
+
+        Id handle;
     };
 }

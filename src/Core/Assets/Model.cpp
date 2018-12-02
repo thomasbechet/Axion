@@ -1,81 +1,68 @@
 #include <Core/Assets/Model.hpp>
 
-#include <Core/Context/Engine.hpp>
-#include <Core/Assets/AssetManager.hpp>
-#include <Core/Logger/Logger.hpp>
-
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tinyobjloader/tiny_obj_loader.h>
-
 using namespace ax;
 
-AssetReference<Model> ModelManager::operator()(std::string name) const noexcept
+Model::Model(){}
+Model::Model(std::string name)
 {
-    try
-    {
-        return m_models.at(name)->reference();
-    }
-    catch(std::out_of_range e)
-    {
-        Engine::interrupt("Failed to access model '" + name + "'");
-    }
+    m_name = name;
 }
-AssetReference<Model> ModelManager::load(std::string name, Path path) noexcept
+Model::~Model()
 {
-    if(isLoaded(name))
-    {
-        Engine::logger().log("Failed to load model '" + name + "' because it already exists.", Logger::Warning);
-        return AssetReference<Model>();
-    }
+    unload();
+}
 
+bool Model::loadFromFile(Path path) noexcept
+{
     if(path.extension() == ".obj")
         return loadObjModel(name, path);
-
-    return AssetReference<Model>();
-}
-bool ModelManager::unload(std::string name, bool tryUnloadMeshes, bool tryUnloadMaterials, bool tryUnloadTextures) noexcept
-{
-    if(!isLoaded(name))
-    {
-        Engine::logger().log("Failed to unload model '" + name + "' because it does not exists.", Logger::Warning);
+    else
         return false;
-    }
-
-    if(m_models.at(name)->referenceCount() > 0) return false;
-
-    Model* model = m_models.at(name)->get();
-
-    if(tryUnloadMeshes)
-    {
-        for(auto it = model->meshes.begin(); it != model->meshes.end(); it++)
-        {
-            std::string meshName = it->get()->name;
-            it->reset();
-            Engine::assets().mesh.unload(meshName);
-        }
-    }
-    model->meshes.clear();
-    if(tryUnloadMaterials)
-    {
-        for(auto& it : model->materials)
-        {
-            std::string materialName = it.get()->name;
-            it.reset();
-            Engine::assets().material.unload(materialName, tryUnloadTextures);            
-        }
-    }
-    model->materials.clear();
-
-    m_models.erase(name);
-
-    return true;
 }
-bool ModelManager::isLoaded(std::string name) const noexcept
+bool Model::unload(bool tryDestroyMeshes = true, bool tryDestroyMaterials = true) noexcept
 {
-    return m_models.find(name) != m_models.end();
+    if(m_isLoaded)
+    {
+        if(tryUnloadMeshes)
+        {
+            for(auto it = model->meshes.begin(); it != model->meshes.end(); it++)
+            {
+                std::string meshName = it->get()->name;
+                it->reset();
+                Engine::assets().mesh.destroy(meshName);
+            }
+        }
+        model->meshes.clear();
+        if(tryUnloadMaterials)
+        {
+            for(auto& it : model->materials)
+            {
+                std::string materialName = it.get()->name;
+                it.reset();
+                Engine::assets().material.destroy(materialName, tryUnloadTextures);            
+            }
+        }
+        model->materials.clear();
+    }
+
+    m_isLoaded = false;
 }
 
-AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) noexcept
+std::string Model::getName() const noexcept
+{
+    return m_name;
+}
+
+const std::vector<AssetReference<Mesh>>& Model::getMeshes() const noexcept
+{
+    return m_meshes;
+}
+const std::vector<AssetReference<Material>>& Model::getMaterials() const noexcept
+{
+    return m_materials;
+}
+
+bool Model::loadObjModel(Path path) noexcept
 {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
@@ -87,21 +74,21 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
     {
         Engine::logger().log("Failed to load model '" + name + "'", Logger::Warning);
         Engine::logger().log("TINYOBJ Error: " + err);
-        return AssetReference<Model>();
+        return false;
     }
 
     //Loading materials
     for(const auto& material : materials)
     {
-        if(!Engine::assets().material.isLoaded(material.name))
+        if(!Engine::assets().material.exists(material.name))
         {
             MaterialParameters data;
 
             //Diffuse Texture
             Path diffusePath = path.directory() + material.diffuse_texname;
             bool hasDiffuseTex = !diffusePath.filename().empty() &&
-                (Engine::assets().texture.isLoaded(diffusePath.filename()) ||
-                 Engine::assets().texture.load(diffusePath.filename(), diffusePath.path()));
+                (Engine::assets().texture.exists(diffusePath.filename()) ||
+                 Engine::assets().texture.create(diffusePath.filename(), diffusePath.path()));
             
             if(hasDiffuseTex)
                 data.diffuseTexture = diffusePath.filename();
@@ -115,8 +102,8 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
             //Normal Texture
             Path normalPath = path.directory() + material.normal_texname;
             bool hasNormalTex = !normalPath.filename().empty() &&
-                (Engine::assets().texture.isLoaded(normalPath.filename()) ||
-                 Engine::assets().texture.load(normalPath.filename(), normalPath.path()));
+                (Engine::assets().texture.exists(normalPath.filename()) ||
+                 Engine::assets().texture.create(normalPath.filename(), normalPath.path()));
 
             if(hasNormalTex)
                 data.normalTexture = normalPath.filename();
@@ -124,14 +111,14 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
             //Bump Texture
             Path bumpPath = path.directory() + material.bump_texname;
             bool hasBumpTex = !bumpPath.filename().empty() &&
-                (Engine::assets().texture.isLoaded(bumpPath.filename()) ||
-                 Engine::assets().texture.load(bumpPath.filename(), bumpPath.path()));
+                (Engine::assets().texture.exists(bumpPath.filename()) ||
+                 Engine::assets().texture.create(bumpPath.filename(), bumpPath.path()));
 
             if(hasBumpTex)
                 data.bumpTexture = bumpPath.filename();
 
             //Load material as assets
-            Engine::assets().material.load(material.name, data);
+            Engine::assets().material.create(material.name, data);
         } 
     }
 
@@ -179,47 +166,26 @@ AssetReference<Model> ModelManager::loadObjModel(std::string name, Path path) no
     }
 
     //Loading models
-    m_models.emplace(name, std::make_unique<AssetHolder<Model>>());
-    Model* model = m_models.at(name)->get();
-    model->name = name;
-
     for(auto it = meshes.begin(); it != meshes.end(); it++)
     {
         size_t i = std::distance(meshes.begin(), it);
         
         std::string meshName = name + "_" + std::to_string(i);
         Engine::assets().mesh.load(meshName, it->second, true, attrib.normals.empty());
-        model->meshes.emplace_back(Engine::assets().mesh(meshName));
+        m_meshes.emplace_back(Engine::assets().mesh(meshName));
 
         if(it->first != -1)
         {
             std::string materialName = materials[it->first].name;
-            model->materials.emplace_back(Engine::assets().material(materialName));
+            m_materials.emplace_back(Engine::assets().material(materialName));
         }
         else
         {
-            model->materials.emplace_back(AssetReference<Material>());
+            m_materials.emplace_back(AssetReference<Material>());
         }
     }
 
-    return m_models.at(name)->reference();
-}
+    m_isLoaded = true;
 
-void ModelManager::dispose() noexcept
-{
-    std::vector<std::string> keys;
-    keys.reserve(m_models.size());
-    for(auto& it : m_models)
-        keys.emplace_back(it.second->get()->name);
-
-    for(auto it : keys) unload(it, true, true);
-}
-void ModelManager::log() const noexcept
-{
-    Engine::logger().log("[MODEL]", Logger::Info);
-    
-    for(auto& it : m_models)
-    {
-        Engine::logger().log(" \\_ " + it.first, Logger::Info);
-    }
+    return true;
 }

@@ -23,29 +23,30 @@ namespace ax
         B
     };
 
-    struct AXION_CORE_API Texture
-    {
-        std::string name;
-
-        TextureFormat format;
-        Vector2u size;
-        Byte* data;
-
-        Id handle;
-    };
-
-    class AXION_CORE_API TextureManager
+    class AXION_CORE_API Texture
     {
     public:
-        AssetReference<Texture> operator()(std::string name) const noexcept;
-        AssetReference<Texture> load(std::string name, Path path) noexcept;
-        bool unload(std::string name) noexcept;
-        bool isLoaded(std::string name) const noexcept;
+        Texture();
+        Texture(std::string name);
+        ~Texture();
 
-        void dispose() noexcept;
-        void log() const noexcept;
+        bool loadFromFile(Path path) noexcept;
+        bool unload() noexcept;
+        bool isLoaded() const noexcept;
+
+        std::string getName() const noexcept;
+        Vector2u getSize() const noexcept;
+        TextureFormat getFormat() const noexcept;
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<AssetHolder<Texture>>> m_textures;
+        std::string m_name;
+
+        bool m_isLoaded = false;
+
+        TextureFormat m_format = TextureFormat::RGB;
+        Vector2u m_size = Vector2u(0, 0);
+        Byte* m_data = nullptr;
+
+        Id m_handle;
     };
 }

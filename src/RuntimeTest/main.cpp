@@ -141,9 +141,6 @@ public:
         params.diffuseUniform = ax::Color(0.233f, 0.531f, 0.13f);
         ax::Engine::assets().material.load("material_test", params);
 
-        material->getDiffuseTexture();
-        material->setDiffuseTexture();
-
         const int size = 10;
         for(int x = -size / 2; x < size / 2; x += 1)
             for(int y = -size / 2; y < size / 2; y += 1)
