@@ -21,50 +21,12 @@ AssetReference<Material> MaterialManager::create(std::string name, const Materia
         return AssetReference<Material>();
     }
 
-    m_materials.emplace(name, std::make_unique<AssetHolder<Material>>());
-    Material* material = m_materials.at(name)->get();
-    material->name = name;
-
-    if(!params.diffuseTexture.empty())
-        material->diffuseTexture = Engine::assets().texture(params.diffuseTexture);
-    material->diffuseUniform = params.diffuseUniform;
-
-    if(!params.normalTexture.empty())
-        material->normalTexture = Engine::assets().texture(params.normalTexture);
-
-    if(!params.bumpTexture.empty())
-        material->bumpTexture = Engine::assets().texture(params.bumpTexture);
-
-    //Configure renderer material settings
-    RendererMaterialParameters settings;
-
-    //Diffuse
-    settings.diffuseTexture = (material->diffuseTexture) ? material->diffuseTexture->handle : 0;
-    settings.diffuseUniform = material->diffuseUniform;
-    settings.useDiffuseTexture = (material->diffuseTexture.isValid());
-
-    //Normal
-    settings.normalTexture = (material->normalTexture) ? material->normalTexture->handle : 0;
-    settings.useNormalTexture = (material->normalTexture.isValid());
-    settings.bumpTexture = (material->bumpTexture) ? material->bumpTexture->handle : 0;
-    settings.useBumpTexture = (material->bumpTexture.isValid());
-
-    try
-    {
-        material->handle = Engine::renderer().createMaterial(settings);
-    }
-    catch(const RendererException& exception)
-    {
-        Engine::logger().log("Failed to load material '" + name + "' to renderer: ", Logger::Warning);
-        Engine::logger().log(exception.what(), Logger::Warning);
-        m_materials.erase(name);
-
-        return AssetReference<Material>();
-    }
+    m_materials.emplace(name, std::make_unique<AssetHolder<Material>>(name));
+    m_materials.at(name)->get()->load(params);
 
     return *m_materials.at(name).get();
 }
-bool MaterialManager::destoy(std::string name, bool tryUnloadTexture) noexcept
+bool MaterialManager::destroy(std::string name, bool tryUnloadTexture) noexcept
 {
     try
     {
@@ -122,7 +84,7 @@ void MaterialManager::dispose() noexcept
     std::vector<std::string> keys;
     keys.reserve(m_materials.size());
     for(auto& it : m_materials)
-        keys.emplace_back(it.second->get()->name);
+        keys.emplace_back(it.first);
 
     for(auto it : keys) unload(it, true);
 }

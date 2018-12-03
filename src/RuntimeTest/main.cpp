@@ -137,6 +137,8 @@ public:
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
         //mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
 
+        
+
         ax::MaterialParameters params;
         params.diffuseUniform = ax::Color(0.233f, 0.531f, 0.13f);
         ax::Engine::assets().material.load("material_test", params);

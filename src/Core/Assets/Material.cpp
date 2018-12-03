@@ -9,28 +9,23 @@
 
 using namespace ax;
 
-AssetReference<Material> MaterialManager::operator()(std::string name) const noexcept
+Material(){}
+Material(std::string name)
 {
-    try
-    {
-        return m_materials.at(name)->reference();
-    }
-    catch(std::out_of_range e)
-    {
-        Engine::interrupt("Failed to access material '" + name + "'");
-    } 
+    m_name = name;
 }
-AssetReference<Material> MaterialManager::load(std::string name, const MaterialParameters& params) noexcept
+~Material()
+{
+    unload();
+}
+
+bool MaterialManager::load(std::string name, const MaterialParameters& params) noexcept
 {
     if(isLoaded(name))
     {
         Engine::logger().log("Failed to load material '" + name + "' because it already exists.", Logger::Warning);
         return AssetReference<Material>();
     }
-
-    m_materials.emplace(name, std::make_unique<AssetHolder<Material>>());
-    Material* material = m_materials.at(name)->get();
-    material->name = name;
 
     if(!params.diffuseTexture.empty())
         material->diffuseTexture = Engine::assets().texture(params.diffuseTexture);
@@ -69,76 +64,78 @@ AssetReference<Material> MaterialManager::load(std::string name, const MaterialP
         return AssetReference<Material>();
     }
 
-    return *m_materials.at(name).get();
-}
-bool MaterialManager::unload(std::string name, bool tryUnloadTexture) noexcept
-{
-    try
-    {
-        if(m_materials.at(name)->referenceCount() > 0) return false;
-        Material* material = m_materials.at(name)->get();
-
-        if(tryUnloadTexture)
-        {
-            if(material->diffuseTexture)
-            {
-                std::string diffuseTexName = material->diffuseTexture->name;
-                material->diffuseTexture.reset();
-                Engine::assets().texture.unload(diffuseTexName);
-            }
-
-            if(material->normalTexture)
-            {
-                std::string normalTexName = material->normalTexture->name;
-                material->normalTexture.reset();
-                Engine::assets().texture.unload(normalTexName);
-            }
-
-            if(material->bumpTexture)
-            {
-                std::string bumpTexName = material->bumpTexture->name;
-                material->bumpTexture.reset();
-                Engine::assets().texture.unload(bumpTexName);
-            }
-        }
-
-        Engine::renderer().destroyMaterial(material->handle);
-        m_materials.erase(name);
-    }
-    catch(const std::out_of_range& exception)
-    {
-        Engine::logger().log("Failed to unload material '" + name + "' because it does not exists.", Logger::Warning);
-        return false;
-    }
-    catch(const RendererException& exception)
-    {
-        Engine::logger().log("Failed to unload material '" + name + "' from renderer:", Logger::Warning);
-        Engine::logger().log(exception.what(), Logger::Warning);
-        return false;
-    }
+    m_isLoaded = true;
 
     return true;
 }
-bool MaterialManager::exists(std::string name) const noexcept
+bool MaterialManager::unload(std::string name, bool tryUnloadTexture) noexcept
 {
-    return m_materials.find(name) != m_materials.end();
-}
-
-void MaterialManager::dispose() noexcept
-{
-    std::vector<std::string> keys;
-    keys.reserve(m_materials.size());
-    for(auto& it : m_materials)
-        keys.emplace_back(it.second->get()->name);
-
-    for(auto it : keys) unload(it, true);
-}
-void MaterialManager::log() const noexcept
-{
-    Engine::logger().log("[MATERIAL]", Logger::Info);
-    
-    for(auto& it : m_materials)
+    if(isLoaded())
     {
-        Engine::logger().log(" \\_ " + it.first, Logger::Info);
+        try
+        {
+            if(m_materials.at(name)->referenceCount() > 0) return false;
+            Material* material = m_materials.at(name)->get();
+
+            if(tryUnloadTexture)
+            {
+                if(material->diffuseTexture)
+                {
+                    std::string diffuseTexName = material->diffuseTexture->name;
+                    material->diffuseTexture.reset();
+                    Engine::assets().texture.unload(diffuseTexName);
+                }
+
+                if(material->normalTexture)
+                {
+                    std::string normalTexName = material->normalTexture->name;
+                    material->normalTexture.reset();
+                    Engine::assets().texture.unload(normalTexName);
+                }
+
+                if(material->bumpTexture)
+                {
+                    std::string bumpTexName = material->bumpTexture->name;
+                    material->bumpTexture.reset();
+                    Engine::assets().texture.unload(bumpTexName);
+                }
+            }
+
+            Engine::renderer().destroyMaterial(material->handle);
+            m_materials.erase(name);
+        }
+        catch(const std::out_of_range& exception)
+        {
+            Engine::logger().log("Failed to unload material '" + name + "' because it does not exists.", Logger::Warning);
+            return false;
+        }
+        catch(const RendererException& exception)
+        {
+            Engine::logger().log("Failed to unload material '" + name + "' from renderer:", Logger::Warning);
+            Engine::logger().log(exception.what(), Logger::Warning);
+            return false;
+        }
     }
+
+    m_isLoaded = false;
+
+    return true;
+}
+
+std::string Material::getName() const noexcept
+{
+    return m_name;
+}
+
+AssetReference<Texture> Material::getDiffuseTexture() const noexcept
+{
+    return m_diffuseTexture;
+}
+Color Material::getDiffuseColor() const noexcept
+{
+    return m_diffuseColor;
+}
+AssetReference<Texture> Material::getNormalTexture() const noexcept
+{
+    return m_normalTexture;
 }

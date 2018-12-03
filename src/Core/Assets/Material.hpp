@@ -45,7 +45,7 @@ namespace ax
         bool m_isLoaded = false;
 
         AssetReference<Texture> m_diffuseTexture;
-        Color diffuseUniform = Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Color diffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
         
         AssetReference<Texture> m_normalTexture;
 
