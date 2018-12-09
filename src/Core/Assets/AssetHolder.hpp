@@ -9,8 +9,6 @@
 
 #include <memory>
 
-#include <iostream>
-
 namespace ax
 {
     template<typename T>
@@ -28,7 +26,7 @@ namespace ax
         {
             if(m_referenceCount > 0)
             {
-                Engine::interrupt("Dangling reference detected with '" + m_asset.name + "' (" + std::to_string(m_referenceCount) + " references)");
+                Engine::interrupt("Dangling reference detected with '" + m_asset.getName() + "' (" + std::to_string(m_referenceCount) + " references)");
             }
         }
 

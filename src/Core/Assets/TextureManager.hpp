@@ -4,6 +4,8 @@
 //HEADERS
 ///////////////
 #include <Core/Export.hpp>
+#include <Core/Assets/AssetReference.hpp>
+#include <Core/Assets/Texture.hpp>
 
 namespace ax
 {

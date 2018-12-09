@@ -9,6 +9,7 @@
 #include <Core/Assets/Material.hpp>
 #include <Core/Assets/Model.hpp>
 #include <Core/Assets/Shader.hpp>
+#include <Core/Assets/AssetReference.hpp>
 
 #include <string>
 #include <memory>

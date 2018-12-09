@@ -20,11 +20,17 @@ ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
     Assets/AssetManager.cpp
     Assets/Material.cpp
+    Assets/MaterialManager.cpp
     Assets/Mesh.cpp
+    Assets/MeshManager.cpp
     Assets/Model.cpp
+    Assets/ModelManager.cpp
     Assets/Package.cpp
+    Assets/PackageManager.cpp
     Assets/Shader.cpp
+    Assets/ShaderManager.cpp
     Assets/Texture.cpp
+    Assets/TextureManager.cpp
     Context/EngineContext.cpp
     Context/Engine.cpp
     Prefabs/System/BasicWindowSystem.cpp

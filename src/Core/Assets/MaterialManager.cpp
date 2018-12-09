@@ -1,5 +1,10 @@
 #include <Core/Assets/MaterialManager.hpp>
 
+#include <Core/Logger/Logger.hpp>
+#include <Core/Renderer/RendererException.hpp>
+
+#include <vector>
+
 using namespace ax;
 
 AssetReference<Material> MaterialManager::operator()(std::string name) const noexcept
@@ -15,7 +20,7 @@ AssetReference<Material> MaterialManager::operator()(std::string name) const noe
 }
 AssetReference<Material> MaterialManager::create(std::string name, const MaterialParameters& params) noexcept
 {
-    if(isLoaded(name))
+    if(exists(name))
     {
         Engine::logger().log("Failed to load material '" + name + "' because it already exists.", Logger::Warning);
         return AssetReference<Material>();
@@ -33,31 +38,8 @@ bool MaterialManager::destroy(std::string name, bool tryUnloadTexture) noexcept
         if(m_materials.at(name)->referenceCount() > 0) return false;
         Material* material = m_materials.at(name)->get();
 
-        if(tryUnloadTexture)
-        {
-            if(material->diffuseTexture)
-            {
-                std::string diffuseTexName = material->diffuseTexture->name;
-                material->diffuseTexture.reset();
-                Engine::assets().texture.unload(diffuseTexName);
-            }
+        material->unload(tryUnloadTexture);
 
-            if(material->normalTexture)
-            {
-                std::string normalTexName = material->normalTexture->name;
-                material->normalTexture.reset();
-                Engine::assets().texture.unload(normalTexName);
-            }
-
-            if(material->bumpTexture)
-            {
-                std::string bumpTexName = material->bumpTexture->name;
-                material->bumpTexture.reset();
-                Engine::assets().texture.unload(bumpTexName);
-            }
-        }
-
-        Engine::renderer().destroyMaterial(material->handle);
         m_materials.erase(name);
     }
     catch(const std::out_of_range& exception)
@@ -86,7 +68,7 @@ void MaterialManager::dispose() noexcept
     for(auto& it : m_materials)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) unload(it, true);
+    for(auto it : keys) destroy(it, true);
 }
 void MaterialManager::log() const noexcept
 {

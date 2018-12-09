@@ -23,7 +23,8 @@ namespace ax
         ~Model();
 
         bool loadFromFile(Path path) noexcept;
-        bool unload(bool tryDestroyMeshes = true, bool tryDestroyMaterials = true) noexcept;
+        bool unload(bool tryDestroyMeshes = true, bool tryDestroyMaterials = true, bool tryDestroyTextures = true) noexcept;
+        bool isLoaded() const noexcept;
 
         std::string getName() const noexcept;
 
@@ -31,7 +32,7 @@ namespace ax
         const std::vector<AssetReference<Material>>& getMaterials() const noexcept;
 
     private:
-        bool loadObjModel(std::string name, Path path) noexcept;
+        bool loadObjModel(Path path) noexcept;
 
     private:
         std::string m_name;

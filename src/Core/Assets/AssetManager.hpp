@@ -6,12 +6,12 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Vertex.hpp>
-#include <Core/Assets/Texture.hpp>
-#include <Core/Assets/Mesh.hpp>
-#include <Core/Assets/Material.hpp>
-#include <Core/Assets/Model.hpp>
-#include <Core/Assets/Package.hpp>
-#include <Core/Assets/Shader.hpp>
+#include <Core/Assets/TextureManager.hpp>
+#include <Core/Assets/MeshManager.hpp>
+#include <Core/Assets/MaterialManager.hpp>
+#include <Core/Assets/ModelManager.hpp>
+#include <Core/Assets/PackageManager.hpp>
+#include <Core/Assets/ShaderManager.hpp>
 
 namespace ax
 {

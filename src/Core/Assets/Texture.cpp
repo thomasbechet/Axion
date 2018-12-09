@@ -22,6 +22,8 @@ Texture::~Texture()
 
 bool Texture::loadFromFile(Path path) noexcept
 {
+    unload();
+
     int width, height, bpp;
     m_data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
     if(!data)
@@ -101,4 +103,9 @@ Vector2u Texture::getSize() const noexcept
 TextureFormat Texture::getFormat() const noexcept
 {
     return m_format;
+}
+
+Id Texture::getHandle() const noexcept
+{
+    return m_handle;
 }

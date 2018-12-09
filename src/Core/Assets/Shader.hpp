@@ -6,7 +6,6 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Path.hpp>
-#include <Core/Assets/AssetReference.hpp>
 
 #include <string>
 #include <memory>
@@ -27,6 +26,8 @@ namespace ax
         std::string getName() const noexcept;
         std::string getVertexCode() const noexcept;
         std::string getFragmentCode() const noexcept;
+
+        Id getHandle() const noexcept;
 
     private:
         std::string m_name;

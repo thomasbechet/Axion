@@ -1,5 +1,11 @@
 #include <Core/Assets/Model.hpp>
 
+#include <Core/Assets/AssetManager.hpp>
+#include <Core/Logger/Logger.hpp>
+
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tinyobjloader/tiny_obj_loader.h>
+
 using namespace ax;
 
 Model::Model(){}
@@ -14,38 +20,46 @@ Model::~Model()
 
 bool Model::loadFromFile(Path path) noexcept
 {
+    unload();
+
     if(path.extension() == ".obj")
-        return loadObjModel(name, path);
+        return loadObjModel(path);
     else
         return false;
 }
-bool Model::unload(bool tryDestroyMeshes = true, bool tryDestroyMaterials = true) noexcept
+bool Model::unload(bool tryDestroyMeshes, bool tryDestroyMaterials, bool tryDestroyTextures) noexcept
 {
     if(m_isLoaded)
     {
-        if(tryUnloadMeshes)
+        if(tryDestroyMeshes)
         {
-            for(auto it = model->meshes.begin(); it != model->meshes.end(); it++)
+            for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
             {
-                std::string meshName = it->get()->name;
+                std::string meshName = it->get()->getName();
                 it->reset();
                 Engine::assets().mesh.destroy(meshName);
             }
         }
-        model->meshes.clear();
-        if(tryUnloadMaterials)
+        m_meshes.clear();
+        if(tryDestroyMaterials)
         {
-            for(auto& it : model->materials)
+            for(auto& it : m_materials)
             {
-                std::string materialName = it.get()->name;
+                std::string materialName = it.get()->getName();
                 it.reset();
-                Engine::assets().material.destroy(materialName, tryUnloadTextures);            
+                Engine::assets().material.destroy(materialName, tryDestroyTextures);            
             }
         }
-        model->materials.clear();
+        m_materials.clear();
     }
 
     m_isLoaded = false;
+
+    return true;
+}
+bool Model::isLoaded() const noexcept
+{
+    return m_isLoaded;
 }
 
 std::string Model::getName() const noexcept
@@ -72,7 +86,7 @@ bool Model::loadObjModel(Path path) noexcept
     bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, path.c_str(), path.directory().c_str(), true);
     if(!ret)
     {
-        Engine::logger().log("Failed to load model '" + name + "'", Logger::Warning);
+        Engine::logger().log("Failed to load model '" + m_name + "'", Logger::Warning);
         Engine::logger().log("TINYOBJ Error: " + err);
         return false;
     }
@@ -94,19 +108,30 @@ bool Model::loadObjModel(Path path) noexcept
                 data.diffuseTexture = diffusePath.filename();
             else
             {
-                data.diffuseUniform.r = material.diffuse[0];
-                data.diffuseUniform.g = material.diffuse[1];
-                data.diffuseUniform.b = material.diffuse[2];
+                data.diffuseColor.r = material.diffuse[0];
+                data.diffuseColor.g = material.diffuse[1];
+                data.diffuseColor.b = material.diffuse[2];
             }
 
             //Normal Texture
             Path normalPath = path.directory() + material.normal_texname;
+
+            //////
+            ///////
+            ////// GERER LA DETECTION DU BUMP
             bool hasNormalTex = !normalPath.filename().empty() &&
                 (Engine::assets().texture.exists(normalPath.filename()) ||
                  Engine::assets().texture.create(normalPath.filename(), normalPath.path()));
 
+            bool hasBumpTex = !bumpPath.filename().empty() &&
+                (Engine::assets().texture.exists(bumpPath.filename()) ||
+                 Engine::assets().texture.create(bumpPath.filename(), bumpPath.path()));
+
             if(hasNormalTex)
                 data.normalTexture = normalPath.filename();
+            else
+
+            
 
             //Bump Texture
             Path bumpPath = path.directory() + material.bump_texname;

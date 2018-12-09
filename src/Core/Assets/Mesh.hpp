@@ -32,6 +32,8 @@ namespace ax
 
         const std::vector<Vertex>& getVertices() const noexcept;
 
+        Id getHandle() const noexcept;
+
     private:
         std::string m_name;
 

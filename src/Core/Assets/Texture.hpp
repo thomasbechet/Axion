@@ -7,7 +7,6 @@
 #include <Core/Math/Vector.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Path.hpp>
-#include <Core/Assets/AssetReference.hpp>
 
 #include <unordered_map>
 #include <memory>
@@ -37,6 +36,8 @@ namespace ax
         std::string getName() const noexcept;
         Vector2u getSize() const noexcept;
         TextureFormat getFormat() const noexcept;
+
+        Id getHandle() const noexcept;
 
     private:
         std::string m_name;

@@ -15,7 +15,7 @@ AssetReference<Package> PackageManager::operator()(std::string name) const noexc
 }
 AssetReference<Package> PackageManager::load(Path path) noexcept
 {
-    
+    m_packages.emplace(name, std::make_unique<AssetHolder<Package>>(name));
 
     return m_packages.at(name)->reference();
 }
@@ -31,41 +31,7 @@ bool PackageManager::unload(std::string name) noexcept
 
     Package* package = m_packages.at(name)->get();
 
-    for(auto it = package->materials.begin(); it != package->materials.end(); it++)
-    {
-        std::string materialName = it->get()->name;
-        it->reset();
-        Engine::assets().material.unload(materialName);
-    }  
-    package->materials.clear();
-    for(auto it = package->models.begin(); it != package->models.end(); it++)
-    {
-        std::string modelName = it->get()->name;
-        it->reset();
-        Engine::assets().model.unload(modelName);
-    }
-    package->models.clear();
-    for(auto it = package->textures.begin(); it != package->textures.end(); it++)
-    {
-        std::string textureName = it->get()->name;
-        it->reset();
-        Engine::assets().texture.unload(textureName);
-    }
-    package->textures.clear();
-    for(auto it = package->meshes.begin(); it != package->meshes.end(); it++)
-    {
-        std::string meshName = it->get()->name;
-        it->reset();
-        Engine::assets().mesh.unload(meshName);
-    }
-    package->meshes.clear();
-    for(auto it = package->shaders.begin(); it != package->shaders.end(); it++)
-    {
-        std::string shaderName = it->get()->name;
-        it->reset();
-        Engine::assets().shader.unload(shaderName);
-    }
-    package->shaders.clear();
+    package->unload();
 
     m_packages.erase(name);
 

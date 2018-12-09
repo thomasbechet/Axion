@@ -12,13 +12,12 @@ namespace ax
     struct AXION_GL_API MaterialGL
     {
         bool useDiffuseTexture;
-        Color diffuseUniform;
+        Color diffuseColor;
         Id diffuseTexture;
 
         bool useNormalTexture;
+        bool isBumpTexture;
         Id normalTexture;
-        bool useBumpTexture;
-        Id bumpTexture;
 
         GLuint uboIndex;
     };

@@ -4,6 +4,7 @@
 //HEADERS
 ///////////////
 #include <Core/Export.hpp>
+#include <Core/Assets/Material.hpp>
 
 namespace ax
 {

@@ -4,9 +4,6 @@
 #include <Core/Assets/AssetManager.hpp>
 #include <Core/Logger/Logger.hpp>
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tinyobjloader/tiny_obj_loader.h>
-
 using namespace ax;
 
 AssetReference<Model> ModelManager::operator()(std::string name) const noexcept

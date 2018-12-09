@@ -1,4 +1,4 @@
-#include <Core/Assets/AssetManager.hpp>
+#include <Core/Assets/Package.hpp>
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Logger/Logger.hpp>
@@ -8,8 +8,17 @@
 
 using namespace ax;
 
-Package::Package
+Package::Package(){}
 Package::Package(std::string name, Path path)
+{
+    m_name = name;    
+}
+Package::~Package()
+{
+    unload();
+}
+
+bool Package::loadFromFile(Path path) noexcept
 {
     rapidxml::file<> file(path.c_str());
     rapidxml::xml_document<> doc;
@@ -20,15 +29,14 @@ Package::Package(std::string name, Path path)
     catch(rapidxml::parse_error& e)
     {   
         Engine::logger().log("Failed to parse package file " + path.path(), Logger::Warning);
-        
-        return AssetReference<Package>();
+        return false;
     }
     
     rapidxml::xml_node<>* package_node = doc.first_node("package");
     if(!package_node)
     {
         Engine::logger().log("Failed to load package " + path.path() + " because it does not contain 'package' node", Logger::Warning);
-        return AssetReference<Package>();
+        return false;
     }
     
     std::string name = path.filename();
@@ -43,12 +51,10 @@ Package::Package(std::string name, Path path)
     if(isLoaded(name))
     {
         Engine::logger().log("Failed to load package '" + name + "' because it already exists.", Logger::Warning);
-        return AssetReference<Package>();
+        return false
     }
 
-    m_packages.emplace(name, std::make_unique<AssetHolder<Package>>());
     Package* package = m_packages.at(name)->get();
-    package->name = name;
 
     for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
     {
@@ -117,10 +123,46 @@ Package::Package(std::string name, Path path)
             }
         }
     }
-}
-Package::~Package()
-{
 
+    return true;
+}
+bool Package::unload() noexcept
+{
+    for(auto it = m_materials.begin(); it != m_materials.end(); it++)
+    {
+        std::string materialName = it->get()->name;
+        it->reset();
+        Engine::assets().material.unload(materialName);
+    }  
+    m_materials.clear();
+    for(auto it = m_models.begin(); it != m_models.end(); it++)
+    {
+        std::string modelName = it->get()->name;
+        it->reset();
+        Engine::assets().model.unload(modelName);
+    }
+    m_models.clear();
+    for(auto it = m_textures.begin(); it != m_textures.end(); it++)
+    {
+        std::string textureName = it->get()->name;
+        it->reset();
+        Engine::assets().texture.unload(textureName);
+    }
+    m_textures.clear();
+    for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
+    {
+        std::string meshName = it->get()->name;
+        it->reset();
+        Engine::assets().mesh.unload(meshName);
+    }
+    m_meshes.clear();
+    for(auto it = m_shaders.begin(); it != m_shaders.end(); it++)
+    {
+        std::string shaderName = it->get()->name;
+        it->reset();
+        Engine::assets().shader.unload(shaderName);
+    }
+    m_shaders.clear();
 }
 
 std::string Package::getName() const noexcept

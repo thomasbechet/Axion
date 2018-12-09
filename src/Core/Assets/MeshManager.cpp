@@ -33,7 +33,7 @@ AssetReference<Mesh> MeshManager::create(std::string name, const std::vector<Ver
 }
 bool MeshManager::destroy(std::string name) noexcept
 {
-    if(!isLoaded(name))
+    if(!exists(name))
     {
         Engine::logger().log("Failed to unload mesh '" + name + "' because it does not exists.", Logger::Warning);
         return false;
@@ -58,7 +58,7 @@ void MeshManager::dispose() noexcept
     for(auto& it : m_meshes)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) unload(it);
+    for(auto it : keys) destroy(it);
 }
 void MeshManager::log() const noexcept
 {

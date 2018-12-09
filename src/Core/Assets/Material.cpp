@@ -9,47 +9,39 @@
 
 using namespace ax;
 
-Material(){}
-Material(std::string name)
+Material::Material(){}
+Material::Material(std::string name)
 {
     m_name = name;
 }
-~Material()
+Material::~Material()
 {
     unload();
 }
 
 bool Material::load(const MaterialParameters& params) noexcept
 {
-    if(isLoaded(name))
-    {
-        Engine::logger().log("Failed to load material '" + name + "' because it already exists.", Logger::Warning);
-        return false;
-    }
+    unload();
 
     if(!params.diffuseTexture.empty())
         m_diffuseTexture = Engine::assets().texture(params.diffuseTexture);
-    m_diffuseUniform = params.diffuseUniform;
+    m_diffuseColor = params.diffuseColor;
 
     if(!params.normalTexture.empty())
         m_normalTexture = Engine::assets().texture(params.normalTexture);
-
-    if(!params.bumpTexture.empty())
-        m_bumpTexture = Engine::assets().texture(params.bumpTexture);
 
     //Configure renderer material settings
     RendererMaterialParameters settings;
 
     //Diffuse
-    settings.diffuseTexture = (m_diffuseTexture) ? m_diffuseTexture->handle : 0;
-    settings.diffuseUniform = m_diffuseUniform;
+    settings.diffuseTexture = (m_diffuseTexture) ? m_diffuseTexture->getHandle() : 0;
+    settings.diffuseColor = m_diffuseColor;
     settings.useDiffuseTexture = (m_diffuseTexture.isValid());
 
     //Normal
-    settings.normalTexture = (m_normalTexture) ? m_normalTexture->handle : 0;
+    settings.normalTexture = (m_normalTexture) ? m_normalTexture->getHandle() : 0;
     settings.useNormalTexture = (m_normalTexture.isValid());
-    settings.bumpTexture = (m_bumpTexture) ? m_bumpTexture->handle : 0;
-    settings.useBumpTexture = (m_bumpTexture.isValid());
+    settings.isBumpTexture = params.isBumpTexture;
 
     try
     {
@@ -57,7 +49,7 @@ bool Material::load(const MaterialParameters& params) noexcept
     }
     catch(const RendererException& exception)
     {
-        Engine::logger().log("Failed to load material '" + name + "' to renderer: ", Logger::Warning);
+        Engine::logger().log("Failed to load material '" + m_name + "' to renderer: ", Logger::Warning);
         Engine::logger().log(exception.what(), Logger::Warning);
 
         return false;
@@ -67,50 +59,39 @@ bool Material::load(const MaterialParameters& params) noexcept
 
     return true;
 }
-bool Material::unload(std::string name, bool tryUnloadTexture) noexcept
+bool Material::unload(bool tryDestroyTexture) noexcept
 {
     if(isLoaded())
     {
         try
         {
-            if(m_materials.at(name)->referenceCount() > 0) return false;
-            Material* material = m_materials.at(name)->get();
-
-            if(tryUnloadTexture)
+            if(tryDestroyTexture)
             {
-                if(material->diffuseTexture)
+                if(m_diffuseTexture)
                 {
-                    std::string diffuseTexName = material->diffuseTexture->name;
-                    material->diffuseTexture.reset();
-                    Engine::assets().texture.unload(diffuseTexName);
+                    std::string diffuseTexName = m_diffuseTexture->getName();
+                    m_diffuseTexture.reset();
+                    Engine::assets().texture.destroy(diffuseTexName);
                 }
 
-                if(material->normalTexture)
+                if(m_normalTexture)
                 {
-                    std::string normalTexName = material->normalTexture->name;
-                    material->normalTexture.reset();
-                    Engine::assets().texture.unload(normalTexName);
-                }
-
-                if(material->bumpTexture)
-                {
-                    std::string bumpTexName = material->bumpTexture->name;
-                    material->bumpTexture.reset();
-                    Engine::assets().texture.unload(bumpTexName);
+                    std::string normalTexName = m_normalTexture->getName();
+                    m_normalTexture.reset();
+                    Engine::assets().texture.destroy(normalTexName);
                 }
             }
 
-            Engine::renderer().destroyMaterial(material->handle);
-            m_materials.erase(name);
+            Engine::renderer().destroyMaterial(m_handle);
         }
         catch(const std::out_of_range& exception)
         {
-            Engine::logger().log("Failed to unload material '" + name + "' because it does not exists.", Logger::Warning);
+            Engine::logger().log("Failed to unload material '" + m_name + "' because it does not exists.", Logger::Warning);
             return false;
         }
         catch(const RendererException& exception)
         {
-            Engine::logger().log("Failed to unload material '" + name + "' from renderer:", Logger::Warning);
+            Engine::logger().log("Failed to unload material '" + m_name + "' from renderer:", Logger::Warning);
             Engine::logger().log(exception.what(), Logger::Warning);
             return false;
         }
@@ -119,6 +100,10 @@ bool Material::unload(std::string name, bool tryUnloadTexture) noexcept
     m_isLoaded = false;
 
     return true;
+}
+bool Material::isLoaded() const noexcept
+{
+    return m_isLoaded;
 }
 
 std::string Material::getName() const noexcept
@@ -137,4 +122,9 @@ Color Material::getDiffuseColor() const noexcept
 AssetReference<Texture> Material::getNormalTexture() const noexcept
 {
     return m_normalTexture;
+}
+
+Id Material::getHandle() const noexcept
+{
+    return m_handle;
 }

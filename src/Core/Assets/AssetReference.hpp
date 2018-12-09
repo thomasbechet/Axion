@@ -6,8 +6,6 @@
 #include <Core/Export.hpp>
 #include <Core/Assets/AssetHolder.hpp>
 
-#include <iostream>
-
 namespace ax
 {
     template<typename T>

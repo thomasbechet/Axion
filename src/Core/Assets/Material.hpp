@@ -16,12 +16,13 @@ namespace ax
     struct AXION_CORE_API MaterialParameters
     {
         std::string diffuseTexture = "";
-        Color diffuseUniform = Color(1.0f, 1.0f, 1.0f);
+        Color diffuseColor = Color(1.0f, 1.0f, 1.0f);
         
         std::string normalTexture = "";
+        bool isBumpTexture;
     };
 
-    struct AXION_CORE_API Material
+    class AXION_CORE_API Material
     {
     public:
         static constexpr const char* Default = "default_material";
@@ -31,7 +32,8 @@ namespace ax
         ~Material();
 
         bool load(const MaterialParameters& parameters) noexcept;
-        bool unload() noexcept;
+        bool unload(bool tryDestroyTextures = true) noexcept;
+        bool isLoaded() const noexcept;
 
         std::string getName() const noexcept;
 
@@ -39,16 +41,18 @@ namespace ax
         Color getDiffuseColor() const noexcept;
         AssetReference<Texture> getNormalTexture() const noexcept;
 
+        Id getHandle() const noexcept;
+
     private:
         std::string m_name;
 
         bool m_isLoaded = false;
 
         AssetReference<Texture> m_diffuseTexture;
-        Color diffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Color m_diffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
         
         AssetReference<Texture> m_normalTexture;
 
-        Id handle;
+        Id m_handle;
     };
 }

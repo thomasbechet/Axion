@@ -18,6 +18,8 @@ Shader::Shader(std::string name)
 
 bool loadFromFile(Path vertex, Path fragment) noexcept
 {
+    unload();
+
     try
     {
         std::ifstream vertexFile(vertex.path());
@@ -83,4 +85,9 @@ std::string Shader::getVertexCode() const noexcept
 std::string Shader::getFragmentCode() const noexcept
 {
     return m_fragment;
+}
+
+Id Shader::getHandle() const noexcept
+{
+    return m_handle;
 }

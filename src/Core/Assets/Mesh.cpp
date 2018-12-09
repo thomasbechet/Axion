@@ -17,7 +17,7 @@ Mesh::~Mesh()
     unload();
 }
 
-bool Mesh::loadFromVertices(const std::vector<Vertex>& vertices, bool computeTangent = false, bool computeNormal = false) noexcept
+bool Mesh::loadFromVertices(const std::vector<Vertex>& vertices, bool computeTangent, bool computeNormal) noexcept
 {
     unload();
 
@@ -78,9 +78,8 @@ bool Mesh::loadFromVertices(const std::vector<Vertex>& vertices, bool computeTan
     }
     catch(const RendererException& exception)
     {
-        Engine::logger().log("Failed to load mesh '" + name + "' from renderer: ", Logger::Warning);
+        Engine::logger().log("Failed to load mesh '" + m_name + "' from renderer: ", Logger::Warning);
         Engine::logger().log(exception.what(), Logger::Warning);
-        m_meshes.erase(name);
 
         return false;
     }
@@ -95,11 +94,11 @@ bool Mesh::unload() noexcept
     {
         try
         {
-            Engine::renderer().destroyMesh(m_meshes.at(name)->get()->handle);
+            Engine::renderer().destroyMesh(m_handle);
         }
         catch(const RendererException& exception)
         {
-            Engine::logger().log("Failed to unload mesh '" + name + "' from renderer: ", Logger::Warning);
+            Engine::logger().log("Failed to unload mesh '" + m_name + "' from renderer: ", Logger::Warning);
             Engine::logger().log(exception.what(), Logger::Warning);
 
             return false;
@@ -123,4 +122,9 @@ std::string Mesh::getName() const noexcept
 const std::vector<Vertex>& Mesh::getVertices() const noexcept
 {
     return m_vertices;
+}
+
+Id Mesh::getHandle() const noexcept
+{
+    return m_handle;
 }
