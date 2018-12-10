@@ -1,5 +1,7 @@
 #include <Core/Assets/PackageManager.hpp>
 
+#include <Core/Logger/Logger.hpp>
+
 using namespace ax;
 
 AssetReference<Package> PackageManager::operator()(std::string name) const noexcept
@@ -13,17 +15,17 @@ AssetReference<Package> PackageManager::operator()(std::string name) const noexc
         Engine::interrupt("Failed to access package '" + name + "'");
     }
 }
-AssetReference<Package> PackageManager::load(Path path) noexcept
+AssetReference<Package> PackageManager::create(std::string name, Path path) noexcept
 {
     m_packages.emplace(name, std::make_unique<AssetHolder<Package>>(name));
 
     return m_packages.at(name)->reference();
 }
-bool PackageManager::unload(std::string name) noexcept
+bool PackageManager::destroy(std::string name) noexcept
 {
-    if(!isLoaded(name))
+    if(!exists(name))
     {
-        Engine::logger().log("Failed to unload package '" + name + "' because it does not exists.", Logger::Warning);
+        Engine::logger().log("Failed to destroy package '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
 
@@ -49,7 +51,7 @@ void PackageManager::dispose() noexcept
     for(auto& it : m_packages)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) unload(it);
+    for(auto it : keys) destroy(it);
 }
 void PackageManager::log() const noexcept
 {

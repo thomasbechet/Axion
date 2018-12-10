@@ -59,7 +59,7 @@ void MaterialUBO::update(const MaterialGL& material) noexcept
         GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT
     ));
 
-    p->diffuseUniform = material.diffuseUniform;
+    p->diffuseColor = material.diffuseColor;
 
     p->flags = 0;
 
@@ -67,9 +67,11 @@ void MaterialUBO::update(const MaterialGL& material) noexcept
         p->flags |= MATERIAL_USE_DIFFUSE_TEXTURE;
 
     if(material.useNormalTexture)
+    {
         p->flags |= MATERIAL_USE_NORMAL_TEXTURE;
-    else if(material.useBumpTexture)
-        p->flags |= MATERIAL_USE_BUMP_TEXTURE;
+        if(material.isBumpTexture)
+            p->flags |= MATERIAL_IS_BUMP_TEXTURE;
+    }
 
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 }

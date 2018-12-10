@@ -20,7 +20,9 @@ namespace ax
     class AXION_CORE_API Package
     {
     public:
+        Package();
         Package(std::string name);
+        ~Package();
 
         bool loadFromFile(Path path) noexcept;
         bool unload() noexcept;

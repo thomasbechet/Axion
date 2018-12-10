@@ -34,8 +34,8 @@ void ModelComponent::setModel(AssetReference<Model> model) noexcept
 {
     setModel(nullptr);
 
-    std::vector<AssetReference<Mesh>>& meshes = model->meshes;
-    std::vector<AssetReference<Material>>& materials = model->materials;
+    const std::vector<AssetReference<Mesh>>& meshes = model->getMeshes();
+    const std::vector<AssetReference<Material>>& materials = model->getMaterials();
 
     m_elements.reserve(meshes.size());
 
@@ -43,8 +43,8 @@ void ModelComponent::setModel(AssetReference<Model> model) noexcept
     {
         Id id = Engine::renderer().createStaticmesh();
         Engine::renderer().setStaticmeshTransform(id, &transform);
-        Engine::renderer().setStaticmeshMesh(id, meshes[it]->handle);
-        Engine::renderer().setStaticmeshMaterial(id, materials[it]->handle);
+        Engine::renderer().setStaticmeshMesh(id, meshes[it]->getHandle());
+        Engine::renderer().setStaticmeshMaterial(id, materials[it]->getHandle());
 
         m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>(
             meshes[it], materials[it], id
@@ -59,8 +59,8 @@ void ModelComponent::setModel(AssetReference<Mesh> mesh) noexcept
 
     Id id = Engine::renderer().createStaticmesh();
     Engine::renderer().setStaticmeshTransform(id, &transform);
-    Engine::renderer().setStaticmeshMesh(id, mesh->handle);
-    Engine::renderer().setStaticmeshMaterial(id, material->handle);
+    Engine::renderer().setStaticmeshMesh(id, mesh->getHandle());
+    Engine::renderer().setStaticmeshMaterial(id, material->getHandle());
 
     m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>(
         mesh, material, id
@@ -88,7 +88,7 @@ void ModelComponent::setMaterial(AssetReference<Material> material, Id component
         std::get<AssetReference<Material>>(reference).reset();
         std::get<AssetReference<Material>>(reference) = material;
 
-        Engine::renderer().setStaticmeshMaterial(std::get<Id>(reference), std::get<AssetReference<Material>>(reference)->handle);
+        Engine::renderer().setStaticmeshMaterial(std::get<Id>(reference), std::get<AssetReference<Material>>(reference)->getHandle());
     }
     else
     {

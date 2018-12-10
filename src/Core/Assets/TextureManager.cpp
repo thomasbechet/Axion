@@ -1,5 +1,9 @@
 #include <Core/Assets/TextureManager.hpp>
 
+#include <Core/Logger/Logger.hpp>
+
+#include <vector>
+
 using namespace ax;
 
 AssetReference<Texture> TextureManager::operator()(std::string name) const noexcept
@@ -58,7 +62,7 @@ void TextureManager::dispose() noexcept
     for(auto& it : m_textures)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) unload(it);
+    for(auto it : keys) destroy(it);
 }
 void TextureManager::log() const noexcept
 {

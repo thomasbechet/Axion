@@ -26,7 +26,7 @@ bool Texture::loadFromFile(Path path) noexcept
 
     int width, height, bpp;
     m_data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
-    if(!data)
+    if(!m_data)
     {
         Engine::logger().log("Failed to load texture '" + path.path() + "'", Logger::Warning);
 
@@ -53,7 +53,7 @@ bool Texture::loadFromFile(Path path) noexcept
     }
     catch(RendererException exception)
     {
-        Engine::logger().log("Failed to load texture '" + name + "' from renderer: ", Logger::Warning);
+        Engine::logger().log("Failed to load texture '" + m_name + "' from renderer: ", Logger::Warning);
         Engine::logger().log(exception.what());
         stbi_image_free(m_data);
         
@@ -76,8 +76,8 @@ bool Texture::unload() noexcept
         }
         catch(RendererException e)
         {
-            Engine::logger().log("Failed to unload texture '" + name + "' from renderer: ", Logger::Warning);
-            Engine::logger().log(exception.what());
+            Engine::logger().log("Failed to unload texture '" + m_name + "' from renderer: ", Logger::Warning);
+            Engine::logger().log(e.what());
 
             return false;
         }

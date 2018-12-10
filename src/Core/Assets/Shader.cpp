@@ -16,7 +16,7 @@ Shader::Shader(std::string name)
     m_name = name;
 }
 
-bool loadFromFile(Path vertex, Path fragment) noexcept
+bool Shader::loadFromFile(Path vertex, Path fragment) noexcept
 {
     unload();
 
@@ -38,7 +38,7 @@ bool loadFromFile(Path vertex, Path fragment) noexcept
     }
     catch(const RendererException& exception)
     {
-        Engine::logger().log("Failed to compile shader '" + name + "'", Logger::Warning);
+        Engine::logger().log("Failed to compile shader '" + m_name + "'", Logger::Warning);
         Engine::logger().log(exception.what(), Logger::Warning);
         
         return false;
@@ -48,17 +48,17 @@ bool loadFromFile(Path vertex, Path fragment) noexcept
 
     return true;
 }
-bool unload() noexcept
+bool Shader::unload() noexcept
 {
     if(isLoaded())
     {
         try
         {
-            Engine::renderer().destroyShader(m_shaders.at(name)->get()->handle);
+            Engine::renderer().destroyShader(m_handle);
         }
         catch(const RendererException& exception)
         {
-            Engine::logger().log("Failed to unload shader '" + name + "' from renderer: ", Logger::Warning);
+            Engine::logger().log("Failed to unload shader '" + m_name + "' from renderer: ", Logger::Warning);
             Engine::logger().log(exception.what(), Logger::Warning);
             
             return false;
@@ -69,7 +69,7 @@ bool unload() noexcept
 
     return true;
 }
-bool isLoaded() const noexcept
+bool Shader::isLoaded() const noexcept
 {
     return m_isLoaded;
 }

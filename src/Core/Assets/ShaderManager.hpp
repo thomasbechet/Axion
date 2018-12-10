@@ -5,6 +5,9 @@
 ///////////////
 #include <Core/Export.hpp>
 
+#include <Core/Assets/Shader.hpp>
+#include <Core/Assets/AssetReference.hpp>
+
 namespace ax
 {
     class AXION_CORE_API ShaderManager

@@ -115,32 +115,26 @@ bool Model::loadObjModel(Path path) noexcept
 
             //Normal Texture
             Path normalPath = path.directory() + material.normal_texname;
-
-            //////
-            ///////
-            ////// GERER LA DETECTION DU BUMP
-            bool hasNormalTex = !normalPath.filename().empty() &&
-                (Engine::assets().texture.exists(normalPath.filename()) ||
-                 Engine::assets().texture.create(normalPath.filename(), normalPath.path()));
-
-            bool hasBumpTex = !bumpPath.filename().empty() &&
-                (Engine::assets().texture.exists(bumpPath.filename()) ||
-                 Engine::assets().texture.create(bumpPath.filename(), bumpPath.path()));
-
-            if(hasNormalTex)
-                data.normalTexture = normalPath.filename();
-            else
-
-            
-
-            //Bump Texture
             Path bumpPath = path.directory() + material.bump_texname;
-            bool hasBumpTex = !bumpPath.filename().empty() &&
-                (Engine::assets().texture.exists(bumpPath.filename()) ||
-                 Engine::assets().texture.create(bumpPath.filename(), bumpPath.path()));
 
-            if(hasBumpTex)
-                data.bumpTexture = bumpPath.filename();
+            if(!normalPath.filename().empty())
+            {
+                if(Engine::assets().texture.exists(normalPath.filename()) ||
+                    Engine::assets().texture.create(normalPath.filename(), normalPath.path()))
+                {
+                    data.normalTexture = normalPath.filename();
+                    data.isBumpTexture = false;
+                }
+            }
+            else if(!bumpPath.filename().empty())
+            {
+                if(Engine::assets().texture.exists(bumpPath.filename()) ||
+                    Engine::assets().texture.create(bumpPath.filename(), bumpPath.path()))
+                {
+                    data.normalTexture = bumpPath.filename();
+                    data.isBumpTexture = true;
+                }
+            }
 
             //Load material as assets
             Engine::assets().material.create(material.name, data);
@@ -195,8 +189,8 @@ bool Model::loadObjModel(Path path) noexcept
     {
         size_t i = std::distance(meshes.begin(), it);
         
-        std::string meshName = name + "_" + std::to_string(i);
-        Engine::assets().mesh.load(meshName, it->second, true, attrib.normals.empty());
+        std::string meshName = m_name + "_" + std::to_string(i);
+        Engine::assets().mesh.create(meshName, it->second, true, attrib.normals.empty());
         m_meshes.emplace_back(Engine::assets().mesh(meshName));
 
         if(it->first != -1)

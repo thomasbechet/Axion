@@ -11,9 +11,9 @@ WireframePass::WireframePass(RenderContent& content) : RenderPass(content) {}
 
 void WireframePass::initialize() noexcept
 {
-    Id handle = Engine::assets().shader.load("renderergl_shader_wireframe", 
+    Id handle = Engine::assets().shader.create("renderergl_shader_wireframe", 
         "../shaders/wireframe.vertex", 
-        "../shaders/wireframe.fragment")->handle;
+        "../shaders/wireframe.fragment")->getHandle();
 
     m_shader = content.shaders.get(handle).programId;
     m_viewLocation = glGetUniformLocation(m_shader, "camera_view");
@@ -28,7 +28,7 @@ void WireframePass::terminate() noexcept
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    Engine::assets().shader.unload("renderergl_shader_wireframe");
+    Engine::assets().shader.destroy("renderergl_shader_wireframe");
 }
 void WireframePass::updateViewport() noexcept
 {

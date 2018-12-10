@@ -116,7 +116,7 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        ax::Engine::assets().package.load("../packages/package.xml");
+        ax::Engine::assets().package.create("../packages/package.xml");
         ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
@@ -140,8 +140,8 @@ public:
         
 
         ax::MaterialParameters params;
-        params.diffuseUniform = ax::Color(0.233f, 0.531f, 0.13f);
-        ax::Engine::assets().material.load("material_test", params);
+        params.diffuseColor = ax::Color(0.233f, 0.531f, 0.13f);
+        ax::Engine::assets().material.create("material_test", params);
 
         const int size = 10;
         for(int x = -size / 2; x < size / 2; x += 1)

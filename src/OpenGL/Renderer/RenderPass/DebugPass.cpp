@@ -11,14 +11,14 @@ DebugPass::DebugPass(RenderContent& content) : RenderPass(content) {}
 
 void DebugPass::initialize() noexcept
 {
-    Id handle = Engine::assets().shader.load("renderergl_shader_geometry",
+    Id handle = Engine::assets().shader.create("renderergl_shader_geometry",
         "../shaders/geometry_pass.vertex",
-        "../shaders/geometry_pass.fragment")->handle;
+        "../shaders/geometry_pass.fragment")->getHandle();
     m_geometryShader = content.shaders.get(handle).programId;
 
-    handle = Engine::assets().shader.load("renderergl_shader_geometry_debug",
+    handle = Engine::assets().shader.create("renderergl_shader_geometry_debug",
         "../shaders/geometry_debug.vertex",
-        "../shaders/geometry_debug.fragment")->handle;
+        "../shaders/geometry_debug.fragment")->getHandle();
     m_debugShader = content.shaders.get(handle).programId;
 
     m_viewLocation = glGetUniformLocation(m_geometryShader, "camera_view");
@@ -40,8 +40,8 @@ void DebugPass::initialize() noexcept
 void DebugPass::terminate() noexcept
 {
     m_gbuffer.reset();
-    Engine::assets().shader.unload("renderergl_shader_geometry");
-    Engine::assets().shader.unload("renderergl_shader_geometry_debug");
+    Engine::assets().shader.destroy("renderergl_shader_geometry");
+    Engine::assets().shader.destroy("renderergl_shader_geometry_debug");
 }
 void DebugPass::updateViewport() noexcept
 {
@@ -84,11 +84,6 @@ void DebugPass::render(double alpha) noexcept
         {
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, content.textures.get(material.normalTexture).id);
-        }
-        else if(material.useBumpTexture)
-        {
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.bumpTexture).id);
         }
 
         for(auto& staticmeshId : materialIt.second)

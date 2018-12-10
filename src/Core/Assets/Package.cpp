@@ -2,6 +2,7 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Logger/Logger.hpp>
+#include <Core/Assets/AssetManager.hpp>
 
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
@@ -9,7 +10,7 @@
 using namespace ax;
 
 Package::Package(){}
-Package::Package(std::string name, Path path)
+Package::Package(std::string name)
 {
     m_name = name;    
 }
@@ -46,15 +47,6 @@ bool Package::loadFromFile(Path path) noexcept
     Path directory = "";
     if(package_node->first_attribute("directory")) 
         directory = Path(package_node->first_attribute("directory")->value());
-    
-
-    if(isLoaded(name))
-    {
-        Engine::logger().log("Failed to load package '" + name + "' because it already exists.", Logger::Warning);
-        return false
-    }
-
-    Package* package = m_packages.at(name)->get();
 
     for(rapidxml::xml_node<>* texture_node = package_node->first_node("texture"); texture_node; texture_node = texture_node->next_sibling("texture"))
     {
@@ -66,7 +58,7 @@ bool Package::loadFromFile(Path path) noexcept
             if(texture_node->first_attribute("name"))
                 texture_name = texture_node->first_attribute("name")->value();
 
-            if(Engine::assets().texture.load(texture_name, texture_path))
+            if(Engine::assets().texture.create(texture_name, texture_path))
                 m_textures.emplace_back(Engine::assets().texture(texture_name));
         }
     }
@@ -103,7 +95,7 @@ bool Package::loadFromFile(Path path) noexcept
             if(model_node->first_attribute("name"))
                 model_name = model_node->first_attribute("name")->value();
 
-            if(Engine::assets().model.load(model_name, model_path))
+            if(Engine::assets().model.create(model_name, model_path))
                 m_models.emplace_back(Engine::assets().model(model_name));
         }
     }
@@ -118,7 +110,7 @@ bool Package::loadFromFile(Path path) noexcept
             if(shader_node->first_attribute("name"))
             {
                 std::string shader_name = shader_node->first_attribute("name")->value();
-                if(Engine::assets().shader.load(shader_name, vertex_path, fragment_path))
+                if(Engine::assets().shader.create(shader_name, vertex_path, fragment_path))
                     m_shaders.emplace_back(Engine::assets().shader(shader_name));
             }
         }
@@ -130,37 +122,37 @@ bool Package::unload() noexcept
 {
     for(auto it = m_materials.begin(); it != m_materials.end(); it++)
     {
-        std::string materialName = it->get()->name;
+        std::string materialName = it->get()->getName();
         it->reset();
-        Engine::assets().material.unload(materialName);
+        Engine::assets().material.destroy(materialName);
     }  
     m_materials.clear();
     for(auto it = m_models.begin(); it != m_models.end(); it++)
     {
-        std::string modelName = it->get()->name;
+        std::string modelName = it->get()->getName();
         it->reset();
-        Engine::assets().model.unload(modelName);
+        Engine::assets().model.destroy(modelName);
     }
     m_models.clear();
     for(auto it = m_textures.begin(); it != m_textures.end(); it++)
     {
-        std::string textureName = it->get()->name;
+        std::string textureName = it->get()->getName();
         it->reset();
-        Engine::assets().texture.unload(textureName);
+        Engine::assets().texture.destroy(textureName);
     }
     m_textures.clear();
     for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
     {
-        std::string meshName = it->get()->name;
+        std::string meshName = it->get()->getName();
         it->reset();
-        Engine::assets().mesh.unload(meshName);
+        Engine::assets().mesh.destroy(meshName);
     }
     m_meshes.clear();
     for(auto it = m_shaders.begin(); it != m_shaders.end(); it++)
     {
-        std::string shaderName = it->get()->name;
+        std::string shaderName = it->get()->getName();
         it->reset();
-        Engine::assets().shader.unload(shaderName);
+        Engine::assets().shader.destroy(shaderName);
     }
     m_shaders.clear();
 }
@@ -170,23 +162,23 @@ std::string Package::getName() const noexcept
     return m_name;
 }
 
-const std::vector<AssetReference<Texture>> Package::getTextures() const noexcept
+const std::vector<AssetReference<Texture>>& Package::getTextures() const noexcept
 {
     return m_textures;
 }
-const std::vector<AssetReference<Mesh>> Package::getMeshes() const noexcept
+const std::vector<AssetReference<Mesh>>& Package::getMeshes() const noexcept
 {
     return m_meshes;
 }
-const std::vector<AssetReference<Material>> Package::getMaterials() const noexcept
+const std::vector<AssetReference<Material>>& Package::getMaterials() const noexcept
 {
     return m_materials;
 }
-const std::vector<AssetReference<Model>> Package::getModels() const noexcept
+const std::vector<AssetReference<Model>>& Package::getModels() const noexcept
 {
     return m_models;
 }
-const std::vector<AssetReference<Shader>> Package::getShaders() const noexcept
+const std::vector<AssetReference<Shader>>& Package::getShaders() const noexcept
 {
     return m_shaders;
 }

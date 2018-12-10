@@ -1,5 +1,9 @@
 #include <Core/Assets/ShaderManager.hpp>
 
+#include <Core/Logger/Logger.hpp>
+
+#include <vector>
+
 using namespace ax;
 
 AssetReference<Shader> ShaderManager::operator()(std::string name) const noexcept
@@ -15,7 +19,7 @@ AssetReference<Shader> ShaderManager::operator()(std::string name) const noexcep
 }
 AssetReference<Shader> ShaderManager::create(std::string name, Path vertex, Path fragment) noexcept
 {
-    if(isLoaded(name))
+    if(exists(name))
     {
         Engine::logger().log("Failed to create shader '" + name + "' because it already exists.", Logger::Warning);
         return AssetReference<Shader>();
@@ -28,7 +32,7 @@ AssetReference<Shader> ShaderManager::create(std::string name, Path vertex, Path
 }
 bool ShaderManager::destroy(std::string name) noexcept
 {
-    if(!isLoaded(name))
+    if(!exists(name))
     {
         Engine::logger().log("Failed to destroy shader '" + name + "' because it does not exists.", Logger::Warning);
         return false;
@@ -58,7 +62,7 @@ void ShaderManager::dispose() noexcept
     for(auto& it : m_shaders)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) unload(it);
+    for(auto it : keys) destroy(it);
 }
 void ShaderManager::log() const noexcept
 {

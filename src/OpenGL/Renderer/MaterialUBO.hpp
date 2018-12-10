@@ -14,7 +14,7 @@
 #define MATERIAL_BINDING_POINT 1
 #define MATERIAL_USE_DIFFUSE_TEXTURE 1
 #define MATERIAL_USE_NORMAL_TEXTURE 2
-#define MATERIAL_USE_BUMP_TEXTURE 4
+#define MATERIAL_IS_BUMP_TEXTURE 4
 #define MATERIAL_USE_SPECULAR_TEXTURE 8
 
 namespace ax
@@ -28,7 +28,7 @@ namespace ax
         {
             GLuint flags;
             float pad[3];
-            Color diffuseUniform;
+            Color diffuseColor;
         };
 
     public:

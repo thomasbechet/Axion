@@ -58,7 +58,7 @@ void ModelManager::dispose() noexcept
     for(auto& it : m_models)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) unload(it, true, true);
+    for(auto it : keys) destroy(it, true, true);
 }
 void ModelManager::log() const noexcept
 {
