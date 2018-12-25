@@ -41,14 +41,16 @@ namespace ax
         ) override {return 0;}
         void destroyShader(Id id) override {}
         //Material
-        Id createMaterial(RendererMaterialParameters settings) override {return 0;}
+        Id createMaterial(const RendererMaterialParameters& settings) override {return 0;}
         void destroyMaterial(Id id) override {}
+        void updateMaterial(Id id, const RendererMaterialParameters& settings) override {}
+
         
         //Camera
         Id createCamera() override {return 0;}
         void destroyCamera(Id id) override {}
         void setCameraTransform(Id id, Transform* transform) override {}
-        void setCameraParameters(Id id, RendererCameraParameters settings) override {}
+        void setCameraParameters(Id id, const RendererCameraParameters& settings) override {}
         //Staticmesh
         Id createStaticmesh() override {return 0;}
         void destroyStaticmesh(Id id) override {}
@@ -60,10 +62,6 @@ namespace ax
         Id createPointLight() override {return 0;}
         void destroyPointLight(Id id) override {}
         void setPointLightTransform(Id id, Transform* transform) override {}
-        void setPointLightParameters(Id id, PointLightParameters parameters) override {}
-
-        Id createDirectionalLight() override {return 0;}
-        void destroyDirectionalLight() override {}
-        void setDirectionalLightParameters(Id id, DirectionalLightParameters parameters) override {}
+        void setPointLightParameters(Id id, const PointLightParameters& parameters) override {}
     };
 }

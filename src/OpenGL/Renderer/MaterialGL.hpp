@@ -19,6 +19,10 @@ namespace ax
         bool isBumpTexture;
         Id normalTexture;
 
+        bool useSpecularTexture;
+        float specularUniform;
+        Id specularTexture;
+
         GLuint uboIndex;
     };
 }

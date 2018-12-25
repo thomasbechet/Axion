@@ -21,6 +21,8 @@ Package::~Package()
 
 bool Package::loadFromFile(Path path) noexcept
 {
+    unload();
+
     rapidxml::file<> file(path.c_str());
     rapidxml::xml_document<> doc;
     try
@@ -116,45 +118,52 @@ bool Package::loadFromFile(Path path) noexcept
         }
     }
 
+    m_isLoaded = true;
+
     return true;
 }
 bool Package::unload() noexcept
 {
-    for(auto it = m_materials.begin(); it != m_materials.end(); it++)
+    if(m_isLoaded)
     {
-        std::string materialName = it->get()->getName();
-        it->reset();
-        Engine::assets().material.destroy(materialName);
-    }  
-    m_materials.clear();
-    for(auto it = m_models.begin(); it != m_models.end(); it++)
-    {
-        std::string modelName = it->get()->getName();
-        it->reset();
-        Engine::assets().model.destroy(modelName);
+        for(auto it = m_materials.begin(); it != m_materials.end(); it++)
+        {
+            std::string materialName = it->get()->getName();
+            it->reset();
+            Engine::assets().material.destroy(materialName);
+        }
+        m_materials.clear();
+        for(auto it = m_models.begin(); it != m_models.end(); it++)
+        {
+            std::string modelName = it->get()->getName();
+            it->reset();
+            Engine::assets().model.destroy(modelName);
+        }
+        m_models.clear();
+        for(auto it = m_textures.begin(); it != m_textures.end(); it++)
+        {
+            std::string textureName = it->get()->getName();
+            it->reset();
+            Engine::assets().texture.destroy(textureName);
+        }
+        m_textures.clear();
+        for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
+        {
+            std::string meshName = it->get()->getName();
+            it->reset();
+            Engine::assets().mesh.destroy(meshName);
+        }
+        m_meshes.clear();
+        for(auto it = m_shaders.begin(); it != m_shaders.end(); it++)
+        {
+            std::string shaderName = it->get()->getName();
+            it->reset();
+            Engine::assets().shader.destroy(shaderName);
+        }
+        m_shaders.clear();
     }
-    m_models.clear();
-    for(auto it = m_textures.begin(); it != m_textures.end(); it++)
-    {
-        std::string textureName = it->get()->getName();
-        it->reset();
-        Engine::assets().texture.destroy(textureName);
-    }
-    m_textures.clear();
-    for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
-    {
-        std::string meshName = it->get()->getName();
-        it->reset();
-        Engine::assets().mesh.destroy(meshName);
-    }
-    m_meshes.clear();
-    for(auto it = m_shaders.begin(); it != m_shaders.end(); it++)
-    {
-        std::string shaderName = it->get()->getName();
-        it->reset();
-        Engine::assets().shader.destroy(shaderName);
-    }
-    m_shaders.clear();
+
+    m_isLoaded = false;
 }
 
 std::string Package::getName() const noexcept

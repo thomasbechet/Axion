@@ -63,6 +63,11 @@ namespace ax
 		{
 			return (x * vec.x + y * vec.y);
 		}
+
+		const T* data() const noexcept
+		{
+			return &x;
+		}
 		
 	public:
 		T x = 0;
@@ -151,6 +156,11 @@ namespace ax
 			return Vector3<T>(y * vec.z - z * vec.y,
 								z * vec.x - x * vec.z,
 								x * vec.y - y * vec.x);
+		}
+
+		const T* data() const noexcept
+		{
+			return &x;
 		}
 
 		static const Vector3<T> forward;
@@ -259,6 +269,11 @@ namespace ax
 		T dot(const Vector4<T>& vec) noexcept
 		{
 			return (x * vec.x + y * vec.y + z * vec.z + w * vec.w);
+		}
+
+		const T* data() const noexcept
+		{
+			return &x;
 		}
 		
 	public:

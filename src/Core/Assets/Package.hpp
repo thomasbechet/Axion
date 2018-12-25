@@ -38,6 +38,8 @@ namespace ax
     private:
         std::string m_name;
 
+        bool m_isLoaded = false;
+
         std::vector<AssetReference<Texture>> m_textures;
         std::vector<AssetReference<Mesh>> m_meshes;
         std::vector<AssetReference<Material>> m_materials;

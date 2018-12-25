@@ -30,6 +30,14 @@ namespace ax
         GLuint m_projectionLocation;
         GLuint m_transformLocation;
 
+        GLuint m_materialIndexLocation;
+        GLuint m_diffuseTextureLocation;
+        GLuint m_normalTextureLocation;
+        GLuint m_specularTextureLocation;
+
+        GLuint m_pointLightIndexLocation;
+        GLuint m_pointLightPositionLocation;
+
         std::unique_ptr<GBuffer> m_gbuffer;
     };
 }

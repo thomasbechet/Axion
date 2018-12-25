@@ -24,6 +24,7 @@
 #include <Core/Prefabs/Component/CameraComponent.hpp>
 #include <Core/Prefabs/Component/TransformComponent.hpp>
 #include <Core/Prefabs/Component/ModelComponent.hpp>
+#include <Core/Prefabs/Component/PointLightComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Assets/AssetManager.hpp>
 #include <Core/Assets/Texture.hpp>
@@ -116,7 +117,7 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        ax::Engine::assets().package.create("../packages/package.xml");
+        ax::Engine::assets().package.create("mypackage", "../packages/package.xml");
         ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
@@ -132,16 +133,15 @@ public:
 
         ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
-        //transform1.setScale(0.05f, 0.05f, 0.05f);
-        transform1.setScale(1.0f, 1.0f, 1.0f);
+        transform1.setScale(0.05f, 0.05f, 0.05f);
+        //transform1.setScale(1.0f, 1.0f, 1.0f);
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        //mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
-
-        
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
 
         ax::MaterialParameters params;
-        params.diffuseColor = ax::Color(0.233f, 0.531f, 0.13f);
+        params.diffuseColor = ax::Color(1.0f, 0.0f, 0.0f);
         ax::Engine::assets().material.create("material_test", params);
+        //ax::Engine::assets().material("material_test")->setDiffuseColor(ax::Color(100));
 
         const int size = 10;
         for(int x = -size / 2; x < size / 2; x += 1)
@@ -158,7 +158,12 @@ public:
                 cubeModel.setMaterial("material_test", 0);
             }
 
-        ax::Engine::systems().add<CustomSystem>().setTransform(&transform1);
+        //Light
+        ax::Entity& light = ax::Engine::world().entities().create();
+        light.addComponent<ax::TransformComponent>();
+        light.addComponent<ax::PointLightComponent>(light);
+
+        //ax::Engine::systems().add<CustomSystem>().setTransform(&transform1);
     }
     void onStop() override
     {

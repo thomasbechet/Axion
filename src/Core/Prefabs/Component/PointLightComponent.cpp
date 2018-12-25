@@ -18,6 +18,7 @@ PointLightComponent::~PointLightComponent()
 void PointLightComponent::setRadius(float radius) noexcept
 {
     m_parameters.radius = radius;
+    Engine::renderer().setPointLightParameters(m_handle, m_parameters);
 }
 float PointLightComponent::getRadius() const noexcept
 {

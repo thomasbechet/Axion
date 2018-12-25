@@ -20,6 +20,9 @@ namespace ax
         
         std::string normalTexture = "";
         bool isBumpTexture;
+
+        std::string specularTexture = "";
+        float specularUniform = 0.5f;
     };
 
     class AXION_CORE_API Material
@@ -39,9 +42,13 @@ namespace ax
 
         AssetReference<Texture> getDiffuseTexture() const noexcept;
         Color getDiffuseColor() const noexcept;
+        void setDiffuseColor(Color color) noexcept;
         AssetReference<Texture> getNormalTexture() const noexcept;
 
         Id getHandle() const noexcept;
+
+    private:
+        void update() noexcept;
 
     private:
         std::string m_name;
@@ -52,6 +59,7 @@ namespace ax
         Color m_diffuseColor = Color(1.0f, 1.0f, 1.0f, 1.0f);
         
         AssetReference<Texture> m_normalTexture;
+        bool m_isBumpTexture = false;
 
         Id m_handle;
     };

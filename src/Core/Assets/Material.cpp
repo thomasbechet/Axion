@@ -29,23 +29,15 @@ bool Material::load(const MaterialParameters& params) noexcept
 
     if(!params.normalTexture.empty())
         m_normalTexture = Engine::assets().texture(params.normalTexture);
-
-    //Configure renderer material settings
-    RendererMaterialParameters settings;
-
-    //Diffuse
-    settings.diffuseTexture = (m_diffuseTexture) ? m_diffuseTexture->getHandle() : 0;
-    settings.diffuseColor = m_diffuseColor;
-    settings.useDiffuseTexture = (m_diffuseTexture.isValid());
-
-    //Normal
-    settings.normalTexture = (m_normalTexture) ? m_normalTexture->getHandle() : 0;
-    settings.useNormalTexture = (m_normalTexture.isValid());
-    settings.isBumpTexture = params.isBumpTexture;
+    m_isBumpTexture = params.isBumpTexture;
 
     try
     {
+        //Basic parameters
+        RendererMaterialParameters settings;
         m_handle = Engine::renderer().createMaterial(settings);
+        m_isLoaded = true;
+        update();
     }
     catch(const RendererException& exception)
     {
@@ -54,8 +46,6 @@ bool Material::load(const MaterialParameters& params) noexcept
 
         return false;
     }
-
-    m_isLoaded = true;
 
     return true;
 }
@@ -119,6 +109,11 @@ Color Material::getDiffuseColor() const noexcept
 {
     return m_diffuseColor;
 }
+void Material::setDiffuseColor(Color color) noexcept
+{
+    m_diffuseColor = color;
+    update();
+}
 AssetReference<Texture> Material::getNormalTexture() const noexcept
 {
     return m_normalTexture;
@@ -127,4 +122,32 @@ AssetReference<Texture> Material::getNormalTexture() const noexcept
 Id Material::getHandle() const noexcept
 {
     return m_handle;
+}
+
+void Material::update() noexcept
+{
+    if(isLoaded())
+    {
+        //Configure renderer material settings
+        RendererMaterialParameters settings;
+
+        //Diffuse
+        settings.diffuseTexture = (m_diffuseTexture) ? m_diffuseTexture->getHandle() : 0;
+        settings.diffuseColor = m_diffuseColor;
+        settings.useDiffuseTexture = (m_diffuseTexture.isValid());
+
+        //Normal
+        settings.normalTexture = (m_normalTexture) ? m_normalTexture->getHandle() : 0;
+        settings.useNormalTexture = (m_normalTexture.isValid());
+        settings.isBumpTexture = m_isBumpTexture;
+
+        try
+        {
+            Engine::renderer().updateMaterial(m_handle, settings);
+        }
+        catch(const RendererException& e)
+        {
+            Engine::logger().log("Failed to update material '" + m_name + "'", Logger::Warning);
+        }
+    }
 }

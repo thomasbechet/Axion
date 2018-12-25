@@ -18,7 +18,7 @@ void RendererGL::setCameraTransform(Id id, Transform* transform)
     CameraGL& camera = m_content.cameras.get(id);
     camera.transform = transform;
 }
-void RendererGL::setCameraParameters(Id id, RendererCameraParameters parameters)
+void RendererGL::setCameraParameters(Id id, const RendererCameraParameters& parameters)
 {
     CameraGL& camera = m_content.cameras.get(id);
     camera.fov = parameters.fov;

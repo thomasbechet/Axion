@@ -19,6 +19,8 @@ AssetReference<Package> PackageManager::create(std::string name, Path path) noex
 {
     m_packages.emplace(name, std::make_unique<AssetHolder<Package>>(name));
 
+    m_packages.at(name)->get()->loadFromFile(path);
+
     return m_packages.at(name)->reference();
 }
 bool PackageManager::destroy(std::string name) noexcept

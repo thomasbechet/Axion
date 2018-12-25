@@ -18,5 +18,9 @@ namespace ax
         Id normalTexture;
         bool useNormalTexture = false;
         bool isBumpTexture = false;
+
+        Id specularTexture;
+        float specularUniform;
+        bool useSpecularTexture = false;
     };
 }

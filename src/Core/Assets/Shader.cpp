@@ -15,6 +15,10 @@ Shader::Shader(std::string name)
 {
     m_name = name;
 }
+Shader::~Shader()
+{
+    unload();
+}
 
 bool Shader::loadFromFile(Path vertex, Path fragment) noexcept
 {

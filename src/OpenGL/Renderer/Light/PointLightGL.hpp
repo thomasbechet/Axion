@@ -11,5 +11,11 @@ namespace ax
     struct AXION_GL_API PointLightGL
     {
         Transform* transform = nullptr;
+
+        Color color;
+        float radius;
+        float intensity;
+
+        GLuint uboIndex;
     };
 }

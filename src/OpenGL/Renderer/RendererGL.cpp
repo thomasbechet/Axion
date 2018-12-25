@@ -38,6 +38,7 @@ void RendererGL::initialize() noexcept
 
     //Initialize ubos
     m_content.materialUBO = std::make_unique<MaterialUBO>();
+    m_content.pointLightUBO = std::make_unique<PointLightUBO>();
 
     //Initialize renderpass
     m_renderMode = RenderMode::Debug0;

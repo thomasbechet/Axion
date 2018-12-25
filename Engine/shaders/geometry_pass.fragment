@@ -16,25 +16,24 @@ in vec3 Color;
 	#define MATERIAL_BINDING_POINT 1
 	#define MATERIAL_USE_DIFFUSE_TEXTURE 1
 	#define MATERIAL_USE_NORMAL_TEXTURE 2
-	#define MATERIAL_USE_BUMP_TEXTURE 4
+	#define MATERIAL_IS_BUMP_TEXTURE 4
 	#define MATERIAL_USE_SPECULAR_TEXTURE 8
 
 	struct Material
 	{
 		uint flags;
-		vec4 diffuseUniform;
+		vec4 diffuse_color;
 	};
 	layout(std140, binding = MATERIAL_BINDING_POINT) uniform Materials
 	{
 		Material materials[MATERIAL_MAX_NUMBER];	
 	};
 
-	layout(binding = 0) uniform sampler2D diffuseTexture;
-	layout(binding = 1) uniform sampler2D normalTexture;
-	layout(binding = 2) uniform sampler2D specularTexture;
+	layout(binding = 0) uniform sampler2D diffuse_texture;
+	layout(binding = 1) uniform sampler2D normal_texture;
+	layout(binding = 2) uniform sampler2D specular_texture;
 
 	uniform uint material_index;
-
 #endif
 
 void main()
@@ -43,21 +42,24 @@ void main()
 	
 	if(bool(materials[material_index].flags & MATERIAL_USE_DIFFUSE_TEXTURE))
 	{
-		//out_albedo = texture(diffuseTexture, vec2(UV.x, 1.0 - UV.y)).xyz;
-		out_albedo = vec3(1, 0, 0);
+		out_albedo = texture(diffuse_texture, vec2(UV.x, 1.0 - UV.y)).xyz;
 	}
 	else
 	{
-		out_albedo = materials[material_index].diffuseUniform.xyz;
+		out_albedo = materials[material_index].diffuse_color.xyz;
 	}
 	
 	if(bool(materials[material_index].flags & MATERIAL_USE_NORMAL_TEXTURE))
 	{
-		out_normal = (texture(normalTexture, vec2(UV.x, 1.0 - UV.y)).xyz * 2.0) - 1.0;
-	}
-	else if(bool(materials[material_index].flags & MATERIAL_USE_BUMP_TEXTURE))
-	{
-		out_normal = (texture(normalTexture, vec2(UV.x, 1.0 - UV.y)).xyz * 2.0) - 1.0;
+		if(bool(materials[material_index].flags & MATERIAL_IS_BUMP_TEXTURE))
+		{
+			//out_normal = vec3(1.0, 1.0, 0.0);
+			out_normal = vec3(texture(normal_texture, vec2(UV.x, 1.0 - UV.y)).r, 0.0f, 0.0f);
+		}	
+		else
+		{
+			out_normal = (texture(normal_texture, vec2(UV.x, 1.0 - UV.y)).xyz * 2.0) - 1.0;
+		}
 	}
 	else
 	{

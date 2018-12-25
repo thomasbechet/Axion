@@ -18,6 +18,7 @@ namespace ax
     public:
         Shader();
         Shader(std::string name);
+        ~Shader();
 
         bool loadFromFile(Path vertex, Path fragment) noexcept;
         bool unload() noexcept;

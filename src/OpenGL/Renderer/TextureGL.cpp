@@ -41,5 +41,5 @@ void RendererGL::destroyTexture(Id id)
 {
     TextureGL& texture = m_content.textures.get(id);
     glDeleteTextures(1, &texture.id);
-    m_content.textures.remove(texture.id);
+    m_content.textures.remove(id);
 }

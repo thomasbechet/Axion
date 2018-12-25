@@ -26,9 +26,9 @@ void DebugPass::initialize() noexcept
     m_transformLocation = glGetUniformLocation(m_geometryShader, "transform");
 
     m_materialIndexLocation = glGetUniformLocation(m_geometryShader, "material_index");
-    m_diffuseTextureLocation = glGetUniformLocation(m_geometryShader, "diffuseTexture");
-    m_normalTextureLocation = glGetUniformLocation(m_geometryShader, "normalTexture");
-    m_specularTextureLocation = glGetUniformLocation(m_geometryShader, "specularTexture");
+    m_diffuseTextureLocation = glGetUniformLocation(m_geometryShader, "diffuse_texture");
+    m_normalTextureLocation = glGetUniformLocation(m_geometryShader, "normal_texture");
+    m_specularTextureLocation = glGetUniformLocation(m_geometryShader, "specular_texture");
 
     m_gbuffer = std::make_unique<GBuffer>(content.windowSize);
 

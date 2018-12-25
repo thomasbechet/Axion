@@ -14,6 +14,7 @@
 #include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
 #include <OpenGL/Renderer/GBuffer.hpp>
 #include <OpenGL/Renderer/MaterialUBO.hpp>
+#include <OpenGL/Renderer/Light/PointLightUBO.hpp>
 #include <OpenGL/Renderer/RenderPass/DebugPass.hpp>
 #include <OpenGL/Renderer/RenderPass/DefaultPass.hpp>
 #include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
@@ -33,7 +34,6 @@ namespace ax
         IndexVector<StaticmeshGL> staticmeshes;
         IndexVector<TextureGL> textures;
         IndexVector<PointLightGL> pointLights;
-        IndexVector<DirectionalLightGL> directionalLights;
 
         Color clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
         Vector2u windowSize = Vector2u(0, 0);
@@ -42,6 +42,7 @@ namespace ax
         GLuint quadVAO;
 
         std::unique_ptr<MaterialUBO> materialUBO;
+        std::unique_ptr<PointLightUBO> pointLightUBO;
     };
 
     class AXION_GL_API RendererGL : public Renderer
@@ -75,14 +76,15 @@ namespace ax
         ) override;
         void destroyShader(Id id) override;
         //Material
-        Id createMaterial(RendererMaterialParameters settings) override;
+        Id createMaterial(const RendererMaterialParameters& settings) override;
         void destroyMaterial(Id id) override;
+        void updateMaterial(Id id, const RendererMaterialParameters& settings) override;
 
         //Camera
         Id createCamera() override;
         void destroyCamera(Id id) override;
         void setCameraTransform(Id id, Transform* transform) override;
-        void setCameraParameters(Id id, RendererCameraParameters settings) override;
+        void setCameraParameters(Id id, const RendererCameraParameters& settings) override;
         //Staticmesh
         Id createStaticmesh() override;
         void destroyStaticmesh(Id id) override;
@@ -94,11 +96,7 @@ namespace ax
         Id createPointLight() override;
         void destroyPointLight(Id id) override;
         void setPointLightTransform(Id id, Transform* transform) override;
-        void setPointLightParameters(Id id, PointLightParameters parameters) override;
-
-        Id createDirectionalLight() override;
-        void destroyDirectionalLight() override;
-        void setDirectionalLightParameters(Id id, DirectionalLightParameters parameters) override;
+        void setPointLightParameters(Id id, const PointLightParameters& parameters) override;
 
     private:
         void createRenderPass() noexcept;

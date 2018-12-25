@@ -29,7 +29,6 @@ bool Texture::loadFromFile(Path path) noexcept
     if(!m_data)
     {
         Engine::logger().log("Failed to load texture '" + path.path() + "'", Logger::Warning);
-
         return false;
     }
 
