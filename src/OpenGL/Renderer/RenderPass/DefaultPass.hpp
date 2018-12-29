@@ -15,16 +15,17 @@ namespace ax
     class AXION_GL_API DefaultPass : public RenderPass
     {
     public:
-        DefaultPass(RenderContent& content);
+        DefaultPass(RenderContent& content, Viewport& viewport);
 
         void initialize() noexcept override;
         void terminate() noexcept override;
-        void updateViewport() noexcept override;
+        void updateResolution() noexcept override;
         void render(double alpha) noexcept override;
 
     private:
         GLuint m_geometryShader;
         GLuint m_lightShader;
+        GLuint m_renderShader;
 
         GLuint m_viewLocation;
         GLuint m_projectionLocation;
@@ -39,5 +40,12 @@ namespace ax
         GLuint m_pointLightPositionLocation;
 
         std::unique_ptr<GBuffer> m_gbuffer;
+
+    private:
+        void createRenderBuffer();
+        void destroyRenderBuffer();
+
+        GLuint m_renderBuffer;
+        GLuint m_renderTexture;
     };
 }

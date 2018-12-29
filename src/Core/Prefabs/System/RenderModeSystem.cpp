@@ -17,11 +17,11 @@ void RenderModeSystem::onInitialize()
 void RenderModeSystem::onUpdate()
 {
     if(m_defaultModeButton->isJustPressed())
-        Engine::renderer().setRenderMode(RenderMode::Default);
+        Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::Default);
     else if(m_wireframeModeButton->isJustPressed())
-        Engine::renderer().setRenderMode(RenderMode::Wireframe);
+        Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::Wireframe);
     else if(m_debugModeButton->isJustPressed())
-        Engine::renderer().setRenderMode(RenderMode::Debug0);
+        Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::Debug0);
 }
 void RenderModeSystem::onTerminate()
 {

@@ -7,7 +7,7 @@
 
 using namespace ax;
 
-DebugPass::DebugPass(RenderContent& content) : RenderPass(content) {}
+DebugPass::DebugPass(RenderContent& content, Viewport& viewport) : RenderPass(content, viewport) {}
 
 void DebugPass::initialize() noexcept
 {
@@ -30,7 +30,7 @@ void DebugPass::initialize() noexcept
     m_normalTextureLocation = glGetUniformLocation(m_geometryShader, "normal_texture");
     m_specularTextureLocation = glGetUniformLocation(m_geometryShader, "specular_texture");
 
-    m_gbuffer = std::make_unique<GBuffer>(content.windowSize);
+    m_gbuffer = std::make_unique<GBuffer>(viewport.resolution);
 
     glDepthFunc(GL_LESS);
     glCullFace(GL_BACK);
@@ -43,10 +43,9 @@ void DebugPass::terminate() noexcept
     Engine::assets().shader.destroy("renderergl_shader_geometry");
     Engine::assets().shader.destroy("renderergl_shader_geometry_debug");
 }
-void DebugPass::updateViewport() noexcept
+void DebugPass::updateResolution() noexcept
 {
-    m_gbuffer.reset(new GBuffer(content.windowSize));
-    glViewport(0, 0, content.windowSize.x, content.windowSize.y);
+    m_gbuffer.reset(new GBuffer(viewport.resolution));
 }
 void DebugPass::render(double alpha) noexcept
 {

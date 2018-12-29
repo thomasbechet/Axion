@@ -5,6 +5,6 @@
 			 src="textures/texture.jpg"/>
 	<model name="model_cube"
 		   src="models/cube/untitled.obj"/>
-	<model name="model_sponza"
-		   src="models/sponza/sponza.obj"/>
+	<!--model name="model_sponza"
+		   src="models/sponza/sponza.obj"/-->
 </package>

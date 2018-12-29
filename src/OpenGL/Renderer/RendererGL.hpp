@@ -35,14 +35,28 @@ namespace ax
         IndexVector<TextureGL> textures;
         IndexVector<PointLightGL> pointLights;
 
-        Color clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
-        Vector2u windowSize = Vector2u(0, 0);
-
         GLuint quadVBO;
         GLuint quadVAO;
 
+        GLuint geometryShader;
+        GLuint lightShader;
+        GLuint renderShader;
+        GLuint wireframeShader; 
+
         std::unique_ptr<MaterialUBO> materialUBO;
         std::unique_ptr<PointLightUBO> pointLightUBO;
+    };
+
+    struct AXION_GL_API Viewport
+    {
+        Color clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+
+        Vector2u resolution = Vector2u(0, 0);
+        Vector2f position = Vector2f(0.0f, 0.0f);
+        Vector2f size = Vector2f(1.0f, 1.0f);
+
+        std::unique_ptr<RenderPass> renderPass;
+        Id camera = 0;
     };
 
     class AXION_GL_API RendererGL : public Renderer
@@ -51,13 +65,13 @@ namespace ax
         void initialize() noexcept override;
         void terminate() noexcept override;
         void update(double alpha) noexcept override;
-        
-        //Viewport
-        void updateViewport() noexcept override;
 
-        //Rendermode
-        void setRenderMode(RenderMode mode) override;
-        RenderMode getRenderMode() override;
+        //Viewport
+        Id createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override;
+        void destroyViewport(Id id) override;
+        void setViewportRendermode(Id id, RenderMode mode) override;
+        void setViewportCamera(Id viewport, Id camera) override;
+        void setViewportResolution(Id id, const Vector2u& resolution) override;
 
         //Mesh
         Id createMesh(const std::vector<Vertex>& vertices) override;
@@ -99,12 +113,7 @@ namespace ax
         void setPointLightParameters(Id id, const PointLightParameters& parameters) override;
 
     private:
-        void createRenderPass() noexcept;
-
-    private:
-        RenderMode m_renderMode = RenderMode::Default;
-        std::unique_ptr<RenderPass> m_renderPass;
-
         RenderContent m_content;
+        IndexVector<Viewport> m_viewports;
     };
 }

@@ -133,10 +133,10 @@ public:
 
         ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
-        transform1.setScale(0.05f, 0.05f, 0.05f);
-        //transform1.setScale(1.0f, 1.0f, 1.0f);
+        //transform1.setScale(0.05f, 0.05f, 0.05f);
+        transform1.setScale(1.0f, 1.0f, 1.0f);
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+        //mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
 
         ax::MaterialParameters params;
         params.diffuseColor = ax::Color(1.0f, 0.0f, 0.0f);

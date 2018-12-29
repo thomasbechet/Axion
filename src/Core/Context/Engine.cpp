@@ -81,7 +81,7 @@ void Engine::initialize() noexcept
     std::string typeInput = Engine::context().config().getString("Input", "type", "none");
     typedef Input* (*CreateInput)();
 
-    if(typeInput == "glfw") 
+    if(typeInput == "glfw")
     {
         if(!m_libraryHolder["glfw"].isOpen() && !m_libraryHolder["glfw"].open("axion-glfw"))
             Engine::interrupt("Failed to load dynamic library <axion-glfw>");
@@ -106,6 +106,15 @@ void Engine::initialize() noexcept
     Engine::renderer().initialize();
 
     /////////////////////////////////////////////////////////////////////////////////
+
+    //Create default viewport
+    Id id = Engine::renderer().createViewport(Vector2f(0.5f, 0.0f), Vector2f(0.5f, 1.0f), RenderMode::Default);
+    Engine::renderer().setViewportResolution(id, Vector2u(384, 216));
+
+    id = Engine::renderer().createViewport(Vector2f(0.0f, 0.0f), Vector2f(0.5f, 1.0f), RenderMode::Default);
+    Engine::renderer().setViewportResolution(id, Vector2u(384, 216));
+
+    //Create default material
     MaterialParameters defaultMaterial;
     defaultMaterial.diffuseColor = Color(1.0f, 1.0f, 1.0f);
     Engine::assets().material.create("default_material", defaultMaterial);

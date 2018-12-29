@@ -7,7 +7,7 @@
 
 using namespace ax;
 
-WireframePass::WireframePass(RenderContent& content) : RenderPass(content) {}
+WireframePass::WireframePass(RenderContent& content, Viewport& viewport) : RenderPass(content, viewport) {}
 
 void WireframePass::initialize() noexcept
 {
@@ -30,9 +30,9 @@ void WireframePass::terminate() noexcept
 
     Engine::assets().shader.destroy("renderergl_shader_wireframe");
 }
-void WireframePass::updateViewport() noexcept
+void WireframePass::updateResolution() noexcept
 {
-    glViewport(0, 0, content.windowSize.x, content.windowSize.y);
+    
 }
 void WireframePass::render(double alpha) noexcept
 {

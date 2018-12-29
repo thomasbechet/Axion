@@ -23,18 +23,21 @@ namespace ax
     class AXION_CORE_API Renderer
     {
     public:
-        virtual ~Renderer(){}
+        static constexpr const Id DefaultViewport = 1;
+
+    public:
+        virtual ~Renderer() = default;
 
         virtual void initialize() noexcept = 0;
         virtual void terminate() noexcept = 0;
         virtual void update(double alpha) noexcept = 0;
 
         //Viewport
-        virtual void updateViewport() noexcept = 0;
-
-        //Rendermode
-        virtual void setRenderMode(RenderMode mode) = 0;
-        virtual RenderMode getRenderMode() = 0;
+        virtual Id createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) = 0;
+        virtual void destroyViewport(Id id) = 0;
+        virtual void setViewportRendermode(Id id, RenderMode mode) = 0;
+        virtual void setViewportCamera(Id viewport, Id camera) = 0;
+        virtual void setViewportResolution(Id id, const Vector2u& resolution) = 0;
 
         //Mesh
         virtual Id createMesh(const std::vector<Vertex>& vertices) = 0;

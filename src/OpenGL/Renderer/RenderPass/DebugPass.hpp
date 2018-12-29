@@ -15,11 +15,11 @@ namespace ax
     class AXION_GL_API DebugPass : public RenderPass
     {
     public:
-        DebugPass(RenderContent& content);
+        DebugPass(RenderContent& content, Viewport& viewport);
 
         void initialize() noexcept override;
         void terminate() noexcept override;
-        void updateViewport() noexcept override;
+        void updateResolution() noexcept override;
         void render(double alpha) noexcept override;
 
     private:

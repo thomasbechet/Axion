@@ -18,11 +18,11 @@ namespace ax
 
     public:
         //Viewport
-        void updateViewport() noexcept override {}
-
-        //Rendermode
-        void setRenderMode(RenderMode mode) override {};
-        RenderMode getRenderMode() override {return RenderMode::Default;};
+        Id createViewport(const Vector2f& position, const Vector2f& size, RenderMode rendermode = RenderMode::Default) override {return 0;}
+        void destroyViewport(Id id) override {}
+        void setViewportRendermode(Id id, RenderMode mode) override {}
+        void setViewportCamera(Id viewport, Id camera) override {}
+        void setViewportResolution(Id id, const Vector2u& resolution) override {}
 
         //Mesh
         Id createMesh(const std::vector<Vertex>& vertices) override {return 0;}

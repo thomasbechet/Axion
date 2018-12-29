@@ -134,13 +134,11 @@ void WindowGLFW::setMode(WindowMode mode) noexcept
         {
             const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
             glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, 0);
-            Engine::renderer().updateViewport();
         }
         break;
         case WindowMode::Windowed:
         {
             glfwSetWindowMonitor(m_window, nullptr, m_position.x, m_position.y, m_size.x, m_size.y, 0);
-            Engine::renderer().updateViewport();
         }
         break;
         case WindowMode::Borderless:
@@ -151,7 +149,6 @@ void WindowGLFW::setMode(WindowMode mode) noexcept
             glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
             glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
             glfwSetWindowMonitor(m_window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
-            Engine::renderer().updateViewport();
         }  
         break;
     }
@@ -183,5 +180,4 @@ void WindowGLFW::windowPosCallback(int xpos, int ypos) noexcept
 void WindowGLFW::windowSizeCallback(int width, int height) noexcept
 {
     if(m_mode == WindowMode::Windowed) m_size = Vector2u(width, height);
-    Engine::renderer().updateViewport();
 }

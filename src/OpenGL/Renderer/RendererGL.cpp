@@ -2,6 +2,7 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
+#include <Core/Assets/AssetManager.hpp>
 
 #include <GL/glew.h>
 
@@ -40,64 +41,101 @@ void RendererGL::initialize() noexcept
     m_content.materialUBO = std::make_unique<MaterialUBO>();
     m_content.pointLightUBO = std::make_unique<PointLightUBO>();
 
-    //Initialize renderpass
-    m_renderMode = RenderMode::Debug0;
-    createRenderPass();
-    m_renderPass->initialize();
+    //Loading shaders
+    Id handle = Engine::assets().shader.create("renderergl_shader_geometry",
+        "../shaders/geometry_pass.vertex",
+        "../shaders/geometry_pass.fragment")->getHandle();
+    m_content.geometryShader = m_content.shaders.get(handle).programId;
+
+    handle = Engine::assets().shader.create("renderergl_shader_light",
+        "../shaders/light_pass.vertex",
+        "../shaders/light_pass.fragment")->getHandle();
+    m_content.lightShader = m_content.shaders.get(handle).programId;
+
+    handle = Engine::assets().shader.create("renderergl_shader_render",
+        "../shaders/quad_texture.vertex",
+        "../shaders/quad_texture.fragment")->getHandle();
+    m_content.renderShader = m_content.shaders.get(handle).programId;
 }
 void RendererGL::terminate() noexcept
 {
-    m_renderPass->terminate();
+    for(auto& viewport : m_viewports)
+    {
+        viewport.renderPass->terminate();
+    }
+
+    Engine::assets().shader.destroy("renderergl_shader_geometry");
+    Engine::assets().shader.destroy("renderergl_shader_light");
+    Engine::assets().shader.destroy("renderergl_shader_render");
 }
 void RendererGL::update(double alpha) noexcept
 {
-    m_renderPass->render(alpha);
+    for(auto& viewport : m_viewports)
+    {
+        viewport.renderPass->render(alpha);
+    }
 }
 
-//Viewport
-void RendererGL::updateViewport() noexcept
+Id RendererGL::createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode)
 {
-    m_content.windowSize = Engine::window().getSize();
-    if(m_renderPass) m_renderPass->updateViewport();
+    Id id = m_viewports.add(Viewport());
+    Viewport& viewport = m_viewports.get(id);
+
+    viewport.position = position;
+    viewport.size = size;
+    viewport.resolution = Engine::window().getSize();
+
+    setViewportRendermode(id, mode);
+
+    return id;
 }
-
-//Rendermode
-void RendererGL::setRenderMode(RenderMode mode)
+void RendererGL::destroyViewport(Id id)
 {
-    m_renderPass->terminate();
+    Viewport& viewport = m_viewports.get(id);
 
-    m_renderMode = mode;
-    createRenderPass();
+    viewport.renderPass->terminate();
 
-    m_renderPass->initialize();  
+    m_viewports.remove(id);
 }
-RenderMode RendererGL::getRenderMode()
+void RendererGL::setViewportRendermode(Id id, RenderMode mode)
 {
-    return m_renderMode;
-}
+    Viewport& viewport = m_viewports.get(id);
 
-void RendererGL::createRenderPass() noexcept
-{
-    m_renderPass.reset();
-    switch(m_renderMode)
+    if(viewport.renderPass) viewport.renderPass->terminate();
+    viewport.renderPass.reset();
+
+    switch(mode)
     {
         case RenderMode::Default:
-            m_renderPass = std::make_unique<DefaultPass>(m_content);
+            viewport.renderPass = std::make_unique<DefaultPass>(m_content, viewport);
         break;
         case RenderMode::Wireframe:
-            m_renderPass = std::make_unique<WireframePass>(m_content);
+            viewport.renderPass = std::make_unique<WireframePass>(m_content, viewport);
         break;
         case RenderMode::Debug0:
-            m_renderPass = std::make_unique<DebugPass>(m_content);
+            viewport.renderPass = std::make_unique<DebugPass>(m_content, viewport);
         break;
         case RenderMode::Debug1:
-            m_renderPass = std::make_unique<DebugPass>(m_content);
+            viewport.renderPass = std::make_unique<DebugPass>(m_content, viewport);
         break;
         case RenderMode::Debug2:
-            m_renderPass = std::make_unique<DebugPass>(m_content);
+            viewport.renderPass = std::make_unique<DebugPass>(m_content, viewport);
         break;
         default:
-            m_renderPass = std::make_unique<DefaultPass>(m_content);
+            viewport.renderPass = std::make_unique<DefaultPass>(m_content, viewport);
         break;
     }
+    
+    viewport.renderPass->initialize();
+}
+void RendererGL::setViewportCamera(Id id, Id camera)
+{
+    Viewport& viewport = m_viewports.get(id);
+}
+void RendererGL::setViewportResolution(Id id, const Vector2u& resolution)
+{
+    Viewport& viewport = m_viewports.get(id);
+
+    viewport.resolution = resolution;
+    viewport.renderPass->updateResolution();
 }

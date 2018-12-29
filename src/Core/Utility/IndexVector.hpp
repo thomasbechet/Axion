@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <exception>
+#include <utility>
 
 namespace ax
 {
@@ -22,7 +23,7 @@ namespace ax
 		{
 			if(m_free.empty())
 			{
-				m_list.push_back(element);
+				m_list.push_back(std::forward<C>(element));
 				m_index.push_back(m_list.size() - 1);
 				m_backList.push_back(m_index.size() - 1);
 				return m_index.back() + 1;
@@ -32,7 +33,7 @@ namespace ax
 				Id freeIndex = m_free.back();
 				m_free.pop_back();
 				
-				m_list.push_back(element);
+				m_list.push_back(std::forward<C>(element));
 				m_backList.push_back(freeIndex);
 				m_index[freeIndex] = m_list.size() - 1;
 
