@@ -24,11 +24,6 @@ void DefaultPass::initialize() noexcept
 
     m_gbuffer = std::make_unique<GBuffer>(viewport.resolution);
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
-
-    glDepthFunc(GL_LESS);
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
 }
 void DefaultPass::terminate() noexcept
 {
@@ -42,6 +37,11 @@ void DefaultPass::updateResolution() noexcept
 }
 void DefaultPass::render(double alpha) noexcept
 {
+    glDepthFunc(GL_LESS);
+    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
     glUseProgram(content.geometryShader);
     m_gbuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

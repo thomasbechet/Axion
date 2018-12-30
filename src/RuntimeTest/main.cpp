@@ -134,17 +134,20 @@ public:
         camera0.addComponent<ax::ModelComponent>(camera0).setModel("model_cube");
         cameraSystem.add(spectatorComponent0);
 
-        //#define USE_CAMERA
+        #define USE_CAMERA
         #if defined USE_CAMERA
-            ax::Id viewport = ax::Engine::renderer().createViewport(ax::Vector2f(0.75f, 0.25f), ax::Vector2f(0.20f, 0.20f));
             ax::Entity& camera1 = ax::Engine::world().entities().create();
             camera1.addComponent<ax::TransformComponent>();
             ax::CameraComponent& cameraComponent1 = camera1.addComponent<ax::CameraComponent>(camera1);
             cameraComponent1.setFarPlane(300.0f);
-            cameraComponent1.bindViewport(viewport);
             ax::BasicSpectatorComponent& spectatorComponent1 = camera1.addComponent<ax::BasicSpectatorComponent>(camera1);
             camera1.addComponent<ax::ModelComponent>(camera1).setModel("model_cube");
             cameraSystem.add(spectatorComponent1);
+
+            ax::Id viewport = ax::Engine::renderer().createViewport(ax::Vector2f(0.5f, 0.0f), ax::Vector2f(0.5f, 1.0f));
+            cameraComponent1.bindViewport(viewport);
+
+            ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
         
 

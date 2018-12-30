@@ -16,15 +16,9 @@ void WireframePass::initialize() noexcept
     m_transformLocation = glGetUniformLocation(content.wireframeShader, "transform");
 
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
-
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDisable(GL_CULL_FACE);
 }
 void WireframePass::terminate() noexcept
 {
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
     m_renderBuffer.reset();
 }
 void WireframePass::updateResolution() noexcept
@@ -33,6 +27,8 @@ void WireframePass::updateResolution() noexcept
 }
 void WireframePass::render(double alpha) noexcept
 {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
     glUseProgram(content.wireframeShader);
 
     m_renderBuffer->bindForWriting();
@@ -58,6 +54,9 @@ void WireframePass::render(double alpha) noexcept
     //Setup viewport
     glViewport(0, 0, viewport.resolution.x, viewport.resolution.y);
 
+    //Render scene
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDisable(GL_CULL_FACE);
     for(auto& materialIt : content.materials)
     {
         for(auto& staticmeshId : materialIt.second)
@@ -77,6 +76,8 @@ void WireframePass::render(double alpha) noexcept
     }
 
     //Render texture to backbuffer
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_CULL_FACE);
     Vector2u windowSize = Engine::window().getSize();
     Vector2u position = Vector2u(
         (unsigned)((float)windowSize.x * viewport.position.x),
@@ -98,6 +99,8 @@ void WireframePass::render(double alpha) noexcept
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
     glEnable(GL_DEPTH_TEST);
+
+    std::cout << glGetError() << std::endl;
 
     glUseProgram(0);
 }

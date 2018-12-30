@@ -144,3 +144,10 @@ void RendererGL::setViewportResolution(Id id, const Vector2u& resolution)
     viewport.resolution = resolution;
     viewport.renderPass->updateResolution();
 }
+void RendererGL::setViewportRectangle(Id id, const Vector2f& position, const Vector2f& size)
+{
+    Viewport& viewport = *m_viewports.get(id).get();
+
+    viewport.position = position;
+    viewport.size = size;
+}

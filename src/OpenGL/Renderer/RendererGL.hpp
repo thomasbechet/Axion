@@ -72,6 +72,7 @@ namespace ax
         void setViewportRendermode(Id id, RenderMode mode) override;
         void setViewportCamera(Id viewport, Id camera) override;
         void setViewportResolution(Id id, const Vector2u& resolution) override;
+        void setViewportRectangle(Id viewport, const Vector2f& position, const Vector2f& size) override;
 
         //Mesh
         Id createMesh(const std::vector<Vertex>& vertices) override;

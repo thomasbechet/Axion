@@ -37,7 +37,8 @@ namespace ax
         virtual void destroyViewport(Id id) = 0;
         virtual void setViewportRendermode(Id id, RenderMode mode) = 0;
         virtual void setViewportCamera(Id viewport, Id camera) = 0;
-        virtual void setViewportResolution(Id id, const Vector2u& resolution) = 0;
+        virtual void setViewportResolution(Id viewport, const Vector2u& resolution) = 0;
+        virtual void setViewportRectangle(Id viewport, const Vector2f& position, const Vector2f& size) = 0;
 
         //Mesh
         virtual Id createMesh(const std::vector<Vertex>& vertices) = 0;
