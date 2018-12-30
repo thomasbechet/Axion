@@ -134,7 +134,7 @@ public:
         camera0.addComponent<ax::ModelComponent>(camera0).setModel("model_cube");
         cameraSystem.add(spectatorComponent0);
 
-        #define USE_CAMERA
+        //#define USE_CAMERA
         #if defined USE_CAMERA
             ax::Entity& camera1 = ax::Engine::world().entities().create();
             camera1.addComponent<ax::TransformComponent>();
@@ -149,13 +149,18 @@ public:
 
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
+
+        #define LOW_RESOLUTION
+        #if defined LOW_RESOLUTION
+            ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
+        #endif
         
 
-        ax::Entity& mesh = ax::Engine::world().entities().create();
+        /*ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
         transform1.setScale(0.05f, 0.05f, 0.05f);
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");*/
 
         ax::Entity& cube = ax::Engine::world().entities().create();        
         ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();

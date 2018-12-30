@@ -56,6 +56,16 @@ void RendererGL::initialize() noexcept
         "../shaders/quad_texture.vertex",
         "../shaders/quad_texture.fragment")->getHandle();
     m_content.renderShader = m_content.shaders.get(handle).programId;
+
+    handle = Engine::assets().shader.create("renderergl_shader_wireframe",
+        "../shaders/wireframe.vertex",
+        "../shaders/wireframe.fragment")->getHandle();
+    m_content.wireframeShader = m_content.shaders.get(handle).programId;
+
+    handle = Engine::assets().shader.create("renderergl_shader_geometry_debug",
+        "../shaders/geometry_debug.vertex",
+        "../shaders/geometry_debug.fragment")->getHandle();
+    m_content.debugShader = m_content.shaders.get(handle).programId;
 }
 void RendererGL::terminate() noexcept
 {
@@ -67,6 +77,8 @@ void RendererGL::terminate() noexcept
     Engine::assets().shader.destroy("renderergl_shader_geometry");
     Engine::assets().shader.destroy("renderergl_shader_light");
     Engine::assets().shader.destroy("renderergl_shader_render");
+    Engine::assets().shader.destroy("renderergl_shader_wireframe");
+    Engine::assets().shader.destroy("renderergl_shader_geometry_debug");
 }
 void RendererGL::update(double alpha) noexcept
 {

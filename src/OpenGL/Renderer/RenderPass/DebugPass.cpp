@@ -11,26 +11,17 @@ DebugPass::DebugPass(RenderContent& content, Viewport& viewport) : RenderPass(co
 
 void DebugPass::initialize() noexcept
 {
-    Id handle = Engine::assets().shader.create("renderergl_shader_geometry",
-        "../shaders/geometry_pass.vertex",
-        "../shaders/geometry_pass.fragment")->getHandle();
-    m_geometryShader = content.shaders.get(handle).programId;
+    m_viewLocation = glGetUniformLocation(content.geometryShader, "camera_view");
+    m_projectionLocation = glGetUniformLocation(content.geometryShader, "camera_projection");
+    m_transformLocation = glGetUniformLocation(content.geometryShader, "transform");
 
-    handle = Engine::assets().shader.create("renderergl_shader_geometry_debug",
-        "../shaders/geometry_debug.vertex",
-        "../shaders/geometry_debug.fragment")->getHandle();
-    m_debugShader = content.shaders.get(handle).programId;
-
-    m_viewLocation = glGetUniformLocation(m_geometryShader, "camera_view");
-    m_projectionLocation = glGetUniformLocation(m_geometryShader, "camera_projection");
-    m_transformLocation = glGetUniformLocation(m_geometryShader, "transform");
-
-    m_materialIndexLocation = glGetUniformLocation(m_geometryShader, "material_index");
-    m_diffuseTextureLocation = glGetUniformLocation(m_geometryShader, "diffuse_texture");
-    m_normalTextureLocation = glGetUniformLocation(m_geometryShader, "normal_texture");
-    m_specularTextureLocation = glGetUniformLocation(m_geometryShader, "specular_texture");
+    m_materialIndexLocation = glGetUniformLocation(content.geometryShader, "material_index");
+    m_diffuseTextureLocation = glGetUniformLocation(content.geometryShader, "diffuse_texture");
+    m_normalTextureLocation = glGetUniformLocation(content.geometryShader, "normal_texture");
+    m_specularTextureLocation = glGetUniformLocation(content.geometryShader, "specular_texture");
 
     m_gbuffer = std::make_unique<GBuffer>(viewport.resolution);
+    m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
 
     glDepthFunc(GL_LESS);
     glCullFace(GL_BACK);
@@ -39,32 +30,43 @@ void DebugPass::initialize() noexcept
 }
 void DebugPass::terminate() noexcept
 {
+    m_renderBuffer.reset();
     m_gbuffer.reset();
-    Engine::assets().shader.destroy("renderergl_shader_geometry");
-    Engine::assets().shader.destroy("renderergl_shader_geometry_debug");
 }
 void DebugPass::updateResolution() noexcept
 {
     m_gbuffer.reset(new GBuffer(viewport.resolution));
+    m_renderBuffer.reset(new RenderBuffer(viewport.resolution));
 }
 void DebugPass::render(double alpha) noexcept
 {
-    glUseProgram(m_geometryShader);
+    glDepthFunc(GL_LESS);
+    glCullFace(GL_BACK);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
+    glUseProgram(content.geometryShader);
     m_gbuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //Bind camera
-    CameraGL& camera = content.cameras.get(1);
-    
+    CameraGL& camera = content.cameras.get(viewport.camera);
+
     Vector3f eye = camera.transform->getTranslation();
     Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
     Vector3f up = camera.transform->getUpVector();
 
     Matrix4f viewMatrix = Matrix4f::lookAt(eye, target, up);
-    Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, (float)Engine::window().getSize().x / (float)Engine::window().getSize().y, camera.near, camera.far);
+
+    float aspect = (viewport.size.x * (float)Engine::window().getSize().x) /
+        (viewport.size.y * (float)Engine::window().getSize().y);
+
+    Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far);
 
     glUniformMatrix4fv(m_viewLocation, 1, GL_FALSE, viewMatrix.data());
     glUniformMatrix4fv(m_projectionLocation, 1, GL_FALSE, projectionMatrix.data());
+
+    //Setup viewport
+    glViewport(0, 0, viewport.resolution.x, viewport.resolution.y);
 
     //Draw scene
     for(auto& materialIt : content.materials)
@@ -101,17 +103,39 @@ void DebugPass::render(double alpha) noexcept
         }
     }
 
-    //Draw debug
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glUseProgram(m_debugShader);
-
+    //Debug pass
+    glUseProgram(content.debugShader);
     m_gbuffer->bindForReading();
+    m_renderBuffer->bindForWriting();
+
+    glClear(GL_COLOR_BUFFER_BIT);
 
     glBindVertexArray(content.quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
+
+    //Render texture to backbuffer
+    Vector2u windowSize = Engine::window().getSize();
+    Vector2u position = Vector2u(
+        (unsigned)((float)windowSize.x * viewport.position.x),
+        (unsigned)((float)windowSize.y * viewport.position.y)
+    );
+    Vector2u size = Vector2u(
+        (unsigned)((float)windowSize.x * viewport.size.x),
+        (unsigned)((float)windowSize.y * viewport.size.y)
+    );
+    glViewport(position.x, position.y, size.x, size.y);
+
+    glUseProgram(content.renderShader);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    m_renderBuffer->bindForReading();
+
+    glDisable(GL_DEPTH_TEST);
+    glBindVertexArray(content.quadVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+    glEnable(GL_DEPTH_TEST);
 
     glUseProgram(0);
 }

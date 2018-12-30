@@ -42,6 +42,7 @@ namespace ax
         GLuint lightShader;
         GLuint renderShader;
         GLuint wireframeShader; 
+        GLuint debugShader;
 
         std::unique_ptr<MaterialUBO> materialUBO;
         std::unique_ptr<PointLightUBO> pointLightUBO;

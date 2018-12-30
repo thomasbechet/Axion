@@ -200,7 +200,7 @@ bool Model::loadObjModel(Path path) noexcept
         }
         else
         {
-            m_materials.emplace_back(AssetReference<Material>());
+            m_materials.emplace_back(Engine::assets().material(Material::Default));
         }
     }
 

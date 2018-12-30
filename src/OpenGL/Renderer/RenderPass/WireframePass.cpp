@@ -100,7 +100,5 @@ void WireframePass::render(double alpha) noexcept
     glBindVertexArray(0);
     glEnable(GL_DEPTH_TEST);
 
-    std::cout << glGetError() << std::endl;
-
     glUseProgram(0);
 }

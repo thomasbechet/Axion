@@ -5,6 +5,7 @@
 //////////////
 #include <OpenGL/Export.hpp>
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
+#include <OpenGL/Renderer/RenderBuffer.hpp>
 
 #include <memory>
 
@@ -36,5 +37,6 @@ namespace ax
         GLuint m_specularTextureLocation;
 
         std::unique_ptr<GBuffer> m_gbuffer;
+        std::unique_ptr<RenderBuffer> m_renderBuffer;
     };
 }
