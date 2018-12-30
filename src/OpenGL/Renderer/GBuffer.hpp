@@ -13,14 +13,6 @@ namespace ax
     class AXION_GL_API GBuffer
     {
     public:
-        enum TextureType
-        {
-            Albedo,
-            Normal,
-            Position,
-            Depth
-        };
-
         GBuffer(Vector2u dimensions);
         ~GBuffer();
 

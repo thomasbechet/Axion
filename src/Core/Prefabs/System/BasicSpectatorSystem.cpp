@@ -33,6 +33,8 @@ void BasicSpectatorSystem::onInitialize()
 
     m_changeMode = &Engine::input().addButton("basicspectator_changemode");
     m_changeMode->bind(Keyboard::Space);
+    m_nextCamera = &Engine::input().addButton("basicspectator_next_camera");
+    m_nextCamera->bind(Keyboard::N);
 
     m_lookX = &Engine::input().addAxis("basicspectator_look_x");
     m_lookX->bind(Mouse::Axis::X);
@@ -41,37 +43,42 @@ void BasicSpectatorSystem::onInitialize()
 
     m_zoom = &Engine::input().addAxis("basicspectator_zoom");
     m_zoom->bind(Mouse::Axis::WheelY);
-
-    m_list = &Engine::world().components().getList<BasicSpectatorComponent>();
 }
 void BasicSpectatorSystem::onUpdate()
 {
-    float delta = Engine::context().getDeltaTime().asSeconds();
-
-    Vector2f look = Vector2f(0.0f, 0.0f);
-    look.x = m_lookX->delta();
-    look.y = m_lookY->delta();
-    float wheelDelta = m_zoom->delta();
-    bool slowMode = m_slowMode->isPressed();
-    bool fastMode = m_fastMode->isPressed();
-
-    auto it = m_list->iterator();
-    while(it.next())
+    if(m_nextCamera->isJustPressed())
     {
+        m_active++;
+        if(m_active > m_components.size() - 1) m_active = 0;
+    }
+
+    if(m_active < m_components.size())
+    {
+        BasicSpectatorComponent* component = m_components.at(m_active);
+
+        float delta = Engine::context().getDeltaTime().asSeconds();
+
+        Vector2f look = Vector2f(0.0f, 0.0f);
+        look.x = m_lookX->delta();
+        look.y = m_lookY->delta();
+        float wheelDelta = m_zoom->delta();
+        bool slowMode = m_slowMode->isPressed();
+        bool fastMode = m_fastMode->isPressed();
+
         //Update mode
-        if(m_changeMode->isJustPressed()) it->freeMode = !it->freeMode;
+        if(m_changeMode->isJustPressed()) component->freeMode = !component->freeMode;
 
         //Translation
         Vector3f direction = Vector3f(0.0f, 0.0f, 0.0f);
 
-        if(m_forward->isPressed()) direction += it->transform.getForwardVector();
-        if(m_backward->isPressed()) direction += it->transform.getBackwardVector();
-        if(m_left->isPressed()) direction += it->transform.getLeftVector();
-        if(m_right->isPressed()) direction += it->transform.getRightVector();
-        if(it->freeMode)
+        if(m_forward->isPressed()) direction += component->transform.getForwardVector();
+        if(m_backward->isPressed()) direction += component->transform.getBackwardVector();
+        if(m_left->isPressed()) direction += component->transform.getLeftVector();
+        if(m_right->isPressed()) direction += component->transform.getRightVector();
+        if(component->freeMode)
         {
-            if(m_up->isPressed()) direction += it->transform.getUpVector();
-            if(m_down->isPressed()) direction += it->transform.getDownVector();
+            if(m_up->isPressed()) direction += component->transform.getUpVector();
+            if(m_down->isPressed()) direction += component->transform.getDownVector();
         }
         else
         {
@@ -80,45 +87,45 @@ void BasicSpectatorSystem::onUpdate()
         }     
         direction.normalize();
 
-        float speed = it->normalSpeed;
-        if(slowMode) speed = it->slowSpeed;
-        else if(fastMode) speed = it->fastSpeed;
+        float speed = component->normalSpeed;
+        if(slowMode) speed = component->slowSpeed;
+        else if(fastMode) speed = component->fastSpeed;
 
-        it->transform.translate(direction * delta * speed);
+        component->transform.translate(direction * delta * speed);
 
         //Fov
         if(wheelDelta != 0.0f)
         {
             if(wheelDelta > 0.0f)
-                it->camera.setFov(it->camera.getFov() - it->zoomSpeed);
+                component->camera.setFov(component->camera.getFov() - component->zoomSpeed);
             else
-                it->camera.setFov(it->camera.getFov() + it->zoomSpeed);
+                component->camera.setFov(component->camera.getFov() + component->zoomSpeed);
         }
         
         //Rotation
-        if(it->freeMode)
+        if(component->freeMode)
         {
             if(look.x != 0.0f) 
-                it->transform.rotate(-radians(look.x) * it->rotationSensibility, Vector3f::up);
+                component->transform.rotate(-radians(look.x) * component->rotationSensibility, Vector3f::up);
             if(look.y != 0.0f) 
-                it->transform.rotate(radians(look.y) * it->rotationSensibility, Vector3f::right);
+                component->transform.rotate(radians(look.y) * component->rotationSensibility, Vector3f::right);
             if(m_rotateLeft->isPressed())
-                it->transform.rotate(radians(it->rollSpeed) * delta, Vector3f::forward);
+                component->transform.rotate(radians(component->rollSpeed) * delta, Vector3f::forward);
             if(m_rotateRight->isPressed())
-                it->transform.rotate(-radians(it->rollSpeed) * delta, Vector3f::forward);
+                component->transform.rotate(-radians(component->rollSpeed) * delta, Vector3f::forward);
         }
         else
         {
             if(look.x != 0.0f)
-                it->yaw += look.x * it->rotationSensibility;
+                component->yaw += look.x * component->rotationSensibility;
             if(look.y != 0.0f)
-                it->pitch += look.y * it->rotationSensibility;
+                component->pitch += look.y * component->rotationSensibility;
 
-            if(it->pitch < -90.0f) it->pitch = -90.0f;
-            if(it->pitch > 90.0f) it->pitch = 90.0f;
+            if(component->pitch < -90.0f) component->pitch = -90.0f;
+            if(component->pitch > 90.0f) component->pitch = 90.0f;
 
-            it->transform.setRotation(-radians(it->yaw), Vector3f::up);
-            it->transform.rotate(radians(it->pitch), Vector3f::right);
+            component->transform.setRotation(-radians(component->yaw), Vector3f::up);
+            component->transform.rotate(radians(component->pitch), Vector3f::right);
         }
     }
 }
@@ -135,7 +142,13 @@ void BasicSpectatorSystem::onTerminate()
     Engine::input().removeButton("basicspectator_slowmode");
     Engine::input().removeButton("basicspectator_fastmode");
     Engine::input().removeButton("basicspectator_changemode");
+    Engine::input().removeButton("basicspectator_next_camera");
     Engine::input().removeAxis("basicspectator_look_x");
     Engine::input().removeAxis("basicspectator_look_y");
     Engine::input().removeAxis("basicspectator_zoom");
+}
+
+void BasicSpectatorSystem::add(BasicSpectatorComponent& component) noexcept
+{
+    m_components.push_back(&component);
 }

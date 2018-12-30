@@ -108,11 +108,21 @@ void Engine::initialize() noexcept
     /////////////////////////////////////////////////////////////////////////////////
 
     //Create default viewport
-    Id id = Engine::renderer().createViewport(Vector2f(0.5f, 0.0f), Vector2f(0.5f, 1.0f), RenderMode::Default);
-    Engine::renderer().setViewportResolution(id, Vector2u(384, 216));
+    Engine::renderer().createViewport(Vector2f(0.0f, 0.0f), Vector2f(1.0f, 1.0f), RenderMode::Default);
 
-    id = Engine::renderer().createViewport(Vector2f(0.0f, 0.0f), Vector2f(0.5f, 1.0f), RenderMode::Default);
-    Engine::renderer().setViewportResolution(id, Vector2u(384, 216));
+    Vector2u defaultResolution;
+
+    if(Engine::context().config().getString("Renderer", "default_viewport_width", "default") != "default")
+        defaultResolution.x = Engine::context().config().getUnsigned("Renderer", "default_viewport_width", 1920);
+    else
+        defaultResolution.x = Engine::window().getSize().x;
+
+    if(Engine::context().config().getString("Renderer", "default_viewport_height", "default") != "default")
+        defaultResolution.y = Engine::context().config().getUnsigned("Renderer", "default_viewport_height", 1080);
+    else
+        defaultResolution.y = Engine::window().getSize().y;
+
+    Engine::renderer().setViewportResolution(Renderer::DefaultViewport, defaultResolution);
 
     //Create default material
     MaterialParameters defaultMaterial;

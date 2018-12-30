@@ -5,6 +5,7 @@
 //////////////
 #include <OpenGL/Export.hpp>
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
+#include <OpenGL/Renderer/RenderBuffer.hpp>
 
 #include <memory>
 
@@ -23,10 +24,6 @@ namespace ax
         void render(double alpha) noexcept override;
 
     private:
-        GLuint m_geometryShader;
-        GLuint m_lightShader;
-        GLuint m_renderShader;
-
         GLuint m_viewLocation;
         GLuint m_projectionLocation;
         GLuint m_transformLocation;
@@ -40,12 +37,6 @@ namespace ax
         GLuint m_pointLightPositionLocation;
 
         std::unique_ptr<GBuffer> m_gbuffer;
-
-    private:
-        void createRenderBuffer();
-        void destroyRenderBuffer();
-
-        GLuint m_renderBuffer;
-        GLuint m_renderTexture;
+        std::unique_ptr<RenderBuffer> m_renderBuffer;
     };
 }

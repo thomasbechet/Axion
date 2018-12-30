@@ -114,6 +114,6 @@ namespace ax
 
     private:
         RenderContent m_content;
-        IndexVector<Viewport> m_viewports;
+        IndexVector<std::unique_ptr<Viewport>> m_viewports;
     };
 }

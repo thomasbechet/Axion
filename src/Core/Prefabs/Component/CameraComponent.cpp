@@ -16,6 +16,15 @@ CameraComponent::~CameraComponent()
     Engine::renderer().destroyCamera(m_handle);
 }
 
+void CameraComponent::bindDefaultViewport() noexcept
+{
+    Engine::renderer().setViewportCamera(Renderer::DefaultViewport, m_handle);
+}
+void CameraComponent::bindViewport(Id viewport) noexcept
+{   
+    Engine::renderer().setViewportCamera(viewport, m_handle);
+}
+
 void CameraComponent::setFov(float fov) noexcept
 {
     if(fov >= 180.0f) fov = 179.999999f;

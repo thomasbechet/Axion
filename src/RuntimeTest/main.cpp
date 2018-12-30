@@ -26,6 +26,7 @@
 #include <Core/Prefabs/Component/ModelComponent.hpp>
 #include <Core/Prefabs/Component/PointLightComponent.hpp>
 #include <Core/Utility/Path.hpp>
+#include <Core/Utility/IndexVector.hpp>
 #include <Core/Assets/AssetManager.hpp>
 #include <Core/Assets/Texture.hpp>
 #include <Core/Assets/AssetHolder.hpp>
@@ -121,42 +122,43 @@ public:
         ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
-        ax::Engine::systems().add<ax::BasicSpectatorSystem>();
+        ax::BasicSpectatorSystem& cameraSystem = ax::Engine::systems().add<ax::BasicSpectatorSystem>();
         ax::Engine::systems().add<ax::RenderModeSystem>();
 
+        ax::Entity& camera0 = ax::Engine::world().entities().create();
+        camera0.addComponent<ax::TransformComponent>();
+        ax::CameraComponent& cameraComponent0 = camera0.addComponent<ax::CameraComponent>(camera0);
+        cameraComponent0.setFarPlane(300.0f);
+        cameraComponent0.bindDefaultViewport();
+        ax::BasicSpectatorComponent& spectatorComponent0 = camera0.addComponent<ax::BasicSpectatorComponent>(camera0);
+        camera0.addComponent<ax::ModelComponent>(camera0).setModel("model_cube");
+        cameraSystem.add(spectatorComponent0);
 
-        ax::Entity& camera = ax::Engine::world().entities().create();
-        camera.addComponent<ax::TransformComponent>();
-        camera.addComponent<ax::CameraComponent>(camera).setFarPlane(300.0f);
-        camera.addComponent<ax::BasicSpectatorComponent>(camera);
-
+        //#define USE_CAMERA
+        #if defined USE_CAMERA
+            ax::Id viewport = ax::Engine::renderer().createViewport(ax::Vector2f(0.75f, 0.25f), ax::Vector2f(0.20f, 0.20f));
+            ax::Entity& camera1 = ax::Engine::world().entities().create();
+            camera1.addComponent<ax::TransformComponent>();
+            ax::CameraComponent& cameraComponent1 = camera1.addComponent<ax::CameraComponent>(camera1);
+            cameraComponent1.setFarPlane(300.0f);
+            cameraComponent1.bindViewport(viewport);
+            ax::BasicSpectatorComponent& spectatorComponent1 = camera1.addComponent<ax::BasicSpectatorComponent>(camera1);
+            camera1.addComponent<ax::ModelComponent>(camera1).setModel("model_cube");
+            cameraSystem.add(spectatorComponent1);
+        #endif
+        
 
         ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
-        //transform1.setScale(0.05f, 0.05f, 0.05f);
-        transform1.setScale(1.0f, 1.0f, 1.0f);
+        transform1.setScale(0.05f, 0.05f, 0.05f);
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        //mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
 
-        ax::MaterialParameters params;
-        params.diffuseColor = ax::Color(1.0f, 0.0f, 0.0f);
-        ax::Engine::assets().material.create("material_test", params);
-        //ax::Engine::assets().material("material_test")->setDiffuseColor(ax::Color(100));
-
-        const int size = 10;
-        for(int x = -size / 2; x < size / 2; x += 1)
-            for(int y = -size / 2; y < size / 2; y += 1)
-                for(int z = -size / 2; z < size / 2; z += 1)
-            {
-                ax::Entity& cube = ax::Engine::world().entities().create();        
-                ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
-                transformCube.translate(ax::Vector3f(x * 4, z * 4, y * 4));
-                transformCube.rotate(x, ax::Vector3f(1.0f, 0.0f, 0.0f));
-                transformCube.attachTo(mesh);
-                ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
-                cubeModel.setModel("model_cube");
-                cubeModel.setMaterial("material_test", 0);
-            }
+        ax::Entity& cube = ax::Engine::world().entities().create();        
+        ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
+        transformCube.translate(ax::Vector3f(0, 4, 0));
+        ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
+        cubeModel.setModel("model_cube");
 
         //Light
         ax::Entity& light = ax::Engine::world().entities().create();

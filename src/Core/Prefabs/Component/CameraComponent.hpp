@@ -21,6 +21,9 @@ namespace ax
         CameraComponent(const Entity& entity);
         ~CameraComponent();
 
+        void bindDefaultViewport() noexcept;
+        void bindViewport(Id viewport) noexcept;
+
         void setFov(float fov) noexcept;
         float getFov() const noexcept;
         void setFarPlane(float far) noexcept;

@@ -27,6 +27,7 @@ ADD_LIBRARY(
     Renderer/MaterialGL.cpp
     Renderer/TextureGL.cpp
     Renderer/GBuffer.cpp
+    Renderer/RenderBuffer.cpp
     Renderer/MaterialUBO.cpp
     Renderer/Light/PointLightUBO.cpp
     Renderer/Light/PointLightGL.cpp

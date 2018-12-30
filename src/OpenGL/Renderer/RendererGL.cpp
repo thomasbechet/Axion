@@ -61,7 +61,7 @@ void RendererGL::terminate() noexcept
 {
     for(auto& viewport : m_viewports)
     {
-        viewport.renderPass->terminate();
+        viewport.get()->renderPass->terminate();
     }
 
     Engine::assets().shader.destroy("renderergl_shader_geometry");
@@ -72,14 +72,17 @@ void RendererGL::update(double alpha) noexcept
 {
     for(auto& viewport : m_viewports)
     {
-        viewport.renderPass->render(alpha);
+        if(viewport.get()->camera)
+        {
+            viewport.get()->renderPass->render(alpha);
+        }
     }
 }
 
 Id RendererGL::createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode)
 {
-    Id id = m_viewports.add(Viewport());
-    Viewport& viewport = m_viewports.get(id);
+    Id id = m_viewports.add(std::make_unique<Viewport>());
+    Viewport& viewport = *m_viewports.get(id).get();
 
     viewport.position = position;
     viewport.size = size;
@@ -91,7 +94,7 @@ Id RendererGL::createViewport(const Vector2f& position, const Vector2f& size, Re
 }
 void RendererGL::destroyViewport(Id id)
 {
-    Viewport& viewport = m_viewports.get(id);
+    Viewport& viewport = *m_viewports.get(id).get();
 
     viewport.renderPass->terminate();
 
@@ -99,7 +102,7 @@ void RendererGL::destroyViewport(Id id)
 }
 void RendererGL::setViewportRendermode(Id id, RenderMode mode)
 {
-    Viewport& viewport = m_viewports.get(id);
+    Viewport& viewport = *m_viewports.get(id).get();
 
     if(viewport.renderPass) viewport.renderPass->terminate();
     viewport.renderPass.reset();
@@ -130,11 +133,13 @@ void RendererGL::setViewportRendermode(Id id, RenderMode mode)
 }
 void RendererGL::setViewportCamera(Id id, Id camera)
 {
-    Viewport& viewport = m_viewports.get(id);
+    Viewport& viewport = *m_viewports.get(id).get();
+
+    viewport.camera = camera;
 }
 void RendererGL::setViewportResolution(Id id, const Vector2u& resolution)
 {
-    Viewport& viewport = m_viewports.get(id);
+    Viewport& viewport = *m_viewports.get(id).get();
 
     viewport.resolution = resolution;
     viewport.renderPass->updateResolution();

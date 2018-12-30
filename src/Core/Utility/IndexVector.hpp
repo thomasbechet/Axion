@@ -40,6 +40,10 @@ namespace ax
 				return freeIndex + 1;
 			}
 		}
+		Id add(C& element)
+		{
+			return add(std::move(element));
+		}
 		void remove(Id index)
 		{
 			index--;

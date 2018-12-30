@@ -21,6 +21,8 @@ namespace ax
         void onUpdate() override;
         void onTerminate() override;
 
+        void add(BasicSpectatorComponent& component) noexcept;
+
     private:
         Button* m_forward = nullptr;
         Button* m_backward = nullptr;
@@ -33,10 +35,12 @@ namespace ax
         Button* m_slowMode = nullptr;
         Button* m_fastMode = nullptr;
         Button* m_changeMode = nullptr;
+        Button* m_nextCamera = nullptr;
         Axis* m_lookX = nullptr;
         Axis* m_lookY = nullptr;
         Axis* m_zoom = nullptr;
 
-        ComponentList<BasicSpectatorComponent>* m_list = nullptr;
+        std::vector<BasicSpectatorComponent*> m_components;
+        unsigned m_active = 0;
     };
 }

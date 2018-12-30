@@ -23,7 +23,7 @@ void DefaultPass::initialize() noexcept
     m_pointLightPositionLocation = glGetUniformLocation(content.lightShader, "pointlight_position");
 
     m_gbuffer = std::make_unique<GBuffer>(viewport.resolution);
-    createRenderBuffer();
+    m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
 
     glDepthFunc(GL_LESS);
     glCullFace(GL_BACK);
@@ -32,14 +32,13 @@ void DefaultPass::initialize() noexcept
 }
 void DefaultPass::terminate() noexcept
 {
-    destroyRenderBuffer();
+    m_renderBuffer.reset();
     m_gbuffer.reset();
 }
 void DefaultPass::updateResolution() noexcept
 {
     m_gbuffer.reset(new GBuffer(viewport.resolution));
-    destroyRenderBuffer();
-    createRenderBuffer();
+    m_renderBuffer.reset(new RenderBuffer(viewport.resolution));
 }
 void DefaultPass::render(double alpha) noexcept
 {
@@ -47,7 +46,7 @@ void DefaultPass::render(double alpha) noexcept
     m_gbuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    CameraGL& camera = content.cameras.get(1);
+    CameraGL& camera = content.cameras.get(viewport.camera);
 
     Vector3f eye = camera.transform->getTranslation();
     Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
@@ -104,9 +103,7 @@ void DefaultPass::render(double alpha) noexcept
     //Light pass
     glUseProgram(content.lightShader);
     m_gbuffer->bindForReading();
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_renderBuffer);
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
-    glDrawBuffers(1, buffers);
+    m_renderBuffer->bindForWriting();
 
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -130,14 +127,12 @@ void DefaultPass::render(double alpha) noexcept
         (unsigned)((float)windowSize.x * viewport.size.x),
         (unsigned)((float)windowSize.y * viewport.size.y)
     );
-    std::cout << viewport.position.x << std::endl;
     glViewport(position.x, position.y, size.x, size.y);
 
     glUseProgram(content.renderShader);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_renderTexture);
+    m_renderBuffer->bindForReading();
 
     glDisable(GL_DEPTH_TEST);
     glBindVertexArray(content.quadVAO);
@@ -146,31 +141,4 @@ void DefaultPass::render(double alpha) noexcept
     glEnable(GL_DEPTH_TEST);
 
     glUseProgram(0);
-}
-
-void DefaultPass::createRenderBuffer()
-{
-    glGenFramebuffers(1, &m_renderBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_renderBuffer);
-
-    glGenTextures(1, &m_renderTexture);
-    glBindTexture(GL_TEXTURE_2D, m_renderTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, viewport.resolution.x, viewport.resolution.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_renderTexture, 0);
-
-    GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if(Status != GL_FRAMEBUFFER_COMPLETE){
-        Engine::interrupt("Failed to load renderbuffer");
-    }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-void DefaultPass::destroyRenderBuffer()
-{
-    glDeleteFramebuffers(1, &m_renderBuffer);
-    glDeleteTextures(1, &m_renderTexture);
 }
