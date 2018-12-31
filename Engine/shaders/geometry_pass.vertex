@@ -11,7 +11,6 @@ uniform mat4 transform;
 uniform mat4 camera_view;
 uniform mat4 camera_projection;
 
-out vec3 FragPos;
 out vec2 UV;
 out vec3 Normal;
 out vec3 Color;
@@ -19,8 +18,7 @@ out vec3 Color;
 void main()
 {
 	gl_Position = camera_projection * camera_view * transform * vec4(in_vertex, 1.0f);
-	FragPos = vec3(transform * vec4(in_vertex, 1.0));
-	Normal = normalize(vec3(transform * vec4(in_normal, 1.0)));
+	Normal = camera_view * transform * vec4(in_normal, 1.0f);
 	
 	UV = in_uv;
 	Color = in_color;

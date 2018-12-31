@@ -22,9 +22,8 @@ namespace ax
     private:
         GLuint m_fbo;
 
-        GLuint m_albedoTexture;
-        GLuint m_normalTexture;
-        GLuint m_positionTexture;
+        GLuint m_albedoSpecularTexture;
+        GLuint m_normalDepthTexture;
         GLuint m_depthTexture;
     };
 }

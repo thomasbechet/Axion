@@ -156,11 +156,11 @@ public:
         #endif
         
 
-        /*ax::Entity& mesh = ax::Engine::world().entities().create();
+        ax::Entity& mesh = ax::Engine::world().entities().create();
         ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
         transform1.setScale(0.05f, 0.05f, 0.05f);
         transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");*/
+        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
 
         ax::Entity& cube = ax::Engine::world().entities().create();        
         ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();

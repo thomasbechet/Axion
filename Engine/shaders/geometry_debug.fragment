@@ -21,7 +21,10 @@ vec4 normal(in vec2 uv)
 }
 vec4 position(in vec2 uv)
 {
-	return vec4(texture(gbuffer_position, uv).xyz, 1.0f);
+	vec3 fragPos = vec3(gl_FragCoord.x, gl_FragCoord.y, 0.0f);
+	fragPos.z = texture(gbuffer_depth, UV).x * 2.0f - 1.0f;
+	return vec4(fragPos, 1.0f);
+	//return vec4(texture(gbuffer_position, uv).xyz, 1.0f);
 }
 vec4 depth(in vec2 uv)
 {

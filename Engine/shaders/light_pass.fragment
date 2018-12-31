@@ -2,10 +2,8 @@
 
 layout(location = 0) out vec3 out_color;
 
-layout(binding = 0) uniform sampler2D gbuffer_albedo;
-layout(binding = 1) uniform sampler2D gbuffer_normal;
-layout(binding = 2) uniform sampler2D gbuffer_position;
-layout(binding = 3) uniform sampler2D gbuffer_depth;
+layout(binding = 0) uniform sampler2D gbuffer_albedo_specular;
+layout(binding = 1) uniform sampler2D gbuffer_normal_depth;
 
 in vec2 UV;
 
@@ -32,8 +30,9 @@ in vec2 UV;
 
 void main()
 {
-	vec3 normal = texture2D(gbuffer_normal, UV).xyz;
-	vec4 colorDiffuse = vec4(texture2D(gbuffer_albedo, UV).xyz, 1.0f);
+	vec3 albedo = texture2D(gbuffer_albedo_specular, UV).rgb;
+	vec3 normal = texture2D(gbuffer_normal_depth, UV).rgb;
+	
 	vec3 fragPos = texture2D(gbuffer_position, UV).xyz;
 
 	vec3 lightPos = vec3(4.0f, 4.0f, 0.0f);
@@ -43,8 +42,8 @@ void main()
 	vec3 l = normalize(lightPos - fragPos);
 
 	float diffuse = max(dot(n, l), 0.0f);
-	vec4 ambient = colorDiffuse * ambientStrength;
+	vec4 ambient = albedo * ambientStrength;
 
-	vec4 color = (diffuse * colorDiffuse) + ambient;
+	vec4 color = (diffuse * albedo) + ambient;
 	out_color = color.xyz;
 }

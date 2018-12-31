@@ -1,10 +1,8 @@
 #version 420 core
 
-layout(location = 0) out vec3 out_albedo;
-layout(location = 1) out vec3 out_normal;
-layout(location = 2) out vec3 out_position;
+layout(location = 0) out vec3 out_albedo_specular;
+layout(location = 1) out vec3 out_normal_depth;
 
-in vec3 FragPos;
 in vec2 UV;
 in vec3 Normal;
 in vec3 Color;
@@ -38,30 +36,33 @@ in vec3 Color;
 
 void main()
 {
-	out_position = FragPos;
-	
+	//Albedo
 	if(bool(materials[material_index].flags & MATERIAL_USE_DIFFUSE_TEXTURE))
 	{
-		out_albedo = texture(diffuse_texture, vec2(UV.x, 1.0 - UV.y)).xyz;
+		out_albedo_specular.rgb = texture(diffuse_texture, vec2(UV.x, 1.0 - UV.y)).rgb;
 	}
 	else
 	{
-		out_albedo = materials[material_index].diffuse_color.xyz;
+		out_albedo_specular.rgb = materials[material_index].diffuse_color.rgb;
 	}
-	
+
+	//Normal	
 	if(bool(materials[material_index].flags & MATERIAL_USE_NORMAL_TEXTURE))
 	{
 		if(bool(materials[material_index].flags & MATERIAL_IS_BUMP_TEXTURE))
 		{
-			out_normal = vec3(texture(normal_texture, vec2(UV.x, 1.0 - UV.y)).r, 0.0f, 0.0f);
+			out_normal_depth.rgb = vec3(texture(normal_texture, vec2(UV.x, 1.0 - UV.y)).r, 0.0f, 0.0f);
 		}	
 		else
 		{
-			out_normal = (texture(normal_texture, vec2(UV.x, 1.0 - UV.y)).xyz * 2.0) - 1.0;
+			out_normal_depth.rgb = (texture(normal_texture, vec2(UV.x, 1.0 - UV.y)).rgb * 2.0) - 1.0;
 		}
 	}
 	else
 	{
-		out_normal = Normal;
+		out_normal_depth.rgb = Normal;
 	}
+
+	//Depth
+	out_normal_depth.a = gl_FragCoord.z;
 }
