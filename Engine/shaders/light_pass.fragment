@@ -28,12 +28,40 @@ in vec2 UV;
 	uniform vec3 pointlight_position;
 #endif
 
+#define USE_CAMERA_UNIFORM_BLOCK 1
+#if USE_CAMERA_UNIFORM_BLOCK
+
+	#define CAMERA_BINDING_POINT 3
+
+	layout(std140, binding = CAMERA_BINDING_POINT) uniform Camera
+	{
+		mat4 camera_view;
+		mat4 camera_projection;
+		mat4 inv_camera_view;
+		mat4 inv_camera_projection;
+	};
+
+#endif
+
+vec3 viewPosFromDepth(float depth)
+{
+    //float z = depth * 2.0 - 1.0;
+    float z = depth * 2.0 - 1.0;
+
+    vec4 clipSpacePosition = vec4(UV * 2.0 - 1.0, z, 1.0);
+    vec4 viewSpacePosition = inv_camera_projection * clipSpacePosition;
+
+    //Perspective division
+    viewSpacePosition /= viewSpacePosition.w;
+
+    return viewSpacePosition.xyz;
+}
+
 void main()
 {
 	vec3 albedo = texture2D(gbuffer_albedo_specular, UV).rgb;
 	vec3 normal = texture2D(gbuffer_normal_depth, UV).rgb;
-	
-	vec3 fragPos = texture2D(gbuffer_position, UV).xyz;
+	vec3 fragPos = viewPosFromDepth(texture2D(gbuffer_normal_depth, UV).a);
 
 	vec3 lightPos = vec3(4.0f, 4.0f, 0.0f);
 	float ambientStrength = 0.0f;
@@ -42,8 +70,10 @@ void main()
 	vec3 l = normalize(lightPos - fragPos);
 
 	float diffuse = max(dot(n, l), 0.0f);
-	vec4 ambient = albedo * ambientStrength;
+	vec3 ambient = albedo * ambientStrength;
 
-	vec4 color = (diffuse * albedo) + ambient;
-	out_color = color.xyz;
+	vec3 color = (diffuse * albedo) + ambient;
+	out_color = color;
+
+	out_color = fragPos;
 }

@@ -40,32 +40,55 @@ void RendererGL::initialize() noexcept
     //Initialize ubos
     m_content.materialUBO = std::make_unique<MaterialUBO>();
     m_content.pointLightUBO = std::make_unique<PointLightUBO>();
+    m_content.cameraUBO = std::make_unique<CameraUBO>();
 
-    //Loading shaders
-    Id handle = Engine::assets().shader.create("renderergl_shader_geometry",
+    //Load shaders
+    AssetReference<Shader> shader;
+    
+    //Geometry Shader
+    shader =  Engine::assets().shader.create("renderergl_shader_geometry",
         "../shaders/geometry_pass.vertex",
-        "../shaders/geometry_pass.fragment")->getHandle();
-    m_content.geometryShader = m_content.shaders.get(handle).programId;
+        "../shaders/geometry_pass.fragment");
+    if(shader->isLoaded())
+        m_content.geometryShader = m_content.shaders.get(shader->getHandle()).programId;
+    else
+        Engine::interrupt("Failed to load shader: renderergl_shader_geometry");
 
-    handle = Engine::assets().shader.create("renderergl_shader_light",
+    //Light Shader
+    shader = Engine::assets().shader.create("renderergl_shader_light",
         "../shaders/light_pass.vertex",
-        "../shaders/light_pass.fragment")->getHandle();
-    m_content.lightShader = m_content.shaders.get(handle).programId;
+        "../shaders/light_pass.fragment");
+    if(shader->isLoaded())
+        m_content.lightShader = m_content.shaders.get(shader->getHandle()).programId;
+    else
+        Engine::interrupt("Failed to load shader: renderergl_shader_light");
 
-    handle = Engine::assets().shader.create("renderergl_shader_render",
+    //Quad Shader
+    shader = Engine::assets().shader.create("renderergl_shader_render",
         "../shaders/quad_texture.vertex",
-        "../shaders/quad_texture.fragment")->getHandle();
-    m_content.renderShader = m_content.shaders.get(handle).programId;
+        "../shaders/quad_texture.fragment");
+    if(shader->isLoaded())
+        m_content.renderShader = m_content.shaders.get(shader->getHandle()).programId;
+    else
+        Engine::interrupt("Failed to load shader: renderergl_shader_render");
 
-    handle = Engine::assets().shader.create("renderergl_shader_wireframe",
+    //Wireframe Shader
+    shader = Engine::assets().shader.create("renderergl_shader_wireframe",
         "../shaders/wireframe.vertex",
-        "../shaders/wireframe.fragment")->getHandle();
-    m_content.wireframeShader = m_content.shaders.get(handle).programId;
+        "../shaders/wireframe.fragment");
+    if(shader->isLoaded())
+        m_content.wireframeShader = m_content.shaders.get(shader->getHandle()).programId;
+    else
+        Engine::interrupt("Failed to load shader: renderergl_shader_wireframe");
 
-    handle = Engine::assets().shader.create("renderergl_shader_geometry_debug",
+    //Geometry Debug Shader
+    shader = Engine::assets().shader.create("renderergl_shader_geometry_debug",
         "../shaders/geometry_debug.vertex",
-        "../shaders/geometry_debug.fragment")->getHandle();
-    m_content.debugShader = m_content.shaders.get(handle).programId;
+        "../shaders/geometry_debug.fragment");
+    if(shader->isLoaded())
+        m_content.debugShader = m_content.shaders.get(shader->getHandle()).programId;
+    else
+        Engine::interrupt("Failed to load shader: renderergl_shader_geometry_debug");
 }
 void RendererGL::terminate() noexcept
 {

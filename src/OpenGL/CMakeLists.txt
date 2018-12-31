@@ -26,10 +26,11 @@ ADD_LIBRARY(
     Renderer/StaticmeshGL.cpp
     Renderer/MaterialGL.cpp
     Renderer/TextureGL.cpp
-    Renderer/GBuffer.cpp
-    Renderer/RenderBuffer.cpp
-    Renderer/MaterialUBO.cpp
-    Renderer/Light/PointLightUBO.cpp
+    Renderer/FrameBuffer/GBuffer.cpp
+    Renderer/FrameBuffer/RenderBuffer.cpp
+    Renderer/UBO/MaterialUBO.cpp
+    Renderer/UBO/PointLightUBO.cpp
+    Renderer/UBO/CameraUBO.cpp
     Renderer/Light/PointLightGL.cpp
     Renderer/Light/DirectionalLightGL.cpp
     Renderer/RenderPass/RenderPass.cpp

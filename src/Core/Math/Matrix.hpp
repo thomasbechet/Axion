@@ -205,6 +205,86 @@ namespace ax
 				0, 0, 2 * far * near / nmf, 0
 			);
 		}
+
+		void inverse() noexcept
+		{
+			// Inversion by LU decomposition, alternate implementation
+			int i, j, k;
+
+			for (i = 1; i < 4; i++)
+			{
+				m[0][i] /= m[0][0];
+			}
+
+			for (i = 1; i < 4; i++)
+			{
+				for (j = i; j < 4; j++)
+				{
+					T sum = 0.0;
+					for (k = 0; k < i; k++)
+					{
+						sum += m[j][k] * m[k][i];
+					}
+					m[j][i] -= sum;
+				}
+				if (i == 4 - 1) continue;
+				for (j=i+1; j < 4; j++)
+				{
+					T sum = 0.0;
+					for (int k = 0; k < i; k++)
+						sum += m[i][k] * m[k][j];
+					m[i][j] = (m[i][j] - sum) / m[i][i];
+				}
+			}
+
+			//Invert L
+			for (i = 0; i < 4; i++)
+			{
+				for (int j = i; j < 4; j++)
+				{
+					T x = 1.0;
+					if (i != j)
+					{
+						x = 0.0;
+						for (int k = i; k < j; k++) 
+							x -= m[j][k] * m[k][i];
+					}
+					m[j][i] = x / m[j][j];
+				}
+			}
+
+			//Invert U
+			for (i = 0; i < 4; i++)
+			{
+				for (j = i; j < 4; j++)
+				{
+					if (i == j) continue;
+					T sum = 0.0;
+					for (int k = i; k < j; k++)
+						sum += m[k][j] * ((i == k) ? 1.0f : m[i][k]);
+					m[i][j] = -sum;
+				}
+			}
+
+			//Final Inversion
+			for ( i = 0; i < 4; i++ )
+			{
+				for ( int j = 0; j < 4; j++ )
+				{
+					T sum = 0.0;
+					for ( int k = ((i>j)?i:j); k < 4; k++ )  
+						sum += ((j == k) ? 1.0f : m[j][k]) * m[k][i];
+					m[j][i] = sum;
+				}
+			}
+		}
+		static Matrix4<T> inverse(const Matrix4<T>& matrix)
+		{
+			Matrix4<T> m = matrix;
+			m.inverse();
+
+			return m;
+		}
 		//////////////////////////
 		//UTILITY
 		//////////////////////////

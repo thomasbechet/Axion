@@ -12,9 +12,10 @@
 #include <OpenGL/Renderer/CameraGL.hpp>
 #include <OpenGL/Renderer/Light/PointLightGL.hpp>
 #include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
-#include <OpenGL/Renderer/GBuffer.hpp>
-#include <OpenGL/Renderer/MaterialUBO.hpp>
-#include <OpenGL/Renderer/Light/PointLightUBO.hpp>
+#include <OpenGL/Renderer/FrameBuffer/GBuffer.hpp>
+#include <OpenGL/Renderer/UBO/MaterialUBO.hpp>
+#include <OpenGL/Renderer/UBO/PointLightUBO.hpp>
+#include <OpenGL/Renderer/UBO/CameraUBO.hpp>
 #include <OpenGL/Renderer/RenderPass/DebugPass.hpp>
 #include <OpenGL/Renderer/RenderPass/DefaultPass.hpp>
 #include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
@@ -46,6 +47,7 @@ namespace ax
 
         std::unique_ptr<MaterialUBO> materialUBO;
         std::unique_ptr<PointLightUBO> pointLightUBO;
+        std::unique_ptr<CameraUBO> cameraUBO;
     };
 
     struct AXION_GL_API Viewport

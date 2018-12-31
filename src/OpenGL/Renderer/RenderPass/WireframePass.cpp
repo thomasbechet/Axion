@@ -48,8 +48,7 @@ void WireframePass::render(double alpha) noexcept
 
     Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far);
 
-    glUniformMatrix4fv(m_viewLocation, 1, GL_FALSE, viewMatrix.data());
-    glUniformMatrix4fv(m_projectionLocation, 1, GL_FALSE, projectionMatrix.data());
+    content.cameraUBO->update(viewMatrix, projectionMatrix);
 
     //Setup viewport
     glViewport(0, 0, viewport.resolution.x, viewport.resolution.y);
