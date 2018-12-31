@@ -131,8 +131,15 @@ public:
         cameraComponent0.setFarPlane(300.0f);
         cameraComponent0.bindDefaultViewport();
         ax::BasicSpectatorComponent& spectatorComponent0 = camera0.addComponent<ax::BasicSpectatorComponent>(camera0);
-        camera0.addComponent<ax::ModelComponent>(camera0).setModel("model_cube");
         cameraSystem.add(spectatorComponent0);
+
+        ax::Entity& sniper = ax::Engine::world().entities().create();
+        ax::TransformComponent& strans = sniper.addComponent<ax::TransformComponent>();
+        strans.rotate(ax::radians(-90.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
+        strans.setScale(0.3f, 0.3f, 0.3f);
+        strans.setTranslation(-0.3f, -0.2f, 0.2f);
+        strans.attachTo(camera0);
+        sniper.addComponent<ax::ModelComponent>(sniper).setModel("model_sniper");
 
         //#define USE_CAMERA
         #if defined USE_CAMERA
@@ -141,8 +148,9 @@ public:
             ax::CameraComponent& cameraComponent1 = camera1.addComponent<ax::CameraComponent>(camera1);
             cameraComponent1.setFarPlane(300.0f);
             ax::BasicSpectatorComponent& spectatorComponent1 = camera1.addComponent<ax::BasicSpectatorComponent>(camera1);
-            camera1.addComponent<ax::ModelComponent>(camera1).setModel("model_cube");
             cameraSystem.add(spectatorComponent1);
+            camera1.addComponent<ax::ModelComponent>(camera0).setModel("model_cube");
+            
 
             ax::Id viewport = ax::Engine::renderer().createViewport(ax::Vector2f(0.5f, 0.0f), ax::Vector2f(0.5f, 1.0f));
             cameraComponent1.bindViewport(viewport);
@@ -164,9 +172,9 @@ public:
 
         ax::Entity& cube = ax::Engine::world().entities().create();        
         ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
-        transformCube.translate(ax::Vector3f(0, 4, 0));
+        transformCube.translate(ax::Vector3f(0, 1, 0));
         ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
-        cubeModel.setModel("model_cube");
+        cubeModel.setModel("model_bunny");
 
         //Light
         ax::Entity& light = ax::Engine::world().entities().create();

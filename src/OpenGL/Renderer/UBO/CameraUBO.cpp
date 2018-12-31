@@ -25,7 +25,7 @@ void CameraUBO::update(const Matrix4f& view, const Matrix4f& projection) noexcep
         GL_UNIFORM_BUFFER,
         0,
         sizeof(CameraUBOData),
-        GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT
+        GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT
     ));
 
     p->viewMatrix = view;

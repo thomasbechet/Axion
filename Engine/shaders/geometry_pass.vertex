@@ -34,10 +34,11 @@ void main()
 	UV = in_uv;
 	Color = in_color;
 
-	vec3 N = normalise(vec3(transform * vec4(in_normal, 0.0f)));
-	vec3 T = normalise(vec3(transform * vec4(in_tangent, 0.0f)));
+	/*vec3 N = normalize(vec3(transform * vec4(in_normal, 0.0f)));
+	vec3 T = normalize(vec3(transform * vec4(in_tangent, 0.0f)));
 	vec3 B = cross(N, T);
-	mat3 TBN = mat3(T, B, N);
+	mat3 TBN = mat3(T, B, N);*/
 
-	Normal = vec3(camera_view * transform * vec4(in_normal, 1.0f));
+	Normal = normalize(mat3(transpose(inverse(transform))) * in_normal);
+	Normal = mat3(camera_view) * Normal;
 }

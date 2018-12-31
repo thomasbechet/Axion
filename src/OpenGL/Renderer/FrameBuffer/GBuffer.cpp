@@ -19,21 +19,25 @@ GBuffer::GBuffer(Vector2u dimensions)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_albedoSpecularTexture, 0);
 
-    //Normal Depth
-    glGenTextures(1, &m_normalDepthTexture);
-    glBindTexture(GL_TEXTURE_2D, m_normalDepthTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, dimensions.x, dimensions.y, 0, GL_RGBA, GL_FLOAT, nullptr);
+    //Normal
+    glGenTextures(1, &m_normalTexture);
+    glBindTexture(GL_TEXTURE_2D, m_normalTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, dimensions.x, dimensions.y, 0, GL_RGB, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_normalDepthTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_normalTexture, 0);
 
-    //Depth RenderBuffer
-    glGenRenderbuffers(1, &m_depthRenderBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, dimensions.x, dimensions.y);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBuffer);
+    //Depth Stencil
+    glGenTextures(1, &m_depthStencilTexture);
+    glBindTexture(GL_TEXTURE_2D, m_depthStencilTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, dimensions.x, dimensions.y, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_depthStencilTexture, 0);
 
     GLenum DrawBuffers[] = {
         GL_COLOR_ATTACHMENT0,
@@ -53,8 +57,8 @@ GBuffer::~GBuffer()
     glDeleteFramebuffers(1, &m_fbo);
 
     glDeleteTextures(1, &m_albedoSpecularTexture);
-    glDeleteTextures(1, &m_normalDepthTexture);
-    glDeleteRenderbuffers(1, &m_depthRenderBuffer);
+    glDeleteTextures(1, &m_normalTexture);
+    glDeleteTextures(1, &m_depthStencilTexture);
 }
 
 void GBuffer::bindForWriting() noexcept
@@ -72,6 +76,8 @@ void GBuffer::bindForReading() noexcept
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_albedoSpecularTexture);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, m_normalDepthTexture);
+    glBindTexture(GL_TEXTURE_2D, m_normalTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, m_depthStencilTexture);
 }
 
