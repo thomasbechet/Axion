@@ -119,6 +119,12 @@ public:
     void onStart() override
     {
         ax::Engine::assets().package.create("mypackage", "../packages/package.xml");
+        ax::MaterialParameters materialParameters;
+        materialParameters.diffuseTexture = "texture_image";
+        materialParameters.normalTexture = "texture_cube_normal";
+        ax::AssetReference<ax::Material> m = ax::Engine::assets().material.create("mymaterial", materialParameters);
+
+
         ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
@@ -133,13 +139,17 @@ public:
         ax::BasicSpectatorComponent& spectatorComponent0 = camera0.addComponent<ax::BasicSpectatorComponent>(camera0);
         cameraSystem.add(spectatorComponent0);
 
-        ax::Entity& sniper = ax::Engine::world().entities().create();
-        ax::TransformComponent& strans = sniper.addComponent<ax::TransformComponent>();
-        strans.rotate(ax::radians(-90.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
-        strans.setScale(0.3f, 0.3f, 0.3f);
-        strans.setTranslation(-0.3f, -0.2f, 0.2f);
-        strans.attachTo(camera0);
-        sniper.addComponent<ax::ModelComponent>(sniper).setModel("model_sniper");
+        //#define USE_SNIPER
+        #if defined USE_SNIPER
+            ax::Entity& sniper = ax::Engine::world().entities().create();
+            ax::TransformComponent& strans = sniper.addComponent<ax::TransformComponent>();
+            strans.rotate(ax::radians(-90.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
+            strans.setScale(0.3f, 0.3f, 0.3f);
+            strans.setTranslation(-0.3f, -0.2f, 0.2f);
+            strans.attachTo(camera0);
+            sniper.addComponent<ax::ModelComponent>(sniper).setModel("model_sniper");
+        #endif
+        
 
         //#define USE_CAMERA
         #if defined USE_CAMERA
@@ -149,8 +159,6 @@ public:
             cameraComponent1.setFarPlane(300.0f);
             ax::BasicSpectatorComponent& spectatorComponent1 = camera1.addComponent<ax::BasicSpectatorComponent>(camera1);
             cameraSystem.add(spectatorComponent1);
-            camera1.addComponent<ax::ModelComponent>(camera0).setModel("model_cube");
-            
 
             ax::Id viewport = ax::Engine::renderer().createViewport(ax::Vector2f(0.5f, 0.0f), ax::Vector2f(0.5f, 1.0f));
             cameraComponent1.bindViewport(viewport);
@@ -158,30 +166,34 @@ public:
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
 
-        #define LOW_RESOLUTION
+        //#define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
             ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
         #endif
         
-
-        ax::Entity& mesh = ax::Engine::world().entities().create();
-        ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
-        transform1.setScale(0.05f, 0.05f, 0.05f);
-        transform1.setTranslation(0.0f, 0.0f, 0.0f);
-        mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+        //#define USE_SPONZA
+        #if defined USE_SPONZA
+            ax::Entity& mesh = ax::Engine::world().entities().create();
+            ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
+            transform1.setScale(0.05f, 0.05f, 0.05f);
+            transform1.setTranslation(0.0f, 0.0f, 0.0f);
+            mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+        #endif
+        
 
         ax::Entity& cube = ax::Engine::world().entities().create();        
         ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
-        transformCube.translate(ax::Vector3f(0, 1, 0));
+        transformCube.translate(ax::Vector3f(3, 1, 0));
         ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
-        cubeModel.setModel("model_bunny");
+        cubeModel.setModel("model_cube");
+        cubeModel.setMaterial("mymaterial");
 
         //Light
         ax::Entity& light = ax::Engine::world().entities().create();
         light.addComponent<ax::TransformComponent>();
         light.addComponent<ax::PointLightComponent>(light);
 
-        //ax::Engine::systems().add<CustomSystem>().setTransform(&transform1);
+        ax::Engine::systems().add<CustomSystem>().setTransform(&transformCube);
     }
     void onStop() override
     {

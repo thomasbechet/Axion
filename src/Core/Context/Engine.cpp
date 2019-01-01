@@ -126,7 +126,7 @@ void Engine::initialize() noexcept
 
     //Create default material
     MaterialParameters defaultMaterial;
-    defaultMaterial.diffuseColor = Color(1.0f, 1.0f, 1.0f);
+    defaultMaterial.diffuseColor = Color(1.0f, 0.0f, 0.0f);
     Engine::assets().material.create("default_material", defaultMaterial);
 }
 void Engine::terminate() noexcept

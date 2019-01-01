@@ -38,6 +38,10 @@ void MaterialUBO::unload(MaterialGL& material) noexcept
 }
 void MaterialUBO::update(const MaterialGL& material) noexcept
 {
+    std::cout << "update ubo" << std::endl;
+    std::cout << "use diff: " << material.useDiffuseTexture << std::endl;
+    std::cout << "diff id: " << material.diffuseTexture << std::endl;
+
     glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
 
     MaterialUBOData* p = static_cast<MaterialUBOData*>(glMapBufferRange(

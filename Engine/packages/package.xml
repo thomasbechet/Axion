@@ -1,14 +1,19 @@
 <package name="mypackage" directory="../">
 	<texture name="texture_image" 
 			 src="textures/image.png"/>
-	<texture name="texture_texture" 
-			 src="textures/texture.jpg"/>
+	<texture name="texture_cube_normal"
+			 src="textures/wall_normal2.bmp"/>
+	<model name="model_bunny"
+		   src="models/bunny/bunny.obj"/>
+	<model name="model_monkey"
+		   src="models/monkey/Monkey.obj"/>
 	<model name="model_cube"
-		   src="models/cube/untitled.obj"/>
+		   src="models/cube/cube.obj"/>
+	
+	<!--texture name="texture_texture"
+		     src="textures/texture.jpg"/>
 	<model name="model_sponza"
 		   src="models/sponza/sponza.obj"/>
 	<model name="model_sniper"
-		   src="models/sniper/Sniper.obj"/>
-	<model name="model_bunny"
-		   src="models/bunny/bunny.obj"/>
+		   src="models/sniper/Sniper.obj"/-->
 </package>

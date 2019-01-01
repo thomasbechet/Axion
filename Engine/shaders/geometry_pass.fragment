@@ -6,6 +6,7 @@ layout(location = 1) out vec3 out_normal;
 in vec2 UV;
 in vec3 Normal;
 in vec3 Color;
+in mat3 TBN;
 
 #define USE_MATERIAL_UNIFORM_BLOCK 1 
 #if USE_MATERIAL_UNIFORM_BLOCK
@@ -56,15 +57,12 @@ void main()
 		}	
 		else
 		{
-			normal = (texture(normal_texture, vec2(UV.x, 1.0 - UV.y)).rgb * 2.0) - 1.0;
+			normal = TBN * vec3((texture(normal_texture, vec2(UV.x, 1.0 - UV.y)).rgb * 2.0) - 1.0);
 		}
 	}
 	else
 	{
 		normal = Normal;
 	}
-
-	normal = Normal;
-
 	out_normal = normal;
 }

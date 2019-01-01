@@ -19,7 +19,7 @@ namespace ax
         Color diffuseColor = Color(1.0f, 1.0f, 1.0f);
         
         std::string normalTexture = "";
-        bool isBumpTexture;
+        bool isBumpTexture = false;
 
         std::string specularTexture = "";
         float specularUniform = 0.5f;
