@@ -63,23 +63,16 @@ void main()
 	vec3 normal = texture2D(gbuffer_normal, UV).rgb;
 	vec3 fragPos = viewPosFromDepth(texture2D(gbuffer_depth_stencil, UV).r);
 
-	vec3 lightPos = vec3(0.0f, 5.0f, 0.0f);
-	lightPos = vec3(camera_view * vec4(lightPos, 1.0f));
+	vec3 lightPos = vec3(0.0f, 0.0f, -2.0f);
+	//lightPos = vec3(camera_view * vec4(lightPos, 1.0f));
 	float ambientStrength = 0.0f;
 
 	vec3 n = normalize(normal);
 	vec3 l = normalize(lightPos - fragPos);
 
-	if(length(lightPos - fragPos) < 30.0f)
-	{
-		float diffuse = max(dot(n, l), 0.0f);
-		vec3 ambient = albedo * ambientStrength;
+	float diffuse = max(dot(n, l), 0.0f);
+	vec3 ambient = albedo * ambientStrength;
 
-		vec3 color = (diffuse * albedo) + ambient;
-		out_color = color;
-	}
-	else
-	{
-		out_color = vec3(0, 0, 0);
-	}
+	vec3 color = (diffuse * albedo) + ambient;
+	out_color = color;
 }

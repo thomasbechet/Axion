@@ -2,8 +2,8 @@
 
 #include <OpenGL/Renderer/RendererGL.hpp>
 #include <Core/Window/Window.hpp>
-#include <Core/Assets/AssetManager.hpp>
-#include <Core/Assets/Shader.hpp>
+#include <Core/Asset/AssetManager.hpp>
+#include <Core/Asset/Shader.hpp>
 
 using namespace ax;
 

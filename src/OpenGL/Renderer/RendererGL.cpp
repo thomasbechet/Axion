@@ -2,7 +2,7 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
-#include <Core/Assets/AssetManager.hpp>
+#include <Core/Asset/AssetManager.hpp>
 
 #include <GL/glew.h>
 

@@ -22,7 +22,7 @@ namespace ax
     private:
         struct PointLightUBOData
         {
-            Color color;
+            Color3 color;
             float radius;
             float intensity;
         };

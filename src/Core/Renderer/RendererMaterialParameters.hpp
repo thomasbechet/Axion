@@ -12,7 +12,7 @@ namespace ax
     struct AXION_CORE_API RendererMaterialParameters
     {
         Id diffuseTexture;
-        Color diffuseColor;
+        Color3 diffuseColor;
         bool useDiffuseTexture = false;
 
         Id normalTexture;

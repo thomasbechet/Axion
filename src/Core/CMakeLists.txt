@@ -18,34 +18,35 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
-    Assets/AssetManager.cpp
-    Assets/Material.cpp
-    Assets/MaterialManager.cpp
-    Assets/Mesh.cpp
-    Assets/MeshManager.cpp
-    Assets/Model.cpp
-    Assets/ModelManager.cpp
-    Assets/Package.cpp
-    Assets/PackageManager.cpp
-    Assets/Shader.cpp
-    Assets/ShaderManager.cpp
-    Assets/Texture.cpp
-    Assets/TextureManager.cpp
+    Asset/AssetManager.cpp
+    Asset/Material.cpp
+    Asset/MaterialManager.cpp
+    Asset/Mesh.cpp
+    Asset/MeshManager.cpp
+    Asset/Model.cpp
+    Asset/ModelManager.cpp
+    Asset/Package.cpp
+    Asset/PackageManager.cpp
+    Asset/Shader.cpp
+    Asset/ShaderManager.cpp
+    Asset/Texture.cpp
+    Asset/TextureManager.cpp
     Context/EngineContext.cpp
     Context/Engine.cpp
-    Prefabs/System/BasicWindowSystem.cpp
-    Prefabs/System/BasicSpectatorSystem.cpp
-    Prefabs/System/RenderModeSystem.cpp
-    Prefabs/Component/TransformComponent.cpp
-    Prefabs/Component/CameraComponent.cpp
-    Prefabs/Component/BasicSpectatorComponent.cpp
-    Prefabs/Component/ModelComponent.cpp
-    Prefabs/Component/PointLightComponent.cpp
+    Prefab/System/BasicWindowSystem.cpp
+    Prefab/System/BasicSpectatorSystem.cpp
+    Prefab/System/RenderModeSystem.cpp
+    Prefab/Component/TransformComponent.cpp
+    Prefab/Component/CameraComponent.cpp
+    Prefab/Component/BasicSpectatorComponent.cpp
+    Prefab/Component/ModelComponent.cpp
+    Prefab/Component/PointLightComponent.cpp
+    Prefab/Component/CustomShapeComponent.cpp
+    Prefab/Component/UVSphereComponent.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp
     Utility/TimeRecorder.cpp
-    Utility/Color.cpp
     Utility/Memory.cpp
     Utility/ConfigParser.cpp
     Utility/LibraryLoader.cpp
@@ -58,6 +59,10 @@ ADD_LIBRARY(
     Logger/ConsoleLogger.cpp
     Math/Transform.cpp
     Math/Math.cpp
+    Math/Geometry/Shape.cpp
+    Math/Geometry/Sphere.cpp
+    Math/Geometry/UVSphere.cpp
+    Math/Geometry/IcoSphere.cpp
     System/System.cpp
     System/SystemManager.cpp
     World/Entity/EntityManager.cpp

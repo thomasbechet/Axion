@@ -11,7 +11,7 @@
 #include <Core/Renderer/NullRenderer.hpp>
 #include <Core/Window/NullWindow.hpp>
 #include <Core/Input/NullInput.hpp>
-#include <Core/Assets/AssetManager.hpp>
+#include <Core/Asset/AssetManager.hpp>
 
 using namespace ax;
 
@@ -126,7 +126,7 @@ void Engine::initialize() noexcept
 
     //Create default material
     MaterialParameters defaultMaterial;
-    defaultMaterial.diffuseColor = Color(1.0f, 0.0f, 0.0f);
+    defaultMaterial.diffuseColor = Color3(1.0f, 0.0f, 0.0f);
     Engine::assets().material.create("default_material", defaultMaterial);
 }
 void Engine::terminate() noexcept

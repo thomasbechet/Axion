@@ -27,6 +27,7 @@ namespace ax
 
         //Mesh
         Id createMesh(const std::vector<Vertex>& vertices) override {return 0;}
+        void updateMesh(Id id, const std::vector<Vertex>& vertices) override {}
         void destroyMesh(Id id) override {}
         //Texture
         Id createTexture(

@@ -5,9 +5,9 @@
 ///////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
-#include <Core/Assets/Mesh.hpp>
-#include <Core/Assets/Material.hpp>
-#include <Core/Assets/Texture.hpp>
+#include <Core/Asset/Mesh.hpp>
+#include <Core/Asset/Material.hpp>
+#include <Core/Asset/Texture.hpp>
 #include <Core/Renderer/RenderMode.hpp>
 #include <Core/Renderer/RendererCameraParameters.hpp>
 #include <Core/Renderer/RendererMaterialParameters.hpp>
@@ -42,6 +42,7 @@ namespace ax
 
         //Mesh
         virtual Id createMesh(const std::vector<Vertex>& vertices) = 0;
+        virtual void updateMesh(Id id, const std::vector<Vertex>& vertices) = 0;
         virtual void destroyMesh(Id id) = 0;
         //Texture
         virtual Id createTexture(

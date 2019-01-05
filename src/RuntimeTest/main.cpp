@@ -18,18 +18,19 @@
 #include <Core/System/SystemManager.hpp>
 #include <Core/Input/Input.hpp>
 #include <Core/Window/Window.hpp>
-#include <Core/Prefabs/System/BasicWindowSystem.hpp>
-#include <Core/Prefabs/System/BasicSpectatorSystem.hpp>
-#include <Core/Prefabs/System/RenderModeSystem.hpp>
-#include <Core/Prefabs/Component/CameraComponent.hpp>
-#include <Core/Prefabs/Component/TransformComponent.hpp>
-#include <Core/Prefabs/Component/ModelComponent.hpp>
-#include <Core/Prefabs/Component/PointLightComponent.hpp>
+#include <Core/Prefab/System/BasicWindowSystem.hpp>
+#include <Core/Prefab/System/BasicSpectatorSystem.hpp>
+#include <Core/Prefab/System/RenderModeSystem.hpp>
+#include <Core/Prefab/Component/CameraComponent.hpp>
+#include <Core/Prefab/Component/TransformComponent.hpp>
+#include <Core/Prefab/Component/ModelComponent.hpp>
+#include <Core/Prefab/Component/PointLightComponent.hpp>
+#include <Core/Prefab/Component/UVSphereComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/IndexVector.hpp>
-#include <Core/Assets/AssetManager.hpp>
-#include <Core/Assets/Texture.hpp>
-#include <Core/Assets/AssetHolder.hpp>
+#include <Core/Asset/AssetManager.hpp>
+#include <Core/Asset/Texture.hpp>
+#include <Core/Asset/AssetHolder.hpp>
 #include <RuntimeTest/CustomSystem.hpp>
 
 struct Position : public ax::Component
@@ -119,10 +120,10 @@ public:
     void onStart() override
     {
         ax::Engine::assets().package.create("mypackage", "../packages/package.xml");
-        ax::MaterialParameters materialParameters;
+        /*ax::MaterialParameters materialParameters;
         materialParameters.diffuseTexture = "texture_image";
         materialParameters.normalTexture = "texture_cube_normal";
-        ax::AssetReference<ax::Material> m = ax::Engine::assets().material.create("mymaterial", materialParameters);
+        ax::AssetReference<ax::Material> m = ax::Engine::assets().material.create("mymaterial", materialParameters);*/
 
 
         ax::Engine::assets().log();
@@ -166,7 +167,7 @@ public:
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
 
-        //#define LOW_RESOLUTION
+        #define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
             ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
         #endif
@@ -183,17 +184,18 @@ public:
 
         ax::Entity& cube = ax::Engine::world().entities().create();        
         ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
-        transformCube.translate(ax::Vector3f(3, 1, 0));
-        ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
-        cubeModel.setModel("model_cube");
-        cubeModel.setMaterial("mymaterial");
+        transformCube.translate(ax::Vector3f(0, 0, 0));
+        //ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
+        //cubeModel.setModel("model_cube");
+        //cubeModel.setMaterial("mymaterial");
+        ax::UVSphereComponent& sphere = cube.addComponent<ax::UVSphereComponent>(cube);
 
         //Light
         ax::Entity& light = ax::Engine::world().entities().create();
         light.addComponent<ax::TransformComponent>();
         light.addComponent<ax::PointLightComponent>(light);
 
-        ax::Engine::systems().add<CustomSystem>().setTransform(&transformCube);
+        //ax::Engine::systems().add<CustomSystem>().setTransform(&transformCube);
     }
     void onStop() override
     {

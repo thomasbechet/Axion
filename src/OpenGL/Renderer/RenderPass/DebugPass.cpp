@@ -3,7 +3,7 @@
 #include <OpenGL/Renderer/RendererGL.hpp>
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
-#include <Core/Assets/AssetManager.hpp>
+#include <Core/Asset/AssetManager.hpp>
 
 using namespace ax;
 

@@ -27,13 +27,23 @@ Id RendererGL::createMesh(const std::vector<Vertex>& vertices)
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(3, 3, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(Vector3f) + sizeof(Vector2f) + sizeof(Vector3f)));
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(4, 3, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(Vector3f) + sizeof(Vector2f) + sizeof(Vector3f) + sizeof(Vector3f)));
+    glVertexAttribPointer(4, 3, GL_FLOAT, false, sizeof(Vertex), (void*)(sizeof(Vector3f) + sizeof(Vector2f) + sizeof(Vector3f) + sizeof(Color3)));
     glEnableVertexAttribArray(4);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
     return id;
+}
+void RendererGL::updateMesh(Id id, const std::vector<Vertex>& vertices)
+{
+    MeshGL& mesh = m_content.meshes.get(id);
+
+    mesh.size = vertices.size();
+
+    glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 void RendererGL::destroyMesh(Id id)
 {

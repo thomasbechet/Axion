@@ -52,7 +52,7 @@ namespace ax
 
     struct AXION_GL_API Viewport
     {
-        Color clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
+        Color3 clearColor = Color3(0.0f, 0.0f, 0.0f);
 
         Vector2u resolution = Vector2u(0, 0);
         Vector2f position = Vector2f(0.0f, 0.0f);
@@ -79,6 +79,7 @@ namespace ax
 
         //Mesh
         Id createMesh(const std::vector<Vertex>& vertices) override;
+        void updateMesh(Id id, const std::vector<Vertex>& vertices) override;
         void destroyMesh(Id id) override;
         //Texture
         Id createTexture(

@@ -12,7 +12,7 @@ namespace ax
     {
         Transform* transform = nullptr;
 
-        Color color;
+        Color3 color;
         float radius;
         float intensity;
 

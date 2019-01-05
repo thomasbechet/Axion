@@ -28,7 +28,7 @@ namespace ax
         {
             GLuint flags;
             float pad[3];
-            Color diffuseColor;
+            Color3 diffuseColor;
             //float specularUniform;
         };
 
