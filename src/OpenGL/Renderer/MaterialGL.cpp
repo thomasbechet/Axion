@@ -26,6 +26,7 @@ void RendererGL::updateMaterial(Id id, const RendererMaterialParameters& setting
     MaterialGL& material = m_content.materials.get(id).first;
 
     material.useDiffuseTexture = settings.useDiffuseTexture;
+    material.useDiffuseColor = settings.useDiffuseColor;
     material.diffuseColor = settings.diffuseColor;
     material.diffuseTexture = settings.diffuseTexture;
 

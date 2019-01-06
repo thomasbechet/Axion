@@ -20,8 +20,6 @@ namespace ax
         struct CameraUBOData
         {
             Matrix4f viewMatrix;
-            Matrix4f projectionMatrix;
-            Matrix4f invViewMatrix;
             Matrix4f invProjectionMatrix;
         };
 
@@ -29,7 +27,7 @@ namespace ax
         CameraUBO();
         ~CameraUBO();
 
-        void update(const Matrix4f& view, const Matrix4f& projection) noexcept;
+        void update(const Matrix4f& view, const Matrix4f& projection) const noexcept;
 
     private:
         GLuint m_ubo;

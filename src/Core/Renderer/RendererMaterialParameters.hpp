@@ -14,6 +14,7 @@ namespace ax
         Id diffuseTexture;
         Color3 diffuseColor;
         bool useDiffuseTexture = false;
+        bool useDiffuseColor = false;
 
         Id normalTexture;
         bool useNormalTexture = false;

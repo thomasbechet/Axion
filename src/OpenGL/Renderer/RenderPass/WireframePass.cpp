@@ -11,9 +11,7 @@ WireframePass::WireframePass(RenderContent& content, Viewport& viewport) : Rende
 
 void WireframePass::initialize() noexcept
 {
-    m_viewLocation = glGetUniformLocation(content.wireframeShader, "camera_view");
-    m_projectionLocation = glGetUniformLocation(content.wireframeShader, "camera_projection");
-    m_transformLocation = glGetUniformLocation(content.wireframeShader, "transform");
+    m_mvpLocation = glGetUniformLocation(content.wireframeShader, "mvp");
 
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
 }
@@ -28,11 +26,8 @@ void WireframePass::updateResolution() noexcept
 void WireframePass::render(double alpha) noexcept
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
     glUseProgram(content.wireframeShader);
-
     m_renderBuffer->bindForWriting();
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     CameraGL& camera = content.cameras.get(viewport.camera);
@@ -50,6 +45,8 @@ void WireframePass::render(double alpha) noexcept
 
     content.cameraUBO->update(viewMatrix, projectionMatrix);
 
+    Matrix4f vp = projectionMatrix * viewMatrix;
+
     //Setup viewport
     glViewport(0, 0, viewport.resolution.x, viewport.resolution.y);
 
@@ -65,7 +62,8 @@ void WireframePass::render(double alpha) noexcept
             {
                 MeshGL& mesh = content.meshes.get(staticmesh.mesh);
 
-                glUniformMatrix4fv(m_transformLocation, 1, GL_TRUE, staticmesh.transform->getWorldMatrix().data());
+                Matrix4f mvp = vp * staticmesh.transform->getWorldMatrix();
+                glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);

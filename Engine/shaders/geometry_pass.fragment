@@ -14,14 +14,15 @@ in mat3 TBN;
 	#define MATERIAL_MAX_NUMBER 50
 	#define MATERIAL_BINDING_POINT 1u
 	#define MATERIAL_USE_DIFFUSE_TEXTURE 1u
-	#define MATERIAL_USE_NORMAL_TEXTURE 2u
-	#define MATERIAL_IS_BUMP_TEXTURE 4u
-	#define MATERIAL_USE_SPECULAR_TEXTURE 8u
+	#define MATERIAL_USE_DIFFUSE_COLOR 2u
+	#define MATERIAL_USE_NORMAL_TEXTURE 4u
+	#define MATERIAL_IS_BUMP_TEXTURE 8u
+	#define MATERIAL_USE_SPECULAR_TEXTURE 16u
 
 	struct Material
 	{
 		uint flags;
-		vec4 diffuse_color;
+		vec3 diffuse_color;
 	};
 	layout(std140, binding = MATERIAL_BINDING_POINT) uniform Materials
 	{
@@ -42,9 +43,13 @@ void main()
 	{
 		out_albedo_specular.rgb = texture(diffuse_texture, vec2(UV.x, 1.0 - UV.y)).rgb;
 	}
-	else
+	else if(bool(materials[material_index].flags & MATERIAL_USE_DIFFUSE_COLOR))
 	{
 		out_albedo_specular.rgb = materials[material_index].diffuse_color.rgb;
+	}
+	else
+	{
+		out_albedo_specular.rgb = Color;
 	}
 
 	//Normal

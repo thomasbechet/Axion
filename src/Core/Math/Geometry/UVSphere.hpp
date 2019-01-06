@@ -18,7 +18,13 @@ namespace ax
         void setRadius(float radius) noexcept;
 
     public:
-        static std::vector<Vertex> vertices(float radius, unsigned UN, unsigned UV, bool smooth) noexcept; 
+        static std::vector<Vertex> vertices(
+            float radius = 1.0f, 
+            unsigned UN = 30, 
+            unsigned UV = 30, 
+            bool smooth = true, 
+            float coordinateFactor = 1.0f
+        ) noexcept; 
 
     private:
         unsigned m_UN = 10;

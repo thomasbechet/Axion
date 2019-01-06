@@ -42,7 +42,7 @@ ADD_LIBRARY(
     Prefab/Component/ModelComponent.cpp
     Prefab/Component/PointLightComponent.cpp
     Prefab/Component/CustomShapeComponent.cpp
-    Prefab/Component/UVSphereComponent.cpp
+    Prefab/Component/Shape/UVSphereComponent.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp

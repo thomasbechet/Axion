@@ -6,7 +6,7 @@ layout(location = 2) in vec3 in_normal;
 layout(location = 3) in vec3 in_tangent;
 layout(location = 4) in vec3 in_color;
 
-uniform mat4 transform;
+uniform mat4 mvp;
 
 #define USE_CAMERA_UNIFORM_BLOCK 1
 #if USE_CAMERA_UNIFORM_BLOCK
@@ -16,8 +16,6 @@ uniform mat4 transform;
 	layout(std140, binding = CAMERA_BINDING_POINT) uniform Camera
 	{
 		mat4 camera_view;
-		mat4 camera_projection;
-		mat4 inv_camera_view;
 		mat4 inv_camera_projection;
 	};
 
@@ -25,5 +23,5 @@ uniform mat4 transform;
 
 void main()
 {
-	gl_Position = camera_projection * camera_view * transform * vec4(in_vertex, 1.0f);
+	gl_Position = mvp * vec4(in_vertex, 1.0f);
 }

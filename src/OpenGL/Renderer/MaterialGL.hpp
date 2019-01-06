@@ -12,6 +12,7 @@ namespace ax
     struct AXION_GL_API MaterialGL
     {
         bool useDiffuseTexture;
+        bool useDiffuseColor;
         Color3 diffuseColor;
         Id diffuseTexture;
 

@@ -25,7 +25,7 @@
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Prefab/Component/ModelComponent.hpp>
 #include <Core/Prefab/Component/PointLightComponent.hpp>
-#include <Core/Prefab/Component/UVSphereComponent.hpp>
+#include <Core/Prefab/Component/Shape/UVSphereComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/AssetManager.hpp>
@@ -120,10 +120,10 @@ public:
     void onStart() override
     {
         ax::Engine::assets().package.create("mypackage", "../packages/package.xml");
-        /*ax::MaterialParameters materialParameters;
-        materialParameters.diffuseTexture = "texture_image";
-        materialParameters.normalTexture = "texture_cube_normal";
-        ax::AssetReference<ax::Material> m = ax::Engine::assets().material.create("mymaterial", materialParameters);*/
+        ax::MaterialParameters materialParameters;
+        materialParameters.diffuseTexture = "texture_brick_diffuse";
+        materialParameters.normalTexture = "texture_brick_normal";
+        ax::AssetReference<ax::Material> m = ax::Engine::assets().material.create("mymaterial", materialParameters);
 
 
         ax::Engine::assets().log();
@@ -167,12 +167,12 @@ public:
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
 
-        #define LOW_RESOLUTION
+        //#define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
             ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
         #endif
         
-        //#define USE_SPONZA
+        #define USE_SPONZA
         #if defined USE_SPONZA
             ax::Entity& mesh = ax::Engine::world().entities().create();
             ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
@@ -184,18 +184,24 @@ public:
 
         ax::Entity& cube = ax::Engine::world().entities().create();        
         ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
-        transformCube.translate(ax::Vector3f(0, 0, 0));
+        transformCube.translate(ax::Vector3f(0, 5, 0));
         //ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
         //cubeModel.setModel("model_cube");
         //cubeModel.setMaterial("mymaterial");
         ax::UVSphereComponent& sphere = cube.addComponent<ax::UVSphereComponent>(cube);
+        sphere.setMaterial("mymaterial");
+        sphere.setRadius(10.0f);
+        sphere.setCoordinateFactor(10.0f);
+        sphere.setSliceCount(100);
+        sphere.setStackCount(100);
+        sphere.generate();
 
         //Light
         ax::Entity& light = ax::Engine::world().entities().create();
         light.addComponent<ax::TransformComponent>();
         light.addComponent<ax::PointLightComponent>(light);
 
-        //ax::Engine::systems().add<CustomSystem>().setTransform(&transformCube);
+        ax::Engine::systems().add<CustomSystem>().setTransform(&transformCube);
     }
     void onStop() override
     {

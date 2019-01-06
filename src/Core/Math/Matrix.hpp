@@ -23,23 +23,23 @@ namespace ax
 					T x4, T y4, T z4, T w4)
 		{
 			m[0][0] = x1;
-			m[0][1] = y1;
-			m[0][2] = z1;
-			m[0][3] = w1;
+			m[1][0] = y1;
+			m[2][0] = z1;
+			m[3][0] = w1;
 			
-			m[1][0] = x2;
+			m[0][1] = x2;
 			m[1][1] = y2;
-			m[1][2] = z2;
-			m[1][3] = w2;
+			m[2][1] = z2;
+			m[3][1] = w2;
 			
-			m[2][0] = x3;
-			m[2][1] = y3;
+			m[0][2] = x3;
+			m[1][2] = y3;
 			m[2][2] = z3;
-			m[2][3] = w3;
+			m[3][2] = w3;
 			
-			m[3][0] = x4;
-			m[3][1] = y4;
-			m[3][2] = z4;
+			m[0][3] = x4;
+			m[1][3] = y4;
+			m[2][3] = z4;
 			m[3][3] = w4;
 		}
 		Matrix4<T>(Vector4<T> vec1,
@@ -48,23 +48,23 @@ namespace ax
 					Vector4<T> vec4)
 		{
 			m[0][0] = vec1.x;
-			m[0][1] = vec1.y;
-			m[0][2] = vec1.z;
-			m[0][3] = vec1.w;
+			m[1][0] = vec1.y;
+			m[2][0] = vec1.z;
+			m[3][0] = vec1.w;
 			
-			m[1][0] = vec2.x;
+			m[0][1] = vec2.x;
 			m[1][1] = vec2.y;
-			m[1][2] = vec2.z;
-			m[1][3] = vec2.w;
+			m[2][1] = vec2.z;
+			m[3][1] = vec2.w;
 			
-			m[2][0] = vec3.x;
-			m[2][1] = vec3.y;
+			m[0][2] = vec3.x;
+			m[1][2] = vec3.y;
 			m[2][2] = vec3.z;
-			m[2][3] = vec3.w;
+			m[3][2] = vec3.w;
 			
-			m[3][0] = vec4.x;
-			m[3][1] = vec4.y;
-			m[3][2] = vec4.z;
+			m[0][3] = vec4.x;
+			m[1][3] = vec4.y;
+			m[2][3] = vec4.z;
 			m[3][3] = vec4.w;
 		}
 		
@@ -80,7 +80,7 @@ namespace ax
 				{
 					for(unsigned k = 0; k < 4; k++)
 					{
-						result.m[i][j] += m[i][k] * mat.m[k][j]; 
+						result.m[j][i] += m[k][i] * mat.m[j][k]; 
 					}
 				}
 			}
@@ -90,18 +90,18 @@ namespace ax
 		Vector4<T> operator*(const Vector4<T>& vec)
 		{
 			return Vector4<T>(
-				m[0][0] * vec.x + m[0][1] * vec.y + m[0][2] * vec.z + m[0][3] * vec.w,
-				m[1][0] * vec.x + m[1][1] * vec.y + m[1][2] * vec.z + m[1][3] * vec.w,
-				m[2][0] * vec.x + m[2][1] * vec.y + m[2][2] * vec.z + m[2][3] * vec.w,
-				m[3][0] * vec.x + m[3][1] * vec.y + m[3][2] * vec.z + m[3][3] * vec.w
+				m[0][0] * vec.x + m[1][0] * vec.y + m[2][0] * vec.z + m[3][0] * vec.w,
+				m[0][1] * vec.x + m[1][1] * vec.y + m[2][1] * vec.z + m[3][1] * vec.w,
+				m[0][2] * vec.x + m[1][2] * vec.y + m[2][2] * vec.z + m[3][2] * vec.w,
+				m[0][3] * vec.x + m[1][3] * vec.y + m[2][3] * vec.z + m[3][3] * vec.w
 			);
 		}
 		Vector3<T> operator*(const Vector3<T>& vec)
 		{
 			return Vector3<T>(
-				m[0][0] * vec.x + m[0][1] * vec.y + m[0][2] * vec.z + m[0][3],
-				m[1][0] * vec.x + m[1][1] * vec.y + m[1][2] * vec.z + m[1][3],
-				m[2][0] * vec.x + m[2][1] * vec.y + m[2][2] * vec.z + m[2][3]
+				m[0][0] * vec.x + m[1][0] * vec.y + m[2][0] * vec.z + m[3][0],
+				m[0][1] * vec.x + m[1][1] * vec.y + m[2][1] * vec.z + m[3][1],
+				m[0][2] * vec.x + m[1][2] * vec.y + m[2][2] * vec.z + m[3][2]
 			);
 		}
 		
@@ -186,11 +186,18 @@ namespace ax
 			Vector3<T> xaxis = Vector3<T>::normalize(Vector3<T>::cross(up, zaxis));
 			Vector3<T> yaxis = Vector3<T>::cross(zaxis, xaxis);
 
-			return Matrix4<T>(
+			/*return Matrix4<T>(
 				xaxis.x, yaxis.x, zaxis.x, 0,
 				xaxis.y, yaxis.y, zaxis.y, 0,
 				xaxis.z, yaxis.z, zaxis.z, 0,
 				-Vector3<T>::dot(xaxis, eye), -Vector3<T>::dot(yaxis, eye), -Vector3<T>::dot(zaxis, eye), 1
+			);*/
+
+			return Matrix4<T>(
+				xaxis.x, xaxis.y, xaxis.z, -Vector3<T>::dot(xaxis, eye),
+				yaxis.x, yaxis.y, yaxis.z, -Vector3<T>::dot(yaxis, eye),
+				zaxis.x, zaxis.y, zaxis.z, -Vector3<T>::dot(zaxis, eye),
+				0, 0, 0, 1
 			);
 		}
 		static Matrix4<T> perspective(T fov = 90, T aspect = 1, T near = 0.01, T far = 100) noexcept
@@ -198,11 +205,19 @@ namespace ax
 			T yS = (T)1 / tan(radians(fov) / (T)2);
 			T xS = yS / aspect;
 			T nmf = near - far;
-			return Matrix4<T>(
+
+			/*return Matrix4<T>(
 				xS, 0, 0, 0,
 				0, yS, 0, 0,
 				0, 0, (far + near) / nmf, -1,
 				0, 0, 2 * far * near / nmf, 0
+			);*/
+
+			return Matrix4<T>(
+				xS, 0, 0, 0,
+				0, yS, 0, 0,
+				0, 0, (far + near) / nmf, 2 * far * near / nmf,
+				0, 0, -1, 0
 			);
 		}
 
@@ -213,7 +228,7 @@ namespace ax
 
 			for (i = 1; i < 4; i++)
 			{
-				m[0][i] /= m[0][0];
+				m[i][0] /= m[0][0];
 			}
 
 			for (i = 1; i < 4; i++)
@@ -223,17 +238,17 @@ namespace ax
 					T sum = 0.0;
 					for (k = 0; k < i; k++)
 					{
-						sum += m[j][k] * m[k][i];
+						sum += m[k][j] * m[i][k];
 					}
-					m[j][i] -= sum;
+					m[i][j] -= sum;
 				}
 				if (i == 4 - 1) continue;
-				for (j=i+1; j < 4; j++)
+				for (j = i + 1; j < 4; j++)
 				{
 					T sum = 0.0;
 					for (int k = 0; k < i; k++)
-						sum += m[i][k] * m[k][j];
-					m[i][j] = (m[i][j] - sum) / m[i][i];
+						sum += m[k][i] * m[j][k];
+					m[j][i] = (m[j][i] - sum) / m[i][i];
 				}
 			}
 
@@ -247,9 +262,9 @@ namespace ax
 					{
 						x = 0.0;
 						for (int k = i; k < j; k++) 
-							x -= m[j][k] * m[k][i];
+							x -= m[k][j] * m[i][k];
 					}
-					m[j][i] = x / m[j][j];
+					m[i][j] = x / m[j][j];
 				}
 			}
 
@@ -261,20 +276,20 @@ namespace ax
 					if (i == j) continue;
 					T sum = 0.0;
 					for (int k = i; k < j; k++)
-						sum += m[k][j] * ((i == k) ? 1.0f : m[i][k]);
-					m[i][j] = -sum;
+						sum += m[j][k] * ((i == k) ? 1.0f : m[k][i]);
+					m[j][i] = -sum;
 				}
 			}
 
 			//Final Inversion
-			for ( i = 0; i < 4; i++ )
+			for (i = 0; i < 4; i++)
 			{
-				for ( int j = 0; j < 4; j++ )
+				for (int j = 0; j < 4; j++)
 				{
 					T sum = 0.0;
-					for ( int k = ((i>j)?i:j); k < 4; k++ )  
-						sum += ((j == k) ? 1.0f : m[j][k]) * m[k][i];
-					m[j][i] = sum;
+					for (int k = ((i > j) ? i : j); k < 4; k++)  
+						sum += ((j == k) ? 1.0f : m[k][j]) * m[i][k];
+					m[i][j] = sum;
 				}
 			}
 		}
@@ -309,7 +324,7 @@ namespace ax
 		}
 		
 	public:
-		T m[4][4] = {{0}}; //[columns = y][columns = x]
+		T m[4][4] = {{0}}; //[columns = y][columns = x] (columns major)
 	};
 
 	using Matrix4f = Matrix4<float>;

@@ -54,6 +54,9 @@ void MaterialUBO::update(const MaterialGL& material) noexcept
     if(material.useDiffuseTexture)
         p->flags |= MATERIAL_USE_DIFFUSE_TEXTURE;
 
+    if(material.useDiffuseColor)
+        p->flags |= MATERIAL_USE_DIFFUSE_COLOR;
+
     if(material.useNormalTexture)
     {
         p->flags |= MATERIAL_USE_NORMAL_TEXTURE;

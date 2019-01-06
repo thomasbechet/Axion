@@ -1,8 +1,10 @@
 <package name="mypackage" directory="../">
-	<!--texture name="texture_image" 
+	<texture name="texture_image" 
 			 src="textures/image.png"/>
 	<texture name="texture_cube_normal"
 			 src="textures/wall_normal2.bmp"/>
+	<texture name="texture_earth"
+			 src="textures/earthmap.jpg"/>
 	<model name="model_bunny"
 		   src="models/bunny/bunny.obj"/>
 	<model name="model_monkey"
@@ -13,7 +15,12 @@
 	<texture name="texture_texture"
 		     src="textures/texture.jpg"/>
 	<model name="model_sponza"
-		   src="models/sponza/sponza.obj"/-->
+		   src="models/sponza/sponza.obj"/>
 	<!--model name="model_sniper"
 		   src="models/sniper/Sniper.obj"/-->
+		   
+	<texture name="texture_brick_diffuse"
+			 src="textures/brick_mat/redbricks2b-albedo.png"/>
+	<texture name="texture_brick_normal"
+			 src="textures/brick_mat/redbricks2b-normal.png"/>
 </package>

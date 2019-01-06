@@ -10,9 +10,11 @@ DefaultPass::DefaultPass(RenderContent& content, Viewport& viewport) : RenderPas
 
 void DefaultPass::initialize() noexcept
 {
-    m_viewLocation = glGetUniformLocation(content.geometryShader, "camera_view");
-    m_projectionLocation = glGetUniformLocation(content.geometryShader, "camera_projection");
     m_transformLocation = glGetUniformLocation(content.geometryShader, "transform");
+    //m_mvpLocation = glGetUniformLocation(content.geometryShader, "mvp");
+
+    m_v = glGetUniformLocation(content.geometryShader, "v");
+    m_p = glGetUniformLocation(content.geometryShader, "p");
 
     m_materialIndexLocation = glGetUniformLocation(content.geometryShader, "material_index");
     m_diffuseTextureLocation = glGetUniformLocation(content.geometryShader, "diffuse_texture");
@@ -90,7 +92,15 @@ void DefaultPass::render(double alpha) noexcept
             {
                 MeshGL& mesh = content.meshes.get(staticmesh.mesh);
 
-                glUniformMatrix4fv(m_transformLocation, 1, GL_TRUE, staticmesh.transform->getWorldMatrix().data());
+                Matrix4f transform = staticmesh.transform->getWorldMatrix();
+
+                glUniformMatrix4fv(m_transformLocation, 1, GL_TRUE, transform.data());
+
+                Matrix4f mvp = projectionMatrix * viewMatrix * transform;
+
+                //glUniformMatrix4fv(m_mvpLocation, 1, GL_TRUE, mvp.data());
+                glUniformMatrix4fv(m_v, 1, GL_TRUE, viewMatrix.data());
+                glUniformMatrix4fv(m_p, 1, GL_TRUE, projectionMatrix.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);

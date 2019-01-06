@@ -21,9 +21,7 @@ namespace ax
         void render(double alpha) noexcept override;
 
     private:
-        GLuint m_viewLocation;
-        GLuint m_projectionLocation;
-        GLuint m_transformLocation;
+        GLuint m_mvpLocation;
 
         std::unique_ptr<RenderBuffer> m_renderBuffer;
     };
