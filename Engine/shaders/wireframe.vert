@@ -11,7 +11,7 @@ uniform mat4 mvp;
 #define USE_CAMERA_UNIFORM_BLOCK 1
 #if USE_CAMERA_UNIFORM_BLOCK
 
-	#define CAMERA_BINDING_POINT 3
+	#define CAMERA_BINDING_POINT 2
 
 	layout(std140, binding = CAMERA_BINDING_POINT) uniform Camera
 	{

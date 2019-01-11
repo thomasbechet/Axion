@@ -39,16 +39,16 @@ void RendererGL::initialize() noexcept
 
     //Initialize ubos
     m_content.materialUBO = std::make_unique<MaterialUBO>();
-    m_content.pointLightUBO = std::make_unique<PointLightUBO>();
     m_content.cameraUBO = std::make_unique<CameraUBO>();
+    m_content.pointLightUBO = std::make_unique<PointLightUBO>();
 
     //Load shaders
     AssetReference<Shader> shader;
     
     //Geometry Shader
     shader =  Engine::assets().shader.create("renderergl_shader_geometry",
-        "../shaders/geometry_pass.vertex",
-        "../shaders/geometry_pass.fragment");
+        "../shaders/geometry_pass.vert",
+        "../shaders/geometry_pass.frag");
     if(shader->isLoaded())
         m_content.geometryShader = m_content.shaders.get(shader->getHandle()).programId;
     else
@@ -56,8 +56,8 @@ void RendererGL::initialize() noexcept
 
     //Light Shader
     shader = Engine::assets().shader.create("renderergl_shader_light",
-        "../shaders/light_pass.vertex",
-        "../shaders/light_pass.fragment");
+        "../shaders/light_pass.vert",
+        "../shaders/light_pass.frag");
     if(shader->isLoaded())
         m_content.lightShader = m_content.shaders.get(shader->getHandle()).programId;
     else
@@ -65,8 +65,8 @@ void RendererGL::initialize() noexcept
 
     //Quad Shader
     shader = Engine::assets().shader.create("renderergl_shader_render",
-        "../shaders/quad_texture.vertex",
-        "../shaders/quad_texture.fragment");
+        "../shaders/quad_texture.vert",
+        "../shaders/quad_texture.frag");
     if(shader->isLoaded())
         m_content.renderShader = m_content.shaders.get(shader->getHandle()).programId;
     else
@@ -74,8 +74,8 @@ void RendererGL::initialize() noexcept
 
     //Wireframe Shader
     shader = Engine::assets().shader.create("renderergl_shader_wireframe",
-        "../shaders/wireframe.vertex",
-        "../shaders/wireframe.fragment");
+        "../shaders/wireframe.vert",
+        "../shaders/wireframe.frag");
     if(shader->isLoaded())
         m_content.wireframeShader = m_content.shaders.get(shader->getHandle()).programId;
     else
@@ -83,8 +83,8 @@ void RendererGL::initialize() noexcept
 
     //Geometry Debug Shader
     shader = Engine::assets().shader.create("renderergl_shader_geometry_debug",
-        "../shaders/geometry_debug.vertex",
-        "../shaders/geometry_debug.fragment");
+        "../shaders/geometry_debug.vert",
+        "../shaders/geometry_debug.frag");
     if(shader->isLoaded())
         m_content.debugShader = m_content.shaders.get(shader->getHandle()).programId;
     else

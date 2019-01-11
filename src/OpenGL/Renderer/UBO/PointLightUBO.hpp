@@ -4,14 +4,15 @@
 //HEADERS
 //////////////
 #include <OpenGL/Export.hpp>
+#include <OpenGL/Renderer/UBO/UBOConstants.hpp>
 #include <Core/Utility/Color.hpp>
+#include <Core/Utility/IndexVector.hpp>
+#include <Core/Math/Matrix.hpp>
 
 #include <GL/glew.h>
 
 #include <vector>
-
-#define POINTLIGHT_MAX_NUMBER 50
-#define POINTLIGHT_BINDING_POINT 2
+#include <array>
 
 namespace ax
 {
@@ -22,8 +23,9 @@ namespace ax
     private:
         struct PointLightUBOData
         {
-            Color3 color;
+            Vector3f position;
             float radius;
+            Color3 color;
             float intensity;
         };
 
@@ -33,11 +35,17 @@ namespace ax
 
         void load(PointLightGL& light) noexcept;
         void unload(PointLightGL& light) noexcept;
-        void update(const PointLightGL& light) noexcept;
+
+        void updatePositions(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept;
+        void updateIndexes() noexcept;
+        void updateLight(const PointLightGL& light) noexcept;
 
     private:
-        GLuint m_ubo;
-        size_t m_next = 0;
+        GLuint m_uboLights;
+        GLuint m_uboIndexes;
         std::vector<GLuint> m_free;
+
+        std::vector<GLuint> m_indexes;
+        std::array<PointLightUBOData, POINTLIGHT_MAX_NUMBER> m_pointlights;
     };
 }

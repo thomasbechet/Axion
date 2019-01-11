@@ -26,8 +26,7 @@ namespace ax
     private:
         GLuint m_transformLocation;
         GLuint m_mvpLocation;
-        GLuint m_v;
-        GLuint m_p;
+        GLuint m_normalToViewLocation;
 
         GLuint m_materialIndexLocation;
         GLuint m_diffuseTextureLocation;

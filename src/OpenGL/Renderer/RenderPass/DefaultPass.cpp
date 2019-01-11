@@ -11,10 +11,8 @@ DefaultPass::DefaultPass(RenderContent& content, Viewport& viewport) : RenderPas
 void DefaultPass::initialize() noexcept
 {
     m_transformLocation = glGetUniformLocation(content.geometryShader, "transform");
-    //m_mvpLocation = glGetUniformLocation(content.geometryShader, "mvp");
-
-    m_v = glGetUniformLocation(content.geometryShader, "v");
-    m_p = glGetUniformLocation(content.geometryShader, "p");
+    m_mvpLocation = glGetUniformLocation(content.geometryShader, "mvp");
+    m_normalToViewLocation = glGetUniformLocation(content.geometryShader, "normal_to_view");
 
     m_materialIndexLocation = glGetUniformLocation(content.geometryShader, "material_index");
     m_diffuseTextureLocation = glGetUniformLocation(content.geometryShader, "diffuse_texture");
@@ -48,13 +46,19 @@ void DefaultPass::render(double alpha) noexcept
     m_gbuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    //Compute camera
     CameraGL& camera = content.cameras.get(viewport.camera);
 
+    //Compute camera matrix
     Vector3f eye = camera.transform->getTranslation();
     Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
     Vector3f up = camera.transform->getUpVector();
 
     Matrix4f viewMatrix = Matrix4f::lookAt(eye, target, up);
+
+    //Updates Lights
+    content.pointLightUBO->updateIndexes();
+    content.pointLightUBO->updatePositions(content.pointLights, viewMatrix);
 
     float aspect = (viewport.size.x * (float)Engine::window().getSize().x) /
         (viewport.size.y * (float)Engine::window().getSize().y);
@@ -62,6 +66,8 @@ void DefaultPass::render(double alpha) noexcept
     Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far);
 
     content.cameraUBO->update(viewMatrix, projectionMatrix);
+
+    Matrix4f vp = projectionMatrix * viewMatrix;
 
     //Setup viewport
     glViewport(0, 0, viewport.resolution.x, viewport.resolution.y);
@@ -93,14 +99,12 @@ void DefaultPass::render(double alpha) noexcept
                 MeshGL& mesh = content.meshes.get(staticmesh.mesh);
 
                 Matrix4f transform = staticmesh.transform->getWorldMatrix();
+                Matrix4f mvp = vp * transform;
+                Matrix3f normalToView = Matrix3f(viewMatrix) * Matrix3f::transpose(Matrix3f::inverse(Matrix3f(transform)));
 
-                glUniformMatrix4fv(m_transformLocation, 1, GL_TRUE, transform.data());
-
-                Matrix4f mvp = projectionMatrix * viewMatrix * transform;
-
-                //glUniformMatrix4fv(m_mvpLocation, 1, GL_TRUE, mvp.data());
-                glUniformMatrix4fv(m_v, 1, GL_TRUE, viewMatrix.data());
-                glUniformMatrix4fv(m_p, 1, GL_TRUE, projectionMatrix.data());
+                glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, transform.data());
+                glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
+                glUniformMatrix3fv(m_normalToViewLocation, 1, GL_FALSE, normalToView.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);

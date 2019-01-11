@@ -1,5 +1,7 @@
 #include <OpenGL/Renderer/UBO/CameraUBO.hpp>
 
+#include <OpenGL/Renderer/UBO/UBOConstants.hpp>
+
 #include <cstring>
 
 using namespace ax;

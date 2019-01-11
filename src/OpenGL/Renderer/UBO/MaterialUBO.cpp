@@ -1,6 +1,7 @@
 #include <OpenGL/Renderer/UBO/MaterialUBO.hpp>
 
 #include <OpenGL/Renderer/MaterialGL.hpp>
+#include <OpenGL/Renderer/UBO/UBOConstants.hpp>
 
 #include <cstring>
 

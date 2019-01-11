@@ -133,7 +133,7 @@ public:
         ax::Engine::systems().add<ax::RenderModeSystem>();
 
         ax::Entity& camera0 = ax::Engine::world().entities().create();
-        camera0.addComponent<ax::TransformComponent>();
+        ax::TransformComponent& cameraTransform = camera0.addComponent<ax::TransformComponent>();
         ax::CameraComponent& cameraComponent0 = camera0.addComponent<ax::CameraComponent>(camera0);
         cameraComponent0.setFarPlane(300.0f);
         cameraComponent0.bindDefaultViewport();
@@ -167,7 +167,7 @@ public:
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
 
-        //#define LOW_RESOLUTION
+        #define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
             ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
         #endif
@@ -198,10 +198,10 @@ public:
 
         //Light
         ax::Entity& light = ax::Engine::world().entities().create();
-        light.addComponent<ax::TransformComponent>();
+        light.addComponent<ax::TransformComponent>().setTranslation(10.0f, 0.0f, 0.0f);
         light.addComponent<ax::PointLightComponent>(light);
 
-        ax::Engine::systems().add<CustomSystem>().setTransform(&transformCube);
+        ax::Engine::systems().add<CustomSystem>().setTransform(&cameraTransform);
     }
     void onStop() override
     {

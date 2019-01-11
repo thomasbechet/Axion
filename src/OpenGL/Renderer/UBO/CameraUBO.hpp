@@ -8,8 +8,6 @@
 
 #include <GL/glew.h>
 
-#define CAMERA_BINDING_POINT 3
-
 namespace ax
 {
     class CameraGL;

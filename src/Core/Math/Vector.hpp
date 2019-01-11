@@ -10,6 +10,13 @@
 
 namespace ax
 {
+	template<typename T>
+	class AXION_CORE_API Vector2;
+	template<typename T>
+	class AXION_CORE_API Vector3;
+	template<typename T>
+	class AXION_CORE_API Vector4;
+
 	///////////////////////////////////
 	//Vectors
 	///////////////////////////////////
@@ -27,13 +34,15 @@ namespace ax
 		//////////////////////////
 		//OPERATORS
 		//////////////////////////
-		Vector2<T> operator+(const Vector2<T>& vec){return Vector2<T>(x + vec.x, y + vec.y);}
-		Vector2<T> operator-(const Vector2<T>& vec){return Vector2<T>(x - vec.x, y - vec.y);}
-		Vector2<T> operator+=(const Vector2<T>& vec){return Vector2<T>(x += vec.x, y += vec.y);}
-		Vector2<T> operator-=(const Vector2<T>& vec){return Vector2<T>(x -= vec.x, y -= vec.y);}
-		Vector2<T> operator*(const Vector2<T>& vec){return Vector2<T>(x * vec.x, y * vec.y);}
-		Vector2<T> operator*(const T& factor){return Vector2<T>(x * factor, y * factor);}
-		Vector2<T> operator/(const Vector2<T>& vec){return Vector2<T>(x / vec.x, y / vec.y);}
+		Vector2<T> operator+(const Vector2<T>& vec)const{return Vector2<T>(x + vec.x, y + vec.y);}
+		Vector2<T> operator-(const Vector2<T>& vec)const{return Vector2<T>(x - vec.x, y - vec.y);}
+		Vector2<T> operator*(const Vector2<T>& vec)const{return Vector2<T>(x * vec.x, y * vec.y);}
+		Vector2<T> operator*(const T& factor)const{return Vector2<T>(x * factor, y * factor);}
+		Vector2<T> operator/(const Vector2<T>& vec)const{return Vector2<T>(x / vec.x, y / vec.y);}
+		Vector2<T> operator+=(const Vector2<T>& vec){x += vec.x; y += vec.y; return *this;}
+		Vector2<T> operator-=(const Vector2<T>& vec){x -= vec.x; y -= vec.y; return *this;}
+		Vector2<T> operator*=(const Vector2<T>& vec){x *= vec.x; y *= vec.y; return *this;}
+		Vector2<T> operator/=(const Vector2<T>& vec){x /= vec.x; y /= vec.y; return *this;}
 		
 		//////////////////////////
 		//ALGEBRA
@@ -104,18 +113,26 @@ namespace ax
 			this->y = vec.y;
 			this->z = z;
 		}
+		Vector3<T>(const Vector4<T>& vec)
+		{
+			this->x = vec.x;
+			this->y = vec.y;
+			this->z = vec.z;
+		}
 		
 		////////////////////
 		//OPERATORS
 		////////////////////
-		Vector3<T> operator+(const Vector3<T> vec){return Vector3<T>(x + vec.x, y + vec.y, z + vec.z);}
-		Vector3<T> operator-(const Vector3<T> vec){return Vector3<T>(x - vec.x, y - vec.y, z - vec.z);}
-		Vector3<T> operator+=(const Vector3<T>& vec){return Vector3<T>(x += vec.x, y += vec.y, z += vec.z);}
-		Vector3<T> operator-=(const Vector3<T>& vec){return Vector3<T>(x -= vec.x, y -= vec.y, z -= vec.z);}
-		Vector3<T> operator*(const Vector3<T> vec){return Vector3<T>(x * vec.x, y * vec.y, z * vec.z);}
-		Vector3<T> operator*(const T& factor){return Vector3<T>(x * factor, y * factor, z * factor);}
-		Vector3<T> operator/(const Vector3<T> vec){return Vector3<T>(x / vec.x, y / vec.y, z / vec.z);}
-		
+		Vector3<T> operator+(const Vector3<T> vec)const{return Vector3<T>(x + vec.x, y + vec.y, z + vec.z);}
+		Vector3<T> operator-(const Vector3<T> vec)const{return Vector3<T>(x - vec.x, y - vec.y, z - vec.z);}
+		Vector3<T> operator*(const Vector3<T> vec)const{return Vector3<T>(x * vec.x, y * vec.y, z * vec.z);}
+		Vector3<T> operator*(const T& factor)const{return Vector3<T>(x * factor, y * factor, z * factor);}
+		Vector3<T> operator/(const Vector3<T> vec)const{return Vector3<T>(x / vec.x, y / vec.y, z / vec.z);}
+		Vector3<T> operator+=(const Vector3<T>& vec){x += vec.x; y += vec.y; z += vec.z; return *this;}
+		Vector3<T> operator-=(const Vector3<T>& vec){x -= vec.x; y -= vec.y; z -= vec.z; return *this;}
+		Vector3<T> operator*=(const Vector3<T>& vec){x *= vec.x; y *= vec.y; z *= vec.z; return *this;}
+		Vector3<T> operator/=(const Vector3<T>& vec){x /= vec.x; y /= vec.y; z /= vec.z; return *this;}
+
 		//////////////////////////
 		//ALGEBRA
 		//////////////////////////
@@ -235,12 +252,14 @@ namespace ax
 		///////////////////////
 		//OPERATORS
 		///////////////////////
-		Vector4<T> operator+(const Vector4<T> vec){return Vector4<T>(x + vec.x, y + vec.y, z + vec.z, w + vec.w);}
-		Vector4<T> operator-(const Vector4<T> vec){return Vector4<T>(x - vec.x, y - vec.y, z - vec.z, w - vec.w);}
-		Vector4<T> operator+=(const Vector4<T>& vec){return Vector4<T>(x += vec.x, y += vec.y, z += vec.z, w += vec.w);}
-		Vector4<T> operator-=(const Vector4<T>& vec){return Vector4<T>(x -= vec.x, y -= vec.y, z -= vec.z, w -= vec.w);}
-		Vector4<T> operator*(const Vector4<T> vec){return Vector4<T>(x * vec.x, y * vec.y, z * vec.z, w * vec.w);}
-		Vector4<T> operator/(const Vector4<T> vec){return Vector4<T>(x / vec.x, y / vec.y, z / vec.z, w / vec.w);}
+		Vector4<T> operator+(const Vector4<T> vec)const{return Vector4<T>(x + vec.x, y + vec.y, z + vec.z, w + vec.w);}
+		Vector4<T> operator-(const Vector4<T> vec)const{return Vector4<T>(x - vec.x, y - vec.y, z - vec.z, w - vec.w);}
+		Vector4<T> operator*(const Vector4<T> vec)const{return Vector4<T>(x * vec.x, y * vec.y, z * vec.z, w * vec.w);}
+		Vector4<T> operator/(const Vector4<T> vec)const{return Vector4<T>(x / vec.x, y / vec.y, z / vec.z, w / vec.w);}
+		Vector4<T> operator+=(const Vector4<T>& vec){x += vec.x; y += vec.y; z += vec.z; w += vec.w; return *this;}
+		Vector4<T> operator-=(const Vector4<T>& vec){x -= vec.x; y -= vec.y; z -= vec.z; w -= vec.w; return *this;}
+		Vector4<T> operator*=(const Vector4<T>& vec){x *= vec.x; y *= vec.y; z *= vec.z; w *= vec.w; return *this;}
+		Vector4<T> operator/=(const Vector4<T>& vec){x /= vec.x; y /= vec.y; z /= vec.z; w /= vec.w; return *this;}
 		
 		//////////////////////////
 		//ALGEBRA

@@ -97,6 +97,10 @@ namespace ax
 		{
 			return m_list.empty();
 		}
+		C* data() const noexcept
+		{
+			return m_list.data();
+		}
 
 	private:
 		std::vector<C> m_list;

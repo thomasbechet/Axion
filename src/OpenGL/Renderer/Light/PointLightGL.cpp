@@ -8,7 +8,7 @@ Id RendererGL::createPointLight()
     PointLightGL& light = m_content.pointLights.get(id);
 
     m_content.pointLightUBO->load(light);
-    m_content.pointLightUBO->update(light);
+    //m_content.pointLightUBO->updateLight(light);
 
     return id;
 }
@@ -21,6 +21,8 @@ void RendererGL::setPointLightTransform(Id id, Transform* transform)
 {
     PointLightGL& light = m_content.pointLights.get(id);
     light.transform = transform;
+
+    m_content.pointLightUBO->updateLight(light);
 }
 void RendererGL::setPointLightParameters(Id id, const PointLightParameters& parameters)
 {
@@ -30,5 +32,5 @@ void RendererGL::setPointLightParameters(Id id, const PointLightParameters& para
     light.radius = parameters.radius;
     light.intensity = parameters.intensity;
 
-    m_content.pointLightUBO->update(light);   
+    m_content.pointLightUBO->updateLight(light);  
 }
