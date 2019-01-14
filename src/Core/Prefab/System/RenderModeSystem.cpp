@@ -17,7 +17,7 @@ void RenderModeSystem::onInitialize()
 void RenderModeSystem::onUpdate()
 {
     if(m_defaultModeButton->isJustPressed())
-        Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::Default);
+        Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::ForwardPlusShading);
     else if(m_wireframeModeButton->isJustPressed())
         Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::Wireframe);
     else if(m_debugModeButton->isJustPressed())

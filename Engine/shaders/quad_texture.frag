@@ -2,7 +2,7 @@
 
 out vec3 out_color;
 
-uniform sampler2D render_texture;
+layout(binding = 0) uniform sampler2D render_texture;
 
 in vec2 UV;
 

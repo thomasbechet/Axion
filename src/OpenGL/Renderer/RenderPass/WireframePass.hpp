@@ -5,11 +5,12 @@
 //////////////
 #include <OpenGL/Export.hpp>
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
+#include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>
+
+#include <memory>
 
 namespace ax
 {
-    class RenderContent;
-
     class AXION_GL_API WireframePass : public RenderPass
     {
     public:
@@ -24,5 +25,7 @@ namespace ax
         GLuint m_mvpLocation;
 
         std::unique_ptr<RenderBuffer> m_renderBuffer;
+
+        GLuint m_wireframeShader;
     };
 }

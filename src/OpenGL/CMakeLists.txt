@@ -26,17 +26,17 @@ ADD_LIBRARY(
     Renderer/StaticmeshGL.cpp
     Renderer/MaterialGL.cpp
     Renderer/TextureGL.cpp
-    Renderer/FrameBuffer/GBuffer.cpp
+    Renderer/FrameBuffer/ForwardPlusBuffers.cpp
     Renderer/FrameBuffer/RenderBuffer.cpp
     Renderer/UBO/MaterialUBO.cpp
     Renderer/UBO/PointLightUBO.cpp
     Renderer/UBO/CameraUBO.cpp
+    Renderer/Utility/ComputeShader.cpp
     Renderer/Light/PointLightGL.cpp
     Renderer/Light/DirectionalLightGL.cpp
     Renderer/RenderPass/RenderPass.cpp
-    Renderer/RenderPass/DefaultPass.cpp
+    Renderer/RenderPass/ForwardPlusPass.cpp
     Renderer/RenderPass/WireframePass.cpp
-    Renderer/RenderPass/DebugPass.cpp
 )
 
 #Adding glfw dependency

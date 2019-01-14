@@ -12,13 +12,10 @@
 #include <OpenGL/Renderer/CameraGL.hpp>
 #include <OpenGL/Renderer/Light/PointLightGL.hpp>
 #include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
-#include <OpenGL/Renderer/FrameBuffer/GBuffer.hpp>
 #include <OpenGL/Renderer/UBO/MaterialUBO.hpp>
 #include <OpenGL/Renderer/UBO/PointLightUBO.hpp>
 #include <OpenGL/Renderer/UBO/CameraUBO.hpp>
-#include <OpenGL/Renderer/RenderPass/DebugPass.hpp>
-#include <OpenGL/Renderer/RenderPass/DefaultPass.hpp>
-#include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
+#include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
 
@@ -39,11 +36,7 @@ namespace ax
         GLuint quadVBO;
         GLuint quadVAO;
 
-        GLuint geometryShader;
-        GLuint lightShader;
-        GLuint renderShader;
-        GLuint wireframeShader; 
-        GLuint debugShader;
+        GLuint quadRenderShader;
 
         std::unique_ptr<MaterialUBO> materialUBO;
         std::unique_ptr<PointLightUBO> pointLightUBO;

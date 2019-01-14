@@ -4,7 +4,6 @@
 //HEADERS
 //////////////
 #include <OpenGL/Export.hpp>
-#include <OpenGL/Renderer/UBO/UBOConstants.hpp>
 #include <Core/Utility/Color.hpp>
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Math/Matrix.hpp>
@@ -36,16 +35,12 @@ namespace ax
         void load(PointLightGL& light) noexcept;
         void unload(PointLightGL& light) noexcept;
 
-        void updatePositions(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept;
-        void updateIndexes() noexcept;
         void updateLight(const PointLightGL& light) noexcept;
+        void updatePositions(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept;
 
     private:
         GLuint m_uboLights;
-        GLuint m_uboIndexes;
-        std::vector<GLuint> m_free;
 
-        std::vector<GLuint> m_indexes;
-        std::array<PointLightUBOData, POINTLIGHT_MAX_NUMBER> m_pointlights;
+        IndexVector<PointLightUBOData> m_pointlights;
     };
 }

@@ -1,5 +1,8 @@
 #include <OpenGL/Renderer/RendererGL.hpp>
 
+#include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
+#include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
+
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Asset/AssetManager.hpp>
@@ -44,51 +47,13 @@ void RendererGL::initialize() noexcept
 
     //Load shaders
     AssetReference<Shader> shader;
-    
-    //Geometry Shader
-    shader =  Engine::assets().shader.create("renderergl_shader_geometry",
-        "../shaders/geometry_pass.vert",
-        "../shaders/geometry_pass.frag");
-    if(shader->isLoaded())
-        m_content.geometryShader = m_content.shaders.get(shader->getHandle()).programId;
-    else
-        Engine::interrupt("Failed to load shader: renderergl_shader_geometry");
-
-    //Light Shader
-    shader = Engine::assets().shader.create("renderergl_shader_light",
-        "../shaders/light_pass.vert",
-        "../shaders/light_pass.frag");
-    if(shader->isLoaded())
-        m_content.lightShader = m_content.shaders.get(shader->getHandle()).programId;
-    else
-        Engine::interrupt("Failed to load shader: renderergl_shader_light");
-
-    //Quad Shader
-    shader = Engine::assets().shader.create("renderergl_shader_render",
+    shader = Engine::assets().shader.create("renderergl_shader_quadrender",
         "../shaders/quad_texture.vert",
         "../shaders/quad_texture.frag");
     if(shader->isLoaded())
-        m_content.renderShader = m_content.shaders.get(shader->getHandle()).programId;
+        m_content.quadRenderShader = m_content.shaders.get(shader->getHandle()).programId;
     else
-        Engine::interrupt("Failed to load shader: renderergl_shader_render");
-
-    //Wireframe Shader
-    shader = Engine::assets().shader.create("renderergl_shader_wireframe",
-        "../shaders/wireframe.vert",
-        "../shaders/wireframe.frag");
-    if(shader->isLoaded())
-        m_content.wireframeShader = m_content.shaders.get(shader->getHandle()).programId;
-    else
-        Engine::interrupt("Failed to load shader: renderergl_shader_wireframe");
-
-    //Geometry Debug Shader
-    shader = Engine::assets().shader.create("renderergl_shader_geometry_debug",
-        "../shaders/geometry_debug.vert",
-        "../shaders/geometry_debug.frag");
-    if(shader->isLoaded())
-        m_content.debugShader = m_content.shaders.get(shader->getHandle()).programId;
-    else
-        Engine::interrupt("Failed to load shader: renderergl_shader_geometry_debug");
+        Engine::interrupt("Failed to load shader: renderergl_shader_quadrender");
 }
 void RendererGL::terminate() noexcept
 {
@@ -97,11 +62,7 @@ void RendererGL::terminate() noexcept
         viewport.get()->renderPass->terminate();
     }
 
-    Engine::assets().shader.destroy("renderergl_shader_geometry");
-    Engine::assets().shader.destroy("renderergl_shader_light");
-    Engine::assets().shader.destroy("renderergl_shader_render");
-    Engine::assets().shader.destroy("renderergl_shader_wireframe");
-    Engine::assets().shader.destroy("renderergl_shader_geometry_debug");
+    Engine::assets().shader.destroy("renderergl_shader_quadrender");
 }
 void RendererGL::update(double alpha) noexcept
 {
@@ -145,22 +106,16 @@ void RendererGL::setViewportRendermode(Id id, RenderMode mode)
     switch(mode)
     {
         case RenderMode::Default:
-            viewport.renderPass = std::make_unique<DefaultPass>(m_content, viewport);
+            viewport.renderPass = std::make_unique<ForwardPlusPass>(m_content, viewport);
+        break;
+        case RenderMode::ForwardPlusShading:
+            viewport.renderPass = std::make_unique<ForwardPlusPass>(m_content, viewport);
         break;
         case RenderMode::Wireframe:
             viewport.renderPass = std::make_unique<WireframePass>(m_content, viewport);
         break;
-        case RenderMode::Debug0:
-            viewport.renderPass = std::make_unique<DebugPass>(m_content, viewport);
-        break;
-        case RenderMode::Debug1:
-            viewport.renderPass = std::make_unique<DebugPass>(m_content, viewport);
-        break;
-        case RenderMode::Debug2:
-            viewport.renderPass = std::make_unique<DebugPass>(m_content, viewport);
-        break;
         default:
-            viewport.renderPass = std::make_unique<DefaultPass>(m_content, viewport);
+            viewport.renderPass = std::make_unique<ForwardPlusPass>(m_content, viewport);
         break;
     }
     

@@ -1,4 +1,4 @@
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
 
 #include <OpenGL/Renderer/RendererGL.hpp>
 #include <Core/Window/Window.hpp>
@@ -11,13 +11,29 @@ WireframePass::WireframePass(RenderContent& content, Viewport& viewport) : Rende
 
 void WireframePass::initialize() noexcept
 {
-    m_mvpLocation = glGetUniformLocation(content.wireframeShader, "mvp");
+    //Load shaders
+    AssetReference<Shader> shader;
+    shader = Engine::assets().shader.create("renderergl_shader_wireframe",
+        "../shaders/WF_wireframe.vert",
+        "../shaders/WF_wireframe.frag");
+    if(shader->isLoaded())
+        m_wireframeShader = content.shaders.get(shader->getHandle()).programId;
+    else
+        Engine::interrupt("Failed to load shader: renderergl_shader_wireframe");
 
+    //Load uniform locations
+    m_mvpLocation = glGetUniformLocation(m_wireframeShader, "mvp");
+
+    //Load buffers
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
 }
 void WireframePass::terminate() noexcept
 {
+    //Unload buffers
     m_renderBuffer.reset();
+
+    //Unload shaders
+    Engine::assets().shader.destroy("renderergl_shader_wireframe");
 }
 void WireframePass::updateResolution() noexcept
 {
@@ -26,7 +42,7 @@ void WireframePass::updateResolution() noexcept
 void WireframePass::render(double alpha) noexcept
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glUseProgram(content.wireframeShader);
+    glUseProgram(m_wireframeShader);
     m_renderBuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -86,7 +102,7 @@ void WireframePass::render(double alpha) noexcept
     );
     glViewport(position.x, position.y, size.x, size.y);
 
-    glUseProgram(content.renderShader);
+    glUseProgram(content.quadRenderShader);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     m_renderBuffer->bindForReading();
