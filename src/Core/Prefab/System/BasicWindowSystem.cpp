@@ -27,10 +27,10 @@ void BasicWindowSystem::onUpdate()
     }
     else if(m_borderlessButton->isJustPressed())
     {
-        if(Engine::window().getMode() == WindowMode::Windowed)
+        /*if(Engine::window().getMode() == WindowMode::Windowed)
             Engine::window().setMode(WindowMode::Borderless);
         else
-            Engine::window().setMode(WindowMode::Windowed);
+            Engine::window().setMode(WindowMode::Windowed);*/
     }
     else if(m_closeButton->isJustPressed() || Engine::window().shouldClose())
         Engine::context().requestStop();

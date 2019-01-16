@@ -1,4 +1,4 @@
-#version 430 core
+#version 420 core
 
 layout(location = 0) out vec3 out_normal;
 
@@ -6,8 +6,8 @@ in vec2 UV;
 in vec3 NORMAL;
 in mat3 TBN;
 
-#define USE_MATERIAL_UNIFORM_BLOCK 1 
-#if USE_MATERIAL_UNIFORM_BLOCK
+#define USE_MATERIAL 1 
+#if USE_MATERIAL
 
 	#define MATERIAL_UBO_BINDING_POINT 1
 	#define MATERIAL_MAX_NUMBER 50

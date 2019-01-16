@@ -1,4 +1,4 @@
-#version 430 core
+#version 420 core
 
 layout(location = 0) out vec3 out_color;
 
@@ -11,8 +11,8 @@ in mat3 TBN;
 layout(binding = 3) uniform sampler2D gbuffer_normal_texture;
 layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 
-#define USE_MATERIAL_UNIFORM_BLOCK 1 
-#if USE_MATERIAL_UNIFORM_BLOCK
+#define USE_MATERIAL 1 
+#if USE_MATERIAL
 
 	#define MATERIAL_UBO_BINDING_POINT 1
 	#define MATERIAL_MAX_NUMBER 50
@@ -78,8 +78,8 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 
 #endif
 
-#define USE_CAMERA_UNIFORM_BLOCK 1
-#if USE_CAMERA_UNIFORM_BLOCK
+#define USE_CAMERA 1
+#if USE_CAMERA
 
 	#define CAMERA_UBO_BINDING_POINT 2
 
@@ -91,8 +91,8 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 
 #endif
 
-#define USE_POINTLIGHT_UNIFORM_BLOCK 1 
-#if USE_POINTLIGHT_UNIFORM_BLOCK
+#define USE_POINTLIGHT 1 
+#if USE_POINTLIGHT
 
 	#define POINTLIGHT_UBO_BINDING_POINT 3
 	#define POINTLIGHT_MAX_NUMBER 50
@@ -114,7 +114,7 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 
 vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 {
-	vec3 position = point_lights[0].position;
+	vec3 position = light.position;
 
 	vec3 lightDir = normalize(position - fragPos);
     float diffCoeff = max(dot(normal, lightDir), 0.0);    

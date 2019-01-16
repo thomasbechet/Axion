@@ -1,2 +1,48 @@
 #version 430
 
+#define USE_POINTLIGHT 1 
+#if USE_POINTLIGHT
+
+	#define POINTLIGHT_UBO_BINDING_POINT 3
+	#define POINTLIGHT_MAX_NUMBER 50
+
+	struct PointLight
+	{
+		vec3 position;
+		float radius;
+		vec3 color;
+		float intensity;
+	};
+	layout(std140, binding = POINTLIGHT_UBO_BINDING_POINT) uniform PointLights
+	{ 
+		PointLight point_lights[POINTLIGHT_MAX_NUMBER];
+		uint point_light_count;
+	};
+
+#endif
+
+#define USE_POINTLIGHT_CULLING
+#if USE_POINTLIGHT_CULLING
+
+    #define POINTLIGHT_CULLING_SSBO_BINDING_POINT 1
+
+    layout(std140, binding = POINTLIGHT_CULL_SSBO_BINDING_POINT) writeonly buffer PointLightsCullIndices
+    {
+        uint point_lights_cull_indices[];
+    };
+
+#endif
+
+#define TILE_SIZE 16
+layout(local_size_x = TILE_SIZE, local_size_y = TILE_SIZE, local_size_z = 1) in;
+
+void main()
+{
+    ivec2 location = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 itemID = ivec2(gl_LocalInvocationID.xy);
+	ivec2 tileID = ivec2(gl_WorkGroupID.xy);
+	ivec2 tileNumber = ivec2(gl_NumWorkGroups.xy);
+    uint index = tileID.y * tileNumber.x + tileID.x;
+
+    
+}

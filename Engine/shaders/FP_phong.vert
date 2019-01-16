@@ -1,4 +1,4 @@
-#version 420 core
+#version 40 core
 
 layout(location = 0) in vec3 in_vertex;
 layout(location = 1) in vec2 in_uv;
@@ -16,8 +16,8 @@ out vec3 COLOR;
 out vec3 NORMAL;
 out mat3 TBN;
 
-#define USE_CAMERA_UNIFORM_BLOCK 1
-#if USE_CAMERA_UNIFORM_BLOCK
+#define USE_CAMERA 1
+#if USE_CAMERA
 
 	#define CAMERA_UBO_BINDING_POINT 2
 

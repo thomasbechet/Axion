@@ -35,15 +35,22 @@ void ForwardPlusPass::initialize() noexcept
     else
         Engine::interrupt("Failed to load shader: renderergl_shader_geometry");
 
-    //Load locations
-    m_transformLocation = glGetUniformLocation(m_phongShader, "transform");
-    m_mvpLocation = glGetUniformLocation(m_phongShader, "mvp");
-    m_normalToViewLocation = glGetUniformLocation(m_phongShader, "normal_to_view");
+    //Phong locations
+    phongLocations.transform = glGetUniformLocation(m_phongShader, "transform");
+    phongLocations.mvp = glGetUniformLocation(m_phongShader, "mvp");
+    phongLocations.normalToView = glGetUniformLocation(m_phongShader, "normal_to_view");
 
-    m_materialIndexLocation = glGetUniformLocation(m_phongShader, "material_index");
-    m_diffuseTextureLocation = glGetUniformLocation(m_phongShader, "diffuse_texture");
-    m_normalTextureLocation = glGetUniformLocation(m_phongShader, "normal_texture");
-    m_specularTextureLocation = glGetUniformLocation(m_phongShader, "specular_texture");
+    phongLocations.materialIndex = glGetUniformLocation(m_phongShader, "material_index");
+    phongLocations.diffuseTexture = glGetUniformLocation(m_phongShader, "diffuse_texture");
+    phongLocations.normalTexture = glGetUniformLocation(m_phongShader, "normal_texture");
+
+    //Geometry locations
+    geometryLocations.transform = glGetUniformLocation(m_geometryShader, "transform");
+    geometryLocations.mvp = glGetUniformLocation(m_geometryShader, "mvp");
+    geometryLocations.normalToView = glGetUniformLocation(m_geometryShader, "normal_to_view");
+
+    geometryLocations.materialIndex = glGetUniformLocation(m_geometryShader, "material_index");
+    geometryLocations.normalTexture = glGetUniformLocation(m_geometryShader, "normal_texture");
 }
 void ForwardPlusPass::terminate() noexcept
 {
@@ -64,15 +71,10 @@ void ForwardPlusPass::updateResolution() noexcept
 void ForwardPlusPass::render(double alpha) noexcept
 {
     updateUBOs();
-    std::cout << "s1 " << glGetError() << std::endl;
     renderGeometryPass();
-    std::cout << "s2 " << glGetError() << std::endl;
     renderLightPass();
-    std::cout << "s3 " << glGetError() << std::endl;
+    renderPPPass();
     renderViewportPass();
-    std::cout << "s4 " << glGetError() << std::endl;
-
-    Engine::interrupt("end");
 }
 
 void ForwardPlusPass::updateUBOs() noexcept
@@ -111,8 +113,6 @@ void ForwardPlusPass::renderGeometryPass() noexcept
     glDepthMask(GL_TRUE); 
     glDepthFunc(GL_LESS);
 
-    std::cout << "i1 " << glGetError() << std::endl;
-
     glUseProgram(m_geometryShader);
     m_buffers->bindForGeometryPass();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -121,11 +121,11 @@ void ForwardPlusPass::renderGeometryPass() noexcept
     {
         MaterialGL& material = materialIt.first;
 
-        glUniform1ui(m_materialIndexLocation, material.uboIndex);
+        glUniform1ui(geometryLocations.materialIndex, material.uboIndex);
 
         if(material.useNormalTexture)
         {
-            glActiveTexture(GL_TEXTURE1);
+            glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, content.textures.get(material.normalTexture).id);
         }
 
@@ -140,9 +140,9 @@ void ForwardPlusPass::renderGeometryPass() noexcept
                 Matrix4f mvp = m_vpMatrix * transform;
                 Matrix3f normalToView = Matrix3f(m_viewMatrix) * Matrix3f::transpose(Matrix3f::inverse(Matrix3f(transform)));
 
-                glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, transform.data());
-                glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
-                glUniformMatrix3fv(m_normalToViewLocation, 1, GL_FALSE, normalToView.data());
+                glUniformMatrix4fv(geometryLocations.transform, 1, GL_FALSE, transform.data());
+                glUniformMatrix4fv(geometryLocations.mvp, 1, GL_FALSE, mvp.data());
+                glUniformMatrix3fv(geometryLocations.normalToView, 1, GL_FALSE, normalToView.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);
@@ -157,8 +157,7 @@ void ForwardPlusPass::renderLightPass() noexcept
     glDepthMask(GL_FALSE); 
     glDepthFunc(GL_EQUAL);
 
-    m_buffers->bindForLightPass();
-    
+    m_buffers->bindForLightPass();    
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(m_phongShader);
@@ -166,7 +165,7 @@ void ForwardPlusPass::renderLightPass() noexcept
     {
         MaterialGL& material = materialIt.first;
 
-        glUniform1ui(m_materialIndexLocation, material.uboIndex);
+        glUniform1ui(phongLocations.materialIndex, material.uboIndex);
 
         if(material.useDiffuseTexture)
         {
@@ -191,9 +190,9 @@ void ForwardPlusPass::renderLightPass() noexcept
                 Matrix4f mvp = m_vpMatrix * transform;
                 Matrix3f normalToView = Matrix3f(m_viewMatrix) * Matrix3f::transpose(Matrix3f::inverse(Matrix3f(transform)));
 
-                glUniformMatrix4fv(m_transformLocation, 1, GL_FALSE, transform.data());
-                glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
-                glUniformMatrix3fv(m_normalToViewLocation, 1, GL_FALSE, normalToView.data());
+                glUniformMatrix4fv(phongLocations.transform, 1, GL_FALSE, transform.data());
+                glUniformMatrix4fv(phongLocations.mvp, 1, GL_FALSE, mvp.data());
+                glUniformMatrix3fv(phongLocations.normalToView, 1, GL_FALSE, normalToView.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);
@@ -204,10 +203,10 @@ void ForwardPlusPass::renderLightPass() noexcept
 }
 void ForwardPlusPass::renderPPPass() noexcept
 {
-    m_buffers->bindForPPPass();
-    m_renderBuffer->bindForWriting();
-
     glUseProgram(content.quadRenderShader);
+
+    m_renderBuffer->bindForWriting();
+    m_buffers->bindForPPPass();
 
     glDisable(GL_DEPTH_TEST);
     glBindVertexArray(content.quadVAO);

@@ -38,8 +38,10 @@ ForwardPlusBuffers::ForwardPlusBuffers(Vector2u dimensions)
     //GENERATE FBO GEOMETRY
     glGenFramebuffers(1, &m_fboGeometry);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboGeometry);
-
+    
+    glBindTexture(GL_TEXTURE_2D, m_normalTexture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_normalTexture, 0);
+    glBindTexture(GL_TEXTURE_2D, m_depthStencilTexture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_depthStencilTexture, 0);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -51,7 +53,9 @@ ForwardPlusBuffers::ForwardPlusBuffers(Vector2u dimensions)
     glGenFramebuffers(1, &m_fboLight);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboLight);
 
+    glBindTexture(GL_TEXTURE_2D, m_lightTexture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_lightTexture, 0);
+    glBindTexture(GL_TEXTURE_2D, m_depthStencilTexture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_depthStencilTexture, 0);
 
     status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -59,7 +63,7 @@ ForwardPlusBuffers::ForwardPlusBuffers(Vector2u dimensions)
         Engine::interrupt("Failed to configure light buffer from ForwardPlusPass");
     }
 
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 ForwardPlusBuffers::~ForwardPlusBuffers()
 {

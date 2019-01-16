@@ -37,14 +37,30 @@ namespace ax
         Matrix4f m_vpMatrix;
 
     private:
-        GLuint m_transformLocation;
-        GLuint m_mvpLocation;
-        GLuint m_normalToViewLocation;
+        struct PhongLocations
+        {
+            GLuint transform;
+            GLuint mvp;
+            GLuint normalToView;
 
-        GLuint m_materialIndexLocation;
-        GLuint m_diffuseTextureLocation;
-        GLuint m_normalTextureLocation;
-        GLuint m_specularTextureLocation;
+            GLuint materialIndex;
+            GLuint diffuseTexture;
+            GLuint normalTexture;
+        };
+
+        PhongLocations phongLocations;
+        
+        struct GeometryLocations
+        {
+            GLuint transform;
+            GLuint mvp;
+            GLuint normalToView;
+
+            GLuint materialIndex;
+            GLuint normalTexture;
+        };
+
+        GeometryLocations geometryLocations;
 
     private:
         GLuint m_phongShader;

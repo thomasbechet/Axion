@@ -1,4 +1,4 @@
-#version 430 core
+#version 420 core
 
 layout(location = 0) in vec3 in_vertex;
 layout(location = 1) in vec2 in_uv;
@@ -6,16 +6,16 @@ layout(location = 2) in vec3 in_normal;
 layout(location = 3) in vec3 in_tangent;
 layout(location = 4) in vec3 in_color;
 
-layout(location = 0) uniform mat4 transform;
-layout(location = 1) uniform mat4 mvp;
-layout(location = 2) uniform mat3 normal_to_view;
+uniform mat4 transform;
+uniform mat4 mvp;
+uniform mat3 normal_to_view;
 
 out vec2 UV;
 out vec3 NORMAL;
 out mat3 TBN;
 
-#define USE_CAMERA_UNIFORM_BLOCK 1
-#if USE_CAMERA_UNIFORM_BLOCK
+#define USE_CAMERA 1
+#if USE_CAMERA
 
 	#define CAMERA_UBO_BINDING_POINT 2
 

@@ -79,7 +79,8 @@ void WireframePass::render(double alpha) noexcept
                 MeshGL& mesh = content.meshes.get(staticmesh.mesh);
 
                 Matrix4f mvp = vp * staticmesh.transform->getWorldMatrix();
-                glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
+                //glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
+                glUniformMatrix4fv(0, 1, GL_FALSE, mvp.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);
