@@ -41,8 +41,7 @@ namespace ax
         static std::vector<Vertex> vertices(
             float xMin, float xMax, 
             float yMin, float yMax, 
-            float zMin, float zMax, 
-            bool smooth = false, 
+            float zMin, float zMax,
             float coordinateFactor = 1.0f
         ) noexcept;
 

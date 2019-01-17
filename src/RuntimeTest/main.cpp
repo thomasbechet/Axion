@@ -26,6 +26,7 @@
 #include <Core/Prefab/Component/ModelComponent.hpp>
 #include <Core/Prefab/Component/PointLightComponent.hpp>
 #include <Core/Prefab/Component/Shape/UVSphereComponent.hpp>
+#include <Core/Prefab/Component/Shape/RectangleComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/AssetManager.hpp>
@@ -182,19 +183,31 @@ public:
         #endif
         
 
-        ax::Entity& cube = ax::Engine::world().entities().create();        
-        ax::TransformComponent& transformCube = cube.addComponent<ax::TransformComponent>();
+        ax::Entity& e1 = ax::Engine::world().entities().create();        
+        ax::TransformComponent& transformCube = e1.addComponent<ax::TransformComponent>();
         transformCube.translate(ax::Vector3f(0, 5, 0));
-        //ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(cube);
+        //ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(e1);
         //cubeModel.setModel("model_cube");
         //cubeModel.setMaterial("mymaterial");
-        ax::UVSphereComponent& sphere = cube.addComponent<ax::UVSphereComponent>(cube);
+        ax::UVSphereComponent& sphere = e1.addComponent<ax::UVSphereComponent>(e1);
         sphere.setMaterial("mymaterial");
         sphere.setRadius(10.0f);
         sphere.setCoordinateFactor(10.0f);
         sphere.setSliceCount(100);
         sphere.setStackCount(100);
         sphere.generate();
+
+
+        ax::Entity& e2 = ax::Engine::world().entities().create();        
+        ax::TransformComponent& e2Trans = e2.addComponent<ax::TransformComponent>();
+        e2Trans.translate(ax::Vector3f(0, 30, 0));
+        ax::RectangleComponent& cubeComponent = e2.addComponent<ax::RectangleComponent>(e2);
+        cubeComponent.setMaterial("mymaterial");
+        cubeComponent.setCoordinateFactor(10.0f);
+        cubeComponent.setMaxX(10.0f);
+        cubeComponent.setMaxY(10.0f);
+        cubeComponent.setMaxZ(10.0f);
+        cubeComponent.generate();
 
         //Light
         ax::Entity& light = ax::Engine::world().entities().create();

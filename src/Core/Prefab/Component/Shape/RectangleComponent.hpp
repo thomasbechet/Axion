@@ -31,7 +31,6 @@ namespace ax
         void setMaterial(std::string name) noexcept;
         void setMaterial(AssetReference<Material> material) noexcept;
 
-        void setSmooth(bool smooth) noexcept;
         void setCoordinateFactor(float factor) noexcept;
 
         void generate() noexcept;
@@ -39,7 +38,6 @@ namespace ax
         TransformComponent& transform;
 
     private:
-        bool m_smooth = false;
         float m_coordinateFactor = 1.0f;
 
         Id m_staticmesh;

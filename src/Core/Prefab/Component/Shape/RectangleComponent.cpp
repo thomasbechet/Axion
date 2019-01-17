@@ -19,7 +19,6 @@ RectangleComponent::RectangleComponent(const Entity& entity,
         zMin, zMax
     ),
     transform(entity.getComponent<TransformComponent>()),
-    m_smooth(smooth),
     m_coordinateFactor(factor)
 {
     //Mesh
@@ -28,7 +27,7 @@ RectangleComponent::RectangleComponent(const Entity& entity,
             m_xMin, m_xMax,
             m_yMin, m_yMax,
             m_zMin, m_zMax,
-            m_smooth, m_coordinateFactor
+            m_coordinateFactor
         )
     );
 
@@ -69,10 +68,6 @@ void RectangleComponent::setMaterial(AssetReference<Material> material) noexcept
     }   
 }
 
-void RectangleComponent::setSmooth(bool smooth) noexcept
-{
-    m_smooth = smooth;
-}
 void RectangleComponent::setCoordinateFactor(float factor) noexcept
 {
     m_coordinateFactor = factor;
@@ -85,7 +80,7 @@ void RectangleComponent::generate() noexcept
             m_xMin, m_xMax,
             m_yMin, m_yMax,
             m_zMin, m_zMax,
-            m_smooth, m_coordinateFactor
+            m_coordinateFactor
         )
     );
 }

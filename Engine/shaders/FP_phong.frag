@@ -117,8 +117,10 @@ vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 	vec3 position = light.position;
 
 	vec3 lightDir = normalize(position - fragPos);
-    float diffCoeff = max(dot(normal, lightDir), 0.0);    
+    float diffCoeff = max(dot(normal, lightDir), 0.0);
+	float ambientCoeff = 0.2f;
     vec3 diffuse  = vec3(1.0f, 1.0f, 1.0f) * diffCoeff * albedo;
+	
     
 	vec3 incidenceVector = normalize(fragPos - position); //a unit vector
 	vec3 reflectionVector = reflect(incidenceVector, normal); //also a unit vector
@@ -126,7 +128,7 @@ vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 	float cosAngle = max(0.0, dot(surfaceToCamera, reflectionVector));
 	float specularCoefficient = pow(cosAngle, 50.0f);
 
-	return (diffuse + specularCoefficient * vec3(1.0f, 1.0f, 1.0f));
+	return (diffuse + specularCoefficient * vec3(1.0f, 1.0f, 1.0f)) + ambientCoeff * albedo;
 }
 
 void main()
