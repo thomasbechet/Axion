@@ -30,6 +30,7 @@ void CameraUBO::update(const Matrix4f& view, const Matrix4f& projection) const n
         GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT
     ));
 
+    p->projectionMatrix = projection;
     p->viewMatrix = view;
     p->invProjectionMatrix = Matrix4f::inverse(projection);
 

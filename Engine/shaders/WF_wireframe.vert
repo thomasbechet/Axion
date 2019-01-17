@@ -15,6 +15,7 @@ layout(location = 0) uniform mat4 mvp;
 
 	layout(std140, binding = CAMERA_BINDING_POINT) uniform Camera
 	{
+		mat4 camera_projection;
 		mat4 camera_view;
 		mat4 inv_camera_projection;
 	};

@@ -1,4 +1,4 @@
-#version 420 core
+#version 430 core
 
 layout(location = 0) out vec3 out_color;
 
@@ -85,6 +85,7 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 
 	layout(std140, binding = CAMERA_UBO_BINDING_POINT) uniform Camera
 	{
+		mat4 camera_projection;
 		mat4 camera_view;
 		mat4 inv_camera_projection;
 	};
@@ -112,6 +113,37 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 
 #endif
 
+#define USE_POINTLIGHT_CULLING 1
+#if USE_POINTLIGHT_CULLING
+
+    #define POINTLIGHT_CULL_SSBO_BINDING_POINT 1
+	#define POINTLIGHT_CULL_MAX_NUMBER 1024
+	#define CULL_TILE_SIZE 16
+
+    layout(std140, binding = POINTLIGHT_CULL_SSBO_BINDING_POINT) readonly buffer PointLightsCullIndices
+    {
+        uint point_lights_cull_indices[];
+    };
+
+	uint getCullingKey()
+	{
+		//Determine tile index
+		ivec2 location = ivec2(gl_FragCoord.xy);
+		ivec2 tileID = location / ivec2(CULL_TILE_SIZE, CULL_TILE_SIZE);
+		return (tileID.y * CULL_TILE_SIZE + tileID.x) * POINTLIGHT_CULL_MAX_NUMBER;
+	}
+
+	bool isPointLightCullIndexValid(uint key, uint index)
+	{
+		return (index < POINTLIGHT_CULL_MAX_NUMBER) && (point_lights_cull_indices[key + index] != -1u);
+	}
+	uint getPointLightCullIndex(uint key, uint index)
+	{
+		return point_lights_cull_indices[key + index];
+	}
+
+#endif
+
 vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 {
 	vec3 position = light.position;
@@ -133,20 +165,25 @@ vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 
 void main()
 {
-	//Determine tile index
-	//ivec2 location = ivec2(gl_FragCoord.xy);
-	//ivec2 tileID = location / ivec2(16, 16);
-	//uint index = tileID.y * numberOfTilesX + tileID.x;
 
 	vec3 color = vec3(0.0f, 0.0f, 0.0f);
 
 	vec3 albedo = getAlbedo();
 	vec3 normal = getNormal();
 
+	//No culling prepass
 	for(uint i = 0; i < point_light_count; i++)
 	{
 		color += phongPointLight(point_lights[i], albedo, normal, POSITION); 
 	}
+
+	//Culling prepass
+	/*uint key = getCullingKey();
+	for(uint i = 0; isPointLightCullIndexValid(key, i); i++)
+	{
+		PointLight pointLight = point_lights[getPointLightCullIndex(key, i)];
+		color += phongPointLight(pointLight, albedo, normal, POSITION); 
+	}*/
 
 	out_color = color;
 }

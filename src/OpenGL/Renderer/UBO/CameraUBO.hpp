@@ -17,6 +17,7 @@ namespace ax
     private:
         struct CameraUBOData
         {
+            Matrix4f projectionMatrix;
             Matrix4f viewMatrix;
             Matrix4f invProjectionMatrix;
         };
