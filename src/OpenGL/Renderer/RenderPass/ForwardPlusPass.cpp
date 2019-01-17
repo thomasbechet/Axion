@@ -14,7 +14,7 @@ void ForwardPlusPass::initialize() noexcept
 {
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
     m_buffers = std::make_unique<ForwardPlusBuffers>(viewport.resolution);
-    m_cullingShader = std::make_unique<ComputeShader>(Path("../shaders/FP_light_culling.comp"));
+    //m_cullingShader = std::make_unique<ComputeShader>(Path("../shaders/FP_light_culling.comp"));
 
     //Load shaders
     AssetReference<Shader> shader;

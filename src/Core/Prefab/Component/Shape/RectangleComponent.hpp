@@ -5,7 +5,7 @@
 //////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
-#include <Core/Math/Geometry/UVSphere.hpp>
+#include <Core/Math/Geometry/Rectangle.hpp>
 #include <Core/World/Entity/Entity.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Asset/AssetReference.hpp>
@@ -13,19 +13,19 @@
 
 namespace ax
 {
-    struct AXION_CORE_API UVSphereComponent : public UVSphere, public Component
+    struct AXION_CORE_API RectangleComponent : public Rectangle, public Component
     {
     public:
-        static std::string name(){return "UVSphere";}
+        static std::string name(){return "Rectangle";}
         
-        UVSphereComponent(const Entity& entity,
-            float radius = 1.0f,
-            unsigned slice = 30,
-            unsigned stack = 30,
+        RectangleComponent(const Entity& entity,
+            float xMin = -0.5f, float xMax = 0.5f,
+            float yMin = -0.5f, float yMax = 0.5f,
+            float zMin = -0.5f, float zMax = 0.5f,
             bool smooth = true,
             float factor = 1.0f
         );
-        ~UVSphereComponent();
+        ~RectangleComponent();
 
         void setMaterial(std::nullptr_t) noexcept;
         void setMaterial(std::string name) noexcept;

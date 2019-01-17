@@ -13,6 +13,7 @@ namespace ax
         Sphere(float radius = 1.0f);
 
         float getRadius() const noexcept;
+        void setRadius(float radius) noexcept;
 
     protected:
         float m_radius = 1.0f;

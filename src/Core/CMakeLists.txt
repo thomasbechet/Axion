@@ -43,6 +43,7 @@ ADD_LIBRARY(
     Prefab/Component/PointLightComponent.cpp
     Prefab/Component/CustomShapeComponent.cpp
     Prefab/Component/Shape/UVSphereComponent.cpp
+    Prefab/Component/Shape/RectangleComponent.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp
@@ -63,6 +64,7 @@ ADD_LIBRARY(
     Math/Geometry/Sphere.cpp
     Math/Geometry/UVSphere.cpp
     Math/Geometry/IcoSphere.cpp
+    Math/Geometry/Rectangle.cpp
     System/System.cpp
     System/SystemManager.cpp
     World/Entity/EntityManager.cpp

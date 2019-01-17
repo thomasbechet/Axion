@@ -2,26 +2,28 @@
 
 #include <Core/Math/Math.hpp>
 
-#include <Core/Utility/Timer.hpp>
-
 using namespace ax;
 
 UVSphere::UVSphere(float radius, unsigned UN, unsigned VN) : Sphere(radius)
 {
-
+    m_UN = UN;
+    m_VN = VN;
 }
 
-void UVSphere::setRadius(float radius) noexcept
+void UVSphere::setSliceCount(unsigned slice) noexcept
 {
-    m_radius = radius;
+    m_UN = slice;
+    if(m_UN < 1) m_UN = 1;
+}
+void UVSphere::setStackCount(unsigned stack) noexcept
+{
+    m_VN = stack;
+    if(m_VN < 1) m_VN = 1;
 }
 
 std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, bool smooth, float coordinateFactor) noexcept
 {
     std::vector<Vertex> vertices;
-
-    Timer timer;
-    timer.start();
 
     vertices.reserve(((VN - 2) * UN * 6) + (2 * UN * 3));
 
