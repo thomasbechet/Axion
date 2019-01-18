@@ -30,6 +30,7 @@ ADD_LIBRARY(
     Renderer/FrameBuffer/RenderBuffer.cpp
     Renderer/UBO/MaterialUBO.cpp
     Renderer/UBO/PointLightUBO.cpp
+    Renderer/UBO/DirectionalLightUBO.cpp
     Renderer/UBO/CameraUBO.cpp
     Renderer/Utility/ComputeShader.cpp
     Renderer/Light/PointLightGL.cpp

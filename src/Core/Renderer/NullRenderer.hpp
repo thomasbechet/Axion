@@ -60,10 +60,14 @@ namespace ax
         void setStaticmeshTransform(Id id, Transform* transform) override {}
         void setStaticmeshMesh(Id id, Id mesh) override {}
 
-        //Light
+        //PointLight
         Id createPointLight() override {return 0;}
         void destroyPointLight(Id id) override {}
         void setPointLightTransform(Id id, Transform* transform) override {}
         void setPointLightParameters(Id id, const PointLightParameters& parameters) override {}
+        //DirectionalLight
+        Id createPointLight() override {return 0;};
+        void destroyPointLight(Id id) override {};
+        void setPointLightParameters(Id id, const DirectionalLightParameters& parameters) override {};
     };
 }

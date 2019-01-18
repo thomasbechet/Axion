@@ -74,10 +74,14 @@ namespace ax
         virtual void setStaticmeshTransform(Id id, Transform* transform) = 0;
         virtual void setStaticmeshMesh(Id id, Id mesh) = 0;
 
-        //Light
+        //PointLight
         virtual Id createPointLight() = 0;
         virtual void destroyPointLight(Id id) = 0;
         virtual void setPointLightTransform(Id id, Transform* transform) = 0;
         virtual void setPointLightParameters(Id id, const PointLightParameters& parameters) = 0;
+        //DirectionalLight
+        virtual Id createPointLight() = 0;
+        virtual void destroyPointLight(Id id) = 0;
+        virtual void setPointLightParameters(Id id, const DirectionalLightParameters& parameters) = 0;
     };
 }

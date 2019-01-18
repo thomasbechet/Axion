@@ -113,6 +113,26 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 
 #endif
 
+#define USE_DIRECTIONALLIGHT 1
+#if USE_DIRECTIONALLIGHT
+
+	#define DIRECTIONALLIGHT_UBO_BINDING_POINT 4
+	#define DIRECTIONALLIGHT_MAX_NUMBER 50
+
+	struct DirectionalLight
+	{
+		vec3 direction;
+		vec3 color;
+		float intensity;
+	};
+	layout(std140, binding = DIRECTIONALLIGHT_UBO_BINDING_POINT) uniform directional_lights
+	{
+		DirectionalLight directional_lights[DIRECTIONALLIGHT_MAX_NUMBER];
+		uint directional_lights_count;
+	};
+
+#endif
+
 #define USE_POINTLIGHT_CULLING 1
 #if USE_POINTLIGHT_CULLING
 
@@ -163,6 +183,11 @@ vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 	return (diffuse + specularCoefficient * vec3(1.0f, 1.0f, 1.0f)) + ambientCoeff * albedo;
 }
 
+vec3 phongDirectionalLight(DirectionalLight light, vec3 albedo, vec3 normal, vec3 fragPos)
+{
+
+}
+
 void main()
 {
 
@@ -184,6 +209,11 @@ void main()
 		PointLight pointLight = point_lights[getPointLightCullIndex(key, i)];
 		color += phongPointLight(pointLight, albedo, normal, POSITION); 
 	}*/
+
+	for(uint i = 0; i < directional_lights_count; i++)
+	{
+		DirectionalLight light = directional_lights[i];
+	}
 
 	out_color = color;
 }

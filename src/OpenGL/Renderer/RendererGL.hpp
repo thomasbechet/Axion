@@ -14,6 +14,7 @@
 #include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
 #include <OpenGL/Renderer/UBO/MaterialUBO.hpp>
 #include <OpenGL/Renderer/UBO/PointLightUBO.hpp>
+#include <OpenGL/Renderer/UBO/DirectionalLightUBO.hpp>
 #include <OpenGL/Renderer/UBO/CameraUBO.hpp>
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <Core/Renderer/Renderer.hpp>
@@ -32,6 +33,7 @@ namespace ax
         IndexVector<StaticmeshGL> staticmeshes;
         IndexVector<TextureGL> textures;
         IndexVector<PointLightGL> pointLights;
+        IndexVector<DirectionalLightGL> directionalLights;
 
         GLuint quadVBO;
         GLuint quadVAO;
@@ -40,6 +42,7 @@ namespace ax
 
         std::unique_ptr<MaterialUBO> materialUBO;
         std::unique_ptr<PointLightUBO> pointLightUBO;
+        std::unique_ptr<DirectionalLightUBO> directionalLightUBO;
         std::unique_ptr<CameraUBO> cameraUBO;
     };
 
@@ -104,11 +107,15 @@ namespace ax
         void setStaticmeshTransform(Id id, Transform* transform) override;
         void setStaticmeshMesh(Id id, Id mesh) override;
 
-        //Light
+        //PointLight
         Id createPointLight() override;
         void destroyPointLight(Id id) override;
         void setPointLightTransform(Id id, Transform* transform) override;
         void setPointLightParameters(Id id, const PointLightParameters& parameters) override;
+        //DirectionalLight
+        Id createPointLight() override;
+        void destroyPointLight(Id id) override;
+        void setPointLightParameters(Id id, const DirectionalLightParameters& parameters) override;
 
     private:
         RenderContent m_content;
