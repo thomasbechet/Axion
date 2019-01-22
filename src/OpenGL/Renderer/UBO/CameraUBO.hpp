@@ -26,7 +26,7 @@ namespace ax
         CameraUBO();
         ~CameraUBO();
 
-        void update(const Matrix4f& view, const Matrix4f& projection) const noexcept;
+        void update(const Matrix4f& view, const Matrix4f& projection, const Matrix4f& invProjection) const noexcept;
 
     private:
         GLuint m_ubo;

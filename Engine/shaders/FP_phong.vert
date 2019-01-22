@@ -33,7 +33,6 @@ out mat3 TBN;
 void main()
 {
 	vec4 position = mvp * vec4(in_vertex, 1.0f);
-
 	gl_Position = position;
 
 	POSITION = vec3(inv_camera_projection * position);

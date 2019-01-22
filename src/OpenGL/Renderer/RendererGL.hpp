@@ -113,9 +113,10 @@ namespace ax
         void setPointLightTransform(Id id, Transform* transform) override;
         void setPointLightParameters(Id id, const PointLightParameters& parameters) override;
         //DirectionalLight
-        Id createPointLight() override;
-        void destroyPointLight(Id id) override;
-        void setPointLightParameters(Id id, const DirectionalLightParameters& parameters) override;
+        Id createDirectionalLight() override;
+        void destroyDirectionalLight(Id id) override;
+        void setDirectionalLightTransform(Id id, Transform* transform) override;
+        void setDirectionalLightParameters(Id id, const DirectionalLightParameters& parameters) override;
 
     private:
         RenderContent m_content;

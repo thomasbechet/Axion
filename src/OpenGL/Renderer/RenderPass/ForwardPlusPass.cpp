@@ -1,6 +1,7 @@
 #include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
 
 #include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/Utility/ShaderConstants.hpp>
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Asset/AssetManager.hpp>
@@ -12,10 +13,16 @@ ForwardPlusPass::ForwardPlusPass(RenderContent& content, Viewport& viewport) : R
 
 void ForwardPlusPass::initialize() noexcept
 {
+    glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
+    glClearDepth(0.0f);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glDepthRange(0.0f, 1.0f);
+
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
     m_buffers = std::make_unique<ForwardPlusBuffers>(viewport.resolution);
 
-    //m_cullingShader = std::make_unique<ComputeShader>(Path("../shaders/FP_light_culling.comp"));
+    //initializeCullPass();
 
     //Load shaders
     AssetReference<Shader> shader;
@@ -55,8 +62,9 @@ void ForwardPlusPass::initialize() noexcept
 }
 void ForwardPlusPass::terminate() noexcept
 {
+    //terminateCullPass();
+
     //Unload buffers
-    m_cullingShader.reset();
     m_buffers.reset();
     m_renderBuffer.reset();
 
@@ -73,6 +81,7 @@ void ForwardPlusPass::render(double alpha) noexcept
 {
     updateUBOs();
     renderGeometryPass();
+    //processCullPass();
     renderLightPass();
     renderPPPass();
     renderViewportPass();
@@ -84,21 +93,23 @@ void ForwardPlusPass::updateUBOs() noexcept
     CameraGL& camera = content.cameras.get(viewport.camera);
 
     Vector3f eye = camera.transform->getTranslation();
-    Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
+    Vector3f forward = camera.transform->getForwardVector();
     Vector3f up = camera.transform->getUpVector();
 
-    m_viewMatrix = Matrix4f::lookAt(eye, target, up);
+    m_viewMatrix = Matrix4f::view(eye, forward, up);
 
     float aspect = (viewport.size.x * (float)Engine::window().getSize().x) /
         (viewport.size.y * (float)Engine::window().getSize().y);
 
-    Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far);
+    Matrix4f projectionMatrix = Matrix4f::perspectiveInversedZ(camera.fov, aspect, camera.near, camera.far);
+    Matrix4f invProjectionMatrix = Matrix4f::inverse(Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far));
 
     m_vpMatrix = projectionMatrix * m_viewMatrix;
 
     //Updates Lights
     content.pointLightUBO->updatePositions(content.pointLights, m_viewMatrix);
-    content.cameraUBO->update(m_viewMatrix, projectionMatrix);
+    content.directionalLightUBO->updateDirections(content.directionalLights, m_viewMatrix);
+    content.cameraUBO->update(m_viewMatrix, projectionMatrix, invProjectionMatrix);
 }
 void ForwardPlusPass::renderGeometryPass() noexcept
 {
@@ -106,13 +117,9 @@ void ForwardPlusPass::renderGeometryPass() noexcept
     glViewport(0, 0, viewport.resolution.x, viewport.resolution.y);
 
     //Maybe useless configuration ?
-    glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-
-    //Render geometry
+    glDepthFunc(GL_GREATER);
     glDepthMask(GL_TRUE); 
-    glDepthFunc(GL_LESS);
 
     glUseProgram(m_geometryShader);
     m_buffers->bindForGeometryPass();
@@ -151,6 +158,12 @@ void ForwardPlusPass::renderGeometryPass() noexcept
             }
         }
     }
+}
+void ForwardPlusPass::processCullPass() noexcept
+{
+    m_cullingShader->use();
+    m_buffers->bindForCullPass();
+    glDispatchCompute(CULL_TILE_SIZE, CULL_TILE_SIZE, 1);
 }
 void ForwardPlusPass::renderLightPass() noexcept
 {
@@ -236,7 +249,23 @@ void ForwardPlusPass::renderViewportPass() noexcept
     glBindVertexArray(content.quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
-    glEnable(GL_DEPTH_TEST);
 
     glUseProgram(0);
+}
+
+void ForwardPlusPass::initializeCullPass() noexcept
+{
+    glGenBuffers(1, &m_cullSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_cullSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, CULL_TILE_SIZE * CULL_TILE_SIZE * POINTLIGHT_CULL_MAX_NUMBER * sizeof(GLint), 0, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, POINTLIGHT_CULL_SSBO_BINDING_POINT, m_cullSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    m_cullingShader = std::make_unique<ComputeShader>(Path("../shaders/FP_light_culling.comp"));
+}
+void ForwardPlusPass::terminateCullPass() noexcept
+{
+    m_cullingShader.reset();
+
+    glDeleteBuffers(1, &m_cullSSBO);
 }

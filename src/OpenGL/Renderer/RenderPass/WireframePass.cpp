@@ -11,6 +11,10 @@ WireframePass::WireframePass(RenderContent& content, Viewport& viewport) : Rende
 
 void WireframePass::initialize() noexcept
 {
+    glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
+    glClearDepth(0.0f);
+    glDepthFunc(GL_GREATER);
+
     //Load shaders
     AssetReference<Shader> shader;
     shader = Engine::assets().shader.create("renderergl_shader_wireframe",
@@ -41,6 +45,9 @@ void WireframePass::updateResolution() noexcept
 }
 void WireframePass::render(double alpha) noexcept
 {
+    glDepthFunc(GL_GREATER);
+    glClearDepth(0.0f);
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glUseProgram(m_wireframeShader);
     m_renderBuffer->bindForWriting();
@@ -49,17 +56,18 @@ void WireframePass::render(double alpha) noexcept
     CameraGL& camera = content.cameras.get(viewport.camera);
 
     Vector3f eye = camera.transform->getTranslation();
-    Vector3f target = camera.transform->getTranslation() + camera.transform->getForwardVector();
+    Vector3f forward = camera.transform->getForwardVector();
     Vector3f up = camera.transform->getUpVector();
 
-    Matrix4f viewMatrix = Matrix4f::lookAt(eye, target, up);
+    Matrix4f viewMatrix = Matrix4f::view(eye, forward, up);
 
     float aspect = (viewport.size.x * (float)Engine::window().getSize().x) /
         (viewport.size.y * (float)Engine::window().getSize().y);
 
-    Matrix4f projectionMatrix = Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far);
+    Matrix4f projectionMatrix = Matrix4f::perspectiveInversedZ(camera.fov, aspect, camera.near, camera.far);
+    Matrix4f invProjectionMatrix = Matrix4f::inverse(Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far));
 
-    content.cameraUBO->update(viewMatrix, projectionMatrix);
+    content.cameraUBO->update(viewMatrix, projectionMatrix, invProjectionMatrix);
 
     Matrix4f vp = projectionMatrix * viewMatrix;
 
@@ -109,6 +117,7 @@ void WireframePass::render(double alpha) noexcept
     m_renderBuffer->bindForReading();
 
     glDisable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     glBindVertexArray(content.quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);

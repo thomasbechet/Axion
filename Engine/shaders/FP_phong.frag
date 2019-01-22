@@ -1,5 +1,6 @@
 #version 430 core
 
+layout(early_fragment_tests) in;
 layout(location = 0) out vec3 out_color;
 
 in vec2 UV;
@@ -9,7 +10,7 @@ in vec3 COLOR;
 in mat3 TBN;
 
 layout(binding = 3) uniform sampler2D gbuffer_normal_texture;
-layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
+layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
 
 #define USE_MATERIAL 1 
 #if USE_MATERIAL
@@ -122,10 +123,11 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 	struct DirectionalLight
 	{
 		vec3 direction;
+		float pad;
 		vec3 color;
 		float intensity;
 	};
-	layout(std140, binding = DIRECTIONALLIGHT_UBO_BINDING_POINT) uniform directional_lights
+	layout(std140, binding = DIRECTIONALLIGHT_UBO_BINDING_POINT) uniform DirectionalLights
 	{
 		DirectionalLight directional_lights[DIRECTIONALLIGHT_MAX_NUMBER];
 		uint directional_lights_count;
@@ -136,26 +138,26 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 #define USE_POINTLIGHT_CULLING 1
 #if USE_POINTLIGHT_CULLING
 
-    #define POINTLIGHT_CULL_SSBO_BINDING_POINT 1
+    #define POINTLIGHT_CULL_SSBO_BINDING_POINT 5
 	#define POINTLIGHT_CULL_MAX_NUMBER 1024
 	#define CULL_TILE_SIZE 16
 
-    layout(std140, binding = POINTLIGHT_CULL_SSBO_BINDING_POINT) readonly buffer PointLightsCullIndices
+    layout(packed, binding = POINTLIGHT_CULL_SSBO_BINDING_POINT) readonly buffer PointLightsCullIndices
     {
-        uint point_lights_cull_indices[];
+        int point_lights_cull_indices[];
     };
 
 	uint getCullingKey()
 	{
 		//Determine tile index
-		ivec2 location = ivec2(gl_FragCoord.xy);
-		ivec2 tileID = location / ivec2(CULL_TILE_SIZE, CULL_TILE_SIZE);
+		ivec2 chunk = (textureSize(gbuffer_depth_texture, 0).xy / ivec2(CULL_TILE_SIZE, CULL_TILE_SIZE));
+		ivec2 tileID = ivec2(gl_FragCoord.xy) / chunk;
 		return (tileID.y * CULL_TILE_SIZE + tileID.x) * POINTLIGHT_CULL_MAX_NUMBER;
 	}
 
 	bool isPointLightCullIndexValid(uint key, uint index)
 	{
-		return (index < POINTLIGHT_CULL_MAX_NUMBER) && (point_lights_cull_indices[key + index] != -1u);
+		return (index < POINTLIGHT_CULL_MAX_NUMBER) && (point_lights_cull_indices[key + index] != -1);
 	}
 	uint getPointLightCullIndex(uint key, uint index)
 	{
@@ -167,12 +169,12 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_stencil_texture;
 vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 {
 	vec3 position = light.position;
+	float radius = 10.0f;
 
 	vec3 lightDir = normalize(position - fragPos);
     float diffCoeff = max(dot(normal, lightDir), 0.0);
-	float ambientCoeff = 0.2f;
+	float ambientCoeff = 0.05f;
     vec3 diffuse  = vec3(1.0f, 1.0f, 1.0f) * diffCoeff * albedo;
-	
     
 	vec3 incidenceVector = normalize(fragPos - position); //a unit vector
 	vec3 reflectionVector = reflect(incidenceVector, normal); //also a unit vector
@@ -180,17 +182,31 @@ vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 	float cosAngle = max(0.0, dot(surfaceToCamera, reflectionVector));
 	float specularCoefficient = pow(cosAngle, 50.0f);
 
-	return (diffuse + specularCoefficient * vec3(1.0f, 1.0f, 1.0f)) + ambientCoeff * albedo;
+	float attenuation = smoothstep(radius, 0, length(fragPos - position));
+
+	if(length(fragPos - position) > radius) return vec3(0, 0, 0);
+
+	return ((diffuse + specularCoefficient * vec3(1.0f, 1.0f, 1.0f)) + ambientCoeff * albedo) * attenuation;
 }
 
 vec3 phongDirectionalLight(DirectionalLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 {
+	vec3 lightDir = normalize(light.direction);
+    float diffCoeff = max(dot(normal, lightDir), 0.0);
+	float ambientCoeff = 0.2f;
+    vec3 diffuse  = vec3(1.0f, 1.0f, 1.0f) * diffCoeff * albedo;
+    
+	vec3 incidenceVector = -lightDir; //a unit vector
+	vec3 reflectionVector = reflect(incidenceVector, normal); //also a unit vector
+	vec3 surfaceToCamera = normalize(-fragPos); //also a unit vector
+	float cosAngle = max(0.0, dot(surfaceToCamera, reflectionVector));
+	float specularCoefficient = pow(cosAngle, 50.0f);
 
+	return ((diffuse + specularCoefficient * vec3(1.0f, 1.0f, 1.0f)) + ambientCoeff * albedo);
 }
 
 void main()
 {
-
 	vec3 color = vec3(0.0f, 0.0f, 0.0f);
 
 	vec3 albedo = getAlbedo();
@@ -199,21 +215,31 @@ void main()
 	//No culling prepass
 	for(uint i = 0; i < point_light_count; i++)
 	{
-		color += phongPointLight(point_lights[i], albedo, normal, POSITION); 
+		PointLight light = point_lights[i];
+		color += phongPointLight(light, albedo, normal, POSITION); 
 	}
 
 	//Culling prepass
 	/*uint key = getCullingKey();
-	for(uint i = 0; isPointLightCullIndexValid(key, i); i++)
+	uint i;
+	for(i = 0; isPointLightCullIndexValid(key, i); i++)
 	{
 		PointLight pointLight = point_lights[getPointLightCullIndex(key, i)];
 		color += phongPointLight(pointLight, albedo, normal, POSITION); 
 	}*/
 
-	for(uint i = 0; i < directional_lights_count; i++)
+	//Adding directional light
+	/*for(uint i = 0; i < directional_lights_count; i++)
 	{
 		DirectionalLight light = directional_lights[i];
-	}
+		color += phongDirectionalLight(light, albedo, normal, POSITION);
+	}*/
+
+	//color = vec3(float(i) / 5.0f, float(i) / 5.0f, float(i) / 5.0f);
+
+	//color = albedo;
+
+	//color = POSITION;
 
 	out_color = color;
 }

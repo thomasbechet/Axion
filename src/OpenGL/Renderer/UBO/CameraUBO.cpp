@@ -19,7 +19,7 @@ CameraUBO::~CameraUBO()
     glDeleteBuffers(1, &m_ubo);
 }
 
-void CameraUBO::update(const Matrix4f& view, const Matrix4f& projection) const noexcept
+void CameraUBO::update(const Matrix4f& view, const Matrix4f& projection, const Matrix4f& invProjection) const noexcept
 {
     glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
 
@@ -32,7 +32,7 @@ void CameraUBO::update(const Matrix4f& view, const Matrix4f& projection) const n
 
     p->projectionMatrix = projection;
     p->viewMatrix = view;
-    p->invProjectionMatrix = Matrix4f::inverse(projection);
+    p->invProjectionMatrix = invProjection;
 
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 }

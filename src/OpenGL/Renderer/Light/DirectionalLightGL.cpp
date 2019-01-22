@@ -2,15 +2,32 @@
 
 using namespace ax;
 
-Id RendererGL::createPointLight()
+Id RendererGL::createDirectionalLight()
 {
-    return 0;
-}
-void RendererGL::destroyPointLight(Id id)
-{
+    Id id = m_content.directionalLights.add(DirectionalLightGL());
+    DirectionalLightGL& light = m_content.directionalLights.get(id);
 
-}
-void RendererGL::setPointLightParameters(Id id, const DirectionalLightParameters& parameters)
-{
+    m_content.directionalLightUBO->load(light);
+    //m_content.pointLightUBO->updateLight(light);
 
+    return id;
+}
+void RendererGL::destroyDirectionalLight(Id id)
+{
+    DirectionalLightGL& light = m_content.directionalLights.get(id);
+    m_content.directionalLightUBO->unload(light);
+}
+void RendererGL::setDirectionalLightTransform(Id id, Transform* transform)
+{
+    DirectionalLightGL& light = m_content.directionalLights.get(id);
+    light.transform = transform;
+}
+void RendererGL::setDirectionalLightParameters(Id id, const DirectionalLightParameters& parameters)
+{
+    PointLightGL& light = m_content.pointLights.get(id);
+
+    light.color = parameters.color;
+    light.intensity = parameters.intensity;
+
+    m_content.pointLightUBO->updateLight(light);
 }

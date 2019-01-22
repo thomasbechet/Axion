@@ -25,8 +25,10 @@
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Prefab/Component/ModelComponent.hpp>
 #include <Core/Prefab/Component/PointLightComponent.hpp>
+#include <Core/Prefab/Component/DirectionalLightComponent.hpp>
 #include <Core/Prefab/Component/Shape/UVSphereComponent.hpp>
 #include <Core/Prefab/Component/Shape/RectangleComponent.hpp>
+#include <Core/Prefab/Component/Shape/QuadComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/AssetManager.hpp>
@@ -53,7 +55,7 @@ struct Position : public ax::Component
     float z;
 };
 
-struct StaticMesh : public ax::Component
+struct Staticsponza : public ax::Component
 {
     void load(const ax::Entity& e) noexcept
     {
@@ -63,7 +65,7 @@ struct StaticMesh : public ax::Component
     {
         
     }
-    static std::string name(){return "StaticMesh";}
+    static std::string name(){return "Staticsponza";}
 
     ax::Id id;
     Position* position;
@@ -81,10 +83,10 @@ private:
     unsigned count = 0;
 };
 
-class StaticMeshSystem : public ax::System
+class StaticsponzaSystem : public ax::System
 {
 public:
-    static std::string name(){return "StaticMeshSystem";}
+    static std::string name(){return "StaticsponzaSystem";}
 
     void onInitialize() override
     {
@@ -122,8 +124,9 @@ public:
     {
         ax::Engine::assets().package.create("mypackage", "../packages/package.xml");
         ax::MaterialParameters materialParameters;
-        materialParameters.diffuseTexture = "texture_brick_diffuse";
-        materialParameters.normalTexture = "texture_brick_normal";
+        //materialParameters.diffuseTexture = "texture_brick_diffuse";
+        //materialParameters.normalTexture = "texture_brick_normal";
+		materialParameters.diffuseTexture = "texture_earth";
         ax::AssetReference<ax::Material> m = ax::Engine::assets().material.create("mymaterial", materialParameters);
 
 
@@ -136,7 +139,8 @@ public:
         ax::Entity& camera0 = ax::Engine::world().entities().create();
         ax::TransformComponent& cameraTransform = camera0.addComponent<ax::TransformComponent>();
         ax::CameraComponent& cameraComponent0 = camera0.addComponent<ax::CameraComponent>(camera0);
-        cameraComponent0.setFarPlane(300.0f);
+        cameraComponent0.setFarPlane(100000000.0f);
+        cameraComponent0.setNearPlane(0.01f);
         cameraComponent0.bindDefaultViewport();
         ax::BasicSpectatorComponent& spectatorComponent0 = camera0.addComponent<ax::BasicSpectatorComponent>(camera0);
         cameraSystem.add(spectatorComponent0);
@@ -168,53 +172,69 @@ public:
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
 
-        #define LOW_RESOLUTION
+        //#define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
             ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
         #endif
         
         #define USE_SPONZA
         #if defined USE_SPONZA
-            ax::Entity& mesh = ax::Engine::world().entities().create();
-            ax::TransformComponent& transform1 = mesh.addComponent<ax::TransformComponent>();
-            transform1.setScale(0.05f, 0.05f, 0.05f);
-            transform1.setTranslation(0.0f, 0.0f, 0.0f);
-            mesh.addComponent<ax::ModelComponent>(mesh).setModel("model_sponza");
+            ax::Entity& sponza = ax::Engine::world().entities().create();
+            ax::TransformComponent& sponzaTransform = sponza.addComponent<ax::TransformComponent>();
+            sponzaTransform.setScale(0.05f, 0.05f, 0.05f);
+            sponzaTransform.setTranslation(0.0f, 2.0f, 0.0f);
+            sponza.addComponent<ax::ModelComponent>(sponza).setModel("model_sponza");
         #endif
         
 
-        ax::Entity& e1 = ax::Engine::world().entities().create();        
-        ax::TransformComponent& transformCube = e1.addComponent<ax::TransformComponent>();
-        transformCube.translate(ax::Vector3f(0, 5, 0));
-        //ax::ModelComponent& cubeModel = cube.addComponent<ax::ModelComponent>(e1);
-        //cubeModel.setModel("model_cube");
-        //cubeModel.setMaterial("mymaterial");
-        ax::UVSphereComponent& sphere = e1.addComponent<ax::UVSphereComponent>(e1);
-        sphere.setMaterial("mymaterial");
-        sphere.setRadius(10.0f);
-        sphere.setCoordinateFactor(10.0f);
-        sphere.setSliceCount(100);
-        sphere.setStackCount(100);
-        sphere.generate();
+        ax::Entity& rotator = ax::Engine::world().entities().create();   
+        ax::TransformComponent& rotatorTransform = rotator.addComponent<ax::TransformComponent>();
+
+        ax::Entity& sphere = ax::Engine::world().entities().create();        
+        ax::TransformComponent& sphereTransform = sphere.addComponent<ax::TransformComponent>();
+        sphereTransform.translate(ax::Vector3f(0, 3000000000.0f, 0));
+        //sphereTransform.translate(ax::Vector3f(0, 3844000.0f, 0));
+        ax::UVSphereComponent& sphereComponent = sphere.addComponent<ax::UVSphereComponent>(sphere);
+        sphereComponent.setMaterial("mymaterial");
+        sphereComponent.setRadius(1737000.0f);
+        sphereComponent.setRadius(700000000.0f);
+        sphereComponent.setCoordinateFactor(1.0f);
+        sphereComponent.setSliceCount(100);
+        sphereComponent.setStackCount(100);
+        sphereComponent.generate();
+
+        sphereTransform.attachTo(rotator);
 
 
-        ax::Entity& e2 = ax::Engine::world().entities().create();        
-        ax::TransformComponent& e2Trans = e2.addComponent<ax::TransformComponent>();
-        e2Trans.translate(ax::Vector3f(0, 30, 0));
-        ax::RectangleComponent& cubeComponent = e2.addComponent<ax::RectangleComponent>(e2);
-        cubeComponent.setMaterial("mymaterial");
-        cubeComponent.setCoordinateFactor(10.0f);
-        cubeComponent.setMaxX(10.0f);
-        cubeComponent.setMaxY(10.0f);
-        cubeComponent.setMaxZ(10.0f);
-        cubeComponent.generate();
+        ax::Entity& rectangle = ax::Engine::world().entities().create();        
+        ax::TransformComponent& rectangleTransform = rectangle.addComponent<ax::TransformComponent>();
+        rectangleTransform.translate(ax::Vector3f(0, 0, 3));
+        ax::RectangleComponent& rectangleComponent = rectangle.addComponent<ax::RectangleComponent>(rectangle);
+        rectangleComponent.setMaterial("mymaterial");
+        rectangleComponent.setCoordinateFactor(1.0f);
+        rectangleComponent.setMaxX(1.0f);
+        rectangleComponent.setMaxY(1.0f);
+        rectangleComponent.setMaxZ(1.0f);
+        rectangleComponent.generate();
 
-        //Light
-        ax::Entity& light = ax::Engine::world().entities().create();
-        light.addComponent<ax::TransformComponent>().setTranslation(10.0f, 0.0f, 0.0f);
-        light.addComponent<ax::PointLightComponent>(light);
+        //Lights
+        ax::Entity& pointLight = ax::Engine::world().entities().create();
+        ax::TransformComponent& lightTransform = pointLight.addComponent<ax::TransformComponent>();
+        pointLight.addComponent<ax::PointLightComponent>(pointLight);
+        pointLight.addComponent<ax::UVSphereComponent>(pointLight, 0.1f);
 
-        ax::Engine::systems().add<CustomSystem>().setTransform(&cameraTransform);
+        ax::Entity& directionalLight = ax::Engine::world().entities().create();
+        directionalLight.addComponent<ax::TransformComponent>();
+        directionalLight.addComponent<ax::DirectionalLightComponent>(directionalLight);
+
+        //Plane
+        ax::Entity& plane = ax::Engine::world().entities().create();
+        plane.addComponent<ax::TransformComponent>();
+        plane.addComponent<ax::QuadComponent>(plane, 2000.0f, 2000.0f);
+
+        CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
+        system.setTransform(&rotatorTransform);
+        system.setSpawnTransform(&cameraTransform);
     }
     void onStop() override
     {

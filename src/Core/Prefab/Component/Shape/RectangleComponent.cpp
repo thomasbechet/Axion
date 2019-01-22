@@ -1,7 +1,6 @@
 #include <Core/Prefab/Component/Shape/RectangleComponent.hpp>
 
 #include <Core/Renderer/Renderer.hpp>
-#include <Core/Math/Geometry/UVSphere.hpp>
 #include <Core/Asset/AssetManager.hpp>
 
 using namespace ax;

@@ -12,6 +12,11 @@ public:
         m_transform = transform;
     }
 
+    void setSpawnTransform(ax::TransformComponent* transform)
+    {
+        m_spawn = transform;
+    }
+
     void onStart() override
     {
         spawnButton = &ax::Engine::input().addButton("test");
@@ -22,20 +27,21 @@ public:
     {
         float delta = ax::Engine::context().getDeltaTime().asSeconds();
         m_time += delta;
-        //m_transform->rotate(ax::radians(delta * 2.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
-        //m_transform->rotate(ax::radians(delta * 5.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
-        //m_transform->setTranslation(ax::Vector3f(0.0f, 3.0f + std::cos(m_time), 0.0f));
+        m_transform->setRotation(ax::radians(1.0f) * m_time, ax::Vector3f(1.0f, 0.0f, 0.0f));
 
         if(spawnButton->isJustPressed())
         {
             ax::Entity& light = ax::Engine::world().entities().create();
-            light.addComponent<ax::TransformComponent>().setTranslation(m_transform->getTranslation());
+            light.addComponent<ax::TransformComponent>().setTranslation(m_spawn->getTranslation());
             light.addComponent<ax::PointLightComponent>(light);
+
+            std::cout << m_spawn->getTranslation().x << std::endl;
         }
     }
 
 private:
     ax::TransformComponent* m_transform;
+    ax::TransformComponent* m_spawn;
     float m_time = 0.0f;
 
     ax::Button* spawnButton;

@@ -41,9 +41,11 @@ ADD_LIBRARY(
     Prefab/Component/BasicSpectatorComponent.cpp
     Prefab/Component/ModelComponent.cpp
     Prefab/Component/PointLightComponent.cpp
+    Prefab/Component/DirectionalLightComponent.cpp
     Prefab/Component/CustomShapeComponent.cpp
     Prefab/Component/Shape/UVSphereComponent.cpp
     Prefab/Component/Shape/RectangleComponent.cpp
+    Prefab/Component/Shape/QuadComponent.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp
@@ -65,6 +67,7 @@ ADD_LIBRARY(
     Math/Geometry/UVSphere.cpp
     Math/Geometry/IcoSphere.cpp
     Math/Geometry/Rectangle.cpp
+    Math/Geometry/Quad.cpp
     System/System.cpp
     System/SystemManager.cpp
     World/Entity/EntityManager.cpp

@@ -4,12 +4,14 @@
 //HEADERS
 //////////////
 #include <OpenGL/Export.hpp>
+#include <Core/Math/Transform.hpp>
 
 namespace ax
 {
     struct AXION_GL_API DirectionalLightGL
     {
-        Vector3f direction;
+        Transform* transform = nullptr;
+
         Color3 color;
 
         GLuint uboIndex;

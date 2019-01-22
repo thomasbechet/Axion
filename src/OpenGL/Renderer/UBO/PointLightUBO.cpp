@@ -31,7 +31,7 @@ void PointLightUBO::unload(PointLightGL& light) noexcept
 
 void PointLightUBO::updateLight(const PointLightGL& light) noexcept
 {
-    m_pointlights.get(light.uboIndex).position = light.transform->getTranslation();
+    
 }
 void PointLightUBO::updatePositions(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept
 {
@@ -47,6 +47,7 @@ void PointLightUBO::updatePositions(IndexVector<PointLightGL>& lights, const Mat
     for(auto& light : lights)
     {
         m_pointlights.get(light.uboIndex).position = Vector3f(view * Vector4f(light.transform->getTranslation(), 1.0f));
+        m_pointlights.get(light.uboIndex).radius = 5.0f;
     }
 
     std::copy(m_pointlights.begin(), m_pointlights.end(), p);

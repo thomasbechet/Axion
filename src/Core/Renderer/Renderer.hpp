@@ -80,8 +80,9 @@ namespace ax
         virtual void setPointLightTransform(Id id, Transform* transform) = 0;
         virtual void setPointLightParameters(Id id, const PointLightParameters& parameters) = 0;
         //DirectionalLight
-        virtual Id createPointLight() = 0;
-        virtual void destroyPointLight(Id id) = 0;
-        virtual void setPointLightParameters(Id id, const DirectionalLightParameters& parameters) = 0;
+        virtual Id createDirectionalLight() = 0;
+        virtual void destroyDirectionalLight(Id id) = 0;
+        virtual void setDirectionalLightTransform(Id id, Transform* transform) = 0;
+        virtual void setDirectionalLightParameters(Id id, const DirectionalLightParameters& parameters) = 0;
     };
 }

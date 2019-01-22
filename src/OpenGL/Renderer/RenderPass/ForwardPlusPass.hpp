@@ -28,9 +28,16 @@ namespace ax
     private:
         void updateUBOs() noexcept;
         void renderGeometryPass() noexcept;
+        void processCullPass() noexcept;
         void renderLightPass() noexcept;
         void renderPPPass() noexcept;
         void renderViewportPass() noexcept;
+
+    private:
+        void initializeCullPass() noexcept;
+        void terminateCullPass() noexcept;
+        std::unique_ptr<ComputeShader> m_cullingShader;
+        GLuint m_cullSSBO;
 
     private:
         Matrix4f m_viewMatrix;
@@ -68,6 +75,5 @@ namespace ax
 
         std::unique_ptr<RenderBuffer> m_renderBuffer;
         std::unique_ptr<ForwardPlusBuffers> m_buffers;
-        std::unique_ptr<ComputeShader> m_cullingShader;
     };
 }

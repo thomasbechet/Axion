@@ -38,13 +38,13 @@
 #define USE_POINTLIGHT_CULLING 1
 #if USE_POINTLIGHT_CULLING
 
-    #define POINTLIGHT_CULL_SSBO_BINDING_POINT 1
+    #define POINTLIGHT_CULL_SSBO_BINDING_POINT 5
 	#define POINTLIGHT_CULL_MAX_NUMBER 1024
-	#define CULLING_TILE_SIZE 16
+	#define CULL_TILE_SIZE 16
 
-    layout(std140, binding = POINTLIGHT_CULL_SSBO_BINDING_POINT) writeonly buffer PointLightsCullIndices
+    layout(packed, binding = POINTLIGHT_CULL_SSBO_BINDING_POINT) writeonly buffer PointLightsCullIndices
     {
-        uint point_lights_cull_indices[];
+        int point_lights_cull_indices[];
     };
 
 #endif
@@ -59,7 +59,7 @@ shared ivec2 screenSize;
 
 layout(binding = 0) uniform sampler2D depth_texture;
 
-layout(local_size_x = CULLING_TILE_SIZE, local_size_y = CULLING_TILE_SIZE, local_size_z = 1) in;
+layout(local_size_x = CULL_TILE_SIZE, local_size_y = CULL_TILE_SIZE, local_size_z = 1) in;
 void main()
 {
     ivec2 location = ivec2(gl_GlobalInvocationID.xy);
@@ -132,7 +132,7 @@ void main()
 	// Step 3: Cull lights.
 	// Parallelize the threads against the lights now.
 	// Can handle 256 simultaniously. Anymore lights than that and additional passes are performed
-	uint threadCount = CULLING_TILE_SIZE * CULLING_TILE_SIZE;
+	uint threadCount = CULL_TILE_SIZE * CULL_TILE_SIZE;
 	uint passCount = (point_light_count + threadCount - 1) / threadCount;
 	for (uint i = 0; i < passCount; i++)
 	{

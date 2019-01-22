@@ -17,9 +17,9 @@ ForwardPlusBuffers::ForwardPlusBuffers(Vector2u dimensions)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     //Depth Stencil
-    glGenTextures(1, &m_depthStencilTexture);
-    glBindTexture(GL_TEXTURE_2D, m_depthStencilTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, dimensions.x, dimensions.y, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+    glGenTextures(1, &m_depthTexture);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, dimensions.x, dimensions.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -41,8 +41,8 @@ ForwardPlusBuffers::ForwardPlusBuffers(Vector2u dimensions)
     
     glBindTexture(GL_TEXTURE_2D, m_normalTexture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_normalTexture, 0);
-    glBindTexture(GL_TEXTURE_2D, m_depthStencilTexture);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_depthStencilTexture, 0);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if(status != GL_FRAMEBUFFER_COMPLETE){
@@ -55,8 +55,8 @@ ForwardPlusBuffers::ForwardPlusBuffers(Vector2u dimensions)
 
     glBindTexture(GL_TEXTURE_2D, m_lightTexture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_lightTexture, 0);
-    glBindTexture(GL_TEXTURE_2D, m_depthStencilTexture);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_depthStencilTexture, 0);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 
     status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if(status != GL_FRAMEBUFFER_COMPLETE){
@@ -71,7 +71,7 @@ ForwardPlusBuffers::~ForwardPlusBuffers()
     glDeleteFramebuffers(1, &m_fboLight);
 
     glDeleteTextures(1, &m_normalTexture);
-    glDeleteTextures(1, &m_depthStencilTexture);
+    glDeleteTextures(1, &m_depthTexture);
     glDeleteTextures(1, &m_lightTexture);
 }
 
@@ -84,6 +84,11 @@ void ForwardPlusBuffers::bindForGeometryPass() noexcept
         GL_COLOR_ATTACHMENT0
     };
     glDrawBuffers(1, buffers);
+}
+void ForwardPlusBuffers::bindForCullPass() noexcept
+{   
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
 }
 void ForwardPlusBuffers::bindForLightPass() noexcept
 {
@@ -99,7 +104,7 @@ void ForwardPlusBuffers::bindForLightPass() noexcept
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, m_normalTexture);
     glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, m_depthStencilTexture);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
 }
 void ForwardPlusBuffers::bindForPPPass() noexcept
 {

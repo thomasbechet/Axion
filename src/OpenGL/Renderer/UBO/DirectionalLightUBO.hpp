@@ -23,6 +23,7 @@ namespace ax
         struct DirectionalLightUBOData
         {
             Vector3f direction;
+            float pad;
             Color3 color;
             float intensity;
         };

@@ -180,9 +180,10 @@ namespace ax
 		{
 			return Matrix4<T>::scale(scale.x, scale.y, scale.z);
 		}
-		static Matrix4<T> lookAt(Vector3<T>& eye, Vector3<T>& target, Vector3<T>& up) noexcept
+
+		static Matrix4<T> view(Vector3<T>& eye, Vector3<T>& forward, Vector3<T>& up) noexcept
 		{
-			Vector3<T> zaxis = Vector3<T>::normalize(eye - target);
+			Vector3<T> zaxis = -1.0f * forward;
 			Vector3<T> xaxis = Vector3<T>::normalize(Vector3<T>::cross(up, zaxis));
 			Vector3<T> yaxis = Vector3<T>::cross(zaxis, xaxis);
 
@@ -204,6 +205,32 @@ namespace ax
 				0, yS, 0, 0,
 				0, 0, (far + near) / nmf, 2 * far * near / nmf,
 				0, 0, -1, 0
+			);
+		}
+		static Matrix4<T> perspectiveInversedZ(T fov = 90, T aspect = 1, T near = 0.01, T far = 100) noexcept
+		{
+			/*T yS = (T)1 / tan(radians(fov) / (T)2);
+			T xS = yS / aspect;
+    		return Matrix4<T>(
+        		xS, 0, 0, 0,
+				0, yS, 0, 0,
+				0, 0, -(far / (near - far)) - 1, -((near * far) / (near - far)),
+				0, 0, (T)-1, 0
+			);*/
+
+			/*float f = 1.0f / tan(radians(fov) / 2.0f);
+			return Matrix4<T>(
+				f / aspect, 0.0f,  0.0f,  0.0f,
+						0.0f,    f,  0.0f,  0.0f,
+						0.0f, 0.0f,  0.0f, -1.0f,
+						0.0f, 0.0f, near,  0.0f);*/
+
+			float f = 1.0f / tan(radians(fov) / 2.0f);
+			return Matrix4<T>(
+				f / aspect, 0.0f, 0.0f, 0.0f,
+				0.0f, f, 0.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, near,
+				0.0f, 0.0f, -1.0f, 0.0f
 			);
 		}
 
@@ -410,7 +437,7 @@ namespace ax
 		}
 		Vector3<T> operator*(const Vector3<T>& vec) noexcept
 		{
-			return Vector4<T>(
+			return Vector3<T>(
 				m[0][0] * vec.x + m[1][0] * vec.y + m[2][0] * vec.z,
 				m[0][1] * vec.x + m[1][1] * vec.y + m[2][1] * vec.z,
 				m[0][2] * vec.x + m[1][2] * vec.y + m[2][2] * vec.z

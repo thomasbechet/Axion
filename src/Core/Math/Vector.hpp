@@ -125,11 +125,13 @@ namespace ax
 		////////////////////
 		Vector3<T> operator+(const Vector3<T> vec)const{return Vector3<T>(x + vec.x, y + vec.y, z + vec.z);}
 		Vector3<T> operator-(const Vector3<T> vec)const{return Vector3<T>(x - vec.x, y - vec.y, z - vec.z);}
+		Vector3<T> operator-(const T& factor)const{return Vector3<T>(x - factor, y - factor, z - factor);}
 		Vector3<T> operator*(const Vector3<T> vec)const{return Vector3<T>(x * vec.x, y * vec.y, z * vec.z);}
 		Vector3<T> operator*(const T& factor)const{return Vector3<T>(x * factor, y * factor, z * factor);}
 		Vector3<T> operator/(const Vector3<T> vec)const{return Vector3<T>(x / vec.x, y / vec.y, z / vec.z);}
 		Vector3<T> operator+=(const Vector3<T>& vec){x += vec.x; y += vec.y; z += vec.z; return *this;}
 		Vector3<T> operator-=(const Vector3<T>& vec){x -= vec.x; y -= vec.y; z -= vec.z; return *this;}
+		Vector3<T> operator-=(const T& factor){x -= factor; y -= factor; z -= factor; return *this;}
 		Vector3<T> operator*=(const Vector3<T>& vec){x *= vec.x; y *= vec.y; z *= vec.z; return *this;}
 		Vector3<T> operator/=(const Vector3<T>& vec){x /= vec.x; y /= vec.y; z /= vec.z; return *this;}
 

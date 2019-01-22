@@ -21,9 +21,9 @@ namespace ax
         TransformComponent& transform;
         CameraComponent& camera;
 
-        float normalSpeed = 10.0f; // m/s
+        float normalSpeed = 20.0f; // m/s
         float slowSpeed = 2.0f; // m/s
-        float fastSpeed = 30.0f; // m/s
+        float fastSpeed = 500.0f; // m/s
         float rollSpeed = 90.0f; //deg/s
         float rotationSensibility = 0.3f;
         float zoomSpeed = 5.0f;
