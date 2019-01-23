@@ -143,6 +143,8 @@ void main()
 			break;
 		}
 
+		/*
+
 		vec4 position = vec4(point_lights[lightIndex].position, 0);
 		float radius = point_lights[lightIndex].radius;
 
@@ -162,6 +164,13 @@ void main()
 		// If greater than zero, then it is a visible light
 		if(distance > 0.0)
 		{
+			// Add index to the shared array of visible indices
+			uint offset = atomicAdd(visibleLightCount, 1);
+			visibleLightIndices[offset] = int(lightIndex);
+		}
+		*/
+
+		if(gl_LocalInvocationIndex == 0){
 			// Add index to the shared array of visible indices
 			uint offset = atomicAdd(visibleLightCount, 1);
 			visibleLightIndices[offset] = int(lightIndex);

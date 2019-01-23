@@ -150,8 +150,8 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
 	uint getCullingKey()
 	{
 		//Determine tile index
-		ivec2 chunk = (textureSize(gbuffer_depth_texture, 0).xy / ivec2(CULL_TILE_SIZE, CULL_TILE_SIZE));
-		ivec2 tileID = ivec2(gl_FragCoord.xy) / chunk;
+		vec2 chunk = (textureSize(gbuffer_depth_texture, 0).xy / vec2(CULL_TILE_SIZE, CULL_TILE_SIZE));
+		ivec2 tileID = ivec2(vec2(gl_FragCoord.xy) / chunk);
 		return (tileID.y * CULL_TILE_SIZE + tileID.x) * POINTLIGHT_CULL_MAX_NUMBER;
 	}
 
@@ -169,7 +169,7 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
 vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 {
 	vec3 position = light.position;
-	float radius = 10.0f;
+	float radius = light.radius;
 
 	vec3 lightDir = normalize(position - fragPos);
     float diffCoeff = max(dot(normal, lightDir), 0.0);
@@ -213,33 +213,31 @@ void main()
 	vec3 normal = getNormal();
 
 	//No culling prepass
-	for(uint i = 0; i < point_light_count; i++)
+	/*for(uint i = 0; i < point_light_count; i++)
 	{
 		PointLight light = point_lights[i];
 		color += phongPointLight(light, albedo, normal, POSITION); 
-	}
+	}*/
 
 	//Culling prepass
-	/*uint key = getCullingKey();
-	uint i;
-	for(i = 0; isPointLightCullIndexValid(key, i); i++)
+	uint key = getCullingKey();
+	for(uint i = 0; isPointLightCullIndexValid(key, i); i++)
 	{
 		PointLight pointLight = point_lights[getPointLightCullIndex(key, i)];
 		color += phongPointLight(pointLight, albedo, normal, POSITION); 
-	}*/
+	}
 
 	//Adding directional light
-	/*for(uint i = 0; i < directional_lights_count; i++)
+	for(uint i = 0; i < directional_lights_count; i++)
 	{
 		DirectionalLight light = directional_lights[i];
 		color += phongDirectionalLight(light, albedo, normal, POSITION);
-	}*/
-
-	//color = vec3(float(i) / 5.0f, float(i) / 5.0f, float(i) / 5.0f);
+	}
 
 	//color = albedo;
 
-	//color = POSITION;
+	//color = vec3(texture2D(gbuffer_depth_texture, gl_FragCoord.xy / vec2(1920, 1080)).x * 10.0f);
+	//color = vec3((gl_FragCoord.xy) / vec2(1920, 1080), 1.0f);
 
 	out_color = color;
 }

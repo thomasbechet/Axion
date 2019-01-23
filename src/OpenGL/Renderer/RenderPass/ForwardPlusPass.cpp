@@ -22,7 +22,7 @@ void ForwardPlusPass::initialize() noexcept
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
     m_buffers = std::make_unique<ForwardPlusBuffers>(viewport.resolution);
 
-    //initializeCullPass();
+    initializeCullPass();
 
     //Load shaders
     AssetReference<Shader> shader;
@@ -62,7 +62,7 @@ void ForwardPlusPass::initialize() noexcept
 }
 void ForwardPlusPass::terminate() noexcept
 {
-    //terminateCullPass();
+    terminateCullPass();
 
     //Unload buffers
     m_buffers.reset();
@@ -81,7 +81,7 @@ void ForwardPlusPass::render(double alpha) noexcept
 {
     updateUBOs();
     renderGeometryPass();
-    //processCullPass();
+    processCullPass();
     renderLightPass();
     renderPPPass();
     renderViewportPass();
