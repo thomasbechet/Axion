@@ -99,12 +99,23 @@ void main()
 
 	if(gl_LocalInvocationIndex == 0)
 	{
+		frustumPlanes[4] = vec4(0.0, 0.0, -1.0, 1.0f - maxDepth); // Near
+		frustumPlanes[5] = vec4(0.0, 0.0, 1.0, maxDepth); // Far
+
+		frustumPlanes[4] *= camera_view;
+		frustumPlanes[4] /= length(frustumPlanes[4].xyz);
+		frustumPlanes[5] *= camera_view;
+		frustumPlanes[5] /= length(frustumPlanes[5].xyz);
+
 		for (uint i = 0; i < point_light_count; i++)
 		{
 			vec4 position = vec4(point_lights[i].position, 1.0f); //view space
 			float radius = point_lights[i].radius;
 
-			if(position.z + radius < minDepth)
+			float distance0 = dot(position, frustumPlanes[4]);
+			float distance1 = dot(position, frustumPlanes[5]);
+
+			if(distance0 > 0.0f)
 			{
 				// Add index to the shared array of visible indices
 				uint offset = atomicAdd(visibleLightCount, 1);

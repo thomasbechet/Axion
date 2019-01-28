@@ -221,21 +221,25 @@ void main()
 	//Culling prepass
 	uint tileID = getCullID();
 	uint key = tileID * POINTLIGHT_CULL_MAX_NUMBER;
-	for(uint i = 0; isPointLightCullIndexValid(key, i); i++)
+	uint i;
+	for(i = 0; isPointLightCullIndexValid(key, i); i++)
 	{
 		PointLight pointLight = point_lights[getPointLightCullIndex(key, i)];
 		color += phongPointLight(pointLight, albedo, normal, POSITION); 
 	}
 
+	float I = float(i) / 5.0f;
+
 	//Adding directional light
-	for(uint i = 0; i < directional_lights_count; i++)
+	for(i = 0; i < directional_lights_count; i++)
 	{
 		DirectionalLight light = directional_lights[i];
 		color += phongDirectionalLight(light, albedo, normal, POSITION);
 	}
 
 	float v = (float(getCullID()) / float(CULL_TILE_SIZE * CULL_TILE_SIZE));
-	//color = vec3(v, v, v);
+	
+	//color = vec3(I, I, I);
 
 	out_color = color;
 }

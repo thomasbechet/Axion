@@ -50,7 +50,6 @@ void PointLightUBO::updateMemory(IndexVector<PointLightGL>& lights, const Matrix
     for(auto& light : lights)
     {
         m_pointlights.get(light.uboIndex).position = Vector3f(view * Vector4f(light.transform->getTranslation(), 1.0f));
-        std::cout << m_pointlights.get(light.uboIndex).position.z << std::endl;
     }
 
     std::copy(m_pointlights.begin(), m_pointlights.end(), p);
