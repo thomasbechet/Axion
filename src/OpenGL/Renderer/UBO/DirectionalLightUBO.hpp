@@ -36,7 +36,7 @@ namespace ax
         void unload(DirectionalLightGL& light) noexcept;
 
         void updateLight(const DirectionalLightGL& light) noexcept;
-        void updateDirections(IndexVector<DirectionalLightGL>& lights, const Matrix4f& view) noexcept;
+        void updateMemory(IndexVector<DirectionalLightGL>& lights, const Matrix4f& view) noexcept;
 
     private:
         GLuint m_uboLights;

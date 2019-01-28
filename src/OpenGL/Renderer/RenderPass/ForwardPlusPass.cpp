@@ -107,8 +107,8 @@ void ForwardPlusPass::updateUBOs() noexcept
     m_vpMatrix = projectionMatrix * m_viewMatrix;
 
     //Updates Lights
-    content.pointLightUBO->updatePositions(content.pointLights, m_viewMatrix);
-    content.directionalLightUBO->updateDirections(content.directionalLights, m_viewMatrix);
+    content.pointLightUBO->updateMemory(content.pointLights, m_viewMatrix);
+    content.directionalLightUBO->updateMemory(content.directionalLights, m_viewMatrix);
     content.cameraUBO->update(m_viewMatrix, projectionMatrix, invProjectionMatrix);
 }
 void ForwardPlusPass::renderGeometryPass() noexcept

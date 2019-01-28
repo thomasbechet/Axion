@@ -38,5 +38,5 @@ void RendererGL::updateMaterial(Id id, const RendererMaterialParameters& setting
     material.specularUniform = settings.specularUniform;
     material.specularTexture = settings.specularTexture;
 
-    m_content.materialUBO->update(material);
+    m_content.materialUBO->updateMaterial(material);
 }

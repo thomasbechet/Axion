@@ -36,7 +36,7 @@ namespace ax
         void unload(PointLightGL& light) noexcept;
 
         void updateLight(const PointLightGL& light) noexcept;
-        void updatePositions(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept;
+        void updateMemory(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept;
 
     private:
         GLuint m_uboLights;

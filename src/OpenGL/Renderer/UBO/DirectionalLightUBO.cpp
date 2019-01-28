@@ -33,7 +33,7 @@ void DirectionalLightUBO::updateLight(const DirectionalLightGL& light) noexcept
 {
     
 }
-void DirectionalLightUBO::updateDirections(IndexVector<DirectionalLightGL>& lights, const Matrix4f& view) noexcept
+void DirectionalLightUBO::updateMemory(IndexVector<DirectionalLightGL>& lights, const Matrix4f& view) noexcept
 {
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboLights);
     DirectionalLightUBOData* p = static_cast<DirectionalLightUBOData*>(glMapBufferRange(

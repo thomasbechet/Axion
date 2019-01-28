@@ -37,7 +37,7 @@ void MaterialUBO::unload(MaterialGL& material) noexcept
 {
     m_free.emplace_back(material.uboIndex);
 }
-void MaterialUBO::update(const MaterialGL& material) noexcept
+void MaterialUBO::updateMaterial(const MaterialGL& material) noexcept
 {
     glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
 

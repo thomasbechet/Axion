@@ -32,7 +32,7 @@ namespace ax
 
         void load(MaterialGL& material) noexcept;
         void unload(MaterialGL& material) noexcept;
-        void update(const MaterialGL& material) noexcept;
+        void updateMaterial(const MaterialGL& material) noexcept;
 
     private:
         GLuint m_ubo;

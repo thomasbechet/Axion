@@ -183,7 +183,7 @@ namespace ax
 
 		static Matrix4<T> view(Vector3<T>& eye, Vector3<T>& forward, Vector3<T>& up) noexcept
 		{
-			Vector3<T> zaxis = -1.0f * forward;
+			Vector3<T> zaxis = forward;
 			Vector3<T> xaxis = Vector3<T>::normalize(Vector3<T>::cross(up, zaxis));
 			Vector3<T> yaxis = Vector3<T>::cross(zaxis, xaxis);
 

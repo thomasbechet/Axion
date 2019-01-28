@@ -31,9 +31,12 @@ void PointLightUBO::unload(PointLightGL& light) noexcept
 
 void PointLightUBO::updateLight(const PointLightGL& light) noexcept
 {
-    
+    PointLightUBOData& data = m_pointlights.get(light.uboIndex);
+    data.radius = light.radius;
+    data.color = light.color;
+    data.intensity = light.intensity;
 }
-void PointLightUBO::updatePositions(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept
+void PointLightUBO::updateMemory(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept
 {
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboLights);
     PointLightUBOData* p = static_cast<PointLightUBOData*>(glMapBufferRange(
@@ -47,7 +50,7 @@ void PointLightUBO::updatePositions(IndexVector<PointLightGL>& lights, const Mat
     for(auto& light : lights)
     {
         m_pointlights.get(light.uboIndex).position = Vector3f(view * Vector4f(light.transform->getTranslation(), 1.0f));
-        m_pointlights.get(light.uboIndex).radius = 5.0f;
+        std::cout << m_pointlights.get(light.uboIndex).position.z << std::endl;
     }
 
     std::copy(m_pointlights.begin(), m_pointlights.end(), p);

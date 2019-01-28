@@ -33,7 +33,7 @@ public:
         {
             ax::Entity& light = ax::Engine::world().entities().create();
             light.addComponent<ax::TransformComponent>().setTranslation(m_spawn->getTranslation());
-            light.addComponent<ax::PointLightComponent>(light);
+            light.addComponent<ax::PointLightComponent>(light).setRadius(10);
         }
     }
 

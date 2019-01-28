@@ -147,21 +147,20 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
         int point_lights_cull_indices[];
     };
 
-	uint getCullingKey()
+	uint getCullID()
 	{
-		//Determine tile index
 		vec2 chunk = (textureSize(gbuffer_depth_texture, 0).xy / vec2(CULL_TILE_SIZE, CULL_TILE_SIZE));
 		ivec2 tileID = ivec2(vec2(gl_FragCoord.xy) / chunk);
-		return (tileID.y * CULL_TILE_SIZE + tileID.x) * POINTLIGHT_CULL_MAX_NUMBER;
+		return tileID.y * CULL_TILE_SIZE + tileID.x;
 	}
 
-	bool isPointLightCullIndexValid(uint key, uint index)
+	bool isPointLightCullIndexValid(uint offset, uint index)
 	{
-		return (index < POINTLIGHT_CULL_MAX_NUMBER) && (point_lights_cull_indices[key + index] != -1);
+		return (index < POINTLIGHT_CULL_MAX_NUMBER) && (point_lights_cull_indices[offset + index] != -1);
 	}
-	uint getPointLightCullIndex(uint key, uint index)
+	uint getPointLightCullIndex(uint offset, uint index)
 	{
-		return point_lights_cull_indices[key + index];
+		return point_lights_cull_indices[offset + index];
 	}
 
 #endif
@@ -220,7 +219,8 @@ void main()
 	}*/
 
 	//Culling prepass
-	uint key = getCullingKey();
+	uint tileID = getCullID();
+	uint key = tileID * POINTLIGHT_CULL_MAX_NUMBER;
 	for(uint i = 0; isPointLightCullIndexValid(key, i); i++)
 	{
 		PointLight pointLight = point_lights[getPointLightCullIndex(key, i)];
@@ -234,10 +234,8 @@ void main()
 		color += phongDirectionalLight(light, albedo, normal, POSITION);
 	}
 
-	//color = albedo;
-
-	//color = vec3(texture2D(gbuffer_depth_texture, gl_FragCoord.xy / vec2(1920, 1080)).x * 10.0f);
-	//color = vec3((gl_FragCoord.xy) / vec2(1920, 1080), 1.0f);
+	float v = (float(getCullID()) / float(CULL_TILE_SIZE * CULL_TILE_SIZE));
+	//color = vec3(v, v, v);
 
 	out_color = color;
 }
