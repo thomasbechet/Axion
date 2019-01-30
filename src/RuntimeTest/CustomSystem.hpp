@@ -21,6 +21,20 @@ public:
     {
         spawnButton = &ax::Engine::input().addButton("test");
         spawnButton->bind(ax::Keyboard::C);
+
+        m_pointlights.reserve(MAX_X * MAX_Y);
+        for(int x = 0; x < MAX_X; x++)
+        {
+            for(int y = 0; y < MAX_Y; y++)
+            {
+                ax::Entity& pointLight = ax::Engine::world().entities().create();
+                ax::TransformComponent* lightTransform = &pointLight.addComponent<ax::TransformComponent>();
+                lightTransform->setTranslation(x * 5.0f, 0.2f, 100.0f + y * 5.0f);
+                m_pointlights.emplace_back(lightTransform);
+                pointLight.addComponent<ax::PointLightComponent>(pointLight).setRadius(5.0f);
+                pointLight.addComponent<ax::UVSphereComponent>(pointLight, 0.2f);
+            }
+        }
     }
 
     void onUpdate() override
@@ -28,6 +42,17 @@ public:
         float delta = ax::Engine::context().getDeltaTime().asSeconds();
         m_time += delta;
         m_transform->setRotation(ax::radians(1.0f) * m_time, ax::Vector3f(1.0f, 0.0f, 0.0f));
+
+        for(int x = 0; x < MAX_X; x++)
+        {
+            for(int y = 0; y < MAX_Y; y++)
+            {
+                ax::TransformComponent* component = m_pointlights.at(y * MAX_X + x);
+                ax::Vector3f trans = component->getTranslation();
+                trans.y = 1.2f + std::cos(m_time + x * y);
+                component->setTranslation(trans);
+            }
+        }
 
         if(spawnButton->isJustPressed())
         {
@@ -38,6 +63,10 @@ public:
     }
 
 private:
+    std::vector<ax::TransformComponent*> m_pointlights;
+    int MAX_X = 20;
+    int MAX_Y = 20;
+
     ax::TransformComponent* m_transform;
     ax::TransformComponent* m_spawn;
     float m_time = 0.0f;

@@ -97,7 +97,7 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
 #if USE_POINTLIGHT
 
 	#define POINTLIGHT_UBO_BINDING_POINT 3
-	#define POINTLIGHT_MAX_NUMBER 150
+	#define POINTLIGHT_MAX_NUMBER 500
 
 	struct PointLight
 	{

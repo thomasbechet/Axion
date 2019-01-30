@@ -172,7 +172,7 @@ public:
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
 
-        //#define LOW_RESOLUTION
+        #define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
             ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
         #endif
@@ -218,17 +218,6 @@ public:
         rectangleComponent.generate();
 
         //Lights
-        for(int x = 0; x < 10; x++)
-        {
-            for(int y = 0; y < 10; y++)
-            {
-                ax::Entity& pointLight = ax::Engine::world().entities().create();
-                ax::TransformComponent& lightTransform = pointLight.addComponent<ax::TransformComponent>();
-                lightTransform.setTranslation(x * 5.0f, 0.2f, 100.0f + y * 5.0f);
-                pointLight.addComponent<ax::PointLightComponent>(pointLight).setRadius(10.0f);
-            }
-        }
-
         ax::Entity& directionalLight = ax::Engine::world().entities().create();
         directionalLight.addComponent<ax::TransformComponent>();
         directionalLight.addComponent<ax::DirectionalLightComponent>(directionalLight);
@@ -236,7 +225,7 @@ public:
         //Plane
         ax::Entity& plane = ax::Engine::world().entities().create();
         plane.addComponent<ax::TransformComponent>();
-        plane.addComponent<ax::QuadComponent>(plane, 2000.0f, 2000.0f);
+        plane.addComponent<ax::QuadComponent>(plane, 500.0f, 500.0f);
 
         CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
         system.setTransform(&rotatorTransform);
