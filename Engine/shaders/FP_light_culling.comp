@@ -59,6 +59,21 @@ shared ivec2 screenSize;
 
 layout(binding = 0) uniform sampler2D depth_texture;
 
+vec4 unprojectScreenSpaceToViewSpace(in vec4 screenPoint)
+{
+	vec4 clipSpace = vec4(
+		screenPoint.x * 2.0f - 1.0f,
+		screenPoint.y * 2.0f - 1.0f,
+		screenPoint.z,
+		screenPoint.w
+	);
+
+	vec4 viewSpace = inv_camera_projection * clipSpace;
+	viewSpace /= viewSpace.w;
+
+	return viewSpace;
+}
+
 layout(local_size_x = CULL_TILE_SIZE, local_size_y = CULL_TILE_SIZE, local_size_z = 1) in;
 void main()
 {
