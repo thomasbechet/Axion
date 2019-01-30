@@ -49,8 +49,8 @@
 
 #endif
 
-shared uint minDepthInt;
-shared uint maxDepthInt;
+shared int minDepthInt;
+shared int maxDepthInt;
 shared uint visibleLightCount;
 shared vec4 frustumPlanes[6];
 shared int visibleLightIndices[POINTLIGHT_CULL_MAX_NUMBER];
@@ -85,37 +85,32 @@ void main()
 	vec2 uv = vec2(globalID) / screenSize;
 	float depth = texture(depth_texture, uv).r;
 	
-	uint depthInt = floatBitsToUint(depth);
+	int depthInt = floatBitsToInt(depth);
 	atomicMin(minDepthInt, depthInt);
 	atomicMax(maxDepthInt, depthInt);
 
 	//Convert back int depth to fload depth
 	if (gl_LocalInvocationIndex == 0){
-		minDepth = uintBitsToFloat(minDepthInt);
-		maxDepth = uintBitsToFloat(maxDepthInt);
+		minDepth = intBitsToFloat(minDepthInt);
+		maxDepth = intBitsToFloat(maxDepthInt);
 	}
 
 	barrier();
 
 	if(gl_LocalInvocationIndex == 0)
 	{
-		frustumPlanes[4] = vec4(0.0, 0.0, -1.0, 1.0f - maxDepth); // Near
+		frustumPlanes[4] = vec4(0.0, 0.0, 0.0, 1.0f - maxDepth); // Near
 		frustumPlanes[5] = vec4(0.0, 0.0, 1.0, maxDepth); // Far
-
-		frustumPlanes[4] *= camera_view;
-		frustumPlanes[4] /= length(frustumPlanes[4].xyz);
-		frustumPlanes[5] *= camera_view;
-		frustumPlanes[5] /= length(frustumPlanes[5].xyz);
 
 		for (uint i = 0; i < point_light_count; i++)
 		{
 			vec4 position = vec4(point_lights[i].position, 1.0f); //view space
 			float radius = point_lights[i].radius;
 
-			float distance0 = dot(position, frustumPlanes[4]);
-			float distance1 = dot(position, frustumPlanes[5]);
-
-			if(distance0 > 0.0f)
+			//PASSER EN VIEW SPACE OBLIGER (radius)
+			position *= camera_projection;
+			position.z /= position.w;
+			if(position.z > maxDepth)
 			{
 				// Add index to the shared array of visible indices
 				uint offset = atomicAdd(visibleLightCount, 1);

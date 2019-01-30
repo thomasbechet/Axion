@@ -77,6 +77,13 @@ namespace ax
 		{
 			return &x;
 		}
+
+		friend std::ostream& operator<<(std::ostream& out, const Vector2<T>& vec)
+		{
+			out << "[x=" + std::to_string(vec.x) + " y=" + std::to_string(vec.y) + "]";
+			
+			return out;
+		}
 		
 	public:
 		T x = 0;
@@ -134,6 +141,7 @@ namespace ax
 		Vector3<T> operator-=(const T& factor){x -= factor; y -= factor; z -= factor; return *this;}
 		Vector3<T> operator*=(const Vector3<T>& vec){x *= vec.x; y *= vec.y; z *= vec.z; return *this;}
 		Vector3<T> operator/=(const Vector3<T>& vec){x /= vec.x; y /= vec.y; z /= vec.z; return *this;}
+		Vector3<T> operator-(){return (T)-1 * (*this);} 
 
 		//////////////////////////
 		//ALGEBRA
@@ -180,6 +188,13 @@ namespace ax
 		const T* data() const noexcept
 		{
 			return &x;
+		}
+
+		friend std::ostream& operator<<(std::ostream& out, const Vector3<T>& vec)
+		{
+			out << "[x=" + std::to_string(vec.x) + " y=" + std::to_string(vec.y) + " z=" + std::to_string(vec.z) + "]";
+			
+			return out;
 		}
 
 		static const Vector3<T> forward;
@@ -262,6 +277,7 @@ namespace ax
 		Vector4<T> operator-=(const Vector4<T>& vec){x -= vec.x; y -= vec.y; z -= vec.z; w -= vec.w; return *this;}
 		Vector4<T> operator*=(const Vector4<T>& vec){x *= vec.x; y *= vec.y; z *= vec.z; w *= vec.w; return *this;}
 		Vector4<T> operator/=(const Vector4<T>& vec){x /= vec.x; y /= vec.y; z /= vec.z; w /= vec.w; return *this;}
+		Vector4<T> operator/=(const T& factor){x /= factor; y /= factor; z /= factor; w /= factor; return *this;}
 		
 		//////////////////////////
 		//ALGEBRA
@@ -295,6 +311,13 @@ namespace ax
 		const T* data() const noexcept
 		{
 			return &x;
+		}
+
+		friend std::ostream& operator<<(std::ostream& out, const Vector4<T>& vec)
+		{
+			out << "[x=" + std::to_string(vec.x) + " y=" + std::to_string(vec.y) + " z=" + std::to_string(vec.z) + " w=" + std::to_string(vec.w) + "]";
+			
+			return out;
 		}
 		
 	public:
