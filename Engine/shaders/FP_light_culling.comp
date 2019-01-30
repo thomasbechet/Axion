@@ -18,7 +18,7 @@
 #if USE_POINTLIGHT
 
 	#define POINTLIGHT_UBO_BINDING_POINT 3
-	#define POINTLIGHT_MAX_NUMBER 50
+	#define POINTLIGHT_MAX_NUMBER 150
 
 	struct PointLight
 	{
@@ -122,10 +122,15 @@ void main()
 			vec4 position = vec4(point_lights[i].position, 1.0f); //view space
 			float radius = point_lights[i].radius;
 
-			//PASSER EN VIEW SPACE OBLIGER (radius)
-			position *= camera_projection;
-			position.z /= position.w;
-			if(position.z > maxDepth)
+			vec4 near = vec4(0.0f, 0.0f, -1.0f, maxDepth);
+			near *= inv_camera_projection;
+			near /= near.w;
+
+			vec4 far = vec4(0.0f, 0.0f, 1.0f, minDepth);
+			far *= inv_camera_projection;
+			far /= far.w;
+
+			if(position.z - radius < near.z && position.z - radius < far.z)
 			{
 				// Add index to the shared array of visible indices
 				uint offset = atomicAdd(visibleLightCount, 1);

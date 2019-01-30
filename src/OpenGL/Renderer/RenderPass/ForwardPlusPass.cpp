@@ -102,7 +102,7 @@ void ForwardPlusPass::updateUBOs() noexcept
         (viewport.size.y * (float)Engine::window().getSize().y);
 
     Matrix4f projectionMatrix = Matrix4f::perspectiveInversedZ(camera.fov, aspect, camera.near, camera.far);
-    Matrix4f invProjectionMatrix = Matrix4f::inverse(Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far));
+    Matrix4f invProjectionMatrix = Matrix4f::inverse(projectionMatrix);
 
     m_vpMatrix = projectionMatrix * m_viewMatrix;
 

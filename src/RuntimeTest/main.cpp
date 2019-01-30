@@ -218,10 +218,16 @@ public:
         rectangleComponent.generate();
 
         //Lights
-        ax::Entity& pointLight = ax::Engine::world().entities().create();
-        ax::TransformComponent& lightTransform = pointLight.addComponent<ax::TransformComponent>();
-        pointLight.addComponent<ax::PointLightComponent>(pointLight);
-        pointLight.addComponent<ax::UVSphereComponent>(pointLight, 0.1f);
+        for(int x = 0; x < 10; x++)
+        {
+            for(int y = 0; y < 10; y++)
+            {
+                ax::Entity& pointLight = ax::Engine::world().entities().create();
+                ax::TransformComponent& lightTransform = pointLight.addComponent<ax::TransformComponent>();
+                lightTransform.setTranslation(x * 5.0f, 0.2f, 100.0f + y * 5.0f);
+                pointLight.addComponent<ax::PointLightComponent>(pointLight).setRadius(10.0f);
+            }
+        }
 
         ax::Entity& directionalLight = ax::Engine::world().entities().create();
         directionalLight.addComponent<ax::TransformComponent>();

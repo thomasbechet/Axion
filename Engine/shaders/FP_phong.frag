@@ -97,7 +97,7 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
 #if USE_POINTLIGHT
 
 	#define POINTLIGHT_UBO_BINDING_POINT 3
-	#define POINTLIGHT_MAX_NUMBER 50
+	#define POINTLIGHT_MAX_NUMBER 150
 
 	struct PointLight
 	{
@@ -180,6 +180,7 @@ vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 	vec3 surfaceToCamera = normalize(-fragPos); //also a unit vector
 	float cosAngle = max(0.0, dot(surfaceToCamera, reflectionVector));
 	float specularCoefficient = pow(cosAngle, 50.0f);
+	//specularCoefficient = 0.0f;
 
 	float attenuation = smoothstep(radius, 0, length(fragPos - position));
 
