@@ -240,7 +240,7 @@ void main()
 
 	float v = (float(getCullID()) / float(CULL_TILE_SIZE * CULL_TILE_SIZE));
 	
-	//color = vec3(I, I, I);
+	color = vec3(I, I, I);
 
 	out_color = color;
 }

@@ -66,6 +66,15 @@ vec4 unProject(vec4 clipSpace)
 	return homo;
 }
 
+vec4 createPlaneEquation(vec4 b, vec4 c)
+{
+	vec4 n;
+	n.xyz = -normalize(cross(b.xyz, c.xyz));
+	n.w = 0;
+
+	return n;
+}
+
 layout(local_size_x = CULL_TILE_SIZE, local_size_y = CULL_TILE_SIZE, local_size_z = 1) in;
 void main()
 {
@@ -96,35 +105,52 @@ void main()
 
 	barrier();
 
-	float maxDepth = uintBitsToFloat(maxDepthUint);
-	float minDepth = uintBitsToFloat(minDepthUint);
-
-	uint minX = MAX_WORK_GROUP_SIZE * gl_WorkGroupID.x;
-	uint minY = MAX_WORK_GROUP_SIZE * gl_WorkGroupID.y;
-	uint maxX = MAX_WORK_GROUP_SIZE * (gl_WorkGroupID.x + 1);
-	uint maxY = MAX_WORK_GROUP_SIZE * (gl_WorkGroupID.y + 1);
-
 	if(gl_LocalInvocationIndex == 0)
 	{
-		for (uint i = 0; i < point_light_count; i++)
+		float maxDepth = uintBitsToFloat(maxDepthUint);
+		float minDepth = uintBitsToFloat(minDepthUint);
+
+		float minX = (float(CULL_TILE_SIZE * gl_WorkGroupID.x) / screenSize.x) * 2.0f - 1.0f;
+		float minY = (float(CULL_TILE_SIZE * gl_WorkGroupID.y) / screenSize.y) * 2.0f - 1.0f;
+		float maxX = (float(CULL_TILE_SIZE * (gl_WorkGroupID.x + 1)) / screenSize.x) * 2.0f - 1.0f;
+		float maxY = (float(CULL_TILE_SIZE * (gl_WorkGroupID.y + 1)) / screenSize.y) * 2.0f - 1.0f;
+
+		vec4 tileCorners[4];
+		tileCorners[0] = vec4(minX, minY, 1.0f, 1.0f);
+		tileCorners[1] = vec4(maxX, minY, 1.0f, 1.0f);
+		tileCorners[2] = vec4(maxX, maxY, 1.0f, 1.0f);
+		tileCorners[3] = vec4(minX, maxY, 1.0f, 1.0f);
+
+		vec4 frustum[4];
+		for(int i = 0; i < 4; i++)
+		{
+			frustum[i] = unProject(tileCorners[i]);
+		}
+
+		for(uint i = 0; i < point_light_count; i++)
 		{
 			vec4 position = vec4(point_lights[i].position, 1.0f); //view space
 			float radius = point_lights[i].radius;
 
-			vec4 near = vec4(0.0f, 0.0f, maxDepth, 1.0f);
-			near *= inv_camera_projection;
-			near /= near.w;
-
-			vec4 far = vec4(0.0f, 0.0f, minDepth, 1.0f);
-			far *= inv_camera_projection;
-			far /= far.w;
-
-			if(position.z - radius < near.z && position.z - radius > far.z)
+			// We check if the light exists in our frustum
+			float distance = 0.0;
+			for(uint j = 0; j < 6; j++) 
 			{
+				if(j == 4 || j == 5) continue;
+
+				distance = dot(position, tileCorners[j]) + radius;
+
+				//If one of the tests fails, then there is no intersection
+				if(distance <= 0.0) break;
+			}
+
+			// If greater than zero, then it is a visible light
+			if(distance < 0.0) {
 				// Add index to the shared array of visible indices
 				uint offset = atomicAdd(visibleLightCount, 1);
 				visibleLightIndices[offset] = int(i);
 			}
+
 		}
 	}
 
