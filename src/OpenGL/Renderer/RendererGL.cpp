@@ -52,7 +52,7 @@ void RendererGL::initialize() noexcept
         "../shaders/quad_texture.vert",
         "../shaders/quad_texture.frag");
     if(shader->isLoaded())
-        m_content.quadRenderShader = m_content.shaders.get(shader->getHandle()).programId;
+        m_content.quadRenderShader = m_content.shaders.get(shader->getHandle()).shader.getHandle();
     else
         Engine::interrupt("Failed to load shader: renderergl_shader_quadrender");
 }

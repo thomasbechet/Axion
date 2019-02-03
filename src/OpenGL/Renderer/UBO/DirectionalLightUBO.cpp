@@ -11,8 +11,8 @@ DirectionalLightUBO::DirectionalLightUBO()
 {
     glGenBuffers(1, &m_uboLights);
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboLights);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(DirectionalLightUBOData) * DIRECTIONALLIGHT_MAX_NUMBER + sizeof(GLuint), nullptr, GL_DYNAMIC_COPY);
-    glBindBufferBase(GL_UNIFORM_BUFFER, DIRECTIONALLIGHT_UBO_BINDING_POINT, m_uboLights);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(DirectionalLightUBOData) * SGC_DIRECTIONALLIGHT_MAX_NUMBER + sizeof(GLuint), nullptr, GL_DYNAMIC_COPY);
+    glBindBufferBase(GL_UNIFORM_BUFFER, SGC_DIRECTIONALLIGHT_UBO_BINDING_POINT, m_uboLights);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 DirectionalLightUBO::~DirectionalLightUBO()
@@ -39,7 +39,7 @@ void DirectionalLightUBO::updateMemory(IndexVector<DirectionalLightGL>& lights, 
     DirectionalLightUBOData* p = static_cast<DirectionalLightUBOData*>(glMapBufferRange(
         GL_UNIFORM_BUFFER,
         0,
-        sizeof(DirectionalLightUBOData) * DIRECTIONALLIGHT_MAX_NUMBER + sizeof(GLuint),
+        sizeof(DirectionalLightUBOData) * SGC_DIRECTIONALLIGHT_MAX_NUMBER + sizeof(GLuint),
         GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT
     ));
 
@@ -52,7 +52,7 @@ void DirectionalLightUBO::updateMemory(IndexVector<DirectionalLightGL>& lights, 
     std::copy(m_directionalLights.begin(), m_directionalLights.end(), p);
 
     //Update light count
-    *((GLuint*)(p + DIRECTIONALLIGHT_MAX_NUMBER)) = m_directionalLights.size();
+    *((GLuint*)(p + SGC_DIRECTIONALLIGHT_MAX_NUMBER)) = m_directionalLights.size();
 
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 }

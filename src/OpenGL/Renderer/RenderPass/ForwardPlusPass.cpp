@@ -31,7 +31,7 @@ void ForwardPlusPass::initialize() noexcept
         "../shaders/FP_phong.vert",
         "../shaders/FP_phong.frag");
     if(shader->isLoaded())
-        m_phongShader = content.shaders.get(shader->getHandle()).programId;
+        m_phongShader = content.shaders.get(shader->getHandle()).shader.getHandle();
     else
         Engine::interrupt("Failed to load shader: renderergl_shader_phong");
 
@@ -39,7 +39,7 @@ void ForwardPlusPass::initialize() noexcept
         "../shaders/FP_geometry.vert",
         "../shaders/FP_geometry.frag");
     if(shader->isLoaded())
-        m_geometryShader = content.shaders.get(shader->getHandle()).programId;
+        m_geometryShader = content.shaders.get(shader->getHandle()).shader.getHandle();
     else
         Engine::interrupt("Failed to load shader: renderergl_shader_geometry");
 
@@ -161,9 +161,9 @@ void ForwardPlusPass::renderGeometryPass() noexcept
 }
 void ForwardPlusPass::processCullPass() noexcept
 {
-    m_cullingShader->use();
+    glUseProgram(m_cullingShader->getHandle());
     m_buffers->bindForCullPass();
-    glDispatchCompute(CULL_TILE_SIZE, CULL_TILE_SIZE, 1);
+    glDispatchCompute(SGC_CULL_TILE_SIZE, SGC_CULL_TILE_SIZE, 1);
 }
 void ForwardPlusPass::renderLightPass() noexcept
 {
@@ -257,11 +257,15 @@ void ForwardPlusPass::initializeCullPass() noexcept
 {
     glGenBuffers(1, &m_cullSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_cullSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, CULL_TILE_SIZE * CULL_TILE_SIZE * POINTLIGHT_CULL_MAX_NUMBER * sizeof(GLint), 0, GL_STATIC_DRAW);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, POINTLIGHT_CULL_SSBO_BINDING_POINT, m_cullSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, SGC_CULL_TILE_SIZE * SGC_CULL_TILE_SIZE * SGC_POINTLIGHT_CULL_MAX_NUMBER * sizeof(GLint), 0, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SGC_POINTLIGHT_CULL_SSBO_BINDING_POINT, m_cullSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    m_cullingShader = std::make_unique<ComputeShader>(Path("../shaders/FP_light_culling.comp"));
+    m_cullingShader = std::make_unique<ShaderHolder>();
+    if(!m_cullingShader->loadCompute(Path("../shaders/FP_light_culling.comp")))
+    {
+        Engine::interrupt("Failed to load compute shader.");
+    }
 }
 void ForwardPlusPass::terminateCullPass() noexcept
 {

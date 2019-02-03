@@ -7,7 +7,7 @@
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>
 #include <OpenGL/Renderer/FrameBuffer/ForwardPlusBuffers.hpp>
-#include <OpenGL/Renderer/Utility/ComputeShader.hpp>
+#include <OpenGL/Renderer/Utility/ShaderHolder.hpp>
 
 #include <Core/Math/Matrix.hpp>
 
@@ -36,7 +36,7 @@ namespace ax
     private:
         void initializeCullPass() noexcept;
         void terminateCullPass() noexcept;
-        std::unique_ptr<ComputeShader> m_cullingShader;
+        std::unique_ptr<ShaderHolder> m_cullingShader;
         GLuint m_cullSSBO;
 
     private:

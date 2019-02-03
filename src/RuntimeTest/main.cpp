@@ -222,6 +222,10 @@ public:
         directionalLight.addComponent<ax::TransformComponent>();
         directionalLight.addComponent<ax::DirectionalLightComponent>(directionalLight);
 
+        ax::Entity& pointLight = ax::Engine::world().entities().create();
+        pointLight.addComponent<ax::TransformComponent>().setTranslation(0.0f, 2.0f, 0.0f);
+        pointLight.addComponent<ax::PointLightComponent>(pointLight).setRadius(30.0f);
+
         //Plane
         ax::Entity& plane = ax::Engine::world().entities().create();
         plane.addComponent<ax::TransformComponent>();

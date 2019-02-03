@@ -11,8 +11,8 @@ PointLightUBO::PointLightUBO()
 {
     glGenBuffers(1, &m_uboLights);
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboLights);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(PointLightUBOData) * POINTLIGHT_MAX_NUMBER + sizeof(GLuint), nullptr, GL_DYNAMIC_COPY);
-    glBindBufferBase(GL_UNIFORM_BUFFER, POINTLIGHT_UBO_BINDING_POINT, m_uboLights);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(PointLightUBOData) * SGC_POINTLIGHT_MAX_NUMBER + sizeof(GLuint), nullptr, GL_DYNAMIC_COPY);
+    glBindBufferBase(GL_UNIFORM_BUFFER, SGC_POINTLIGHT_UBO_BINDING_POINT, m_uboLights);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 PointLightUBO::~PointLightUBO()
@@ -42,7 +42,7 @@ void PointLightUBO::updateMemory(IndexVector<PointLightGL>& lights, const Matrix
     PointLightUBOData* p = static_cast<PointLightUBOData*>(glMapBufferRange(
         GL_UNIFORM_BUFFER,
         0,
-        sizeof(PointLightUBOData) * POINTLIGHT_MAX_NUMBER + sizeof(GLuint),
+        sizeof(PointLightUBOData) * SGC_POINTLIGHT_MAX_NUMBER + sizeof(GLuint),
         GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT
     ));
 
@@ -55,7 +55,7 @@ void PointLightUBO::updateMemory(IndexVector<PointLightGL>& lights, const Matrix
     std::copy(m_pointlights.begin(), m_pointlights.end(), p);
 
     //Update light count
-    *((GLuint*)(p + POINTLIGHT_MAX_NUMBER)) = m_pointlights.size();
+    *((GLuint*)(p + SGC_POINTLIGHT_MAX_NUMBER)) = m_pointlights.size();
 
     glUnmapBuffer(GL_UNIFORM_BUFFER);
 }
