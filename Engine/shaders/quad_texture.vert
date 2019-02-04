@@ -2,8 +2,6 @@
 
 layout(location = 0) in vec2 in_vertex;
 
-#include HEADER_CAMERA
-
 out vec2 UV;
 
 void main()

@@ -31,7 +31,7 @@ void ForwardPlusPass::initialize() noexcept
         "../shaders/FP_phong.vert",
         "../shaders/FP_phong.frag");
     if(shader->isLoaded())
-        m_phongShader = content.shaders.get(shader->getHandle()).shader.getHandle();
+        m_phongShader = content.shaders.get(shader->getHandle()).shader.getProgram();
     else
         Engine::interrupt("Failed to load shader: renderergl_shader_phong");
 
@@ -39,7 +39,7 @@ void ForwardPlusPass::initialize() noexcept
         "../shaders/FP_geometry.vert",
         "../shaders/FP_geometry.frag");
     if(shader->isLoaded())
-        m_geometryShader = content.shaders.get(shader->getHandle()).shader.getHandle();
+        m_geometryShader = content.shaders.get(shader->getHandle()).shader.getProgram();
     else
         Engine::interrupt("Failed to load shader: renderergl_shader_geometry");
 
@@ -161,7 +161,7 @@ void ForwardPlusPass::renderGeometryPass() noexcept
 }
 void ForwardPlusPass::processCullPass() noexcept
 {
-    glUseProgram(m_cullingShader->getHandle());
+    glUseProgram(m_cullingShader->getProgram());
     m_buffers->bindForCullPass();
     glDispatchCompute(SGC_CULL_TILE_SIZE, SGC_CULL_TILE_SIZE, 1);
 }
@@ -261,7 +261,7 @@ void ForwardPlusPass::initializeCullPass() noexcept
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SGC_POINTLIGHT_CULL_SSBO_BINDING_POINT, m_cullSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-    m_cullingShader = std::make_unique<ShaderHolder>();
+    m_cullingShader = std::make_unique<ShaderGLSL>();
     if(!m_cullingShader->loadCompute(Path("../shaders/FP_light_culling.comp")))
     {
         Engine::interrupt("Failed to load compute shader.");

@@ -1,15 +1,47 @@
 #version 430
 
-#include HEADER_SHADER_CONSTANTS_UBO
-#include HEADER_CAMERA_UBO
-#include HEADER_POINTLIGHT_UBO
-#include HEADER_POINTLIGHT_CULLING_UBO
+#include GLOBAL_CONSTANTS
+
+struct ShaderConstant
+{
+    ivec2 resolution;
+    vec3 background_color;
+};
+layout(std140, binding = SGC_SHADER_CONSTANTS_UBO_BINDING_POINT) uniform ShaderConstants
+{
+    ShaderConstant shader_constants;
+};	
+
+layout(std140, binding = SGC_CAMERA_UBO_BINDING_POINT) uniform Camera
+{
+    mat4 camera_projection;
+    mat4 camera_view;
+    mat4 inv_camera_projection;
+};
+
+struct PointLight
+{
+    vec3 position;
+    float radius;
+    vec3 color;
+    float intensity;
+};
+layout(std140, binding = SGC_POINTLIGHT_UBO_BINDING_POINT) uniform PointLights
+{ 
+    PointLight point_lights[SGC_POINTLIGHT_MAX_NUMBER];
+    uint point_light_count;
+};
+
+layout(packed, binding = SGC_POINTLIGHT_CULL_SSBO_BINDING_POINT) writeonly buffer PointLightsCullIndices
+{
+    int point_lights_cull_indices[];
+};
 
 shared ivec2 screenSize;
 shared uint minDepthUint;
 shared uint maxDepthUint;
 shared uint visibleLightCount;
-shared int visibleLightIndices[POINTLIGHT_CULL_MAX_NUMBER];
+shared int visibleLightIndices[SGC_POINTLIGHT_CULL_MAX_NUMBER];
 
 layout(binding = 0) uniform sampler2D depth_texture;
 
@@ -65,10 +97,10 @@ void main()
 		float maxDepth = uintBitsToFloat(maxDepthUint);
 		float minDepth = uintBitsToFloat(minDepthUint);
 
-		float minX = (float(tileID.x) / float(CULL_TILE_SIZE) * 2.0f) - 1.0f;
-		float minY = (float(tileID.y) / float(CULL_TILE_SIZE) * 2.0f) - 1.0f;
-		float maxX = ((float(tileID.x) + 1.0f) / float(CULL_TILE_SIZE) * 2.0f) - 1.0f;
-		float maxY = ((float(tileID.y) + 1.0f) / float(CULL_TILE_SIZE) * 2.0f) - 1.0f;
+		float minX = (float(tileID.x) / float(SGC_CULL_TILE_SIZE) * 2.0f) - 1.0f;
+		float minY = (float(tileID.y) / float(SGC_CULL_TILE_SIZE) * 2.0f) - 1.0f;
+		float maxX = ((float(tileID.x) + 1.0f) / float(SGC_CULL_TILE_SIZE) * 2.0f) - 1.0f;
+		float maxY = ((float(tileID.y) + 1.0f) / float(SGC_CULL_TILE_SIZE) * 2.0f) - 1.0f;
 
 		vec4 corners[4];
 		// 3-------2
@@ -114,13 +146,13 @@ void main()
 	// One thread should fill the global light buffer
 	if(gl_LocalInvocationIndex == 0) 
 	{
-		uint offset = index * POINTLIGHT_CULL_MAX_NUMBER;
+		uint offset = index * SGC_POINTLIGHT_CULL_MAX_NUMBER;
 		for(uint i = 0; i < visibleLightCount; i++)
 		{
 			point_lights_cull_indices[offset + i] = visibleLightIndices[i];
 		}
 
-		if(visibleLightCount != POINTLIGHT_CULL_MAX_NUMBER) 
+		if(visibleLightCount != SGC_POINTLIGHT_CULL_MAX_NUMBER) 
 		{
 			point_lights_cull_indices[offset + visibleLightCount] = -1;
 		}

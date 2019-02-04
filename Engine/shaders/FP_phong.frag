@@ -1,3 +1,6 @@
+//////////////////////////
+//THIS BLOCK IS REQUIRED//
+//////////////////////////
 #version 430 core
 
 layout(early_fragment_tests) in;
@@ -12,14 +15,14 @@ in mat3 TBN;
 layout(binding = 3) uniform sampler2D gbuffer_normal_texture;
 layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
 
-#include HEADER_SHADER_CONSTANTS
-#include HEADER_CAMERA
-#include HEADER_MATERIAL
-#include HEADER_POINTLIGHT
-#include HEADER_DIRECTIONALLIGHT
-#include HEADER_CULL_POINTLIGHT
+///////////////////////////
+///////////////////////////
 
-#include HEADER_SHADER_CONSTANTS
+#include GLOBAL_CONSTANTS
+#include HEADER_CAMERA
+#include HEADER_LIGHTS
+#include HEADER_MATERIALS
+#include HEADER_UNIFORMS
 
 vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 {
@@ -77,7 +80,7 @@ void main()
 
 	//Culling prepass
 	uint tileID = getCullID();
-	uint key = tileID * POINTLIGHT_CULL_MAX_NUMBER;
+	uint key = tileID * SGC_POINTLIGHT_CULL_MAX_NUMBER;
 	uint i;
 	for(i = 0; isPointLightCullIndexValid(key, i); i++)
 	{
@@ -94,7 +97,7 @@ void main()
 		color += phongDirectionalLight(light, albedo, normal, POSITION);
 	}
 
-	float v = (float(getCullID()) / float(CULL_TILE_SIZE * CULL_TILE_SIZE));
+	float v = (float(getCullID()) / float(SGC_CULL_TILE_SIZE * SGC_CULL_TILE_SIZE));
 	
 	color = vec3(I, I, I);
 

@@ -21,7 +21,7 @@ void WireframePass::initialize() noexcept
         "../shaders/WF_wireframe.vert",
         "../shaders/WF_wireframe.frag");
     if(shader->isLoaded())
-        m_wireframeShader = content.shaders.get(shader->getHandle()).shader.getHandle();
+        m_wireframeShader = content.shaders.get(shader->getHandle()).shader.getProgram();
     else
         Engine::interrupt("Failed to load shader: renderergl_shader_wireframe");
 

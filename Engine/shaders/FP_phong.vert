@@ -16,6 +16,7 @@ out vec3 COLOR;
 out vec3 NORMAL;
 out mat3 TBN;
 
+#include GLOBAL_CONSTANTS
 #include HEADER_CAMERA
 
 void main()

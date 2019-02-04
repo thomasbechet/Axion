@@ -14,7 +14,14 @@ out vec2 UV;
 out vec3 NORMAL;
 out mat3 TBN;
 
-#include HEADER_CAMERA
+#include GLOBAL_CONSTANTS
+
+layout(std140, binding = SGC_CAMERA_UBO_BINDING_POINT) uniform Camera
+{
+    mat4 camera_projection;
+    mat4 camera_view;
+    mat4 inv_camera_projection;
+};
 
 void main()
 {
