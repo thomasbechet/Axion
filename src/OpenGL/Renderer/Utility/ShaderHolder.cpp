@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include <streambuf>
+#include <regex>
 
 using namespace ax;
 
@@ -85,6 +86,7 @@ bool ShaderHolder::loadCompute(const std::string& computeCode) noexcept
     GLuint compute = glCreateShader(GL_COMPUTE_SHADER);
     std::string code = computeCode;
     injectHeaders(code);
+
     const char* ptr = code.c_str();
     glShaderSource(compute, 1, &ptr, NULL);
     glCompileShader(compute);
@@ -135,28 +137,37 @@ GLuint ShaderHolder::getHandle() const noexcept
 
 void ShaderHolder::injectHeaders(std::string& code) noexcept
 {
-    //Header import found
-    const std::string searchKey = "#include ";
-    std::size_t start = code.find(searchKey);
-    while(start != std::string::npos)
+    std::regex regex("#include \\w+");
+    std::smatch matches;
+    std::regex_search(code, matches, regex);
+
+    std::cout << "BEFORE" << std::endl;
+    std::cout << code << std::endl;
+
+    for(int i = 0; i < matches.size(); i++)
     {
-        start += searchKey.length();
+        std::string match = matches[i];
+        std::cout << "MATCH: " << match << std::endl;
 
-        std::size_t end = start;
-        while(!std::isspace(code.at(end))) end++;
-
-        std::string fileName = code.substr(start, end);
-        Path filePath = "../shaders/headers/" + code.substr(start, end) + ".glsl";
-
-        code.erase(start, end - start); //Remove include directive
+        std::istringstream stream(match);
+        std::string dummy, file;
+        stream >> dummy;
+        stream >> file;
+        Path filePath = "../shaders/headers/" + file + ".glsl";
 
         std::ifstream headerFile(filePath);
-        if(!headerFile.is_open())
+        if(headerFile.is_open())
         {
             std::string headerCode{std::istreambuf_iterator<char>(headerFile), std::istreambuf_iterator<char>()};
-            code.insert(start, headerCode);
+            code = std::regex_replace(code, regex, headerCode);
         }
-        
-        start = code.find(searchKey);
+        else
+        {
+            Engine::logger().log("Failed to open file " + filePath.path(), Logger::Warning);
+        }
     }
+
+    std::cout << "AFTER" << std::endl;
+    std::cout << code << std::endl;
+    std::cout << "END" << std::endl;
 }

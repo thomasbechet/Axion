@@ -16,19 +16,7 @@ out vec3 COLOR;
 out vec3 NORMAL;
 out mat3 TBN;
 
-#define USE_CAMERA 1
-#if USE_CAMERA
-
-	#define CAMERA_UBO_BINDING_POINT 2
-
-	layout(std140, binding = CAMERA_UBO_BINDING_POINT) uniform Camera
-	{
-		mat4 camera_projection;
-		mat4 camera_view;
-		mat4 inv_camera_projection;
-	};
-
-#endif
+#include HEADER_CAMERA
 
 void main()
 {

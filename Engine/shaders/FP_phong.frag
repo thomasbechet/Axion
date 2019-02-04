@@ -12,12 +12,12 @@ in mat3 TBN;
 layout(binding = 3) uniform sampler2D gbuffer_normal_texture;
 layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
 
-HEADER_SHADER_CONSTANTS
-HEADER_CAMERA
-HEADER_MATERIAL
-HEADER_POINTLIGHT
-HEADER_DIRECTIONALLIGHT
-HEADER_CULL_POINTLIGHT
+#include HEADER_SHADER_CONSTANTS
+#include HEADER_CAMERA
+#include HEADER_MATERIAL
+#include HEADER_POINTLIGHT
+#include HEADER_DIRECTIONALLIGHT
+#include HEADER_CULL_POINTLIGHT
 
 #include HEADER_SHADER_CONSTANTS
 
