@@ -76,6 +76,8 @@ void ForwardPlusPass::updateResolution() noexcept
 {
     m_renderBuffer.reset(new RenderBuffer(viewport.resolution));
     m_buffers.reset(new ForwardPlusBuffers(viewport.resolution));
+    terminateCullPass();
+    initializeCullPass();
 }
 void ForwardPlusPass::render(double alpha) noexcept
 {
@@ -106,10 +108,14 @@ void ForwardPlusPass::updateUBOs() noexcept
 
     m_vpMatrix = projectionMatrix * m_viewMatrix;
 
+    //Update constants
+    content.shaderConstantsUBO->setResolution(viewport.resolution);
+
     //Updates Lights
     content.pointLightUBO->updateMemory(content.pointLights, m_viewMatrix);
     content.directionalLightUBO->updateMemory(content.directionalLights, m_viewMatrix);
     content.cameraUBO->update(m_viewMatrix, projectionMatrix, invProjectionMatrix);
+    content.shaderConstantsUBO->update();
 }
 void ForwardPlusPass::renderGeometryPass() noexcept
 {
@@ -163,7 +169,7 @@ void ForwardPlusPass::processCullPass() noexcept
 {
     glUseProgram(m_cullingShader->getProgram());
     m_buffers->bindForCullPass();
-    glDispatchCompute(SGC_CULL_TILE_SIZE, SGC_CULL_TILE_SIZE, 1);
+    glDispatchCompute(viewport.resolution.x / SGC_CULL_TILE_SIZE, viewport.resolution.y / SGC_CULL_TILE_SIZE, 1);
 }
 void ForwardPlusPass::renderLightPass() noexcept
 {
@@ -257,7 +263,7 @@ void ForwardPlusPass::initializeCullPass() noexcept
 {
     glGenBuffers(1, &m_cullSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_cullSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, SGC_CULL_TILE_SIZE * SGC_CULL_TILE_SIZE * SGC_POINTLIGHT_CULL_MAX_NUMBER * sizeof(GLint), 0, GL_STATIC_DRAW);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, (viewport.resolution.x / SGC_CULL_TILE_SIZE) * (viewport.resolution.y / SGC_CULL_TILE_SIZE) * SGC_POINTLIGHT_CULL_MAX_NUMBER * sizeof(GLint), 0, GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SGC_POINTLIGHT_CULL_SSBO_BINDING_POINT, m_cullSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 

@@ -16,6 +16,7 @@
 #include <OpenGL/Renderer/UBO/PointLightUBO.hpp>
 #include <OpenGL/Renderer/UBO/DirectionalLightUBO.hpp>
 #include <OpenGL/Renderer/UBO/CameraUBO.hpp>
+#include <OpenGL/Renderer/UBO/ShaderConstantsUBO.hpp>
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
@@ -44,6 +45,7 @@ namespace ax
         std::unique_ptr<PointLightUBO> pointLightUBO;
         std::unique_ptr<DirectionalLightUBO> directionalLightUBO;
         std::unique_ptr<CameraUBO> cameraUBO;
+        std::unique_ptr<ShaderConstantsUBO> shaderConstantsUBO;
     };
 
     struct AXION_GL_API Viewport

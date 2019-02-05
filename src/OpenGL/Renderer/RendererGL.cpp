@@ -45,6 +45,7 @@ void RendererGL::initialize() noexcept
     m_content.cameraUBO = std::make_unique<CameraUBO>();
     m_content.pointLightUBO = std::make_unique<PointLightUBO>();
     m_content.directionalLightUBO = std::make_unique<DirectionalLightUBO>();
+    m_content.shaderConstantsUBO = std::make_unique<ShaderConstantsUBO>();
 
     //Load shaders
     AssetReference<Shader> shader;

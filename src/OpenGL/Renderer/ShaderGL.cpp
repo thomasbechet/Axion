@@ -23,5 +23,6 @@ Id RendererGL::createShader(
 }
 void RendererGL::destroyShader(Id id)
 {
+    m_content.shaders.get(id).shader.unload();
     m_content.shaders.remove(id);
 }

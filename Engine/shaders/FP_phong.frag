@@ -19,10 +19,10 @@ layout(binding = 4) uniform sampler2D gbuffer_depth_texture;
 ///////////////////////////
 
 #include GLOBAL_CONSTANTS
+#include HEADER_UNIFORMS
 #include HEADER_CAMERA
 #include HEADER_LIGHTS
 #include HEADER_MATERIALS
-#include HEADER_UNIFORMS
 
 vec3 phongPointLight(PointLight light, vec3 albedo, vec3 normal, vec3 fragPos)
 {
@@ -71,8 +71,8 @@ void main()
 	vec3 albedo = getAlbedo();
 	vec3 normal = getNormal();
 
-	/*//No culling prepass
-	for(uint i = 0; i < point_light_count; i++)
+	//No culling prepass
+	/*for(uint i = 0; i < point_light_count; i++)
 	{
 		PointLight light = point_lights[i];
 		color += phongPointLight(light, albedo, normal, POSITION); 
@@ -88,18 +88,18 @@ void main()
 		color += phongPointLight(pointLight, albedo, normal, POSITION); 
 	}
 
-	float I = float(i) / 5.0f;
+	float I = float(i) / 64.0f;
 
 	//Adding directional light
-	for(i = 0; i < directional_lights_count; i++)
+	for(int k = 0; k < directional_lights_count; k++)
 	{
-		DirectionalLight light = directional_lights[i];
+		DirectionalLight light = directional_lights[k];
 		color += phongDirectionalLight(light, albedo, normal, POSITION);
 	}
 
 	float v = (float(getCullID()) / float(SGC_CULL_TILE_SIZE * SGC_CULL_TILE_SIZE));
 	
-	color = vec3(I, I, I);
+	//color = vec3(I, I, I);
 
 	out_color = color;
 }

@@ -33,6 +33,7 @@ ADD_LIBRARY(
     Renderer/UBO/PointLightUBO.cpp
     Renderer/UBO/DirectionalLightUBO.cpp
     Renderer/UBO/CameraUBO.cpp
+    Renderer/UBO/ShaderConstantsUBO.cpp
     Renderer/Utility/ShaderGLSL.cpp
     Renderer/Light/PointLightGL.cpp
     Renderer/Light/DirectionalLightGL.cpp

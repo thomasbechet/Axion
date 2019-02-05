@@ -9,11 +9,6 @@
 
 using namespace ax;
 
-ShaderGLSL::~ShaderGLSL()
-{
-    if(m_isLoaded) glDeleteProgram(m_handle);
-}
-
 bool ShaderGLSL::loadShader(const std::string* vertex, const std::string* fragment) noexcept
 {
     if(vertex == nullptr || fragment == nullptr)
@@ -124,6 +119,11 @@ bool ShaderGLSL::loadCompute(const Path path) noexcept
     std::string computeBuffer{std::istreambuf_iterator<char>(computeFile), std::istreambuf_iterator<char>()};
 
     return loadCompute(computeBuffer);
+}
+void ShaderGLSL::unload() noexcept
+{
+    if(m_isLoaded) glDeleteProgram(m_handle);
+    m_isLoaded = false;
 }
 
 bool ShaderGLSL::isLoaded() const noexcept

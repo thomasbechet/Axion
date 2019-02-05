@@ -66,6 +66,8 @@ private:
     std::vector<ax::TransformComponent*> m_pointlights;
     int MAX_X = 100;
     int MAX_Y = 10;
+    //int MAX_X = 2;
+    //int MAX_Y = 2;
 
     ax::TransformComponent* m_transform;
     ax::TransformComponent* m_spawn;

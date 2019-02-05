@@ -17,7 +17,6 @@ namespace ax
         struct ShaderConstantsUBOData
         {
             Vector2u resolution;
-            Color3 backgroundColor;
         };
 
     public:
@@ -25,9 +24,6 @@ namespace ax
         ~ShaderConstantsUBO();
 
         void setResolution(const Vector2u& resolution) noexcept;
-        void setBackgroundColor(const Color3& color) noexcept;
-
-    private:
         void update() const noexcept;
 
     private:

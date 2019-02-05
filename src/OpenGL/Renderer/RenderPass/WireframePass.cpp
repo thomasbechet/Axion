@@ -68,6 +68,7 @@ void WireframePass::render(double alpha) noexcept
     Matrix4f invProjectionMatrix = Matrix4f::inverse(Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far));
 
     content.cameraUBO->update(viewMatrix, projectionMatrix, invProjectionMatrix);
+    content.shaderConstantsUBO->update();
 
     Matrix4f vp = projectionMatrix * viewMatrix;
 

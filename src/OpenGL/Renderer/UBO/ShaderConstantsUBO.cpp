@@ -21,10 +21,6 @@ void ShaderConstantsUBO::setResolution(const Vector2u& resolution) noexcept
 {
     m_constants.resolution = resolution;
 }
-void ShaderConstantsUBO::setBackgroundColor(const Color3& color) noexcept
-{
-    m_constants.backgroundColor = color;
-}
 
 void ShaderConstantsUBO::update() const noexcept
 {
