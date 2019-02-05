@@ -6,7 +6,7 @@ layout(location = 2) in vec3 in_normal;
 layout(location = 3) in vec3 in_tangent;
 layout(location = 4) in vec3 in_color;
 
-layout(location = 0) uniform mat4 mvp;
+uniform mat4 mvp;
 
 #include GLOBAL_CONSTANTS
 

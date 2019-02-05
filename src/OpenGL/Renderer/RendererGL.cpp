@@ -107,10 +107,12 @@ void RendererGL::setViewportRendermode(Id id, RenderMode mode)
     switch(mode)
     {
         case RenderMode::Default:
-            viewport.renderPass = std::make_unique<ForwardPlusPass>(m_content, viewport);
+            //viewport.renderPass = std::make_unique<ForwardPlusPass>(m_content, viewport);
+            viewport.renderPass = std::make_unique<WireframePass>(m_content, viewport);
         break;
         case RenderMode::ForwardPlusShading:
-            viewport.renderPass = std::make_unique<ForwardPlusPass>(m_content, viewport);
+            //viewport.renderPass = std::make_unique<ForwardPlusPass>(m_content, viewport);
+            viewport.renderPass = std::make_unique<WireframePass>(m_content, viewport);
         break;
         case RenderMode::Wireframe:
             viewport.renderPass = std::make_unique<WireframePass>(m_content, viewport);

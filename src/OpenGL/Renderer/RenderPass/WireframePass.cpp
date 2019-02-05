@@ -53,6 +53,8 @@ void WireframePass::render(double alpha) noexcept
     m_renderBuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    std::cout << "PASS0" << std::endl;
+
     CameraGL& camera = content.cameras.get(viewport.camera);
 
     Vector3f eye = camera.transform->getTranslation();
@@ -88,7 +90,7 @@ void WireframePass::render(double alpha) noexcept
 
                 Matrix4f mvp = vp * staticmesh.transform->getWorldMatrix();
                 //glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
-                glUniformMatrix4fv(0, 1, GL_FALSE, mvp.data());
+                glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);

@@ -9,5 +9,4 @@ in vec2 UV;
 void main()
 {
 	out_color = texture2D(render_texture, UV).xyz;
-	out_color = vec3(1, 0, 0);
 }

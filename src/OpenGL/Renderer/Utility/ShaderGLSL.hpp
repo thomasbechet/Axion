@@ -23,7 +23,6 @@ namespace ax
 
         bool isLoaded() const noexcept;
         GLuint getProgram() const noexcept;
-        //GLuint getProgram() const noexcept;
 
     private:
         void injectHeaders(std::string& code) noexcept;
