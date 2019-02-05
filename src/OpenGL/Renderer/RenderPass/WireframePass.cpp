@@ -53,8 +53,6 @@ void WireframePass::render(double alpha) noexcept
     m_renderBuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    std::cout << "PASS0" << std::endl;
-
     CameraGL& camera = content.cameras.get(viewport.camera);
 
     Vector3f eye = camera.transform->getTranslation();
