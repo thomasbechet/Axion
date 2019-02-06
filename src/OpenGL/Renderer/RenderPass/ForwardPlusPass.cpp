@@ -169,7 +169,7 @@ void ForwardPlusPass::processCullPass() noexcept
 {
     glUseProgram(m_cullingShader->getProgram());
     m_buffers->bindForCullPass();
-    glDispatchCompute(viewport.resolution.x / SGC_CULL_TILE_SIZE, viewport.resolution.y / SGC_CULL_TILE_SIZE, 1);
+    glDispatchCompute(workGroupSize.x, workGroupSize.y, 1);
 }
 void ForwardPlusPass::renderLightPass() noexcept
 {
@@ -263,7 +263,9 @@ void ForwardPlusPass::initializeCullPass() noexcept
 {
     glGenBuffers(1, &m_cullSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_cullSSBO);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, (viewport.resolution.x / SGC_CULL_TILE_SIZE) * (viewport.resolution.y / SGC_CULL_TILE_SIZE) * SGC_POINTLIGHT_CULL_MAX_NUMBER * sizeof(GLint), 0, GL_STATIC_DRAW);
+    workGroupSize.x = ((viewport.resolution.x + (viewport.resolution.x % SGC_CULL_TILE_SIZE)) / SGC_CULL_TILE_SIZE);
+    workGroupSize.y = ((viewport.resolution.y + (viewport.resolution.y % SGC_CULL_TILE_SIZE)) / SGC_CULL_TILE_SIZE);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, workGroupSize.x * workGroupSize.y * SGC_POINTLIGHT_CULL_MAX_NUMBER * sizeof(GLint), 0, GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SGC_POINTLIGHT_CULL_SSBO_BINDING_POINT, m_cullSSBO);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
@@ -275,7 +277,7 @@ void ForwardPlusPass::initializeCullPass() noexcept
 }
 void ForwardPlusPass::terminateCullPass() noexcept
 {
+    m_cullingShader->unload();
     m_cullingShader.reset();
-
     glDeleteBuffers(1, &m_cullSSBO);
 }

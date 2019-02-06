@@ -38,6 +38,7 @@ namespace ax
         void terminateCullPass() noexcept;
         std::unique_ptr<ShaderGLSL> m_cullingShader;
         GLuint m_cullSSBO;
+        Vector2u workGroupSize;
 
     private:
         Matrix4f m_viewMatrix;

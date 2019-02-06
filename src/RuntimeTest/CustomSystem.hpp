@@ -29,7 +29,7 @@ public:
             {
                 ax::Entity& pointLight = ax::Engine::world().entities().create();
                 ax::TransformComponent* lightTransform = &pointLight.addComponent<ax::TransformComponent>();
-                lightTransform->setTranslation(-250.0f + x * 5.0f, 0.2f, 100.0f + y * 5.0f);
+                lightTransform->setTranslation(0.0f + x * 5.0f, 0.2f, 50.0f + y * 5.0f);
                 m_pointlights.emplace_back(lightTransform);
                 pointLight.addComponent<ax::PointLightComponent>(pointLight).setRadius(5.0f);
                 pointLight.addComponent<ax::UVSphereComponent>(pointLight, 0.2f);
@@ -64,8 +64,8 @@ public:
 
 private:
     std::vector<ax::TransformComponent*> m_pointlights;
-    int MAX_X = 100;
-    int MAX_Y = 10;
+    int MAX_X = 32;
+    int MAX_Y = 32;
     //int MAX_X = 2;
     //int MAX_Y = 2;
 

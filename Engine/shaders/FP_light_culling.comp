@@ -36,7 +36,6 @@ layout(packed, binding = SGC_POINTLIGHT_CULL_SSBO_BINDING_POINT) writeonly buffe
     int point_lights_cull_indices[];
 };
 
-shared ivec2 screenSize;
 shared uint minDepthUint;
 shared uint maxDepthUint;
 shared uint visibleLightCount;
@@ -44,36 +43,12 @@ shared int visibleLightIndices[SGC_POINTLIGHT_CULL_MAX_NUMBER];
 
 layout(binding = 0) uniform sampler2D depth_texture;
 
-vec4 unProject(vec4 clipSpace)
-{
-	vec4 homo = inv_camera_projection * clipSpace;
-	homo.xyz /= homo.w;
-	homo.w = 0.0f;
-	return homo;
-}
-
-vec4 createPlaneEquation(vec4 b, vec4 c)
-{
-	vec4 n;
-	n.xyz = -normalize(cross(b.xyz, c.xyz));
-	n.w = 0;
-
-	return n;
-}
-
 layout(local_size_x = SGC_CULL_TILE_SIZE, local_size_y = SGC_CULL_TILE_SIZE, local_size_z = 1) in;
 void main()
 {
-    ivec2 globalID = ivec2(gl_GlobalInvocationID.xy);
-	ivec2 localID = ivec2(gl_LocalInvocationID.xy);
-	ivec2 tileID = ivec2(gl_WorkGroupID.xy);
-	ivec2 tileNumber = ivec2(gl_NumWorkGroups.xy);
-    uint index = tileID.y * tileNumber.x + tileID.x;
-
     // Initialize shared global values for depth and light count
 	if(gl_LocalInvocationIndex == 0)
 	{
-		screenSize = textureSize(depth_texture, 0);
 		minDepthUint = 0x0u;
 		maxDepthUint = 0xFFFFFFFFu;
 		visibleLightCount = 0;
@@ -82,7 +57,7 @@ void main()
 	barrier();
 
 	//Compute max and min depth per tile
-	vec2 uv = vec2(globalID) / shader_constants.resolution;
+	vec2 uv = vec2(gl_GlobalInvocationID.xy) / shader_constants.resolution;
 	float depth = texture(depth_texture, uv).r;
 	
 	uint depthUint = floatBitsToUint(depth);
@@ -96,12 +71,12 @@ void main()
 		float maxDepth = uintBitsToFloat(maxDepthUint);
 		float minDepth = uintBitsToFloat(minDepthUint);
 
-		vec2 tileScale = vec2(shader_constants.resolution * (1.0 / float(2 * SGC_CULL_TILE_SIZE)));
+		vec2 tileScale = vec2(shader_constants.resolution * (1.0f / float(2 * SGC_CULL_TILE_SIZE)));
 		vec2 tileBias = tileScale - vec2(gl_WorkGroupID.xy);
 
 		vec4 col1 = vec4(-camera_projection[0][0] * tileScale.x, camera_projection[0][1], tileBias.x, camera_projection[0][3]);
 		vec4 col2 = vec4(camera_projection[1][0], -camera_projection[1][1] * tileScale.y, tileBias.y, camera_projection[1][3]);
-		vec4 col4 = vec4(camera_projection[3][0], camera_projection[3][1], -1.0, camera_projection[3][3]);
+		vec4 col4 = vec4(camera_projection[3][0], camera_projection[3][1], -1.0f, camera_projection[3][3]);
 
 		vec4 frustum[4];
 		frustum[0] = col4 + col1;
@@ -110,7 +85,7 @@ void main()
     	frustum[3] = col4 + col2;
 		for(int i = 0; i < 4; i++)
 		{
-			frustum[i] *= 1.0 / length(frustum[i].xyz);
+			frustum[i] *= 1.0f / length(frustum[i].xyz);
 		}
 
 		for(uint i = 0; i < point_light_count; i++)
@@ -119,13 +94,13 @@ void main()
 			float radius = point_lights[i].radius;
 
 			bool inFrustum = true;
-            for (int i = 3; i >= 0 && inFrustum; i--)
+            for(int i = 3; i >= 0 && inFrustum; i--)
             {
                 float dist = dot(frustum[i], position);
                 inFrustum = (-radius <= dist);
             }
 
-            if (inFrustum)
+            if(inFrustum)
             {
                 uint offset = atomicAdd(visibleLightCount, 1);
 				visibleLightIndices[offset] = int(i);
@@ -138,6 +113,7 @@ void main()
 	// One thread should fill the global light buffer
 	if(gl_LocalInvocationIndex == 0) 
 	{
+		uint index = gl_WorkGroupID.y * gl_NumWorkGroups.x + gl_WorkGroupID.x;
 		uint offset = index * SGC_POINTLIGHT_CULL_MAX_NUMBER;
 		for(uint i = 0; i < visibleLightCount; i++)
 		{

@@ -2,6 +2,7 @@
 
 #include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
 #include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
+#include <OpenGL/Renderer/RenderPass/DebugLightCullingPass.hpp>
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
@@ -115,6 +116,9 @@ void RendererGL::setViewportRendermode(Id id, RenderMode mode)
         break;
         case RenderMode::Wireframe:
             viewport.renderPass = std::make_unique<WireframePass>(m_content, viewport);
+        break;
+        case RenderMode::Debug0:
+            viewport.renderPass = std::make_unique<DebugLightCullingPass>(m_content, viewport);
         break;
         default:
             viewport.renderPass = std::make_unique<ForwardPlusPass>(m_content, viewport);
