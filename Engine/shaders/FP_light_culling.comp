@@ -36,6 +36,7 @@ layout(packed, binding = SGC_POINTLIGHT_CULL_SSBO_BINDING_POINT) writeonly buffe
     int point_lights_cull_indices[];
 };
 
+shared vec4 frustum[6];
 shared uint minDepthUint;
 shared uint maxDepthUint;
 shared uint visibleLightCount;
@@ -66,6 +67,7 @@ void main()
 
 	barrier();
 
+	//One thread compute frustum planes
 	if(gl_LocalInvocationIndex == 0)
 	{
 		float maxDepth = uintBitsToFloat(maxDepthUint);
@@ -78,7 +80,6 @@ void main()
 		vec4 col2 = vec4(camera_projection[1][0], -camera_projection[1][1] * tileScale.y, tileBias.y, camera_projection[1][3]);
 		vec4 col4 = vec4(camera_projection[3][0], camera_projection[3][1], -1.0f, camera_projection[3][3]);
 
-		vec4 frustum[6];
 		frustum[0] = col4 + col1;
     	frustum[1] = col4 - col1;
     	frustum[2] = col4 - col2;
@@ -87,26 +88,35 @@ void main()
 		{
 			frustum[i] *= 1.0f / length(frustum[i].xyz);
 		}
-		frustum[4] = vec4(0.0f, 0.0f, 1.0f, minDepth);
-		frustum[5] = vec4(0.0f, 0.0f, -1.0f, maxDepth);
+		//frustum[4] = vec4(0.0f, 0.0f, 1.0f, minDepth);
+		//frustum[5] = vec4(0.0f, 0.0f, -1.0f, maxDepth);
+	}
 
-		for(uint i = 0; i < point_light_count; i++)
+	barrier();
+
+	uint threadCount = SGC_CULL_TILE_SIZE * SGC_CULL_TILE_SIZE;
+    uint passCount = (point_light_count + threadCount - 1) / threadCount;
+	for(uint passIt = 0; passIt < passCount; passIt++)
+	{
+		uint lightIndex =  passIt * threadCount + gl_LocalInvocationIndex;
+
+		vec4 position = vec4(point_lights[lightIndex].position, 1.0f); //view space
+		float radius = point_lights[lightIndex].radius;
+
+		if(lightIndex < point_light_count) //Check max light per tile
 		{
-			vec4 position = vec4(point_lights[i].position, 1.0f); //view space
-			float radius = point_lights[i].radius;
-
 			bool inFrustum = true;
-            for(int i = 4; i >= 0 && inFrustum; i--)
-            {
-                float dist = dot(frustum[i], position);
-                inFrustum = (-radius <= dist);
-            }
+			for(int i = 3; i >= 0 && inFrustum; i--)
+			{
+				float dist = dot(frustum[i], position);
+				inFrustum = (-radius <= dist);
+			}
 
-            if(inFrustum)
-            {
-                uint offset = atomicAdd(visibleLightCount, 1);
-				visibleLightIndices[offset] = int(i);
-            }
+			if(inFrustum)
+			{
+				uint offset = atomicAdd(visibleLightCount, 1);
+				visibleLightIndices[offset] = int(lightIndex);
+			}
 		}
 	}
 

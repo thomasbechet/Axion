@@ -78,6 +78,7 @@ void main()
 		color += phongPointLight(light, albedo, normal, POSITION); 
 	}*/
 
+
 	//Culling prepass
 	uint tileID = getCullID();
 	uint key = tileID * SGC_POINTLIGHT_CULL_MAX_NUMBER;
