@@ -25,18 +25,7 @@ void RendererGL::updateMaterial(Id id, const RendererMaterialParameters& setting
 {
     MaterialGL& material = m_content.materials.get(id).first;
 
-    material.useDiffuseTexture = settings.useDiffuseTexture;
-    material.useDiffuseColor = settings.useDiffuseColor;
-    material.diffuseColor = settings.diffuseColor;
-    material.diffuseTexture = settings.diffuseTexture;
-
-    material.useNormalTexture = settings.useNormalTexture;
-    material.isBumpTexture = settings.isBumpTexture;
-    material.normalTexture = settings.normalTexture;
-
-    material.useSpecularTexture = settings.useSpecularTexture;
-    material.specularUniform = settings.specularUniform;
-    material.specularTexture = settings.specularTexture;
+    material.parameters = settings;
 
     m_content.materialUBO->updateMaterial(material);
 }

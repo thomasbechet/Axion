@@ -16,7 +16,7 @@ namespace ax
     struct AXION_CORE_API CameraComponent : public Component
     {
     public:
-        static std::string name(){return "Camera";}
+        static const std::string name;
         
         CameraComponent(const Entity& entity);
         ~CameraComponent();

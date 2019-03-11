@@ -8,6 +8,7 @@ INCLUDE_DIRECTORIES("../")
 INCLUDE_DIRECTORIES("../../extlibs/STB/include/")
 INCLUDE_DIRECTORIES("../../extlibs/TinyObjLoader/include/")
 INCLUDE_DIRECTORIES("../../extlibs/RapidXML/include/")
+INCLUDE_DIRECTORIES("../../extlibs/nlohmann/include/")
 
 #Using std=c++14
 SET(CMAKE_CXX_STANDARD 14)
@@ -31,6 +32,7 @@ ADD_LIBRARY(
     Asset/ShaderManager.cpp
     Asset/Texture.cpp
     Asset/TextureManager.cpp
+    Asset/JsonAttributes.cpp
     Context/EngineContext.cpp
     Context/Engine.cpp
     Prefab/System/BasicWindowSystem.cpp

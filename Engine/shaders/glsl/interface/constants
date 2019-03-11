@@ -1,0 +1,9 @@
+//CONSTANTS//
+struct Constant
+{
+    ivec2 resolution;
+};
+layout(std140, binding = $CONSTANTS_UBO_BINDING_POINT) uniform Constants
+{
+    Constant constants;
+};

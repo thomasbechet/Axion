@@ -16,7 +16,7 @@ namespace ax
     struct AXION_CORE_API QuadComponent : public Quad, public Component
     {
     public:
-        static std::string name(){return "Quad";}
+        static const std::string name;
         
         QuadComponent(const Entity& entity, float x = 1.0f, float y = 1.0f, float factor = 1.0f);
         ~QuadComponent();

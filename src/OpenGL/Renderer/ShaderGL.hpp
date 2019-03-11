@@ -4,7 +4,7 @@
 //HEADERS
 ////////////
 #include <OpenGL/Export.hpp>
-#include <OpenGL/Renderer/Utility/ShaderGLSL.hpp>
+#include <OpenGL/Renderer/Shader/ShaderGLSL.hpp>
 
 #include <GL/glew.h>
 

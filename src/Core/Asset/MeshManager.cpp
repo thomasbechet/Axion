@@ -18,7 +18,7 @@ AssetReference<Mesh> MeshManager::operator()(std::string name) const noexcept
         Engine::interrupt("Failed to access mesh '" + name + "'");
     }
 }
-AssetReference<Mesh> MeshManager::create(std::string name, const std::vector<Vertex>& vertices, bool computeTangent, bool computeNormal) noexcept
+AssetReference<Mesh> MeshManager::loadFromJson(std::string name, const std::string& json) noexcept
 {
     if(exists(name))
     {
@@ -27,11 +27,49 @@ AssetReference<Mesh> MeshManager::create(std::string name, const std::vector<Ver
     }
 
     m_meshes.emplace(name, std::make_unique<AssetHolder<Mesh>>(name));
-    m_meshes.at(name)->get()->loadFromVertices(vertices, computeTangent, computeNormal);
+    if(!m_meshes.at(name)->get()->loadFromJson(json))
+    {
+        m_meshes.erase(name);
+        return AssetReference<Mesh>();
+    }
 
     return m_meshes.at(name)->reference();
 }
-bool MeshManager::destroy(std::string name) noexcept
+AssetReference<Mesh> MeshManager::loadFromFile(std::string name, Path file) noexcept
+{
+    if(exists(name))
+    {
+        Engine::logger().log("Failed to load mesh '" + name + "' because it already exists.", Logger::Warning);
+        return AssetReference<Mesh>();
+    }
+
+    m_meshes.emplace(name, std::make_unique<AssetHolder<Mesh>>(name));
+    if(!m_meshes.at(name)->get()->loadFromFile(file))
+    {
+        m_meshes.erase(name);
+        return AssetReference<Mesh>();
+    }
+
+    return m_meshes.at(name)->reference();
+}
+AssetReference<Mesh> MeshManager::loadFromMemory(std::string name, const std::vector<Vertex>& vertices, bool computeTangent, bool computeNormal) noexcept
+{
+    if(exists(name))
+    {
+        Engine::logger().log("Failed to load mesh '" + name + "' because it already exists.", Logger::Warning);
+        return AssetReference<Mesh>();
+    }
+
+    m_meshes.emplace(name, std::make_unique<AssetHolder<Mesh>>(name));
+    if(!m_meshes.at(name)->get()->loadFromMemory(vertices, computeTangent, computeNormal))
+    {
+        m_meshes.erase(name);
+        return AssetReference<Mesh>();
+    }
+
+    return m_meshes.at(name)->reference();
+}
+bool MeshManager::unload(std::string name) noexcept
 {
     if(!exists(name))
     {
@@ -58,7 +96,7 @@ void MeshManager::dispose() noexcept
     for(auto& it : m_meshes)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) destroy(it);
+    for(auto it : keys) unload(it);
 }
 void MeshManager::log() const noexcept
 {

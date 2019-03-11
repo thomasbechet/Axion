@@ -226,9 +226,9 @@ namespace ax
 	template<typename T>
 	const Vector3<T> Vector3<T>::backward = Vector3<T>(0, 0, -1);
 	template<typename T>
-	const Vector3<T> Vector3<T>::left = Vector3<T>(1, 0, 0);
+	const Vector3<T> Vector3<T>::left = Vector3<T>(-1, 0, 0);
 	template<typename T>
-	const Vector3<T> Vector3<T>::right = Vector3<T>(-1, 0, 0);
+	const Vector3<T> Vector3<T>::right = Vector3<T>(1, 0, 0);
 	template<typename T>
 	const Vector3<T> Vector3<T>::up = Vector3<T>(0, 1, 0);
 	template<typename T>

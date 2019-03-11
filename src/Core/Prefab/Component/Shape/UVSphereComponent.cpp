@@ -6,6 +6,8 @@
 
 using namespace ax;
 
+const std::string UVSphereComponent::name = "UVSphere";
+
 UVSphereComponent::UVSphereComponent(const Entity& entity,
         float radius,
         unsigned slice,

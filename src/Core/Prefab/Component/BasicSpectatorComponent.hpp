@@ -14,7 +14,7 @@ namespace ax
     struct AXION_CORE_API BasicSpectatorComponent : public Component
     {
     public:
-        static std::string name(){return "SpectatorController";}
+        static const std::string name;
 
         BasicSpectatorComponent(const Entity& entity);
 

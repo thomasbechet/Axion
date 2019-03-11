@@ -11,17 +11,19 @@ namespace ax
 {
     struct AXION_CORE_API RendererMaterialParameters
     {
-        Id diffuseTexture;
-        Color3 diffuseColor;
+        Id diffuseTexture = 0;
+        Color3 diffuseColor = Color3(1.0f, 1.0f, 1.0f);
         bool useDiffuseTexture = false;
         bool useDiffuseColor = false;
 
-        Id normalTexture;
+        Id normalTexture = 0;
         bool useNormalTexture = false;
         bool isBumpTexture = false;
 
-        Id specularTexture;
-        float specularUniform;
+        Id specularTexture = 0;
+        float specularUniform = 1.0f;
         bool useSpecularTexture = false;
+
+        Id shader = 0;
     };
 }

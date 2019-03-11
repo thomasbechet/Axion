@@ -4,6 +4,8 @@
 
 using namespace ax;
 
+const std::string PointLightComponent::name = "PointLight";
+
 PointLightComponent::PointLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {

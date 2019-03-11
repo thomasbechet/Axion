@@ -28,13 +28,14 @@ ADD_LIBRARY(
     Renderer/TextureGL.cpp
     Renderer/FrameBuffer/ForwardPlusBuffers.cpp
     Renderer/FrameBuffer/RenderBuffer.cpp
-    Renderer/UBO/ShaderConstantsUBO.cpp
-    Renderer/UBO/MaterialUBO.cpp
-    Renderer/UBO/PointLightUBO.cpp
-    Renderer/UBO/DirectionalLightUBO.cpp
-    Renderer/UBO/CameraUBO.cpp
-    Renderer/UBO/ShaderConstantsUBO.cpp
-    Renderer/Utility/ShaderGLSL.cpp
+    Renderer/Buffer/ConstantsUBO.cpp
+    Renderer/Buffer/MaterialUBO.cpp
+    Renderer/Buffer/PointLightUBO.cpp
+    Renderer/Buffer/DirectionalLightUBO.cpp
+    Renderer/Buffer/CameraUBO.cpp
+    Renderer/Buffer/ConstantsUBO.cpp
+    Renderer/Buffer/CullLightSSBO.cpp
+    Renderer/Shader/ShaderGLSL.cpp
     Renderer/Light/PointLightGL.cpp
     Renderer/Light/DirectionalLightGL.cpp
     Renderer/RenderPass/RenderPass.cpp

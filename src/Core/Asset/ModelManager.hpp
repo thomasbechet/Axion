@@ -12,8 +12,9 @@ namespace ax
     {
     public:
         AssetReference<Model> operator()(std::string name) const noexcept;
-        AssetReference<Model> create(std::string name, Path path) noexcept;
-        bool destroy(std::string name, bool tryUnloadMeshes = true, bool tryUnloadMaterials = true, bool tryUnloadTextures = true) noexcept;
+        AssetReference<Model> loadFromFile(std::string name, Path path) noexcept;
+        AssetReference<Model> loadFromJson(std::string name, std::string json) noexcept;
+        bool unload(std::string name, bool tryUnloadMeshes = true, bool tryUnloadMaterials = true, bool tryUnloadTextures = true) noexcept;
         bool exists(std::string name) const noexcept;
 
         void dispose() noexcept;

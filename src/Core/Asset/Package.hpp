@@ -24,7 +24,8 @@ namespace ax
         Package(std::string name);
         ~Package();
 
-        bool loadFromFile(Path path) noexcept;
+        bool loadFromFile(Path file) noexcept;
+        bool loadFromJson(const std::string& json) noexcept;
         bool unload() noexcept;
 
         std::string getName() const noexcept;

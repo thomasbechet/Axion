@@ -7,6 +7,8 @@
 
 using namespace ax;
 
+const std::string BasicSpectatorSystem::name = "BasicSpectator";
+
 void BasicSpectatorSystem::onInitialize()
 {
     m_forward = &Engine::input().addButton("basicspectator_forward");
@@ -73,8 +75,8 @@ void BasicSpectatorSystem::onUpdate()
 
         if(m_forward->isPressed()) direction += component->transform.getForwardVector();
         if(m_backward->isPressed()) direction += component->transform.getBackwardVector();
-        if(m_left->isPressed()) direction += component->transform.getLeftVector();
-        if(m_right->isPressed()) direction += component->transform.getRightVector();
+        if(m_left->isPressed()) direction += component->transform.getRightVector();
+        if(m_right->isPressed()) direction += component->transform.getLeftVector();
         if(component->freeMode)
         {
             if(m_up->isPressed()) direction += component->transform.getUpVector();
@@ -108,7 +110,7 @@ void BasicSpectatorSystem::onUpdate()
             if(look.x != 0.0f) 
                 component->transform.rotate(-radians(look.x) * component->rotationSensibility, Vector3f::up);
             if(look.y != 0.0f) 
-                component->transform.rotate(radians(look.y) * component->rotationSensibility, Vector3f::right);
+                component->transform.rotate(radians(look.y) * component->rotationSensibility, Vector3f::left);
             if(m_rotateLeft->isPressed())
                 component->transform.rotate(radians(component->rollSpeed) * delta, Vector3f::forward);
             if(m_rotateRight->isPressed())
@@ -125,7 +127,7 @@ void BasicSpectatorSystem::onUpdate()
             if(component->pitch > 90.0f) component->pitch = 90.0f;
 
             component->transform.setRotation(-radians(component->yaw), Vector3f::up);
-            component->transform.rotate(radians(component->pitch), Vector3f::right);
+            component->transform.rotate(radians(component->pitch), Vector3f::left);
         }
     }
 }

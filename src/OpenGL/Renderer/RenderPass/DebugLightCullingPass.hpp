@@ -7,7 +7,7 @@
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>
 #include <OpenGL/Renderer/FrameBuffer/ForwardPlusBuffers.hpp>
-#include <OpenGL/Renderer/Utility/ShaderGLSL.hpp>
+#include <OpenGL/Renderer/Shader/ShaderGLSL.hpp>
 
 #include <Core/Math/Matrix.hpp>
 
@@ -34,8 +34,6 @@ namespace ax
         void renderViewportPass() noexcept;
 
     private:
-        void initializeCullPass() noexcept;
-        void terminateCullPass() noexcept;
         std::unique_ptr<ShaderGLSL> m_cullingShader;
         GLuint m_cullSSBO;
         Vector2u workGroupSize;
@@ -45,37 +43,11 @@ namespace ax
         Matrix4f m_vpMatrix;
 
     private:
-        struct PhongLocations
-        {
-            GLuint transform;
-            GLuint mvp;
-            GLuint normalToView;
-
-            GLuint materialIndex;
-            GLuint diffuseTexture;
-            GLuint normalTexture;
-        };
-
-        PhongLocations phongLocations;
-
-        struct GeometryLocations
-        {
-            GLuint transform;
-            GLuint mvp;
-            GLuint normalToView;
-
-            GLuint materialIndex;
-            GLuint normalTexture;
-        };
-
-        GeometryLocations geometryLocations;
-
-    private:
-        GLuint m_phongShader;
-        GLuint m_debugLightCullingShader;
-        GLuint m_geometryShader;
-
         std::unique_ptr<RenderBuffer> m_renderBuffer;
-        std::unique_ptr<ForwardPlusBuffers> m_buffers;
+
+        GLuint m_quadTextureShader;
+        GLuint m_wireframeShader;
+        GLuint m_debugLightCullingShader;
+        GLuint m_lightCullComputeShader;
     };
 }

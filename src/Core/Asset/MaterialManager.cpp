@@ -18,7 +18,7 @@ AssetReference<Material> MaterialManager::operator()(std::string name) const noe
         Engine::interrupt("Failed to access material '" + name + "'");
     } 
 }
-AssetReference<Material> MaterialManager::create(std::string name, const MaterialParameters& params) noexcept
+AssetReference<Material> MaterialManager::loadFromFile(std::string name, Path file) noexcept
 {
     if(exists(name))
     {
@@ -27,11 +27,49 @@ AssetReference<Material> MaterialManager::create(std::string name, const Materia
     }
 
     m_materials.emplace(name, std::make_unique<AssetHolder<Material>>(name));
-    m_materials.at(name)->get()->load(params);
+    if(!m_materials.at(name)->get()->loadFromFile(file))
+    {
+        m_materials.erase(name);
+        return AssetReference<Material>();
+    }
 
     return *m_materials.at(name).get();
 }
-bool MaterialManager::destroy(std::string name, bool tryUnloadTexture) noexcept
+AssetReference<Material> MaterialManager::loadFromJson(std::string name, const std::string& json) noexcept
+{
+    if(exists(name))
+    {
+        Engine::logger().log("Failed to load material '" + name + "' because it already exists.", Logger::Warning);
+        return AssetReference<Material>();
+    }
+
+    m_materials.emplace(name, std::make_unique<AssetHolder<Material>>(name));
+    if(!m_materials.at(name)->get()->loadFromJson(json))
+    {
+        m_materials.erase(name);
+        return AssetReference<Material>();
+    }
+
+    return *m_materials.at(name).get();
+}
+AssetReference<Material> MaterialManager::loadFromMemory(std::string name, const MaterialParameters& params) noexcept
+{
+    if(exists(name))
+    {
+        Engine::logger().log("Failed to load material '" + name + "' because it already exists.", Logger::Warning);
+        return AssetReference<Material>();
+    }
+
+    m_materials.emplace(name, std::make_unique<AssetHolder<Material>>(name));
+    if(!m_materials.at(name)->get()->loadFromMemory(params))
+    {
+        m_materials.erase(name);
+        return AssetReference<Material>();
+    }
+
+    return *m_materials.at(name).get();
+}
+bool MaterialManager::unload(std::string name, bool tryUnloadTexture) noexcept
 {
     try
     {
@@ -68,7 +106,7 @@ void MaterialManager::dispose() noexcept
     for(auto& it : m_materials)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) destroy(it, true);
+    for(auto it : keys) unload(it, true);
 }
 void MaterialManager::log() const noexcept
 {

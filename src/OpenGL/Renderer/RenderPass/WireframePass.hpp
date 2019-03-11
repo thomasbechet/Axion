@@ -22,10 +22,9 @@ namespace ax
         void render(double alpha) noexcept override;
 
     private:
-        GLuint m_mvpLocation;
-
         std::unique_ptr<RenderBuffer> m_renderBuffer;
 
+        GLuint m_quadTextureShader;
         GLuint m_wireframeShader;
     };
 }

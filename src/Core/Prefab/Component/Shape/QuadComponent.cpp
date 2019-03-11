@@ -5,6 +5,8 @@
 
 using namespace ax;
 
+const std::string QuadComponent::name = "Quad";
+
 QuadComponent::QuadComponent(const Entity& entity, float x, float y, float factor) :
     Quad(x, y),
     transform(entity.getComponent<TransformComponent>()),

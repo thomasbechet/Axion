@@ -30,6 +30,7 @@ namespace ax
         ~Texture();
 
         bool loadFromFile(Path path) noexcept;
+        bool loadFromJson(const std::string& json) noexcept;
         bool unload() noexcept;
         bool isLoaded() const noexcept;
 

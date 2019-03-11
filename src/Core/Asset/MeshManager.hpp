@@ -12,8 +12,10 @@ namespace ax
     {
     public:
         AssetReference<Mesh> operator()(std::string name) const noexcept;
-        AssetReference<Mesh> create(std::string name, const std::vector<Vertex>& vertices, bool computeTangent = false, bool computeNormal = false) noexcept;
-        bool destroy(std::string name) noexcept;
+        AssetReference<Mesh> loadFromJson(std::string name, const std::string& json) noexcept;
+        AssetReference<Mesh> loadFromFile(std::string name, Path file) noexcept;
+        AssetReference<Mesh> loadFromMemory(std::string name, const std::vector<Vertex>& vertices, bool computeTangent = false, bool computeNormal = false) noexcept;
+        bool unload(std::string name) noexcept;
         bool exists(std::string name) const noexcept;
 
         void dispose() noexcept;

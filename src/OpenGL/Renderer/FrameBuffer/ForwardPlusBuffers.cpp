@@ -20,21 +20,20 @@ ForwardPlusBuffers::ForwardPlusBuffers(Vector2u dimensions)
     glGenTextures(1, &m_depthTexture);
     glBindTexture(GL_TEXTURE_2D, m_depthTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, dimensions.x, dimensions.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    //LightAccumulation
+    glGenTextures(1, &m_lightAccumulationTexture);
+    glBindTexture(GL_TEXTURE_2D, m_lightAccumulationTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, dimensions.x, dimensions.y, 0, GL_RGB, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     
-    //Light
-    glGenTextures(1, &m_lightTexture);
-    glBindTexture(GL_TEXTURE_2D, m_lightTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, dimensions.x, dimensions.y, 0, GL_RGB, GL_FLOAT, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    
-
     //GENERATE FBO GEOMETRY
     glGenFramebuffers(1, &m_fboGeometry);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboGeometry);
@@ -53,8 +52,8 @@ ForwardPlusBuffers::ForwardPlusBuffers(Vector2u dimensions)
     glGenFramebuffers(1, &m_fboLight);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fboLight);
 
-    glBindTexture(GL_TEXTURE_2D, m_lightTexture);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_lightTexture, 0);
+    glBindTexture(GL_TEXTURE_2D, m_lightAccumulationTexture);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_lightAccumulationTexture, 0);
     glBindTexture(GL_TEXTURE_2D, m_depthTexture);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 
@@ -72,7 +71,7 @@ ForwardPlusBuffers::~ForwardPlusBuffers()
 
     glDeleteTextures(1, &m_normalTexture);
     glDeleteTextures(1, &m_depthTexture);
-    glDeleteTextures(1, &m_lightTexture);
+    glDeleteTextures(1, &m_lightAccumulationTexture);
 }
 
 void ForwardPlusBuffers::bindForGeometryPass() noexcept
@@ -109,5 +108,5 @@ void ForwardPlusBuffers::bindForLightPass() noexcept
 void ForwardPlusBuffers::bindForPPPass() noexcept
 {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_lightTexture);
+    glBindTexture(GL_TEXTURE_2D, m_lightAccumulationTexture);
 }

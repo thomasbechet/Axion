@@ -39,7 +39,7 @@ namespace ax
     public:
         std::string name() const noexcept
         {
-            return C::name();
+            return C::name;
         }
 
     public:
@@ -104,7 +104,7 @@ namespace ax
         C& get(unsigned offset) const noexcept
         {
             if(offset >= m_length)
-                Engine::interrupt("Tried to access non valid component <" + C::name() + "> from list with [id=" + std::to_string(offset) + "]");
+                Engine::interrupt("Tried to access non valid component <" + C::name + "> from list with [id=" + std::to_string(offset) + "]");
 
             return m_chunks.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first;
         }

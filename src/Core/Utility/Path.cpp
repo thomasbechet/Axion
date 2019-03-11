@@ -1,7 +1,12 @@
 #include <Core/Utility/Path.hpp>
 
+#include <Core/Context/Engine.hpp>
+
 #include <algorithm>
 #include <fstream>
+#include <regex>
+
+#include <iostream>
 
 using namespace ax;
 
@@ -9,9 +14,9 @@ Path::Path(const char* path)
 {
     m_path = Path::sanitize(std::string(path));
 }
-Path::Path(const std::string& path) : m_path(path)
+Path::Path(const std::string& path)
 {
-    Path::sanitize(m_path);
+    m_path = Path::sanitize(path);
 }
 
 std::string Path::directory() const noexcept
@@ -79,6 +84,11 @@ Path::operator std::string() const
 
 std::string Path::sanitize(std::string path) noexcept
 {
+    //Replace constants
+    path = std::regex_replace(path, std::regex("\\$ENGINE_DIR"), Engine::EngineDirectory);
+    path = std::regex_replace(path, std::regex("\\$GAMEDATA_DIR"), Engine::GameDataDirectory);
+    path = std::regex_replace(path, std::regex("\\$GAME_DIR"), Engine::GameDirectory);
+
     //Normalize path
     std::replace(path.begin(), path.end(), '\\', '/');
     if(path.front() == '/') path.erase(0, 1);

@@ -5,6 +5,8 @@
 
 using namespace ax;
 
+const std::string RenderModeSystem::name = "RenderMode";
+
 void RenderModeSystem::onInitialize()
 {
     m_defaultModeButton = &Engine::input().addButton("basicrendermode_default");

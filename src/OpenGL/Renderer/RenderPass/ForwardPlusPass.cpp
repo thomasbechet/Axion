@@ -1,7 +1,7 @@
 #include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
 
 #include <OpenGL/Renderer/RendererGL.hpp>
-#include <OpenGL/Renderer/Utility/ShaderConstants.hpp>
+#include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Asset/AssetManager.hpp>
@@ -22,62 +22,31 @@ void ForwardPlusPass::initialize() noexcept
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
     m_buffers = std::make_unique<ForwardPlusBuffers>(viewport.resolution);
 
-    initializeCullPass();
+    //Quad
+    m_quadTextureShader = content.shaders.get(content.quadTextureShader->getHandle()).shader.getProgram();
 
-    //Load shaders
-    AssetReference<Shader> shader;
+    //Generic shader
+    m_genericShader = content.shaders.get(content.genericShader->getHandle()).shader.getProgram();
 
-    shader = Engine::assets().shader.create("renderergl_shader_phong",
-        "../shaders/FP_phong.vert",
-        "../shaders/FP_phong.frag");
-    if(shader->isLoaded())
-        m_phongShader = content.shaders.get(shader->getHandle()).shader.getProgram();
-    else
-        Engine::interrupt("Failed to load shader: renderergl_shader_phong");
+    //Geometry shader
+    m_geometryShader = content.shaders.get(content.geometryShader->getHandle()).shader.getProgram();
 
-    shader = Engine::assets().shader.create("renderergl_shader_geometry",
-        "../shaders/FP_geometry.vert",
-        "../shaders/FP_geometry.frag");
-    if(shader->isLoaded())
-        m_geometryShader = content.shaders.get(shader->getHandle()).shader.getProgram();
-    else
-        Engine::interrupt("Failed to load shader: renderergl_shader_geometry");
+    //PostProcess shader
+    m_postProcessShader = content.shaders.get(content.postProcessShader->getHandle()).shader.getProgram();
 
-    //Phong locations
-    phongLocations.transform = glGetUniformLocation(m_phongShader, "transform");
-    phongLocations.mvp = glGetUniformLocation(m_phongShader, "mvp");
-    phongLocations.normalToView = glGetUniformLocation(m_phongShader, "normal_to_view");
-
-    phongLocations.materialIndex = glGetUniformLocation(m_phongShader, "material_index");
-    phongLocations.diffuseTexture = glGetUniformLocation(m_phongShader, "diffuse_texture");
-    phongLocations.normalTexture = glGetUniformLocation(m_phongShader, "normal_texture");
-
-    //Geometry locations
-    geometryLocations.transform = glGetUniformLocation(m_geometryShader, "transform");
-    geometryLocations.mvp = glGetUniformLocation(m_geometryShader, "mvp");
-    geometryLocations.normalToView = glGetUniformLocation(m_geometryShader, "normal_to_view");
-
-    geometryLocations.materialIndex = glGetUniformLocation(m_geometryShader, "material_index");
-    geometryLocations.normalTexture = glGetUniformLocation(m_geometryShader, "normal_texture");
+    //LightCullingCompute shader
+    m_lightCullComputeShader = content.lightCullingComputeShader.getProgram();
 }
 void ForwardPlusPass::terminate() noexcept
 {
-    terminateCullPass();
-
     //Unload buffers
     m_buffers.reset();
     m_renderBuffer.reset();
-
-    //Unload shaders
-    Engine::assets().shader.destroy("renderergl_shader_phong");
-    Engine::assets().shader.destroy("renderergl_shader_geometry");
 }
 void ForwardPlusPass::updateResolution() noexcept
 {
     m_renderBuffer.reset(new RenderBuffer(viewport.resolution));
     m_buffers.reset(new ForwardPlusBuffers(viewport.resolution));
-    terminateCullPass();
-    initializeCullPass();
 }
 void ForwardPlusPass::render(double alpha) noexcept
 {
@@ -86,7 +55,7 @@ void ForwardPlusPass::render(double alpha) noexcept
     processCullPass();
     renderLightPass();
     renderPPPass();
-    renderViewportPass();
+    renderViewportPass();   
 }
 
 void ForwardPlusPass::updateUBOs() noexcept
@@ -109,13 +78,13 @@ void ForwardPlusPass::updateUBOs() noexcept
     m_vpMatrix = projectionMatrix * m_viewMatrix;
 
     //Update constants
-    content.shaderConstantsUBO->setResolution(viewport.resolution);
+    content.constantsUBO->setResolution(viewport.resolution);
 
     //Updates Lights
     content.pointLightUBO->updateMemory(content.pointLights, m_viewMatrix);
     content.directionalLightUBO->updateMemory(content.directionalLights, m_viewMatrix);
     content.cameraUBO->update(m_viewMatrix, projectionMatrix, invProjectionMatrix);
-    content.shaderConstantsUBO->update();
+    content.constantsUBO->update();
 }
 void ForwardPlusPass::renderGeometryPass() noexcept
 {
@@ -135,12 +104,12 @@ void ForwardPlusPass::renderGeometryPass() noexcept
     {
         MaterialGL& material = materialIt.first;
 
-        glUniform1ui(geometryLocations.materialIndex, material.uboIndex);
+        glUniform1ui(MATERIAL_INDEX_LOCATION, material.uboIndex);
 
-        if(material.useNormalTexture)
+        if(material.parameters.useNormalTexture)
         {
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.normalTexture).id);
+            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.parameters.normalTexture).id);
         }
 
         for(auto& staticmeshId : materialIt.second)
@@ -154,9 +123,9 @@ void ForwardPlusPass::renderGeometryPass() noexcept
                 Matrix4f mvp = m_vpMatrix * transform;
                 Matrix3f normalToView = Matrix3f(m_viewMatrix) * Matrix3f::transpose(Matrix3f::inverse(Matrix3f(transform)));
 
-                glUniformMatrix4fv(geometryLocations.transform, 1, GL_FALSE, transform.data());
-                glUniformMatrix4fv(geometryLocations.mvp, 1, GL_FALSE, mvp.data());
-                glUniformMatrix3fv(geometryLocations.normalToView, 1, GL_FALSE, normalToView.data());
+                glUniformMatrix4fv(TRANSFORM_MATRIX_LOCATION, 1, GL_FALSE, transform.data());
+                glUniformMatrix4fv(MVP_MATRIX_LOCATION, 1, GL_FALSE, mvp.data());
+                glUniformMatrix3fv(NORMALTOVIEW_MATRIX_LOCATION, 1, GL_FALSE, normalToView.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);
@@ -167,9 +136,9 @@ void ForwardPlusPass::renderGeometryPass() noexcept
 }
 void ForwardPlusPass::processCullPass() noexcept
 {
-    glUseProgram(m_cullingShader->getProgram());
-    m_buffers->bindForCullPass();
-    glDispatchCompute(workGroupSize.x, workGroupSize.y, 1);
+    glUseProgram(content.lightCullingComputeShader.getProgram());
+    Vector2u dispatch = CullLightSSBO::dispatchSize(viewport.resolution);
+    glDispatchCompute(dispatch.x, dispatch.y, 1);
 }
 void ForwardPlusPass::renderLightPass() noexcept
 {
@@ -180,23 +149,29 @@ void ForwardPlusPass::renderLightPass() noexcept
     m_buffers->bindForLightPass();    
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(m_phongShader);
     for(auto& materialIt : content.materials)
     {
         MaterialGL& material = materialIt.first;
 
-        glUniform1ui(phongLocations.materialIndex, material.uboIndex);
+        GLuint shader = (material.parameters.shader) ? content.shaders.get(material.parameters.shader).shader.getProgram() : m_genericShader;
+        glUseProgram(shader);
 
-        if(material.useDiffuseTexture)
+        glUniform1ui(MATERIAL_INDEX_LOCATION, material.uboIndex);
+
+        if(material.parameters.useDiffuseTexture)
         {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.diffuseTexture).id);
+            glActiveTexture(GL_TEXTURE0 + DIFFUSE_TEXTURE_BINDING);
+            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.parameters.diffuseTexture).id);
         }
-
-        if(material.useNormalTexture)
+        if(material.parameters.useNormalTexture)
         {
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.normalTexture).id);
+            glActiveTexture(GL_TEXTURE0 + NORMAL_TEXTURE_BINDING);
+            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.parameters.normalTexture).id);
+        }
+        if(material.parameters.useSpecularTexture)
+        {
+            glActiveTexture(GL_TEXTURE0 + SPECULAR_TEXTURE_BINDING);
+            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.parameters.specularTexture).id);
         }
 
         for(auto& staticmeshId : materialIt.second)
@@ -210,9 +185,9 @@ void ForwardPlusPass::renderLightPass() noexcept
                 Matrix4f mvp = m_vpMatrix * transform;
                 Matrix3f normalToView = Matrix3f(m_viewMatrix) * Matrix3f::transpose(Matrix3f::inverse(Matrix3f(transform)));
 
-                glUniformMatrix4fv(phongLocations.transform, 1, GL_FALSE, transform.data());
-                glUniformMatrix4fv(phongLocations.mvp, 1, GL_FALSE, mvp.data());
-                glUniformMatrix3fv(phongLocations.normalToView, 1, GL_FALSE, normalToView.data());
+                glUniformMatrix4fv(TRANSFORM_MATRIX_LOCATION, 1, GL_FALSE, transform.data());
+                glUniformMatrix4fv(MVP_MATRIX_LOCATION, 1, GL_FALSE, mvp.data());
+                glUniformMatrix3fv(NORMALTOVIEW_MATRIX_LOCATION, 1, GL_FALSE, normalToView.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);
@@ -223,7 +198,7 @@ void ForwardPlusPass::renderLightPass() noexcept
 }
 void ForwardPlusPass::renderPPPass() noexcept
 {
-    glUseProgram(content.quadRenderShader);
+    glUseProgram(m_postProcessShader);
 
     m_renderBuffer->bindForWriting();
     m_buffers->bindForPPPass();
@@ -247,7 +222,7 @@ void ForwardPlusPass::renderViewportPass() noexcept
     );
     glViewport(position.x, position.y, size.x, size.y);
 
-    glUseProgram(content.quadRenderShader);
+    glUseProgram(m_quadTextureShader);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     m_renderBuffer->bindForReading();
@@ -257,27 +232,4 @@ void ForwardPlusPass::renderViewportPass() noexcept
     glBindVertexArray(0);
 
     glUseProgram(0);
-}
-
-void ForwardPlusPass::initializeCullPass() noexcept
-{
-    glGenBuffers(1, &m_cullSSBO);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_cullSSBO);
-    workGroupSize.x = ((viewport.resolution.x + (viewport.resolution.x % SGC_CULL_TILE_SIZE)) / SGC_CULL_TILE_SIZE);
-    workGroupSize.y = ((viewport.resolution.y + (viewport.resolution.y % SGC_CULL_TILE_SIZE)) / SGC_CULL_TILE_SIZE);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, workGroupSize.x * workGroupSize.y * SGC_POINTLIGHT_CULL_MAX_NUMBER * sizeof(GLint), 0, GL_STATIC_DRAW);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, SGC_POINTLIGHT_CULL_SSBO_BINDING_POINT, m_cullSSBO);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-
-    m_cullingShader = std::make_unique<ShaderGLSL>();
-    if(!m_cullingShader->loadCompute(Path("../shaders/FP_light_culling.comp")))
-    {
-        Engine::interrupt("Failed to load compute shader.");
-    }
-}
-void ForwardPlusPass::terminateCullPass() noexcept
-{
-    m_cullingShader->unload();
-    m_cullingShader.reset();
-    glDeleteBuffers(1, &m_cullSSBO);
 }

@@ -16,7 +16,7 @@ namespace ax
     struct AXION_CORE_API RectangleComponent : public Rectangle, public Component
     {
     public:
-        static std::string name(){return "Rectangle";}
+        static const std::string name;
         
         RectangleComponent(const Entity& entity,
             float xMin = -0.5f, float xMax = 0.5f,

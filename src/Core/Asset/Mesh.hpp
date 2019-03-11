@@ -24,7 +24,9 @@ namespace ax
         Mesh(std::string name);
         ~Mesh();
 
-        bool loadFromVertices(const std::vector<Vertex>& vertices, bool computeTangent = false, bool computeNormal = false) noexcept;
+        bool loadFromFile(Path file) noexcept;
+        bool loadFromJson(const std::string& json) noexcept;
+        bool loadFromMemory(const std::vector<Vertex>& vertices, bool computeTangent = false, bool computeNormal = false) noexcept;
         bool unload() noexcept;
         bool isLoaded() const noexcept;
 

@@ -17,24 +17,45 @@ AssetReference<Model> ModelManager::operator()(std::string name) const noexcept
         Engine::interrupt("Failed to access model '" + name + "'");
     }
 }
-AssetReference<Model> ModelManager::create(std::string name, Path path) noexcept
+AssetReference<Model> ModelManager::loadFromFile(std::string name, Path path) noexcept
 {
     if(exists(name))
     {
-        Engine::logger().log("Failed to create model '" + name + "' because it already exists.", Logger::Warning);
+        Engine::logger().log("Failed to load model '" + name + "' because it already exists.", Logger::Warning);
         return AssetReference<Model>();
     }
 
     m_models.emplace(name, std::make_unique<AssetHolder<Model>>(name));
-    m_models.at(name)->get()->loadFromFile(path);
+    if(!m_models.at(name)->get()->loadFromFile(path))
+    {
+        m_models.erase(name);
+        return AssetReference<Model>();
+    }
 
     return m_models.at(name)->reference();
 }
-bool ModelManager::destroy(std::string name, bool tryUnloadMeshes, bool tryUnloadMaterials, bool tryUnloadTextures) noexcept
+AssetReference<Model> ModelManager::loadFromJson(std::string name, std::string json) noexcept
+{
+    if(exists(name))
+    {
+        Engine::logger().log("Failed to load model '" + name + "' because it already exists.", Logger::Warning);
+        return AssetReference<Model>();
+    }
+
+    m_models.emplace(name, std::make_unique<AssetHolder<Model>>(name));
+    if(!m_models.at(name)->get()->loadFromJson(json))
+    {
+        m_models.erase(name);
+        return AssetReference<Model>();
+    }
+
+    return m_models.at(name)->reference();
+}
+bool ModelManager::unload(std::string name, bool tryUnloadMeshes, bool tryUnloadMaterials, bool tryUnloadTextures) noexcept
 {
     if(!exists(name))
     {
-        Engine::logger().log("Failed to destroy model '" + name + "' because it does not exists.", Logger::Warning);
+        Engine::logger().log("Failed to unload model '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
 
@@ -58,7 +79,7 @@ void ModelManager::dispose() noexcept
     for(auto& it : m_models)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) destroy(it, true, true);
+    for(auto it : keys) unload(it, true, true);
 }
 void ModelManager::log() const noexcept
 {

@@ -17,24 +17,45 @@ AssetReference<Shader> ShaderManager::operator()(std::string name) const noexcep
         Engine::interrupt("Failed to access shader '" + name + "'");
     }   
 }
-AssetReference<Shader> ShaderManager::create(std::string name, Path vertex, Path fragment) noexcept
+AssetReference<Shader> ShaderManager::loadFromFile(std::string name, Path file) noexcept
 {
     if(exists(name))
     {
-        Engine::logger().log("Failed to create shader '" + name + "' because it already exists.", Logger::Warning);
+        Engine::logger().log("Failed to load shader '" + name + "' because it already exists.", Logger::Warning);
         return AssetReference<Shader>();
     }
 
     m_shaders.emplace(name, std::make_unique<AssetHolder<Shader>>(name));
-    m_shaders.at(name)->get()->loadFromFile(vertex, fragment);
+    if(!m_shaders.at(name)->get()->loadFromFile(file))
+    {
+        m_shaders.erase(name);
+        return AssetReference<Shader>();
+    }
 
     return m_shaders.at(name)->reference();
 }
-bool ShaderManager::destroy(std::string name) noexcept
+AssetReference<Shader> ShaderManager::loadFromJson(std::string name, const std::string& json) noexcept
+{
+    if(exists(name))
+    {
+        Engine::logger().log("Failed to load shader '" + name + "' because it already exists.", Logger::Warning);
+        return AssetReference<Shader>();
+    }
+
+    m_shaders.emplace(name, std::make_unique<AssetHolder<Shader>>(name));
+    if(!m_shaders.at(name)->get()->loadFromJson(json))
+    {
+        m_shaders.erase(name);
+        return AssetReference<Shader>();
+    }
+
+    return m_shaders.at(name)->reference();
+}
+bool ShaderManager::unload(std::string name) noexcept
 {
     if(!exists(name))
     {
-        Engine::logger().log("Failed to destroy shader '" + name + "' because it does not exists.", Logger::Warning);
+        Engine::logger().log("Failed to unload shader '" + name + "' because it does not exists.", Logger::Warning);
         return false;
     }
 
@@ -62,7 +83,7 @@ void ShaderManager::dispose() noexcept
     for(auto& it : m_shaders)
         keys.emplace_back(it.first);
 
-    for(auto it : keys) destroy(it);
+    for(auto it : keys) unload(it);
 }
 void ShaderManager::log() const noexcept
 {

@@ -21,7 +21,7 @@ namespace ax
         C& addComponent(Args&&... args) noexcept
         {
             if(hasComponent<C>())
-                Engine::interrupt("Entity [id " + std::to_string(m_id) + "] already owns component <" + C::name() + ">");
+                Engine::interrupt("Entity [id " + std::to_string(m_id) + "] already owns component <" + C::name + ">");
 
             ComponentHandle handle = Engine::world().components().create<C>(args...);
             m_handles.emplace_back(handle);
@@ -42,7 +42,7 @@ namespace ax
                 }
             }
 
-            ax::Engine::logger().log("Try to remove nonexistent component <" + C::name() + "> from Entity [id=" + std::to_string(m_id) + "]", Logger::Warning);
+            ax::Engine::logger().log("Try to remove nonexistent component <" + C::name + "> from Entity [id=" + std::to_string(m_id) + "]", Logger::Warning);
         }
         void removeAll() noexcept
         {
@@ -59,7 +59,7 @@ namespace ax
                 if(it.section == section) return Engine::world().components().get<C>(it);
             }
 
-            Engine::interrupt("Component <" + C::name() + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");
+            Engine::interrupt("Component <" + C::name + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");
         }
         template<typename C>
         bool hasComponent() const noexcept

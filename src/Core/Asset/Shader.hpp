@@ -20,7 +20,8 @@ namespace ax
         Shader(std::string name);
         ~Shader();
 
-        bool loadFromFile(Path vertex, Path fragment) noexcept;
+        bool loadFromFile(Path json) noexcept;
+        bool loadFromJson(const std::string& json) noexcept;
         bool unload() noexcept;
         bool isLoaded() const noexcept;
 

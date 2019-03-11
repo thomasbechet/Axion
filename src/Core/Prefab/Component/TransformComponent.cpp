@@ -2,6 +2,8 @@
 
 using namespace ax;
 
+const std::string TransformComponent::name = "Transform";
+
 TransformComponent::TransformComponent(Vector3f position, Quaternionf rotation, Vector3f scale) 
     : Transform(position, rotation, scale)
 {

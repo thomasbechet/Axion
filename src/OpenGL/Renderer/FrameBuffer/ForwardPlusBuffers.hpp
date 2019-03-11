@@ -27,6 +27,6 @@ namespace ax
 
         GLuint m_normalTexture;          
         GLuint m_depthTexture;              
-        GLuint m_lightTexture;              
+        GLuint m_lightAccumulationTexture;              
     };
 }

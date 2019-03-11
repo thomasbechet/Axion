@@ -14,7 +14,7 @@ namespace ax
     struct AXION_CORE_API DirectionalLightComponent : public Component
     {
     public:
-        static std::string name(){return "DirectionalLight";}
+        static const std::string name;
 
         DirectionalLightComponent(const Entity& entity);
         ~DirectionalLightComponent();

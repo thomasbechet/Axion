@@ -1,2 +1,7 @@
 TODO:
+X Light culling depth test //pas de depth test
+-MSAA -> buffer multisample
+X gamma correction
+-hdr
+
     

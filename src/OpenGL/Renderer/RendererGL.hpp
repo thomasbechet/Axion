@@ -12,14 +12,16 @@
 #include <OpenGL/Renderer/CameraGL.hpp>
 #include <OpenGL/Renderer/Light/PointLightGL.hpp>
 #include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
-#include <OpenGL/Renderer/UBO/MaterialUBO.hpp>
-#include <OpenGL/Renderer/UBO/PointLightUBO.hpp>
-#include <OpenGL/Renderer/UBO/DirectionalLightUBO.hpp>
-#include <OpenGL/Renderer/UBO/CameraUBO.hpp>
-#include <OpenGL/Renderer/UBO/ShaderConstantsUBO.hpp>
+#include <OpenGL/Renderer/Buffer/MaterialUBO.hpp>
+#include <OpenGL/Renderer/Buffer/PointLightUBO.hpp>
+#include <OpenGL/Renderer/Buffer/DirectionalLightUBO.hpp>
+#include <OpenGL/Renderer/Buffer/CameraUBO.hpp>
+#include <OpenGL/Renderer/Buffer/ConstantsUBO.hpp>
+#include <OpenGL/Renderer/Buffer/CullLightSSBO.hpp>
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
+#include <Core/Asset/Shader.hpp>
 
 #include <unordered_map>
 
@@ -39,13 +41,20 @@ namespace ax
         GLuint quadVBO;
         GLuint quadVAO;
 
-        GLuint quadRenderShader;
+        AssetReference<Shader> debugLightCullingShader;
+        AssetReference<Shader> geometryShader;
+        AssetReference<Shader> genericShader;
+        AssetReference<Shader> postProcessShader;
+        AssetReference<Shader> quadTextureShader;
+        AssetReference<Shader> wireframeShader;
+        ShaderGLSL lightCullingComputeShader;
 
         std::unique_ptr<MaterialUBO> materialUBO;
         std::unique_ptr<PointLightUBO> pointLightUBO;
         std::unique_ptr<DirectionalLightUBO> directionalLightUBO;
         std::unique_ptr<CameraUBO> cameraUBO;
-        std::unique_ptr<ShaderConstantsUBO> shaderConstantsUBO;
+        std::unique_ptr<ConstantsUBO> constantsUBO;
+        std::unique_ptr<CullLightSSBO> cullLightSSBO;
     };
 
     struct AXION_GL_API Viewport

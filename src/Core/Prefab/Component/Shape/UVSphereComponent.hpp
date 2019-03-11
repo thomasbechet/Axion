@@ -16,7 +16,7 @@ namespace ax
     struct AXION_CORE_API UVSphereComponent : public UVSphere, public Component
     {
     public:
-        static std::string name(){return "UVSphere";}
+        static const std::string name;
         
         UVSphereComponent(const Entity& entity,
             float radius = 1.0f,

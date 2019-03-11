@@ -3,9 +3,11 @@
 #include <Core/Context/Engine.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/Asset/AssetManager.hpp>
+#include <Core/Asset/JsonAttributes.hpp>
 
-#include <rapidxml/rapidxml.hpp>
-#include <rapidxml/rapidxml_utils.hpp>
+#include <json/json.hpp>
+
+#include <fstream>
 
 using namespace ax;
 
@@ -19,7 +21,7 @@ Package::~Package()
     unload();
 }
 
-bool Package::loadFromFile(Path path) noexcept
+/*bool Package::loadFromFile(Path path) noexcept
 {
     unload();
 
@@ -65,7 +67,7 @@ bool Package::loadFromFile(Path path) noexcept
         }
     }
 
-    /*for(rapidxml::xml_node<>* mesh_node = package_node->first_node("mesh"); mesh_node; mesh_node = mesh_node->next_sibling("mesh"))
+    for(rapidxml::xml_node<>* mesh_node = package_node->first_node("mesh"); mesh_node; mesh_node = mesh_node->next_sibling("mesh"))
     {
         Path mesh_path = directory + mesh_node->value();
         std::string mesh_name = mesh_path.filename();
@@ -85,7 +87,7 @@ bool Package::loadFromFile(Path path) noexcept
 
         if(loadMaterial(material_name, material_path))
             m_materials.emplace(material_name, getMaterial(material_name));
-    }*/
+    }
 
     for(rapidxml::xml_node<>* model_node = package_node->first_node("model"); model_node; model_node = model_node->next_sibling("model"))
     {
@@ -121,7 +123,93 @@ bool Package::loadFromFile(Path path) noexcept
     m_isLoaded = true;
 
     return true;
+}*/
+bool Package::loadFromFile(Path json) noexcept
+{
+    if(json.extension() != ".json")
+    {
+        Engine::logger().log("Failed to load package from file '" + json + "'");
+        return false;
+    }
+
+    std::ifstream jsonFile(json.path());
+    if(!jsonFile.is_open())
+    {
+        Engine::logger().log("Failed to load package from file '" + json.path() + "'", Logger::Warning);
+        return false;
+    }
+    std::string jsonBuffer{std::istreambuf_iterator<char>(jsonFile), std::istreambuf_iterator<char>()};
+
+    return loadFromJson(jsonBuffer);
 }
+bool Package::loadFromJson(const std::string& json) noexcept
+{
+    //Parse json string
+    nlohmann::json j = nlohmann::json::parse(json);
+
+    //Test package type
+    auto jType = j.find(JsonAttributes::type);
+    if(jType != j.end() && jType->is_string())
+    {
+        std::string type = jType->get<std::string>(); 
+        j.erase(JsonAttributes::type);
+        if(type != JsonAttributes::packageType)
+        {
+            Engine::logger().log("Loading package without package type attribute.", Logger::Warning);
+            return false;
+        }
+    }
+
+    //Load each items
+    for(auto& it : j.items())
+    {
+        nlohmann::json item = it.value();
+        std::string name = it.key();
+        auto jItemType = item.find(JsonAttributes::type);  
+        if(jItemType != item.end() && jItemType->is_string())
+        {
+            auto jItemName = item.find(JsonAttributes::name);
+            if(jItemName != item.end() && jItemName->is_string())
+            {
+                name = jItemName->get<std::string>();
+            }
+
+            std::string itemType = jItemType->get<std::string>();
+            if(itemType == JsonAttributes::materialType)
+            {
+                if(Engine::assets().material.loadFromJson(name, item.dump()))
+                    m_materials.emplace_back(Engine::assets().material(name));
+            }
+            else if(itemType == JsonAttributes::meshType)
+            {
+                if(Engine::assets().mesh.loadFromJson(name, item.dump()))
+                    m_meshes.emplace_back(Engine::assets().mesh(name));
+            }
+            else if(itemType == JsonAttributes::modelType)
+            {
+                if(Engine::assets().model.loadFromJson(name, item.dump()))
+                    m_models.emplace_back(Engine::assets().model(name));
+            }
+            else if(itemType == JsonAttributes::packageType)
+            {
+                
+            }
+            else if(itemType == JsonAttributes::shaderType)
+            {
+                if(Engine::assets().shader.loadFromJson(name, item.dump()))
+                    m_shaders.emplace_back(Engine::assets().shader(name));
+            }
+            else if(itemType == JsonAttributes::textureType)
+            {
+                if(Engine::assets().texture.loadFromJson(name, item.dump()))
+                    m_textures.emplace_back(Engine::assets().texture(name));
+            }
+        }
+    }
+
+    return true;
+}
+
 bool Package::unload() noexcept
 {
     if(m_isLoaded)
@@ -130,35 +218,35 @@ bool Package::unload() noexcept
         {
             std::string materialName = it->get()->getName();
             it->reset();
-            Engine::assets().material.destroy(materialName);
+            Engine::assets().material.unload(materialName);
         }
         m_materials.clear();
         for(auto it = m_models.begin(); it != m_models.end(); it++)
         {
             std::string modelName = it->get()->getName();
             it->reset();
-            Engine::assets().model.destroy(modelName);
+            Engine::assets().model.unload(modelName);
         }
         m_models.clear();
         for(auto it = m_textures.begin(); it != m_textures.end(); it++)
         {
             std::string textureName = it->get()->getName();
             it->reset();
-            Engine::assets().texture.destroy(textureName);
+            Engine::assets().texture.unload(textureName);
         }
         m_textures.clear();
         for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
         {
             std::string meshName = it->get()->getName();
             it->reset();
-            Engine::assets().mesh.destroy(meshName);
+            Engine::assets().mesh.unload(meshName);
         }
         m_meshes.clear();
         for(auto it = m_shaders.begin(); it != m_shaders.end(); it++)
         {
             std::string shaderName = it->get()->getName();
             it->reset();
-            Engine::assets().shader.destroy(shaderName);
+            Engine::assets().shader.unload(shaderName);
         }
         m_shaders.clear();
     }

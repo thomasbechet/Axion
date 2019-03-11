@@ -4,6 +4,8 @@
 
 using namespace ax;
 
+const std::string DirectionalLightComponent::name = "DirectionalLight";
+
 DirectionalLightComponent::DirectionalLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {

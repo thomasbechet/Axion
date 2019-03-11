@@ -14,8 +14,9 @@ namespace ax
     {
     public:
         AssetReference<Shader> operator()(std::string name) const noexcept;
-        AssetReference<Shader> create(std::string name, Path vertex, Path fragment) noexcept;
-        bool destroy(std::string name) noexcept;
+        AssetReference<Shader> loadFromFile(std::string name, Path file) noexcept;
+        AssetReference<Shader> loadFromJson(std::string name, const std::string& json) noexcept;
+        bool unload(std::string name) noexcept;
         bool exists(std::string name) const noexcept;
 
         void dispose() noexcept;

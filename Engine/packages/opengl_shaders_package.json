@@ -1,0 +1,40 @@
+{
+    "type":"package",
+
+    "opengl_debug_light_culling":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/debug_light_culling.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/debug_light_culling.frag"
+    },
+    "opengl_geometry":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/geometry.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/geometry.frag"
+    },
+    "opengl_generic":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/generic.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/generic.frag"
+    },
+    "opengl_post_process":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/post_process.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/post_process.frag"
+    },
+    "opengl_quad_texture":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/quad_texture.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/quad_texture.frag"
+    },
+    "opengl_wireframe":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/wireframe.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/wireframe.frag"
+    }
+}

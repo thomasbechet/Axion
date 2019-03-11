@@ -4,9 +4,11 @@
 #include <Core/Logger/Logger.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Renderer/RendererException.hpp>
+#include <Core/Asset/JsonAttributes.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+#include <json/json.hpp>
 
 using namespace ax;
 
@@ -63,12 +65,30 @@ bool Texture::loadFromFile(Path path) noexcept
 
     return true;
 }
+bool Texture::loadFromJson(const std::string& json) noexcept
+{
+    nlohmann::json j = nlohmann::json::parse(json);
+
+    auto jType = j.find(JsonAttributes::type);
+    if(jType != j.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::textureType)
+    {
+        Engine::logger().log("Loading texture without texture type attribute.", Logger::Warning);
+        return false;
+    }
+
+    auto jSource = j.find(JsonAttributes::source);
+    if(jSource != j.end() && jSource->is_string())
+    {
+        Path textureFile = jSource->get<std::string>();
+        return loadFromFile(textureFile);
+    }
+
+    return false;
+}
 bool Texture::unload() noexcept
 {
     if(isLoaded())
     {
-        stbi_image_free(m_data);
-
         try
         {
             Engine::renderer().destroyTexture(m_handle);
@@ -80,6 +100,8 @@ bool Texture::unload() noexcept
 
             return false;
         }
+
+        stbi_image_free(m_data);
     }
 
     m_isLoaded = false;

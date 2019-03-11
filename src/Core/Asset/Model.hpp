@@ -23,6 +23,7 @@ namespace ax
         ~Model();
 
         bool loadFromFile(Path path) noexcept;
+        bool loadFromJson(const std::string& json) noexcept;
         bool unload(bool tryDestroyMeshes = true, bool tryDestroyMaterials = true, bool tryDestroyTextures = true) noexcept;
         bool isLoaded() const noexcept;
 

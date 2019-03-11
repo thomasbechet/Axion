@@ -2,9 +2,11 @@
 
 #include <Core/Asset/AssetManager.hpp>
 #include <Core/Logger/Logger.hpp>
+#include <Core/Asset/JsonAttributes.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tinyobjloader/tiny_obj_loader.h>
+#include <json/json.hpp>
 
 using namespace ax;
 
@@ -27,6 +29,29 @@ bool Model::loadFromFile(Path path) noexcept
     else
         return false;
 }
+bool Model::loadFromJson(const std::string& json) noexcept
+{
+    nlohmann::json j = nlohmann::json::parse(json);
+
+    auto jType = j.find(JsonAttributes::type);
+    if(jType != j.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::modelType)
+    {
+        Engine::logger().log("Loading model without model type attribute.", Logger::Warning);
+        return false;
+    }
+
+    auto jSource = j.find(JsonAttributes::source);
+    if(jSource != j.end() && jSource->is_string())
+    {
+        Path source = jSource->get<std::string>();
+        if(source.extension() == ".obj")
+            return loadFromFile(source);
+    }
+
+    //TODO
+
+    return false;
+}
 bool Model::unload(bool tryDestroyMeshes, bool tryDestroyMaterials, bool tryDestroyTextures) noexcept
 {
     if(m_isLoaded)
@@ -37,7 +62,7 @@ bool Model::unload(bool tryDestroyMeshes, bool tryDestroyMaterials, bool tryDest
             {
                 std::string meshName = it->get()->getName();
                 it->reset();
-                Engine::assets().mesh.destroy(meshName);
+                Engine::assets().mesh.unload(meshName);
             }
         }
         m_meshes.clear();
@@ -47,7 +72,7 @@ bool Model::unload(bool tryDestroyMeshes, bool tryDestroyMaterials, bool tryDest
             {
                 std::string materialName = it.get()->getName();
                 it.reset();
-                Engine::assets().material.destroy(materialName, tryDestroyTextures);            
+                Engine::assets().material.unload(materialName, tryDestroyTextures);            
             }
         }
         m_materials.clear();
@@ -102,7 +127,7 @@ bool Model::loadObjModel(Path path) noexcept
             Path diffusePath = path.directory() + material.diffuse_texname;
             bool hasDiffuseTex = !diffusePath.filename().empty() &&
                 (Engine::assets().texture.exists(diffusePath.filename()) ||
-                 Engine::assets().texture.create(diffusePath.filename(), diffusePath.path()));
+                 Engine::assets().texture.loadFromFile(diffusePath.filename(), diffusePath.path()));
             
             if(hasDiffuseTex)
                 data.diffuseTexture = diffusePath.filename();
@@ -120,7 +145,7 @@ bool Model::loadObjModel(Path path) noexcept
             if(!normalPath.filename().empty())
             {
                 if(Engine::assets().texture.exists(normalPath.filename()) ||
-                    Engine::assets().texture.create(normalPath.filename(), normalPath.path()))
+                    Engine::assets().texture.loadFromFile(normalPath.filename(), normalPath.path()))
                 {
                     data.normalTexture = normalPath.filename();
                     data.isBumpTexture = false;
@@ -129,15 +154,28 @@ bool Model::loadObjModel(Path path) noexcept
             else if(!bumpPath.filename().empty())
             {
                 if(Engine::assets().texture.exists(bumpPath.filename()) ||
-                    Engine::assets().texture.create(bumpPath.filename(), bumpPath.path()))
+                    Engine::assets().texture.loadFromFile(bumpPath.filename(), bumpPath.path()))
                 {
                     data.normalTexture = bumpPath.filename();
                     data.isBumpTexture = true;
                 }
             }
 
+            //Specular
+            Path specularPath = path.directory() + material.specular_texname;
+            bool hasSpecularTex = !specularPath.filename().empty() &&
+                (Engine::assets().texture.exists(specularPath.filename()) ||
+                 Engine::assets().texture.loadFromFile(specularPath.filename(), specularPath.path()));
+            
+            if(hasSpecularTex)
+                data.specularTexture = specularPath.filename();
+            else
+            {
+                data.specularUniform = material.shininess;
+            }
+
             //Load material as assets
-            Engine::assets().material.create(material.name, data);
+            Engine::assets().material.loadFromMemory(material.name, data);
         } 
     }
 
@@ -190,7 +228,7 @@ bool Model::loadObjModel(Path path) noexcept
         size_t i = std::distance(meshes.begin(), it);
         
         std::string meshName = m_name + "_" + std::to_string(i);
-        Engine::assets().mesh.create(meshName, it->second, true, attrib.normals.empty());
+        Engine::assets().mesh.loadFromMemory(meshName, it->second, true, attrib.normals.empty());
         m_meshes.emplace_back(Engine::assets().mesh(meshName));
 
         if(it->first != -1)

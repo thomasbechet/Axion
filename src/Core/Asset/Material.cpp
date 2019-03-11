@@ -19,17 +19,36 @@ Material::~Material()
     unload();
 }
 
-bool Material::load(const MaterialParameters& params) noexcept
+bool Material::loadFromFile(Path path) noexcept
+{
+    //TODO
+
+    return true;
+}
+bool Material::loadFromJson(const std::string& json) noexcept
+{
+    //TODO
+
+    return true;
+}
+bool Material::loadFromMemory(const MaterialParameters& parameters) noexcept
 {
     unload();
 
-    if(!params.diffuseTexture.empty())
-        m_diffuseTexture = Engine::assets().texture(params.diffuseTexture);
-    m_diffuseColor = params.diffuseColor;
+    if(!parameters.diffuseTexture.empty())
+        m_diffuseTexture = Engine::assets().texture(parameters.diffuseTexture);
+    m_diffuseColor = parameters.diffuseColor;
 
-    if(!params.normalTexture.empty())
-        m_normalTexture = Engine::assets().texture(params.normalTexture);
-    m_isBumpTexture = params.isBumpTexture;
+    if(!parameters.normalTexture.empty())
+        m_normalTexture = Engine::assets().texture(parameters.normalTexture);
+    m_isBumpTexture = parameters.isBumpTexture;
+
+    if(!parameters.specularTexture.empty())
+        m_specularTexture = Engine::assets().texture(parameters.specularTexture);
+    m_specularUniform = parameters.specularUniform;
+
+    if(!parameters.shader.empty())
+        m_shader = Engine::assets().shader(parameters.shader);
 
     try
     {
@@ -49,7 +68,7 @@ bool Material::load(const MaterialParameters& params) noexcept
 
     return true;
 }
-bool Material::unload(bool tryDestroyTexture) noexcept
+bool Material::unload(bool tryDestroyTexture, bool tryDestroyShader) noexcept
 {
     if(isLoaded())
     {
@@ -61,14 +80,31 @@ bool Material::unload(bool tryDestroyTexture) noexcept
                 {
                     std::string diffuseTexName = m_diffuseTexture->getName();
                     m_diffuseTexture.reset();
-                    Engine::assets().texture.destroy(diffuseTexName);
+                    Engine::assets().texture.unload(diffuseTexName);
                 }
 
                 if(m_normalTexture)
                 {
                     std::string normalTexName = m_normalTexture->getName();
                     m_normalTexture.reset();
-                    Engine::assets().texture.destroy(normalTexName);
+                    Engine::assets().texture.unload(normalTexName);
+                }
+
+                if(m_specularTexture)
+                {
+                    std::string specularTexName = m_specularTexture->getName();
+                    m_specularTexture.reset();
+                    Engine::assets().texture.unload(specularTexName);
+                }
+            }
+
+            if(tryDestroyShader)
+            {
+                if(m_shader)
+                {
+                    std::string shaderName = m_shader->getName();
+                    m_shader.reset();
+                    Engine::assets().shader.unload(shaderName);
                 }
             }
 
@@ -114,9 +150,29 @@ void Material::setDiffuseColor(Color3 color) noexcept
     m_diffuseColor = color;
     update();
 }
+
 AssetReference<Texture> Material::getNormalTexture() const noexcept
 {
     return m_normalTexture;
+}
+
+AssetReference<Texture> Material::getSpecularTexture() const noexcept
+{
+    return m_specularTexture;
+}
+float Material::getSpecularUniform() const noexcept
+{
+    return m_specularUniform;
+}
+void Material::setSpecularUniform(float specular) noexcept
+{
+    m_specularUniform = specular;
+    update();
+}
+
+AssetReference<Shader> Material::getShader() const noexcept
+{
+    return m_shader;
 }
 
 Id Material::getHandle() const noexcept
@@ -140,6 +196,14 @@ void Material::update() noexcept
         settings.normalTexture = (m_normalTexture) ? m_normalTexture->getHandle() : 0;
         settings.useNormalTexture = (m_normalTexture.isValid());
         settings.isBumpTexture = m_isBumpTexture;
+
+        //Specular
+        settings.specularTexture = (m_specularTexture) ? m_specularTexture->getHandle() : 0;
+        settings.specularUniform = m_specularUniform;
+        settings.useSpecularTexture = (m_specularTexture.isValid());       
+
+        //Shader
+        settings.shader = (m_shader) ? m_shader->getHandle() : 0;
 
         try
         {

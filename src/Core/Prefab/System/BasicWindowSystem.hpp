@@ -14,7 +14,7 @@ namespace ax
     class AXION_CORE_API BasicWindowSystem : public System
     {
     public:
-        static std::string name(){return "BasicWindow";}
+        static const std::string name;
 
         void onInitialize() override;
         void onUpdate() override;

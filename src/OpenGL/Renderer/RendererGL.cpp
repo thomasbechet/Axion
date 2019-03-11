@@ -10,6 +10,8 @@
 
 #include <GL/glew.h>
 
+#include <fstream>
+
 using namespace ax;
 
 void RendererGL::initialize() noexcept
@@ -41,31 +43,44 @@ void RendererGL::initialize() noexcept
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    //Initialize ubos
+    //Initialize buffers
     m_content.materialUBO = std::make_unique<MaterialUBO>();
     m_content.cameraUBO = std::make_unique<CameraUBO>();
     m_content.pointLightUBO = std::make_unique<PointLightUBO>();
     m_content.directionalLightUBO = std::make_unique<DirectionalLightUBO>();
-    m_content.shaderConstantsUBO = std::make_unique<ShaderConstantsUBO>();
+    m_content.constantsUBO = std::make_unique<ConstantsUBO>();
+    m_content.cullLightSSBO = std::make_unique<CullLightSSBO>(Vector2u(1, 1));
 
     //Load shaders
-    AssetReference<Shader> shader;
-    shader = Engine::assets().shader.create("renderergl_shader_quadrender",
-        "../shaders/quad_texture.vert",
-        "../shaders/quad_texture.frag");
-    if(shader->isLoaded())
-        m_content.quadRenderShader = m_content.shaders.get(shader->getHandle()).shader.getProgram();
-    else
-        Engine::interrupt("Failed to load shader: renderergl_shader_quadrender");
+    Engine::assets().package.loadFromFile("shaders_package", "$ENGINE_DIR/packages/opengl_shaders_package.json");
+    m_content.debugLightCullingShader = Engine::assets().shader("opengl_debug_light_culling");
+    m_content.geometryShader = Engine::assets().shader("opengl_geometry");
+    m_content.genericShader = Engine::assets().shader("opengl_generic");
+    m_content.postProcessShader = Engine::assets().shader("opengl_post_process");
+    m_content.quadTextureShader = Engine::assets().shader("opengl_quad_texture");
+    m_content.wireframeShader = Engine::assets().shader("opengl_wireframe");
+    
+    //Compute shaders
+    Path lightCullPath = "$ENGINE_DIR/shaders/glsl/light_culling.comp";
+    std::ifstream lightCullFile(lightCullPath.path());
+    if(!lightCullFile.is_open()) Engine::interrupt("Failed to load compute file: " + lightCullPath);
+    std::string lightCullCode{std::istreambuf_iterator<char>(lightCullFile), std::istreambuf_iterator<char>()};
+    if(!m_content.lightCullingComputeShader.loadCompute(lightCullCode))
+        Engine::interrupt("Failed to load compute shader.");
 }
 void RendererGL::terminate() noexcept
 {
+    m_content.debugLightCullingShader.reset();
+    m_content.geometryShader.reset();
+    m_content.genericShader.reset();
+    m_content.postProcessShader.reset();
+    m_content.quadTextureShader.reset();
+    m_content.wireframeShader.reset();
+
     for(auto& viewport : m_viewports)
     {
         viewport.get()->renderPass->terminate();
     }
-
-    Engine::assets().shader.destroy("renderergl_shader_quadrender");
 }
 void RendererGL::update(double alpha) noexcept
 {
@@ -87,6 +102,7 @@ Id RendererGL::createViewport(const Vector2f& position, const Vector2f& size, Re
     viewport.size = size;
     viewport.resolution = Engine::window().getSize();
 
+    m_content.cullLightSSBO->setResolution(viewport.resolution);
     setViewportRendermode(id, mode);
 
     return id;
@@ -138,6 +154,7 @@ void RendererGL::setViewportResolution(Id id, const Vector2u& resolution)
     Viewport& viewport = *m_viewports.get(id).get();
 
     viewport.resolution = resolution;
+    m_content.cullLightSSBO->setResolution(viewport.resolution);
     viewport.renderPass->updateResolution();
 }
 void RendererGL::setViewportRectangle(Id id, const Vector2f& position, const Vector2f& size)

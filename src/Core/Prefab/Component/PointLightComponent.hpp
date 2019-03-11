@@ -14,7 +14,7 @@ namespace ax
     struct AXION_CORE_API PointLightComponent : public Component
     {
     public:
-        static std::string name(){return "PointLight";}
+        static const std::string name;
 
         PointLightComponent(const Entity& entity);
         ~PointLightComponent();

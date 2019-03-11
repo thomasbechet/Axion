@@ -16,7 +16,7 @@ namespace ax
     struct AXION_CORE_API ModelComponent : public Component
     {
     public:
-        static std::string name(){return "Model";}
+        static const std::string name;
 
         ModelComponent(const Entity& entity);
         ~ModelComponent();

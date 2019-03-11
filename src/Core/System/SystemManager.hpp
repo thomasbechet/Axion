@@ -32,7 +32,7 @@ namespace ax
         size_t generateLocation() noexcept
         {
             m_systems.emplace_back(std::make_pair(false, std::make_unique<System>()));
-            m_names.emplace_back(S::name());;
+            m_names.emplace_back(S::name);
 
             return m_systems.size() - 1;
         }
@@ -79,7 +79,7 @@ namespace ax
             }
             else
             {
-                Engine::logger().log("Try to remove nonexistent system <" + S::name() + ">", Logger::Warning);
+                Engine::logger().log("Try to remove nonexistent system <" + S::name + ">", Logger::Warning);
             }
         }
 
@@ -98,7 +98,7 @@ namespace ax
             if(m_systems.at(location).first)
                 return static_cast<S&>(*m_systems.at(location).second.get());
             else
-                Engine::interrupt("Try to access nonexistent system <" + S::name() + ">");
+                Engine::interrupt("Try to access nonexistent system <" + S::name + ">");
         }
 
 
@@ -107,9 +107,9 @@ namespace ax
         void sequenceSwap() noexcept
         {
             if(!m_systems.at(getLocation<S1>()).first)
-                Engine::interrupt("Try to swap nonexistent system <" + S1::name() + "> with system <" + S2::name() + ">");
+                Engine::interrupt("Try to swap nonexistent system <" + S1::name + "> with system <" + S2::name + ">");
             if(!m_systems.at(getLocation<S2>()).first)
-                Engine::interrupt("Try to swap nonexistent system <" + S2::name() + "> with system <" + S1::name() + ">");
+                Engine::interrupt("Try to swap nonexistent system <" + S2::name + "> with system <" + S1::name + ">");
 
             if(std::is_same<S1, S2>::value) return;
 
@@ -122,9 +122,9 @@ namespace ax
         void sequenceBefore() noexcept
         {
             if(!m_systems.at(getLocation<S1>()).first)
-                Engine::interrupt("Try to move nonexistent system <" + S1::name() + "> before system <" + S2::name() + ">");
+                Engine::interrupt("Try to move nonexistent system <" + S1::name + "> before system <" + S2::name + ">");
             if(!m_systems.at(getLocation<S2>()).first)
-                Engine::interrupt("Try to move system <" + S1::name() + "> before nonexistent system <" + S2::name() + ">");
+                Engine::interrupt("Try to move system <" + S1::name + "> before nonexistent system <" + S2::name + ">");
 
             if(std::is_same<S1, S2>::value) return;
 
@@ -139,9 +139,9 @@ namespace ax
         void sequenceAfter() noexcept
         {
             if(!m_systems.at(getLocation<S1>()).first)
-                Engine::interrupt("Try to move nonexistent system <" + S1::name() + "> after system <" + S2::name() + ">");
+                Engine::interrupt("Try to move nonexistent system <" + S1::name + "> after system <" + S2::name + ">");
             if(!m_systems.at(getLocation<S2>()).first)
-                Engine::interrupt("Try to move system <" + S1::name() + "> after nonexistent system <" + S2::name() + ">");
+                Engine::interrupt("Try to move system <" + S1::name + "> after nonexistent system <" + S2::name + ">");
 
             if(std::is_same<S1, S2>::value) return;
 
@@ -156,7 +156,7 @@ namespace ax
         void sequenceTop() noexcept
         {
             if(!m_systems.at(getLocation<S>()).first)
-                Engine::interrupt("Try to move nonexistent system <" + S::name() + ">");
+                Engine::interrupt("Try to move nonexistent system <" + S::name + ">");
 
             size_t location = getLocation<S>();
             m_sequence.erase(std::remove(m_sequence.begin(), m_sequence.end(), location));
@@ -166,7 +166,7 @@ namespace ax
         void sequenceBottom() noexcept
         {
             if(!m_systems.at(getLocation<S>()).first)
-                Engine::interrupt("Try to move nonexistent system <" + S::name() + ">");
+                Engine::interrupt("Try to move nonexistent system <" + S::name + ">");
 
             size_t location = getLocation<S>();
             m_sequence.erase(std::remove(m_sequence.begin(), m_sequence.end(), location));
@@ -176,7 +176,7 @@ namespace ax
         void sequenceMoveUp() noexcept
         {
             if(!m_systems.at(getLocation<S>()).first)
-                Engine::interrupt("Try to move nonexistent system <" + S::name() + ">");
+                Engine::interrupt("Try to move nonexistent system <" + S::name + ">");
 
             size_t location = getLocation<S>();
             auto it = std::find(m_sequence.begin(), m_sequence.end(), location);
@@ -188,7 +188,7 @@ namespace ax
         void sequenceMoveDown() noexcept
         {
             if(!m_systems.at(getLocation<S>()).first)
-                Engine::interrupt("Try to move nonexistent system <" + S::name() + ">");
+                Engine::interrupt("Try to move nonexistent system <" + S::name + ">");
 
             size_t location = getLocation<S>();
             auto it = std::find(m_sequence.begin(), m_sequence.end(), location);

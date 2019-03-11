@@ -14,7 +14,7 @@ namespace ax
 {
     struct AXION_CORE_API TransformComponent : public Component, public Transform
     {
-        static std::string name(){return "Transform";}
+        static const std::string name;
 
         TransformComponent(
             Vector3f position = Vector3f(0.0f, 0.0f, 0.0f), 

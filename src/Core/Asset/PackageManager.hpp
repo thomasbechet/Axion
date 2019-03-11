@@ -13,8 +13,9 @@ namespace ax
     {
     public:
         AssetReference<Package> operator()(std::string name) const noexcept;
-        AssetReference<Package> create(std::string name, Path path) noexcept;
-        bool destroy(std::string name) noexcept;
+        AssetReference<Package> loadFromFile(std::string name, Path path) noexcept;
+        AssetReference<Package> loadFromJson(std::string name, const std::string& json) noexcept;
+        bool unload(std::string name) noexcept;
         bool exists(std::string name) const noexcept;
 
         void dispose() noexcept;

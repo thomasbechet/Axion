@@ -4,6 +4,8 @@
 
 using namespace ax;
 
+const std::string CameraComponent::name = "Camera";
+
 CameraComponent::CameraComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {

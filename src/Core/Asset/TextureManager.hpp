@@ -13,8 +13,9 @@ namespace ax
     {
     public:
         AssetReference<Texture> operator()(std::string name) const noexcept;
-        AssetReference<Texture> create(std::string name, Path path) noexcept;
-        bool destroy(std::string name) noexcept;
+        AssetReference<Texture> loadFromFile(std::string name, Path path) noexcept;
+        AssetReference<Texture> loadFromJson(std::string name, const std::string& json) noexcept;
+        bool unload(std::string name) noexcept;
         bool exists(std::string name) const noexcept;
 
         void dispose() noexcept;

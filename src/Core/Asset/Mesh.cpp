@@ -17,7 +17,19 @@ Mesh::~Mesh()
     unload();
 }
 
-bool Mesh::loadFromVertices(const std::vector<Vertex>& vertices, bool computeTangent, bool computeNormal) noexcept
+bool Mesh::loadFromFile(Path file) noexcept
+{
+    //TODO
+
+    return false;
+}
+bool Mesh::loadFromJson(const std::string& json) noexcept
+{
+    //TODO
+
+    return false;
+}
+bool Mesh::loadFromMemory(const std::vector<Vertex>& vertices, bool computeTangent, bool computeNormal) noexcept
 {
     unload();
 

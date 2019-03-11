@@ -48,12 +48,14 @@ struct Position : public ax::Component
     {
         
     }
-    static std::string name(){return "Position";};
+    static const std::string name;
 
     float x;
     float y;
     float z;
 };
+
+const std::string Position::name = "Position";
 
 struct Staticsponza : public ax::Component
 {
@@ -86,7 +88,7 @@ private:
 class StaticsponzaSystem : public ax::System
 {
 public:
-    static std::string name(){return "StaticsponzaSystem";}
+    static const std::string name;
 
     void onInitialize() override
     {
@@ -117,19 +119,14 @@ public:
     ax::Timer m_timer;
 };
 
+const std::string StaticsponzaSystem::name = "Staticsponza";
+
 class MyGameMode : public ax::GameMode
 {
 public:
     void onStart() override
     {
-        ax::Engine::assets().package.create("mypackage", "../packages/package.xml");
-        ax::MaterialParameters materialParameters;
-        //materialParameters.diffuseTexture = "texture_brick_diffuse";
-        //materialParameters.normalTexture = "texture_brick_normal";
-		materialParameters.diffuseTexture = "texture_earth";
-        ax::AssetReference<ax::Material> m = ax::Engine::assets().material.create("mymaterial", materialParameters);
-
-
+        ax::Engine::assets().package.loadFromFile("mypackage", "../packages/package.json");
         ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
@@ -140,6 +137,7 @@ public:
         ax::TransformComponent& cameraTransform = camera0.addComponent<ax::TransformComponent>();
         ax::CameraComponent& cameraComponent0 = camera0.addComponent<ax::CameraComponent>(camera0);
         cameraComponent0.setFarPlane(100000000.0f);
+        cameraComponent0.setFarPlane(100.0f);
         cameraComponent0.setNearPlane(0.01f);
         cameraComponent0.bindDefaultViewport();
         ax::BasicSpectatorComponent& spectatorComponent0 = camera0.addComponent<ax::BasicSpectatorComponent>(camera0);
@@ -172,67 +170,26 @@ public:
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
 
-        //#define LOW_RESOLUTION
+        #define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
-            ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
+            //ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
+            //ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(3840, 2160));
         #endif
-        
-        #define USE_SPONZA
-        #if defined USE_SPONZA
-            ax::Entity& sponza = ax::Engine::world().entities().create();
-            ax::TransformComponent& sponzaTransform = sponza.addComponent<ax::TransformComponent>();
-            sponzaTransform.setScale(0.05f, 0.05f, 0.05f);
-            sponzaTransform.setTranslation(0.0f, 2.0f, 0.0f);
-            sponza.addComponent<ax::ModelComponent>(sponza).setModel("model_sponza");
-        #endif
-        
-
-        ax::Entity& rotator = ax::Engine::world().entities().create();   
-        ax::TransformComponent& rotatorTransform = rotator.addComponent<ax::TransformComponent>();
-
-        ax::Entity& sphere = ax::Engine::world().entities().create();        
-        ax::TransformComponent& sphereTransform = sphere.addComponent<ax::TransformComponent>();
-        sphereTransform.translate(ax::Vector3f(0, 3000000000.0f, 0));
-        //sphereTransform.translate(ax::Vector3f(0, 3844000.0f, 0));
-        ax::UVSphereComponent& sphereComponent = sphere.addComponent<ax::UVSphereComponent>(sphere);
-        sphereComponent.setMaterial("mymaterial");
-        sphereComponent.setRadius(1737000.0f);
-        sphereComponent.setRadius(700000000.0f);
-        sphereComponent.setCoordinateFactor(1.0f);
-        sphereComponent.setSliceCount(100);
-        sphereComponent.setStackCount(100);
-        sphereComponent.generate();
-
-        sphereTransform.attachTo(rotator);
-
-
-        ax::Entity& rectangle = ax::Engine::world().entities().create();        
-        ax::TransformComponent& rectangleTransform = rectangle.addComponent<ax::TransformComponent>();
-        rectangleTransform.translate(ax::Vector3f(0, 0, 3));
-        ax::RectangleComponent& rectangleComponent = rectangle.addComponent<ax::RectangleComponent>(rectangle);
-        rectangleComponent.setMaterial("mymaterial");
-        rectangleComponent.setCoordinateFactor(1.0f);
-        rectangleComponent.setMaxX(1.0f);
-        rectangleComponent.setMaxY(1.0f);
-        rectangleComponent.setMaxZ(1.0f);
-        rectangleComponent.generate();
-
-        //Lights
-        ax::Entity& directionalLight = ax::Engine::world().entities().create();
-        directionalLight.addComponent<ax::TransformComponent>();
-        directionalLight.addComponent<ax::DirectionalLightComponent>(directionalLight);
-
-        ax::Entity& pointLight = ax::Engine::world().entities().create();
-        pointLight.addComponent<ax::TransformComponent>().setTranslation(0.0f, 2.0f, 0.0f);
-        pointLight.addComponent<ax::PointLightComponent>(pointLight).setRadius(30.0f);
 
         //Plane
+        ax::MaterialParameters wallMaterialParams;
+        wallMaterialParams.normalTexture = "wall_normal2";
+        ax::Engine::assets().material.loadFromMemory("wall_material", wallMaterialParams);
+
         ax::Entity& plane = ax::Engine::world().entities().create();
         plane.addComponent<ax::TransformComponent>();
-        plane.addComponent<ax::QuadComponent>(plane, 500.0f, 500.0f);
+        plane.addComponent<ax::QuadComponent>(plane, 500.0f, 500.0f, 100.0f).setMaterial("wall_material");
+
+        ax::Entity& cube = ax::Engine::world().entities().create();
+        cube.addComponent<ax::TransformComponent>();
+        cube.addComponent<ax::RectangleComponent>(cube);
 
         CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
-        system.setTransform(&rotatorTransform);
         system.setSpawnTransform(&cameraTransform);
     }
     void onStop() override

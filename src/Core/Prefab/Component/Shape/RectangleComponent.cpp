@@ -5,6 +5,8 @@
 
 using namespace ax;
 
+const std::string RectangleComponent::name = "Rectangle";
+
 RectangleComponent::RectangleComponent(const Entity& entity,
         float xMin, float xMax,
         float yMin, float yMax,

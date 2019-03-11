@@ -15,6 +15,10 @@
 
 using namespace ax;
 
+const std::string Engine::EngineDirectory = "../";
+const std::string Engine::GameDataDirectory = "../../GameData/";
+const std::string Engine::GameDirectory = "../../";
+
 Renderer* Engine::m_renderer = nullptr;
 SystemManager* Engine::m_systemManager = nullptr;
 World* Engine::m_world = nullptr;
@@ -126,7 +130,7 @@ void Engine::initialize() noexcept
 
     //Create default material
     MaterialParameters defaultMaterial;
-    Engine::assets().material.create("default_material", defaultMaterial);
+    Engine::assets().material.loadFromMemory("default_material", defaultMaterial);
 }
 void Engine::terminate() noexcept
 {

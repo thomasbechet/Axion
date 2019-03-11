@@ -43,6 +43,10 @@ namespace ax
         static Input& input() noexcept;
         static AssetManager& assets() noexcept;
 
+        static const std::string EngineDirectory; //   Game/Engine/
+        static const std::string GameDataDirectory; // Game/GameData/
+        static const std::string GameDirectory;   //   Game/
+
     private:        
         static Renderer* m_renderer;
         static SystemManager* m_systemManager;

@@ -5,12 +5,7 @@
 class CustomSystem : public ax::System
 {
 public:
-    static std::string name(){return "CustomSystem";}
-
-    void setTransform(ax::TransformComponent* transform)
-    {
-        m_transform = transform;
-    }
+    static const std::string name;
 
     void setSpawnTransform(ax::TransformComponent* transform)
     {
@@ -22,6 +17,10 @@ public:
         spawnButton = &ax::Engine::input().addButton("test");
         spawnButton->bind(ax::Keyboard::C);
 
+        ax::MaterialParameters lightMaterialParameters;
+        lightMaterialParameters.shader = "light_emission";
+        ax::AssetReference<ax::Material> m = ax::Engine::assets().material.loadFromMemory("light_emission_material", lightMaterialParameters);
+
         m_pointlights.reserve(MAX_X * MAX_Y);
         for(int x = 0; x < MAX_X; x++)
         {
@@ -32,16 +31,21 @@ public:
                 lightTransform->setTranslation(0.0f + x * 5.0f, 0.2f, 50.0f + y * 5.0f);
                 m_pointlights.emplace_back(lightTransform);
                 pointLight.addComponent<ax::PointLightComponent>(pointLight).setRadius(5.0f);
-                pointLight.addComponent<ax::UVSphereComponent>(pointLight, 0.2f);
+                pointLight.addComponent<ax::UVSphereComponent>(pointLight, 0.2f).setMaterial(m);
             }
         }
+
+        //Rotation light
+        ax::Entity light = ax::Engine::world().entities().create();
+        m_lightTransform = &light.addComponent<ax::TransformComponent>();
+        light.addComponent<ax::PointLightComponent>(light).setRadius(5.0f);
+        light.addComponent<ax::UVSphereComponent>(light, 0.2f, 20, 20).setMaterial(m);
     }
 
     void onUpdate() override
     {
         float delta = ax::Engine::context().getDeltaTime().asSeconds();
         m_time += delta;
-        m_transform->setRotation(ax::radians(1.0f) * m_time, ax::Vector3f(1.0f, 0.0f, 0.0f));
 
         for(int x = 0; x < MAX_X; x++)
         {
@@ -57,21 +61,29 @@ public:
         if(spawnButton->isJustPressed())
         {
             ax::Entity& light = ax::Engine::world().entities().create();
-            light.addComponent<ax::TransformComponent>().setTranslation(m_spawn->getTranslation());
+            light.addComponent<ax::TransformComponent>().setTranslation(m_spawn->getTranslation() + m_spawn->getForwardVector());
             light.addComponent<ax::PointLightComponent>(light).setRadius(10);
+            light.addComponent<ax::UVSphereComponent>(light, 0.2f, 20, 20).setMaterial("light_emission_material"); 
         }
+
+        ax::Vector3f lightPos;
+        lightPos.x = std::cos(m_time);
+        lightPos.z = std::sin(m_time);
+        lightPos.y = 1.0f;
+        m_lightTransform->setTranslation(lightPos);
     }
 
 private:
     std::vector<ax::TransformComponent*> m_pointlights;
-    int MAX_X = 32;
-    int MAX_Y = 32;
-    //int MAX_X = 2;
-    //int MAX_Y = 2;
+    int MAX_X = 10;
+    int MAX_Y = 10;
 
-    ax::TransformComponent* m_transform;
     ax::TransformComponent* m_spawn;
-    float m_time = 0.0f;
-
     ax::Button* spawnButton;
+
+    ax::TransformComponent* m_lightTransform;
+    
+    float m_time = 0.0f;
 };
+
+const std::string CustomSystem::name = "Custom";

@@ -11,7 +11,7 @@ RenderBuffer::RenderBuffer(Vector2u dimension)
 
     glGenTextures(1, &m_renderTexture);
     glBindTexture(GL_TEXTURE_2D, m_renderTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,dimension.x, dimension.y, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, dimension.x, dimension.y, 0, GL_RGB, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

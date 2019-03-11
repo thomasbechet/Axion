@@ -5,6 +5,8 @@
 
 using namespace ax;
 
+const std::string ModelComponent::name = "Model";
+
 ModelComponent::ModelComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {

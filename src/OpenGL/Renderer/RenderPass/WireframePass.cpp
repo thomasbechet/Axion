@@ -1,6 +1,7 @@
 #include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
 
 #include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Asset/AssetManager.hpp>
 #include <Core/Asset/Shader.hpp>
@@ -14,19 +15,11 @@ void WireframePass::initialize() noexcept
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
     glClearDepth(0.0f);
     glDepthFunc(GL_GREATER);
+    glEnable(GL_MULTISAMPLE);
 
     //Load shaders
-    AssetReference<Shader> shader;
-    shader = Engine::assets().shader.create("renderergl_shader_wireframe",
-        "../shaders/WF_wireframe.vert",
-        "../shaders/WF_wireframe.frag");
-    if(shader->isLoaded())
-        m_wireframeShader = content.shaders.get(shader->getHandle()).shader.getProgram();
-    else
-        Engine::interrupt("Failed to load shader: renderergl_shader_wireframe");
-
-    //Load uniform locations
-    m_mvpLocation = glGetUniformLocation(m_wireframeShader, "mvp");
+    m_wireframeShader = content.shaders.get(content.wireframeShader->getHandle()).shader.getProgram();
+    m_quadTextureShader = content.shaders.get(content.quadTextureShader->getHandle()).shader.getProgram();
 
     //Load buffers
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
@@ -35,9 +28,6 @@ void WireframePass::terminate() noexcept
 {
     //Unload buffers
     m_renderBuffer.reset();
-
-    //Unload shaders
-    Engine::assets().shader.destroy("renderergl_shader_wireframe");
 }
 void WireframePass::updateResolution() noexcept
 {
@@ -68,7 +58,7 @@ void WireframePass::render(double alpha) noexcept
     Matrix4f invProjectionMatrix = Matrix4f::inverse(Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far));
 
     content.cameraUBO->update(viewMatrix, projectionMatrix, invProjectionMatrix);
-    content.shaderConstantsUBO->update();
+    content.constantsUBO->update();
 
     Matrix4f vp = projectionMatrix * viewMatrix;
 
@@ -88,8 +78,7 @@ void WireframePass::render(double alpha) noexcept
                 MeshGL& mesh = content.meshes.get(staticmesh.mesh);
 
                 Matrix4f mvp = vp * staticmesh.transform->getWorldMatrix();
-                //glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
-                glUniformMatrix4fv(m_mvpLocation, 1, GL_FALSE, mvp.data());
+                glUniformMatrix4fv(MVP_MATRIX_LOCATION, 1, GL_FALSE, mvp.data());
 
                 glBindVertexArray(mesh.vao);
                 glDrawArrays(GL_TRIANGLES, 0, mesh.size);
@@ -112,7 +101,7 @@ void WireframePass::render(double alpha) noexcept
     );
     glViewport(position.x, position.y, size.x, size.y);
 
-    glUseProgram(content.quadRenderShader);
+    glUseProgram(m_quadTextureShader);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     m_renderBuffer->bindForReading();

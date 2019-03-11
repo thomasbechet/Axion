@@ -4,6 +4,9 @@
 #include <Core/Logger/Logger.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Renderer/RendererException.hpp>
+#include <Core/Asset/JsonAttributes.hpp>
+
+#include <json/json.hpp>
 
 #include <fstream>
 #include <streambuf>
@@ -20,9 +23,45 @@ Shader::~Shader()
     unload();
 }
 
-bool Shader::loadFromFile(Path vertex, Path fragment) noexcept
+bool Shader::loadFromFile(Path jsonPath) noexcept
 {
     unload();
+
+    std::ifstream jsonFile(jsonPath.path());
+    if(!jsonFile.is_open()) return false;
+    std::string json{std::istreambuf_iterator<char>(jsonFile), std::istreambuf_iterator<char>()};
+
+    return loadFromJson(json);
+}
+bool Shader::loadFromJson(const std::string& json) noexcept
+{
+    unload();
+
+    nlohmann::json j = nlohmann::json::parse(json);
+
+    auto jType = j.find(JsonAttributes::type);
+    if(jType != j.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::shaderType)
+    {
+        Engine::logger().log("Loading shader without shader type attribute.", Logger::Warning);
+        return false;
+    }
+
+    auto jVertex = j.find(JsonAttributes::vertex);
+    if(jVertex == j.end() || !jVertex->is_string())
+    {
+        Engine::logger().log("Shader doesn't contains vertex attribute.", Logger::Warning);
+        return false;
+    }
+
+    auto jFragment = j.find(JsonAttributes::fragment);
+    if(jFragment == j.end() || !jFragment->is_string())
+    {
+        Engine::logger().log("Shader doesn't contains fragment attribute.", Logger::Warning);
+        return false;
+    }
+
+    Path vertex = jVertex->get<std::string>();
+    Path fragment = jFragment->get<std::string>();
 
     try
     {
@@ -52,6 +91,7 @@ bool Shader::loadFromFile(Path vertex, Path fragment) noexcept
 
     return true;
 }
+
 bool Shader::unload() noexcept
 {
     if(isLoaded())
