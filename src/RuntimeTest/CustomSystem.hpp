@@ -40,6 +40,11 @@ public:
         m_lightTransform = &light.addComponent<ax::TransformComponent>();
         light.addComponent<ax::PointLightComponent>(light).setRadius(5.0f);
         light.addComponent<ax::UVSphereComponent>(light, 0.2f, 20, 20).setMaterial(m);
+
+        ax::Entity& cube = ax::Engine::world().entities().create();
+        m_cubeTransform = &cube.addComponent<ax::TransformComponent>();
+        m_cubeTransform->setTranslation(ax::Vector3f(0.0f, 1.5f, 0.0f));
+        cube.addComponent<ax::RectangleComponent>(cube).setMaterial("wall_material");
     }
 
     void onUpdate() override
@@ -67,10 +72,13 @@ public:
         }
 
         ax::Vector3f lightPos;
-        lightPos.x = std::cos(m_time);
-        lightPos.z = std::sin(m_time);
-        lightPos.y = 1.0f;
+        lightPos.x = std::cos(m_time) * 2.0f;
+        lightPos.z = std::sin(m_time) * 2.0f;
+        lightPos.y = 0.5f;
         m_lightTransform->setTranslation(lightPos);
+
+        m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::up);
+        m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::forward);
     }
 
 private:
@@ -82,6 +90,7 @@ private:
     ax::Button* spawnButton;
 
     ax::TransformComponent* m_lightTransform;
+    ax::TransformComponent* m_cubeTransform;
     
     float m_time = 0.0f;
 };

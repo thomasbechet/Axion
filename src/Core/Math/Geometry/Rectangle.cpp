@@ -167,7 +167,7 @@ std::vector<Vertex> Rectangle::vertices(
     vertices.emplace_back(vertex);
 
     //Right
-    vertex.normal = Vector3f::right;
+    vertex.normal = Vector3f::left;
     vertex.tangent = Vector3f::backward;
 
     vertex.position = p3;
@@ -195,7 +195,7 @@ std::vector<Vertex> Rectangle::vertices(
     vertices.emplace_back(vertex);
 
     //Left
-    vertex.normal = Vector3f::left;
+    vertex.normal = Vector3f::right;
     vertex.tangent = Vector3f::forward;
 
     vertex.position = p1;
@@ -224,7 +224,7 @@ std::vector<Vertex> Rectangle::vertices(
 
     //Forward
     vertex.normal = Vector3f::forward;
-    vertex.tangent = Vector3f::right;
+    vertex.tangent = Vector3f::left;
 
     vertex.position = p2;
     vertex.uv = uv0;

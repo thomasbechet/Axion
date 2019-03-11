@@ -33,9 +33,9 @@ void main()
 
 	UV = in_uv;
 
-	//NORMAL = normalize(normal_to_view * in_normal);
-	
-	NORMAL = in_normal;
+	NORMAL = normalize(normal_to_view * in_normal);
+	//NORMAL = normalize(mat3(transform) * in_normal);
+	//NORMAL = in_normal;
 
 	COLOR = in_color;
 

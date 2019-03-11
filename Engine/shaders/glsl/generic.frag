@@ -143,8 +143,7 @@ vec3 getNormal()
     }
     else
     {
-        //return TBN * NORMAL;
-		return vec3(0.0, 1.0, 0.0);
+        return TBN * NORMAL;
     }
 }
 float getSpecular()

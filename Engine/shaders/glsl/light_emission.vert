@@ -2,7 +2,11 @@
 
 layout(location = 0) in vec3 in_vertex;
 
+//layout(location = $MVP_MATRIX_LOCATION) uniform mat4 mvp;
+
+layout(location = $TRANSFORM_MATRIX_LOCATION) uniform mat4 transform;
 layout(location = $MVP_MATRIX_LOCATION) uniform mat4 mvp;
+layout(location = $NORMALTOVIEW_MATRIX_LOCATION) uniform mat3 normal_to_view;
 
 layout(std140, binding = $CAMERA_UBO_BINDING_POINT) uniform Camera
 {

@@ -1,4 +1,4 @@
-#version 420 core
+#version 430 core
 
 layout(location = 0) in vec3 in_vertex;
 layout(location = 1) in vec2 in_uv;
@@ -6,9 +6,9 @@ layout(location = 2) in vec3 in_normal;
 layout(location = 3) in vec3 in_tangent;
 layout(location = 4) in vec3 in_color;
 
-uniform mat4 transform;
-uniform mat4 mvp;
-uniform mat3 normal_to_view;
+layout(location = $TRANSFORM_MATRIX_LOCATION) uniform mat4 transform;
+layout(location = $MVP_MATRIX_LOCATION) uniform mat4 mvp;
+layout(location = $NORMALTOVIEW_MATRIX_LOCATION) uniform mat3 normal_to_view;
 
 out vec2 UV;
 out vec3 NORMAL;

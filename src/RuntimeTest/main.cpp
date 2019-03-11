@@ -185,10 +185,6 @@ public:
         plane.addComponent<ax::TransformComponent>();
         plane.addComponent<ax::QuadComponent>(plane, 500.0f, 500.0f, 100.0f).setMaterial("wall_material");
 
-        ax::Entity& cube = ax::Engine::world().entities().create();
-        cube.addComponent<ax::TransformComponent>();
-        cube.addComponent<ax::RectangleComponent>(cube);
-
         CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
         system.setSpawnTransform(&cameraTransform);
     }
