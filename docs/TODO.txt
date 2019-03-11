@@ -1,7 +1,9 @@
 TODO:
-X Light culling depth test //pas de depth test
 -MSAA -> buffer multisample
-X gamma correction
 -hdr
-
-    
+-TBN full implementation
+-coordinate system rework
+-accès entités et composants par reference (
+    ex: ax::Engine::world().entities.create();
+    ex: ax::Engine::world().composants.create();    
+)
