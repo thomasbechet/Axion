@@ -26,7 +26,7 @@ public:
         {
             for(int y = 0; y < MAX_Y; y++)
             {
-                ax::Entity& pointLight = ax::Engine::world().entities().create();
+                ax::Entity& pointLight = ax::Engine::world().entity.create();
                 ax::TransformComponent* lightTransform = &pointLight.addComponent<ax::TransformComponent>();
                 lightTransform->setTranslation(0.0f + x * 5.0f, 0.2f, 50.0f + y * 5.0f);
                 m_pointlights.emplace_back(lightTransform);
@@ -36,15 +36,19 @@ public:
         }
 
         //Rotation light
-        ax::Entity light = ax::Engine::world().entities().create();
+        ax::Entity light = ax::Engine::world().entity.create();
         m_lightTransform = &light.addComponent<ax::TransformComponent>();
         light.addComponent<ax::PointLightComponent>(light).setRadius(5.0f);
         light.addComponent<ax::UVSphereComponent>(light, 0.2f, 20, 20).setMaterial(m);
 
-        ax::Entity& cube = ax::Engine::world().entities().create();
+        ax::Entity& cube = ax::Engine::world().entity.create();
         m_cubeTransform = &cube.addComponent<ax::TransformComponent>();
         m_cubeTransform->setTranslation(ax::Vector3f(0.0f, 1.5f, 0.0f));
-        cube.addComponent<ax::RectangleComponent>(cube).setMaterial("wall_material");
+        cube.addComponent<ax::UVSphereComponent>(cube, 1.0f, 100, 100, true, 8.0f);
+
+        ax::Entity& directionalLight = ax::Engine::world().entity.create();
+        directionalLight.addComponent<ax::TransformComponent>().rotate(ax::radians(45.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
+        directionalLight.addComponent<ax::DirectionalLightComponent>(directionalLight);
     }
 
     void onUpdate() override
@@ -65,26 +69,26 @@ public:
 
         if(spawnButton->isJustPressed())
         {
-            ax::Entity& light = ax::Engine::world().entities().create();
+            ax::Entity& light = ax::Engine::world().entity.create();
             light.addComponent<ax::TransformComponent>().setTranslation(m_spawn->getTranslation() + m_spawn->getForwardVector());
             light.addComponent<ax::PointLightComponent>(light).setRadius(10);
             light.addComponent<ax::UVSphereComponent>(light, 0.2f, 20, 20).setMaterial("light_emission_material"); 
         }
 
         ax::Vector3f lightPos;
-        lightPos.x = std::cos(m_time) * 2.0f;
-        lightPos.z = std::sin(m_time) * 2.0f;
+        lightPos.x = std::cos(m_time * 0.5f) * 2.0f;
+        lightPos.z = std::sin(m_time * 0.5f) * 2.0f;
         lightPos.y = 0.5f;
         m_lightTransform->setTranslation(lightPos);
 
-        //m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::up);
-        //m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::forward);
+        m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::up);
+        m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::forward);
     }
 
 private:
     std::vector<ax::TransformComponent*> m_pointlights;
-    int MAX_X = 10;
-    int MAX_Y = 10;
+    int MAX_X = 5;
+    int MAX_Y = 5;
 
     ax::TransformComponent* m_spawn;
     ax::Button* spawnButton;

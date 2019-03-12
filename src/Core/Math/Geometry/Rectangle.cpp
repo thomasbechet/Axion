@@ -140,7 +140,7 @@ std::vector<Vertex> Rectangle::vertices(
 
     //Bottom
     vertex.normal = Vector3f::down;
-    vertex.tangent = Vector3f::left;
+    vertex.tangent = Vector3f::right;
 
     vertex.position = p4;
     vertex.uv = uv3;

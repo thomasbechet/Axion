@@ -2,8 +2,3 @@ TODO:
 -MSAA -> buffer multisample
 -hdr
 -TBN full implementation
--coordinate system rework
--accès entités et composants par reference (
-    ex: ax::Engine::world().entities.create();
-    ex: ax::Engine::world().composants.create();    
-)

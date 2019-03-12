@@ -79,13 +79,13 @@ std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, b
             if(smooth)
             {
                 v1.normal = p1;
-                v1.tangent = Vector3f::cross(v1.normal, Vector3f::up);
+                v1.tangent = Vector3f::cross(Vector3f::up, v1.normal);
                 v2.normal = p2;
-                v2.tangent = Vector3f::cross(v2.normal, Vector3f::up);
+                v2.tangent = Vector3f::cross(Vector3f::up, v2.normal);
                 v3.normal = p3;
-                v3.tangent = Vector3f::cross(v3.normal, Vector3f::up);
+                v3.tangent = Vector3f::cross(Vector3f::up, v3.normal);
                 v4.normal = p4;
-                v4.tangent = Vector3f::cross(v4.normal, Vector3f::up);
+                v4.tangent = Vector3f::cross(Vector3f::up, v4.normal);
 
                 //Need to patch bottom normals (p1 and p2 are the same)
                 if(v == 0)
@@ -96,7 +96,7 @@ std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, b
             }
             else
             {
-                Vector3f tangent = p3 - p4;
+                Vector3f tangent = p4 - p3;
                 Vector3f dy = p4 - p1;
                 Vector3f dx = p3 - p4;
 
@@ -116,6 +116,23 @@ std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, b
             }
             //UVs
             v1.uv = Vector2f(
+                1.0f - advanceU1,
+                1.0f - advanceV1
+            ) * coordinateFactor;
+            v2.uv = Vector2f(
+                1.0f - advanceU2,
+                1.0f - advanceV1
+            ) * coordinateFactor;
+            v3.uv = Vector2f(
+                1.0f - advanceU2,
+                1.0f - advanceV2
+            ) * coordinateFactor;
+            v4.uv = Vector2f(
+                1.0f - advanceU1,
+                1.0f - advanceV2
+            ) * coordinateFactor;
+
+            /*v1.uv = Vector2f(
                 advanceU1,
                 1.0f - advanceV1
             ) * coordinateFactor;
@@ -130,7 +147,7 @@ std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, b
             v4.uv = Vector2f(
                 advanceU1,
                 1.0f - advanceV2
-            ) * coordinateFactor;
+            ) * coordinateFactor;*/
 
             //Filling mesh with vertices
             if(v == 0) //Top

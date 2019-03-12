@@ -28,7 +28,7 @@ namespace ax
         void destroy(Entity& entity) noexcept;
         void destroy(std::string& name) noexcept;
 
-        Entity& get(std::string& name) noexcept;
+        Entity& get(std::string name) noexcept;
 
     private:
         std::vector<std::unique_ptr<Chunk>> m_chunks;

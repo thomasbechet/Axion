@@ -196,19 +196,19 @@ vec3 phongPointLight(PointLight light, vec3 fragPos, vec3 normal, vec3 albedo, f
 	vec3 lightColor = vec3(1.0);
 	
 	vec3 diff = max(dot(normal, lightDir), 0.0) * lightColor;
-    vec3 spec = pow(max(dot(viewDir, reflectDir), 0.0), 10) * lightColor;
+    vec3 spec = pow(max(dot(viewDir, reflectDir), 0.0), 50) * lightColor;
 	
 	float distance = length(light.position - fragPos);
 	float attenuation = smoothstep(light.radius, 0, distance);
 	if(distance > light.radius) attenuation = 0.0;
 	
-	return (diff) * albedo * attenuation;
+	return (diff + spec) * albedo * attenuation;
 }
 
 vec3 phongDirectionalLight(DirectionalLight light, vec3 fragPos, vec3 normal, vec3 albedo, float specular)
 {
-	vec3 lightDir = normalize(light.direction);
-	vec3 viewDir = -normalize(fragPos);
+	vec3 lightDir = TBN * normalize(light.direction);
+	vec3 viewDir = TBN * -normalize(fragPos);
 	vec3 reflectDir = reflect(-lightDir, normal);
 	
 	vec3 lightColor = vec3(1.0);
@@ -216,7 +216,7 @@ vec3 phongDirectionalLight(DirectionalLight light, vec3 fragPos, vec3 normal, ve
 	vec3 diff = max(dot(normal, lightDir), 0.0) * lightColor;
     vec3 spec = pow(max(dot(viewDir, reflectDir), 0.0), 10) * lightColor;
 	
-	return (diff) * albedo;
+	return (spec + diff) * albedo;
 }
 
 void main()

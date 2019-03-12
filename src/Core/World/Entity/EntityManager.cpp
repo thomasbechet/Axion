@@ -52,7 +52,7 @@ void EntityManager::destroy(std::string& name) noexcept
     destroy(*m_tagTable[name]);
 }
 
-Entity& EntityManager::get(std::string& name) noexcept
+Entity& EntityManager::get(std::string name) noexcept
 {
     return *m_tagTable[name];
 }

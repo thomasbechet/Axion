@@ -13,8 +13,6 @@ namespace ax
 {
     class EntityManager;
     class ComponentManager;
-    class GameMode;
-    class GameState;
 
     class AXION_CORE_API World
     {
@@ -25,8 +23,13 @@ namespace ax
         World();
         ~World();
 
-        EntityManager& entities() noexcept;
-        ComponentManager& components() noexcept;
+    private:
+        ComponentManager* m_componentManager;
+        EntityManager* m_entityManager;
+
+    public:
+        ComponentManager& component;
+        EntityManager& entity;
 
     public:
         template<typename G>
@@ -61,9 +64,6 @@ namespace ax
 
     
     private:
-        EntityManager* m_entityManager;
-        ComponentManager* m_componentManager;
-
         std::unique_ptr<GameMode> m_gameMode;
         GameMode* m_nextGameMode = nullptr;
 

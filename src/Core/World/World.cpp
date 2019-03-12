@@ -5,27 +5,19 @@
 
 using namespace ax;
 
-World::World()
+World::World() :
+    m_componentManager(new ComponentManager()),
+    m_entityManager(new EntityManager(*m_componentManager)),
+    component(*m_componentManager),
+    entity(*m_entityManager)
 {
     m_gameMode = std::make_unique<GameMode>();
     m_gameState = std::make_unique<GameState>();
-
-    m_componentManager = new ComponentManager();
-    m_entityManager = new EntityManager(*m_componentManager);
 }
 World::~World()
 {
     delete m_entityManager;
     delete m_componentManager;
-}
-
-EntityManager& World::entities() noexcept
-{
-    return *m_entityManager;
-}
-ComponentManager& World::components() noexcept
-{
-    return *m_componentManager;
 }
 
 GameMode& World::getGameMode() const noexcept

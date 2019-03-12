@@ -133,7 +133,7 @@ public:
         ax::BasicSpectatorSystem& cameraSystem = ax::Engine::systems().add<ax::BasicSpectatorSystem>();
         ax::Engine::systems().add<ax::RenderModeSystem>();
 
-        ax::Entity& camera0 = ax::Engine::world().entities().create();
+        ax::Entity& camera0 = ax::Engine::world().entity.create();
         ax::TransformComponent& cameraTransform = camera0.addComponent<ax::TransformComponent>();
         ax::CameraComponent& cameraComponent0 = camera0.addComponent<ax::CameraComponent>(camera0);
         cameraComponent0.setFarPlane(100000000.0f);
@@ -157,7 +157,7 @@ public:
 
         //#define USE_CAMERA
         #if defined USE_CAMERA
-            ax::Entity& camera1 = ax::Engine::world().entities().create();
+            ax::Entity& camera1 = ax::Engine::world().entity.create();
             camera1.addComponent<ax::TransformComponent>();
             ax::CameraComponent& cameraComponent1 = camera1.addComponent<ax::CameraComponent>(camera1);
             cameraComponent1.setFarPlane(300.0f);
@@ -181,7 +181,7 @@ public:
         wallMaterialParams.normalTexture = "wall_normal2";
         ax::Engine::assets().material.loadFromMemory("wall_material", wallMaterialParams);
 
-        ax::Entity& plane = ax::Engine::world().entities().create();
+        ax::Entity& plane = ax::Engine::world().entity.create();
         plane.addComponent<ax::TransformComponent>();
         plane.addComponent<ax::QuadComponent>(plane, 500.0f, 500.0f, 100.0f).setMaterial("wall_material");
 
