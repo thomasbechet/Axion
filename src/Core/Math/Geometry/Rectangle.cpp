@@ -112,7 +112,7 @@ std::vector<Vertex> Rectangle::vertices(
 
     //Top
     vertex.normal = Vector3f::up;
-    vertex.tangent = Vector3f::forward;
+    vertex.tangent = Vector3f::right;
 
     vertex.position = p0;
     vertex.uv = uv0;
@@ -143,139 +143,139 @@ std::vector<Vertex> Rectangle::vertices(
     vertex.tangent = Vector3f::left;
 
     vertex.position = p4;
-    vertex.uv = uv0;
+    vertex.uv = uv3;
     vertices.emplace_back(vertex);
 
     vertex.position = p5;
+    vertex.uv = uv2;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p6;
     vertex.uv = uv1;
     vertices.emplace_back(vertex);
 
     vertex.position = p6;
-    vertex.uv = uv2;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p6;
-    vertex.uv = uv2;
+    vertex.uv = uv1;
     vertices.emplace_back(vertex);
     
     vertex.position = p7;
-    vertex.uv = uv3;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p4;
     vertex.uv = uv0;
     vertices.emplace_back(vertex);
 
-    //Right
+    vertex.position = p4;
+    vertex.uv = uv3;
+    vertices.emplace_back(vertex);
+
+    //Left
     vertex.normal = Vector3f::left;
     vertex.tangent = Vector3f::backward;
 
     vertex.position = p3;
-    vertex.uv = uv0;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p0;
     vertex.uv = uv1;
     vertices.emplace_back(vertex);
 
-    vertex.position = p4;
-    vertex.uv = uv2;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p4;
-    vertex.uv = uv2;
-    vertices.emplace_back(vertex);
-    
-    vertex.position = p7;
-    vertex.uv = uv3;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p3;
+    vertex.position = p0;
     vertex.uv = uv0;
     vertices.emplace_back(vertex);
 
-    //Left
+    vertex.position = p4;
+    vertex.uv = uv3;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p4;
+    vertex.uv = uv3;
+    vertices.emplace_back(vertex);
+    
+    vertex.position = p7;
+    vertex.uv = uv2;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p3;
+    vertex.uv = uv1;
+    vertices.emplace_back(vertex);
+
+    //Right
     vertex.normal = Vector3f::right;
     vertex.tangent = Vector3f::forward;
 
     vertex.position = p1;
-    vertex.uv = uv0;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p2;
     vertex.uv = uv1;
     vertices.emplace_back(vertex);
 
-    vertex.position = p6;
-    vertex.uv = uv2;
+    vertex.position = p2;
+    vertex.uv = uv0;
     vertices.emplace_back(vertex);
 
     vertex.position = p6;
-    vertex.uv = uv2;
+    vertex.uv = uv3;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p6;
+    vertex.uv = uv3;
     vertices.emplace_back(vertex);
     
     vertex.position = p5;
-    vertex.uv = uv3;
+    vertex.uv = uv2;
     vertices.emplace_back(vertex);
 
     vertex.position = p1;
-    vertex.uv = uv0;
-    vertices.emplace_back(vertex);
-
-    //Forward
-    vertex.normal = Vector3f::forward;
-    vertex.tangent = Vector3f::left;
-
-    vertex.position = p2;
-    vertex.uv = uv0;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p3;
     vertex.uv = uv1;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p7;
-    vertex.uv = uv2;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p7;
-    vertex.uv = uv2;
-    vertices.emplace_back(vertex);
-    
-    vertex.position = p6;
-    vertex.uv = uv3;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p2;
-    vertex.uv = uv0;
     vertices.emplace_back(vertex);
 
     //Backward
     vertex.normal = Vector3f::backward;
     vertex.tangent = Vector3f::right;
 
-    vertex.position = p0;
-    vertex.uv = uv0;
-    vertices.emplace_back(vertex);
-
-    vertex.position = p1;
+    vertex.position = p2;
     vertex.uv = uv1;
     vertices.emplace_back(vertex);
 
-    vertex.position = p5;
-    vertex.uv = uv2;
+    vertex.position = p3;
+    vertex.uv = uv0;
     vertices.emplace_back(vertex);
 
-    vertex.position = p5;
-    vertex.uv = uv2;
-    vertices.emplace_back(vertex);
-    
-    vertex.position = p4;
+    vertex.position = p7;
     vertex.uv = uv3;
     vertices.emplace_back(vertex);
 
+    vertex.position = p7;
+    vertex.uv = uv3;
+    vertices.emplace_back(vertex);
+    
+    vertex.position = p6;
+    vertex.uv = uv2;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p2;
+    vertex.uv = uv1;
+    vertices.emplace_back(vertex);
+
+    //Forward
+    vertex.normal = Vector3f::forward;
+    vertex.tangent = Vector3f::left;
+
     vertex.position = p0;
+    vertex.uv = uv1;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p1;
     vertex.uv = uv0;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p5;
+    vertex.uv = uv3;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p5;
+    vertex.uv = uv3;
+    vertices.emplace_back(vertex);
+    
+    vertex.position = p4;
+    vertex.uv = uv2;
+    vertices.emplace_back(vertex);
+
+    vertex.position = p0;
+    vertex.uv = uv1;
     vertices.emplace_back(vertex);
 
     return vertices;

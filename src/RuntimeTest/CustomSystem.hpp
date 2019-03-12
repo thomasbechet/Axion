@@ -77,8 +77,8 @@ public:
         lightPos.y = 0.5f;
         m_lightTransform->setTranslation(lightPos);
 
-        m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::up);
-        m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::forward);
+        //m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::up);
+        //m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::forward);
     }
 
 private:

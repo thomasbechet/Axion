@@ -222,9 +222,9 @@ namespace ax
 	//ENGINE AXIS
 	//////////////
 	template<typename T>
-	const Vector3<T> Vector3<T>::forward = Vector3<T>(0, 0, 1);
+	const Vector3<T> Vector3<T>::forward = Vector3<T>(0, 0, -1);
 	template<typename T>
-	const Vector3<T> Vector3<T>::backward = Vector3<T>(0, 0, -1);
+	const Vector3<T> Vector3<T>::backward = Vector3<T>(0, 0, 1);
 	template<typename T>
 	const Vector3<T> Vector3<T>::left = Vector3<T>(-1, 0, 0);
 	template<typename T>
