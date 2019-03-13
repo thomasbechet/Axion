@@ -31,7 +31,8 @@ void DirectionalLightUBO::unload(DirectionalLightGL& light) noexcept
 
 void DirectionalLightUBO::updateLight(const DirectionalLightGL& light) noexcept
 {
-    
+    DirectionalLightUBOData& data = m_directionalLights.get(light.uboIndex);
+    data.color = light.color;
 }
 void DirectionalLightUBO::updateMemory(IndexVector<DirectionalLightGL>& lights, const Matrix4f& view) noexcept
 {

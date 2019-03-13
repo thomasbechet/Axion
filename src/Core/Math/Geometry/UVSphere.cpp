@@ -87,11 +87,16 @@ std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, b
                 v4.normal = p4;
                 v4.tangent = Vector3f::cross(Vector3f::up, v4.normal);
 
-                //Need to patch bottom normals (p1 and p2 are the same)
+                //Need to patch top and bottom tangents (p1 and p2 are the same)
                 if(v == 0)
                 {
-                    v1.tangent = Vector3f::right;
-                    v2.tangent = Vector3f::right;
+                    v1.tangent = v4.position - v3.position;
+                    v2.tangent = v4.position - v3.position;
+                }
+                else if(v + 1 == VN)
+                {
+                    v1.tangent = v4.position - v3.position;
+                    v2.tangent = v4.position - v3.position;
                 }
             }
             else
@@ -131,23 +136,6 @@ std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, b
                 1.0f - advanceU1,
                 1.0f - advanceV2
             ) * coordinateFactor;
-
-            /*v1.uv = Vector2f(
-                advanceU1,
-                1.0f - advanceV1
-            ) * coordinateFactor;
-            v2.uv = Vector2f(
-                advanceU2,
-                1.0f - advanceV1
-            ) * coordinateFactor;
-            v3.uv = Vector2f(
-                advanceU2,
-                1.0f - advanceV2
-            ) * coordinateFactor;
-            v4.uv = Vector2f(
-                advanceU1,
-                1.0f - advanceV2
-            ) * coordinateFactor;*/
 
             //Filling mesh with vertices
             if(v == 0) //Top

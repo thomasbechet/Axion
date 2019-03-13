@@ -26,3 +26,13 @@ float PointLightComponent::getRadius() const noexcept
 {
     return m_parameters.radius;
 }
+
+void PointLightComponent::setColor(Color3 color) noexcept
+{
+    m_parameters.color = color;
+    Engine::renderer().setPointLightParameters(m_handle, m_parameters);
+}
+Color3 PointLightComponent::getColor() const noexcept
+{
+    return m_parameters.color;
+}

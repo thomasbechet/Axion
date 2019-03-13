@@ -24,10 +24,9 @@ void RendererGL::setDirectionalLightTransform(Id id, Transform* transform)
 }
 void RendererGL::setDirectionalLightParameters(Id id, const DirectionalLightParameters& parameters)
 {
-    PointLightGL& light = m_content.pointLights.get(id);
+    DirectionalLightGL& light = m_content.directionalLights.get(id);
 
     light.color = parameters.color;
-    light.intensity = parameters.intensity;
 
-    m_content.pointLightUBO->updateLight(light);
+    m_content.directionalLightUBO->updateLight(light);
 }

@@ -36,7 +36,17 @@
 		"type":"texture",
 		"source":"$ENGINE_DIR/textures/wall_normal2.bmp"
 	},
-
+	
+	"model_monkey":
+    {
+        "type":"model",
+        "source":"$ENGINE_DIR/models/monkey/Monkey.obj"
+    },
+	"model_bunny":
+    {
+        "type":"model",
+        "source":"$ENGINE_DIR/models/bunny/bunny.obj"
+    },
 	
 	"light_emission":
     {

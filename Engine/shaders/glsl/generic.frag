@@ -162,7 +162,7 @@ vec3 blinnPointLight(PointLight light, vec3 fragPos, vec3 normal, vec3 albedo, f
 	vec3 viewDir = normalize(-fragPos);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 	
-	vec3 lightColor = vec3(1.0);
+	vec3 lightColor = light.color;
 	
 	vec3 diff = max(dot(normal, lightDir), 0.0) * lightColor;
     vec3 spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0) * lightColor;
@@ -179,7 +179,7 @@ vec3 blinnDirectionalLight(DirectionalLight light, vec3 fragPos, vec3 normal, ve
 	vec3 viewDir = -normalize(fragPos);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 	
-	vec3 lightColor = vec3(1.0);
+	vec3 lightColor = light.color;
 	
 	vec3 diff = max(dot(normal, lightDir), 0.0) * lightColor;
     vec3 spec = pow(max(dot(normal, halfwayDir), 0.0), 60.0) * lightColor;
@@ -193,16 +193,21 @@ vec3 phongPointLight(PointLight light, vec3 fragPos, vec3 normal, vec3 albedo, f
 	vec3 viewDir = TBN * -normalize(fragPos);
 	vec3 reflectDir = reflect(-lightDir, normal);
 	
-	vec3 lightColor = vec3(1.0);
+	vec3 lightColor = light.color;
+	float specularStrengh = 0.5f;
 	
 	vec3 diff = max(dot(normal, lightDir), 0.0) * lightColor;
-    vec3 spec = pow(max(dot(viewDir, reflectDir), 0.0), 50) * lightColor;
+    vec3 spec = min(pow(max(dot(viewDir, reflectDir), 0.0), 50), 1.0) * lightColor * specularStrengh;
 	
 	float distance = length(light.position - fragPos);
-	float attenuation = smoothstep(light.radius, 0, distance);
+	float attenuation = clamp(1.0 - distance / light.radius, 0.0, 1.0);
+	attenuation *= attenuation;
 	if(distance > light.radius) attenuation = 0.0;
 	
-	return (diff + spec) * albedo * attenuation;
+	diff *= attenuation;
+	spec *= attenuation;
+	
+	return (diff + spec) * albedo;
 }
 
 vec3 phongDirectionalLight(DirectionalLight light, vec3 fragPos, vec3 normal, vec3 albedo, float specular)
@@ -211,7 +216,7 @@ vec3 phongDirectionalLight(DirectionalLight light, vec3 fragPos, vec3 normal, ve
 	vec3 viewDir = TBN * -normalize(fragPos);
 	vec3 reflectDir = reflect(-lightDir, normal);
 	
-	vec3 lightColor = vec3(1.0);
+	vec3 lightColor = light.color;
 	
 	vec3 diff = max(dot(normal, lightDir), 0.0) * lightColor;
     vec3 spec = pow(max(dot(viewDir, reflectDir), 0.0), 10) * lightColor;

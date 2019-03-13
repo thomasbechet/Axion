@@ -5,6 +5,7 @@
 //////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
+#include <Core/Utility/Color.hpp>
 #include <Core/Renderer/Light/PointLightParameters.hpp>
 #include <Core/World/Component/Component.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
@@ -22,6 +23,9 @@ namespace ax
         void setRadius(float radius) noexcept;
         float getRadius() const noexcept;
 
+        void setColor(Color3 color) noexcept;
+        Color3 getColor() const noexcept;
+  
         TransformComponent& transform;
     
     private:

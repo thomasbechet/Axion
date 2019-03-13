@@ -16,3 +16,13 @@ DirectionalLightComponent::~DirectionalLightComponent()
 {
     Engine::renderer().destroyDirectionalLight(m_handle);
 }
+
+void DirectionalLightComponent::setColor(Color3 color) noexcept
+{
+    m_parameters.color = color;
+    Engine::renderer().setDirectionalLightParameters(m_handle, m_parameters);
+}
+Color3 DirectionalLightComponent::getColor() const noexcept
+{
+    return m_parameters.color;
+}

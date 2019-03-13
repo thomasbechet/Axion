@@ -30,7 +30,12 @@ public:
                 ax::TransformComponent* lightTransform = &pointLight.addComponent<ax::TransformComponent>();
                 lightTransform->setTranslation(0.0f + x * 5.0f, 0.2f, 50.0f + y * 5.0f);
                 m_pointlights.emplace_back(lightTransform);
-                pointLight.addComponent<ax::PointLightComponent>(pointLight).setRadius(5.0f);
+                ax::PointLightComponent& pointLightComponent = pointLight.addComponent<ax::PointLightComponent>(pointLight);
+                pointLightComponent.setRadius(5.0f);
+                int r = rand() % 256;
+                int g = rand() % 256;
+                int b = rand() % 256;
+                pointLightComponent.setColor(ax::Color3(r, g, b));
                 pointLight.addComponent<ax::UVSphereComponent>(pointLight, 0.2f).setMaterial(m);
             }
         }
@@ -38,7 +43,8 @@ public:
         //Rotation light
         ax::Entity light = ax::Engine::world().entity.create();
         m_lightTransform = &light.addComponent<ax::TransformComponent>();
-        light.addComponent<ax::PointLightComponent>(light).setRadius(5.0f);
+        ax::PointLightComponent& pointlight = light.addComponent<ax::PointLightComponent>(light);
+        pointlight.setRadius(30.0f);
         light.addComponent<ax::UVSphereComponent>(light, 0.2f, 20, 20).setMaterial(m);
 
         ax::Entity& cube = ax::Engine::world().entity.create();
@@ -48,7 +54,15 @@ public:
 
         ax::Entity& directionalLight = ax::Engine::world().entity.create();
         directionalLight.addComponent<ax::TransformComponent>().rotate(ax::radians(45.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
-        directionalLight.addComponent<ax::DirectionalLightComponent>(directionalLight);
+        //directionalLight.addComponent<ax::DirectionalLightComponent>(directionalLight);
+
+        ax::Entity& monkey = ax::Engine::world().entity.create();
+        monkey.addComponent<ax::TransformComponent>().setTranslation(10.0f, 3.0f, 0.0f);
+        monkey.addComponent<ax::ModelComponent>(monkey).setModel("model_monkey");
+
+        ax::Entity& bunny = ax::Engine::world().entity.create();
+        bunny.addComponent<ax::TransformComponent>().setTranslation(14.0f, 2.0f, 0.0f);
+        bunny.addComponent<ax::ModelComponent>(bunny).setModel("model_bunny");
     }
 
     void onUpdate() override
@@ -71,7 +85,7 @@ public:
         {
             ax::Entity& light = ax::Engine::world().entity.create();
             light.addComponent<ax::TransformComponent>().setTranslation(m_spawn->getTranslation() + m_spawn->getForwardVector());
-            light.addComponent<ax::PointLightComponent>(light).setRadius(10);
+            light.addComponent<ax::PointLightComponent>(light).setRadius(5);
             light.addComponent<ax::UVSphereComponent>(light, 0.2f, 20, 20).setMaterial("light_emission_material"); 
         }
 
@@ -81,7 +95,7 @@ public:
         lightPos.y = 0.5f;
         m_lightTransform->setTranslation(lightPos);
 
-        m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::up);
+        //m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::up);
         m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::forward);
     }
 
