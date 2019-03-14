@@ -12,6 +12,7 @@
 #include <Core/Window/NullWindow.hpp>
 #include <Core/Input/NullInput.hpp>
 #include <Core/Asset/AssetManager.hpp>
+#include <Core/GUI/NullGUI.hpp>
 
 using namespace ax;
 
@@ -28,6 +29,7 @@ EngineContext* Engine::m_context = nullptr;
 Window* Engine::m_window = nullptr;
 Input* Engine::m_input = nullptr;
 AssetManager* Engine::m_assets = nullptr;
+GUI* Engine::m_gui = nullptr;
 
 std::map<std::string, LibraryLoader> Engine::m_libraryHolder;
 
@@ -96,6 +98,21 @@ void Engine::initialize() noexcept
     }
     else m_input = new NullInput();
 
+    //GUI
+    std::string typeGUI = Engine::context().config().getString("GUI", "type", "none");
+    typedef GUI* (*CreateGUI)();
+
+    if(typeGUI == "opengl")
+    {
+        if(!m_libraryHolder["opengl"].isOpen() && !m_libraryHolder["opengl"].open("axion-opengl"));
+            Engine::interrupt("Failed to load dynamic library <axion-opengl>");
+        CreateGUI createGUI;
+        if(!m_libraryHolder["opengl"].getFunction<CreateGUI>(createGUI, "create_gui"))
+            Engine::interrupt("Failed to access function <create_gui>");
+        m_gui = createGUI();    
+    }
+    else m_gui = new NullGUI();
+
     //ThreadPool
     m_threadPool = new ThreadPool();
 
@@ -108,6 +125,7 @@ void Engine::initialize() noexcept
     Engine::window().initialize();
     Engine::input().initialize();
     Engine::renderer().initialize();
+    Engine::gui().initialize();
 
     /////////////////////////////////////////////////////////////////////////////////
 
@@ -137,6 +155,7 @@ void Engine::terminate() noexcept
     if(Engine::context().isRunning()) return;
 
     //Terminates engine
+    Engine::gui().terminate();
     Engine::renderer().terminate();
     Engine::input().terminate();
     Engine::window().terminate();
@@ -145,6 +164,7 @@ void Engine::terminate() noexcept
     delete m_world;
     delete m_assets;
     delete m_threadPool; //ThreadPool depends on Logger
+    delete m_gui;
     delete m_renderer;
     delete m_input;
     delete m_window;
@@ -192,4 +212,8 @@ Input& Engine::input() noexcept
 AssetManager& Engine::assets() noexcept
 {
     return *m_assets;
+}
+GUI& Engine::gui() noexcept
+{
+    return *m_gui;
 }

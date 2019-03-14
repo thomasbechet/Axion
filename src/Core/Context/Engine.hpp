@@ -22,6 +22,7 @@ namespace ax
     class Window;
     class Input;
     class AssetManager;
+    class GUI;
 
     class AXION_CORE_API Engine
     {
@@ -42,6 +43,7 @@ namespace ax
         static Window& window() noexcept;
         static Input& input() noexcept;
         static AssetManager& assets() noexcept;
+        static GUI& gui() noexcept;
 
         static const std::string EngineDirectory; //   Game/Engine/
         static const std::string GameDataDirectory; // Game/GameData/
@@ -57,6 +59,7 @@ namespace ax
         static Window* m_window;
         static Input* m_input;
         static AssetManager* m_assets;
+        static GUI* m_gui;
 
         static std::map<std::string, LibraryLoader> m_libraryHolder;
     };
