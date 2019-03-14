@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Core/Export.hpp>
+#include <Core/GUI/UIComponent.hpp>
+#include <Core/GUI/UIButton.hpp>
 
 namespace ax
 {
@@ -14,5 +16,9 @@ namespace ax
         virtual void terminate() noexcept = 0;
         virtual void update() noexcept = 0;
         virtual void render() noexcept = 0;
+
+    public:
+        UIButton& createButton() noexcept;
+        UIButton& createButton(UIComponent& component) noexcept;
     };
 }

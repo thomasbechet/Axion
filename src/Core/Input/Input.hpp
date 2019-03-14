@@ -43,10 +43,10 @@ namespace ax
         virtual void initialize() noexcept = 0;
         virtual void terminate() noexcept = 0;
         virtual void update() noexcept = 0;
-        
-        void updateInputs() noexcept;
 
     public:
+        void updateInputs() noexcept;
+
         Button& addButton(std::string name) noexcept;
         Button& getButton(std::string name) noexcept;
         void removeButton(std::string name) noexcept;

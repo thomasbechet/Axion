@@ -63,6 +63,7 @@ ADD_LIBRARY(
     Logger/Logger.cpp
     Logger/ConsoleLogger.cpp
     Math/Transform.cpp
+    Math/Transform2D.cpp
     Math/Math.cpp
     Math/Geometry/Shape.cpp
     Math/Geometry/Sphere.cpp

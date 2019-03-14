@@ -49,8 +49,6 @@ namespace ax
         Matrix4f getWorldMatrix() noexcept;
         Matrix4f getMatrix() noexcept;
 
-        const float* data() const noexcept; 
-
     protected:
         void setParent(Transform* newParent) noexcept;
         Matrix4f localToWorld() noexcept;

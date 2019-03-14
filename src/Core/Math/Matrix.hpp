@@ -588,9 +588,43 @@ namespace ax
 		//////////////////////////
 		static Matrix3<T> identity() noexcept
 		{
-			return Matrix3<T>(1, 0, 0,
-								0, 1, 0,
-								0, 0, 1);
+			return Matrix3<T>(
+				1, 0, 0,
+				0, 1, 0,
+				0, 0, 1
+			);
+		}
+		static Matrix3<T> translate(const Vector2<T>& translation) noexcept
+		{
+			return Matrix3<T>::translate(translation.x, translation.y);
+		}
+		static Matrix3<T> translate(T x, T y) noexcept
+		{
+			return Matrix3<T>(
+				1, 0, x,
+				0, 1, y,
+				0, 0, 1
+			);
+		}
+		static Matrix3<T> rotate(T rotation) noexcept
+		{
+			return Matrix3<T>(
+				std::cos(rotation), std::sin(rotation), 0,
+				-std::sin(rotation), std::cos(rotation), 0,
+				0, 0, 1
+			);
+		}
+		static Matrix3<T> scale(const Vector2<T>& scale) noexcept
+		{
+			return Matrix3<T>::scale(scale.x, scale.y);
+		}
+		static Matrix3<T> scale(T x, T y) noexcept
+		{
+			return Matrix3<T>(
+				x, 0, 0,
+				0, y, 0,
+				0, 0, 1
+			);
 		}
 
 		void inverse() noexcept
