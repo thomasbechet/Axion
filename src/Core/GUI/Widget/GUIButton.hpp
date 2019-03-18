@@ -8,6 +8,7 @@ namespace ax
     class AXION_CORE_API GUIButton : public GUIRectangle
     {
     public:
-        
+        GUIButton(GUILayout& layout);
+        ~GUIButton();
     };
 }

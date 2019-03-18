@@ -23,6 +23,8 @@ namespace ax
         GUIText& addText() noexcept;
         void removeText(GUIText& text) noexcept;
 
+        
+
     private:
         Id m_handle;
     };

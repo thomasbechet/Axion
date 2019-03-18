@@ -36,16 +36,26 @@
 		"type":"texture",
 		"source":"$ENGINE_DIR/textures/wall_normal2.bmp"
 	},
-	
-	"model_monkey":
+
+    "model_bunny":
+    {
+        "type":"model",
+        "source":"$ENGINE_DIR/models/bunny/bunny.obj"
+    },
+    "model_monkey":
     {
         "type":"model",
         "source":"$ENGINE_DIR/models/monkey/Monkey.obj"
     },
-	"model_bunny":
+    "model_cube":
     {
         "type":"model",
-        "source":"$ENGINE_DIR/models/bunny/bunny.obj"
+        "source":"$ENGINE_DIR/models/cube/cube.obj"
+    },
+    "model_sponza":
+    {
+        "type":"model",
+        "source":"$ENGINE_DIR/models/sponza/sponza.obj"
     },
 	
 	"light_emission":

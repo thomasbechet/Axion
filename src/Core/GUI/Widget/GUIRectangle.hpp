@@ -10,6 +10,9 @@ namespace ax
     class AXION_CORE_API GUIRectangle : public GUIWidget
     {
     public:
+        GUIRectangle(GUILayout& layout);
+        virtual ~GUIRectangle() = default;
+
         void onClicked(std::function<void()> function) noexcept;
         void onPressed(std::function<void()> function) noexcept;
         void onReleased(std::function<void()> function) noexcept;
