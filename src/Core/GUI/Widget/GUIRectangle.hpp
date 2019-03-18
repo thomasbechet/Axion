@@ -19,6 +19,13 @@ namespace ax
         void onEntered(std::function<void()> function) noexcept;
         void onLeaved(std::function<void()> function) noexcept;
 
+        void callOnClicked() const noexcept;
+        void callOnPressed() const noexcept;
+        void callOnReleased() const noexcept;
+        void callOnEntered() const noexcept;
+        void callOnLeaved() const noexcept;
+
+        void setSize(unsigned x, unsigned y) noexcept;
         void setSize(Vector2u size) noexcept;
         Vector2u getSize() const noexcept;
 

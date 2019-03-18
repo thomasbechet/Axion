@@ -25,9 +25,9 @@ namespace ax
         virtual Id createLayout() noexcept = 0;
         virtual void destroyLayout(Id layout) noexcept = 0;
 
-        virtual Id createButton(Id layout) noexcept = 0;
+        virtual Id createButton(Id layout, GUIButton& button) noexcept = 0;
         virtual void destroyButton(Id button) noexcept = 0;
-        virtual Id createText(Id layout) noexcept = 0;
+        virtual Id createText(Id layout, GUIText& text) noexcept = 0;
         virtual void destroyText(Id button) noexcept = 0;
 
     protected:

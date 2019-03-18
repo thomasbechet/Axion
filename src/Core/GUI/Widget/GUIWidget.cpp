@@ -75,3 +75,8 @@ GUIWidget& GUIWidget::getNextSibling() const noexcept
 {
     return *m_nextSibling;
 }
+
+Id GUIWidget::getHandle() const noexcept
+{
+    return m_handle;
+}

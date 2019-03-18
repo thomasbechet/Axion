@@ -31,6 +31,8 @@ namespace ax
         bool hasSibling() const noexcept;
         GUIWidget& getNextSibling() const noexcept;
 
+        Id getHandle() const noexcept;
+
     protected:
         GUIWidget* m_parent = nullptr;
         GUIWidget* m_nextSibling = nullptr;
