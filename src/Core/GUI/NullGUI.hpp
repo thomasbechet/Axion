@@ -10,7 +10,7 @@ namespace ax
     protected:
         void initialize() noexcept override {}
         void terminate() noexcept override {}
-        void update() noexcept {}
-        void render() noexcept {}
+        void update() noexcept override {}
+        void render() noexcept override {}
     };
 }

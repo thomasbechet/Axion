@@ -19,12 +19,12 @@ namespace ax
         bool isButtonReleased(Keyboard key) const noexcept override {return false;};
         bool isButtonReleased(Mouse::Button button) const noexcept override {return false;}
         bool isButtonReleased(Gamepad::Button button) const noexcept override {return false;}
-        virtual void setCursorMode(CursorMode mode) noexcept override {}
-        virtual CursorMode getCursorMode() const noexcept override {return CursorMode::Normal;}
+        void setCursorMode(CursorMode mode) noexcept override {}
+        CursorMode getCursorMode() const noexcept override {return CursorMode::Normal;}
         Vector2f getMousePosition() const noexcept override {return Vector2f(0, 0);}
         Vector2f getMouseMotion() const noexcept override {return Vector2f(0, 0);}
         Vector2f getMouseScroll() const noexcept override {return Vector2f(0, 0);}
-        virtual float getGamepadAxis(Gamepad::Axis axis) const noexcept override {return 0.0f;}
+        float getGamepadAxis(Gamepad::Axis axis) const noexcept override {return 0.0f;}
 
     protected:
         void initialize() noexcept override {}

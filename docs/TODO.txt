@@ -2,3 +2,4 @@ TODO:
 -MSAA -> buffer multisample
 -hdr
 -TBN full implementation
+-Asset asynchron
