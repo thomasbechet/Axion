@@ -13,12 +13,12 @@ namespace ax
         void update() noexcept override {}
         void render() noexcept override {}
 
-        Id createLayout() noexcept override {}
+        Id createLayout() noexcept override {return 0;}
         void destroyLayout(Id layout) noexcept override {}
 
-        Id createButton(Id layout) noexcept override {}
+        Id createButton(Id layout, GUIButton& button) noexcept override {return 0;}
         void destroyButton(Id button) noexcept override {}
-        Id createText(Id layout) noexcept override {}
+        Id createText(Id layout, GUIText& text) noexcept override {return 0;}
         void destroyText(Id button) noexcept override {}
     };
 }

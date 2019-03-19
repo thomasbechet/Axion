@@ -4,6 +4,9 @@
 #include <Core/GUI/Widget/GUIButton.hpp>
 #include <Core/GUI/Widget/GUIText.hpp>
 
+#include <vector>
+#include <memory>
+
 namespace ax
 {
     class AXION_CORE_API GUILayout

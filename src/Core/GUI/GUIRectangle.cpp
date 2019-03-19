@@ -1,4 +1,4 @@
-#include <Core/GUI/Widget/GUIRectangle.hpp>
+#include <Core/GUI/GUIRectangle.hpp>
 
 using namespace ax;
 
