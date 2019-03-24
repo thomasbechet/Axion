@@ -22,7 +22,7 @@ void Transform2D::setTranslation(const Vector2f& translation) noexcept
     m_translation = translation;
     m_requestCompute = true;
 }
-Vector2f Transform2D::getTranslation() noexcept
+Vector2f Transform2D::getTranslation() const noexcept
 {
     return m_translation;
 }
@@ -31,7 +31,7 @@ void Transform2D::setRotation(float rotation) noexcept
     m_rotation = rotation;
     m_requestCompute = true;
 }
-float Transform2D::getRotation() noexcept
+float Transform2D::getRotation() const noexcept
 {
     return m_rotation;
 }
@@ -44,7 +44,7 @@ void Transform2D::setScale(const Vector2f& scale) noexcept
     m_scale = scale;
     m_requestCompute = true;
 }
-Vector2f Transform2D::getScale() noexcept
+Vector2f Transform2D::getScale() const noexcept
 {
     return m_scale;
 }

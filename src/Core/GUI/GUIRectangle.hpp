@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/GUI/Widget/GUIWidget.hpp>
+#include <Core/GUI/GUIWidget.hpp>
 
 #include <functional>
 

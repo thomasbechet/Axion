@@ -1,5 +1,10 @@
 #include <Core/GUI/GUILayout.hpp>
 
+#include <Core/Context/Engine.hpp>
+#include <Core/GUI/GUI.hpp>
+
+#include <algorithm>
+
 using namespace ax;
 
 GUILayout::GUILayout()
@@ -19,7 +24,7 @@ GUIButton& GUILayout::addButton() noexcept
 void GUILayout::removeButton(GUIButton& button) noexcept
 {
     m_buttons.erase(std::remove_if(m_buttons.begin(), m_buttons.end(), 
-        [](auto& o){return o->get() == &button}), m_buttons.end());
+        [&](auto& o){return (o.get() == &button);}), m_buttons.end());
 }
 GUIText& GUILayout::addText() noexcept
 {
@@ -29,5 +34,5 @@ GUIText& GUILayout::addText() noexcept
 void GUILayout::removeText(GUIText& text) noexcept
 {
     m_texts.erase(std::remove_if(m_texts.begin(), m_texts.end(), 
-    [](auto& o){return o->get() == &button}), m_texts.end());
+    [&](auto& o){return (o.get() == &text);}), m_texts.end());
 }

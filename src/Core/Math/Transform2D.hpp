@@ -23,12 +23,12 @@ namespace ax
 
         void setTranslation(float x = 0.0f, float y = 0.0f) noexcept;
         void setTranslation(const Vector2f& translation) noexcept;
-        Vector2f getTranslation() noexcept;
+        Vector2f getTranslation() const noexcept;
         void setRotation(float rotation) noexcept;
-        float getRotation() noexcept;
+        float getRotation() const noexcept;
         void setScale(float x = 1.0f, float y = 1.0f) noexcept;
         void setScale(const Vector2f& scale) noexcept;
-        Vector2f getScale() noexcept;
+        Vector2f getScale() const noexcept;
 
         void rotate(float rotation) noexcept;
         void translate(Vector2f vec) noexcept;

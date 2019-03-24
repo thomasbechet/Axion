@@ -2,11 +2,13 @@
 
 #include <Core/Export.hpp>
 #include <Core/Math/Transform2D.hpp>
-#include <Core/GUI/GUILayout.hpp>
-#include <Core/Utiltiy/NonCopyable.hpp>
+#include <Core/Utility/NonCopyable.hpp>
+#include <Core/Utility/Types.hpp>
 
 namespace ax
 {
+    class GUILayout;
+
     class AXION_CORE_API GUIWidget : public NonCopyable
     {
     public:

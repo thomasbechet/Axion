@@ -1,4 +1,4 @@
-#include <Core/GUI/Widget/GUIWidget.hpp>
+#include <Core/GUI/GUIWidget.hpp>
 
 using namespace ax;
 
@@ -9,11 +9,11 @@ GUIWidget::GUIWidget(GUILayout& layout) : m_layout(layout)
 
 void GUIWidget::setPosition(int x, int y) noexcept
 {
-    setTranslation(Vector2i(x, y));
+    m_transform.setTranslation((float)x, (float)y);
 }
 void GUIWidget::setPosition(Vector2i position) noexcept
 {
-    m_transform.setTranslation(position);
+    setPosition(position.x, position.y);
 }
 Vector2i GUIWidget::getPosition() const noexcept
 {
