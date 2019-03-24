@@ -30,6 +30,7 @@ Window* Engine::m_window = nullptr;
 Input* Engine::m_input = nullptr;
 AssetManager* Engine::m_assets = nullptr;
 GUI* Engine::m_gui = nullptr;
+GUIRenderer* Engine::m_guirenderer = nullptr;
 
 std::map<std::string, LibraryLoader> Engine::m_libraryHolder;
 
@@ -98,20 +99,23 @@ void Engine::initialize() noexcept
     }
     else m_input = new NullInput();
 
-    //GUI
-    std::string typeGUI = Engine::context().config().getString("GUI", "type", "none");
-    typedef GUI* (*CreateGUI)();
+    //GUIRenderer
+    std::string typeGUIRenderer = Engine::context().config().getString("GUIRenderer", "type", "none");
+    typedef GUIRenderer* (*CreateGUIRenderer)();
 
-    if(typeGUI == "opengl")
+    if(typeGUIRenderer == "opengl")
     {
         if(!m_libraryHolder["opengl"].isOpen() && !m_libraryHolder["opengl"].open("axion-opengl"));
             Engine::interrupt("Failed to load dynamic library <axion-opengl>");
-        CreateGUI createGUI;
-        if(!m_libraryHolder["opengl"].getFunction<CreateGUI>(createGUI, "create_gui"))
-            Engine::interrupt("Failed to access function <create_gui>");
-        m_gui = createGUI();    
+        CreateGUIRenderer createGUIRenderer;
+        if(!m_libraryHolder["opengl"].getFunction<CreateGUI>(createGUIRenderer, "create_gui_renderer"))
+            Engine::interrupt("Failed to access function <create_gui_renderer>");
+        m_guirenderer = createGUIRenderer();    
     }
-    else m_gui = new NullGUI();
+    else m_guirenderer = new NullGUIRenderer();
+
+    //GUI
+    m_gui = new GUI();
 
     //ThreadPool
     m_threadPool = new ThreadPool();
@@ -125,6 +129,7 @@ void Engine::initialize() noexcept
     Engine::window().initialize();
     Engine::input().initialize();
     Engine::renderer().initialize();
+    Engine::guirenderer().initialize();
     Engine::gui().initialize();
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -156,6 +161,7 @@ void Engine::terminate() noexcept
 
     //Terminates engine
     Engine::gui().terminate();
+    Engine::guirenderer().terminate();
     Engine::renderer().terminate();
     Engine::input().terminate();
     Engine::window().terminate();
@@ -165,6 +171,7 @@ void Engine::terminate() noexcept
     delete m_assets;
     delete m_threadPool; //ThreadPool depends on Logger
     delete m_gui;
+    delete m_guirenderer;
     delete m_renderer;
     delete m_input;
     delete m_window;
@@ -216,4 +223,8 @@ AssetManager& Engine::assets() noexcept
 GUI& Engine::gui() noexcept
 {
     return *m_gui;
+}
+GUIRenderer& Engine::guirenderer() noexcept
+{
+    return *m_guirenderer;
 }
