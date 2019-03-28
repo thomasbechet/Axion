@@ -1,8 +1,5 @@
 #pragma once
 
-//////////////
-//HEADERS
-//////////////
 #include <Core/Utility/Color.hpp>
 #include <OpenGL/Export.hpp>
 

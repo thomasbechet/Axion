@@ -1,8 +1,5 @@
 #pragma once
 
-///////////////
-//HEADERS
-///////////////
 #include <Core/Export.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Renderer/RendererException.hpp>

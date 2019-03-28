@@ -5,10 +5,10 @@
 
 namespace ax
 {
-    class AXION_CORE_API GUIText : public GUIWidget
+    class AXION_CORE_API GUILabel : public GUIWidget
     {
     public:
-        GUIText(GUILayout& layout);
-        ~GUIText();
+        GUILabel(GUILayout& layout);
+        ~GUILabel();
     };
 }

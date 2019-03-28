@@ -1,8 +1,5 @@
 #pragma once
 
-///////////////
-//HEADERS
-///////////////
 #include <Core/Export.hpp>
 #include <Core/Asset/Package.hpp>
 #include <Core/Asset/AssetReference.hpp>

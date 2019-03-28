@@ -1,8 +1,5 @@
 #pragma once 
 
-/////////////////
-//HEADERS
-/////////////////
 #include <vector>
 #include <memory>
 #include <Core/Export.hpp>

@@ -1,16 +1,12 @@
 #pragma once
 
-//////////////
-//HEADERS
-//////////////
 #include <GLFW/Export.hpp>
 #include <Core/Window/Window.hpp>
 
-//Forward declaration
-class GLFWwindow;
-
 namespace ax
 {
+    class GLFWwindow;
+
     class AXION_GLFW_API WindowGLFW : public Window
     {
     public:

@@ -1,8 +1,5 @@
 #pragma once
 
-//////////////
-//HEADERS
-//////////////
 #include <GLFW/Export.hpp>
 #include <GLFW/Input/InputGLFW.hpp>
 

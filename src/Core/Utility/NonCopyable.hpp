@@ -1,8 +1,5 @@
 #pragma once
 
-///////////////////
-//HEADERS
-///////////////////
 #include <Core/Export.hpp>
 
 class AXION_CORE_API NonCopyable

@@ -1,8 +1,5 @@
 #pragma once
 
-/////////////////////
-//HEADERS
-/////////////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/LibraryLoader.hpp>
 
@@ -45,7 +42,6 @@ namespace ax
         static Input& input() noexcept;
         static AssetManager& assets() noexcept;
         static GUI& gui() noexcept;
-        static GUIRenderer& guirenderer() noexcept;
 
         static const std::string EngineDirectory; //   Game/Engine/
         static const std::string GameDataDirectory; // Game/GameData/
@@ -62,7 +58,6 @@ namespace ax
         static Input* m_input;
         static AssetManager* m_assets;
         static GUI* m_gui;
-        static GUIRenderer* m_guirenderer;
 
         static std::map<std::string, LibraryLoader> m_libraryHolder;
     };

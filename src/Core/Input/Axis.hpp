@@ -1,8 +1,5 @@
 #pragma once
 
-/////////////
-//HEADERS
-/////////////
 #include <Core/Export.hpp>
 #include <Core/Input/Mouse.hpp>
 #include <Core/Input/Gamepad.hpp>

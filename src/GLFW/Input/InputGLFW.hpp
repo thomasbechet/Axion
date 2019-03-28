@@ -1,18 +1,14 @@
 #pragma once
 
-///////////////
-//HEADERS
-///////////////
 #include <GLFW/Export.hpp>
 #include <Core/Input/Input.hpp>
 
 #include <memory>
 
-//Forward declaration
-class GLFWwindow;
-
 namespace ax
 {
+    class GLFWwindow;
+
     class AXION_GLFW_API InputGLFW : public Input
     {
     public:

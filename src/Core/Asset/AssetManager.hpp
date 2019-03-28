@@ -1,8 +1,5 @@
 #pragma once
 
-///////////////
-//HEADERS
-///////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Math/Geometry/Vertex.hpp>

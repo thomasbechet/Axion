@@ -1,8 +1,5 @@
 #pragma once
 
-////////////////
-//HEADERS
-////////////////
 #include <unordered_map>
 #include <vector>
 #include <array>

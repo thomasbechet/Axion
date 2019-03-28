@@ -1,8 +1,5 @@
 #pragma once
 
-//////////////
-//HEADERS
-//////////////
 #include <Core/Export.hpp>
 #include <Core/World/Entity/Entity.hpp>
 #include <Core/World/Component/Component.hpp>

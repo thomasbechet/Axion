@@ -1,8 +1,5 @@
 #pragma once
 
-/////////////////////////
-//Headers
-/////////////////////////
 #include <Core/Export.hpp>
 #include <Core/Math/Vector.hpp>
 #include <Core/Math/Matrix.hpp>

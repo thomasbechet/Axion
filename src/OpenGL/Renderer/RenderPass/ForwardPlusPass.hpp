@@ -1,8 +1,5 @@
 #pragma once
 
-//////////////
-//HEADERS
-//////////////
 #include <OpenGL/Export.hpp>
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>

@@ -1,8 +1,5 @@
 #pragma once
 
-////////////////////////
-//HEADERS
-////////////////////////
 #include <Core/Export.hpp>
 #include <Core/Context/GameMode.hpp>
 #include <Core/Context/GameState.hpp>

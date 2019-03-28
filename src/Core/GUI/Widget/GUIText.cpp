@@ -1,12 +1,12 @@
-#include <Core/GUI/Widget/GUIText.hpp>
+#include <Core/GUI/Widget/GUILabel.hpp>
 
 using namespace ax;
 
-GUIText::GUIText(GUILayout& layout)
+GUILabel::GUILabel(GUILayout& layout)
 {
     m_handle = Engine::gui().createButton(*this);
 }
-GUIText::~GUIText()
+GUILabel::~GUILabel()
 {
     Engine::gui().destroyButton(m_handle);
 }

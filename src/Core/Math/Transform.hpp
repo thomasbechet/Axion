@@ -1,8 +1,5 @@
 #pragma once
 
-/////////////
-//HEADERS
-/////////////
 #include <Core/Export.hpp>
 #include <Core/Math/Vector.hpp>
 #include <Core/Math/Quaternion.hpp>

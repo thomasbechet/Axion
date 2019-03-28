@@ -1,8 +1,5 @@
 #pragma once
 
-/////////////////
-//HEADERS
-/////////////////
 #include <Core/Export.hpp>
 #include <Core/System/System.hpp>
 #include <Core/Input/Button.hpp>

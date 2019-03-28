@@ -1,8 +1,5 @@
 #pragma once
 
-////////////////
-//HEADERS
-////////////////
 #include <Core/Export.hpp>
 #include <Core/Math/Geometry/Sphere.hpp>
 #include <Core/Math/Geometry/Vertex.hpp>

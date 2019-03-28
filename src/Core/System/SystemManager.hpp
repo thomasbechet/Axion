@@ -1,8 +1,5 @@
 #pragma once
 
-/////////////////
-//HEADERS
-/////////////////
 #include <Core/Export.hpp>
 #include <Core/Context/Engine.hpp>
 #include <Core/System/System.hpp>

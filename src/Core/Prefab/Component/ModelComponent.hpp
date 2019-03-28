@@ -1,8 +1,5 @@
 #pragma once
 
-///////////////
-//HEADERS
-///////////////
 #include <Core/Export.hpp>
 #include <Core/World/Component/Component.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>

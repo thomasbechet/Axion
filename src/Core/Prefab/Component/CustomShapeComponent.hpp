@@ -1,8 +1,5 @@
 #pragma once
 
-//////////////
-//HEADERS
-//////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Math/Geometry/Shape.hpp>

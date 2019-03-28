@@ -1,11 +1,8 @@
 #pragma once
 
-//////////////
-//HEADERS
-//////////////
-#include <string>
 #include <Core/Export.hpp>
 
+#include <string>
 #include <iostream>
 
 namespace ax

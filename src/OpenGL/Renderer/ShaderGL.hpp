@@ -1,8 +1,5 @@
 #pragma once
 
-////////////
-//HEADERS
-////////////
 #include <OpenGL/Export.hpp>
 #include <OpenGL/Renderer/Shader/ShaderGLSL.hpp>
 

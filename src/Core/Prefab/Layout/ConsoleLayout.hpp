@@ -2,7 +2,7 @@
 
 #include <Core/Export.hpp>
 #include <Core/GUI/GUILayout.hpp>
-#include <Core/GUI/Widget/GUIText.hpp>
+#include <Core/GUI/Widget/GUILabel.hpp>
 
 namespace ax
 {
@@ -16,6 +16,6 @@ namespace ax
         void onUpdate() override;
 
     private:
-        GUIText& m_textVersion;
+        GUILabel& m_labelVersion;
     };
 }

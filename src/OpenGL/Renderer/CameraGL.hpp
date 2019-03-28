@@ -1,8 +1,5 @@
 #pragma once
 
-////////////
-//HEADERS
-////////////
 #include <OpenGL/Export.hpp>
 #include <Core/Math/Transform.hpp>
 #include <Core/Math/Matrix.hpp>

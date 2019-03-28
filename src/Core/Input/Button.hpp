@@ -1,8 +1,5 @@
 #pragma once
 
-//////////////
-//HEADERS
-//////////////
 #include <Core/Export.hpp>
 #include <Core/Input/InputType.hpp>
 #include <Core/Input/Keyboard.hpp>

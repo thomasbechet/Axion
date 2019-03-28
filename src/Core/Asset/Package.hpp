@@ -1,8 +1,5 @@
 #pragma once
 
-/////////////
-//HEADERS
-/////////////
 #include <Core/Export.hpp>
 #include <Core/Asset/Texture.hpp>
 #include <Core/Asset/Mesh.hpp>

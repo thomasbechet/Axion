@@ -1,8 +1,5 @@
 #pragma once
 
-////////////
-//HEADERS
-////////////
 #include <Core/Export.hpp>
 #include <Core/Utility/Color.hpp>
 #include <Core/Asset/Texture.hpp>
