@@ -6,10 +6,9 @@
 #include <Core/Asset/Material.hpp>
 #include <Core/Asset/Texture.hpp>
 #include <Core/Renderer/RenderMode.hpp>
-#include <Core/Renderer/Parameter/RendererCameraParameters.hpp>
-#include <Core/Renderer/Parameter/RendererMaterialParameters.hpp>
-#include <Core/Renderer/Parameter/Light/RendererPointLightParameters.hpp>
-#include <Core/Renderer/Parameter/Light/RendererDirectionalLightParameters.hpp>
+#include <Core/Renderer/Asset/Parameter/RendererMaterialParameters.hpp>
+#include <Core/Renderer/Scene/Parameter/RendererCameraParameters.hpp>
+#include <Core/Renderer/Scene/Parameter/Light/RendererDirectionalLightParameters.hpp>
 
 #include <string>
 
@@ -66,6 +65,9 @@ namespace ax
         virtual void destroyCamera(Id id) = 0;
         virtual void setCameraTransform(Id id, Transform* transform) = 0;
         virtual void setCameraParameters(Id id, const RendererCameraParameters& settings) = 0;
+
+        virtual RendererCamera& createCamera() = 0;
+
         //Staticmesh
         virtual Id createStaticmesh() = 0;
         virtual void destroyStaticmesh(Id id) = 0;
@@ -74,26 +76,19 @@ namespace ax
         virtual void setStaticmeshMesh(Id id, Id mesh) = 0;
 
         //PointLight
-        virtual Id createPointLight() = 0;
-        virtual void destroyPointLight(Id id) = 0;
-        virtual void setPointLightTransform(Id id, Transform* transform) = 0;
-        virtual void setPointLightParameters(Id id, const RendererPointLightParameters& parameters) = 0;
+        virtual RendererPointLight& createPointLight() = 0;
+        virtual void destroyPointLight(RendererPointLight& pointlight) = 0;
+
         //DirectionalLight
-        virtual Id createDirectionalLight() = 0;
-        virtual void destroyDirectionalLight(Id id) = 0;
-        virtual void setDirectionalLightTransform(Id id, Transform* transform) = 0;
-        virtual void setDirectionalLightParameters(Id id, const RendererDirectionalLightParameters& parameters) = 0;
+        virtual RendererDirectionalLight& createDirectionalLight() = 0;
+        virtual void destroyDirectionalLight(RendererDirectionalLight& directionallight) = 0;
 
         //GUI////////////////////////////////////////////////////////////////////////////////////////////////
 
-        virtual Id createGUILayout() noexcept = 0;
-        virtual void destroyGUILayout(Id layout) noexcept = 0;
+        virtual RendererGUILayout& createGUILayout() = 0;
+        virtual void destroyGUILayout(RendererGUILayout& layout) = 0;
 
-        virtual Id createGUIRectangle(Id layout) noexcept = 0;
-        virtual void destroyGUIRectangle(Id layout, Id id) noexcept = 0; 
-
-        virtual Id createGUILabel(Id layout) noexcept = 0;
-        virtual void destroyGUILabel(Id layout, Id id) noexcept = 0;
-        virtual void setGUILabelText(Id layout, Id id, const std::string& text) noexcept = 0;
+        virtual RendererGUIButton& createGUIButton() = 0;
+        virtual void destroyGUIButton(RendererGUIButton& button) = 0;
     };
 }
