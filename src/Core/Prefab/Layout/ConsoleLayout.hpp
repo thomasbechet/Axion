@@ -14,8 +14,5 @@ namespace ax
         void onStart() override;
         void onStop() override;
         void onUpdate() override;
-
-    private:
-        GUILabel& m_labelVersion;
     };
 }

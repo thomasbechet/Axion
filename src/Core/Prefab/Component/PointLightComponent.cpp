@@ -10,7 +10,7 @@ PointLightComponent::PointLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createPointLight();
-    Engine::renderer().setPointLightTransform(m_handle, &transform);
+    m_handle->setTransform(&transform);
 }
 PointLightComponent::~PointLightComponent()
 {
@@ -20,7 +20,7 @@ PointLightComponent::~PointLightComponent()
 void PointLightComponent::setRadius(float radius) noexcept
 {
     m_parameters.radius = radius;
-    Engine::renderer().setPointLightParameters(m_handle, m_parameters);
+    m_handle->setParameters(m_parameters);
 }
 float PointLightComponent::getRadius() const noexcept
 {
@@ -30,7 +30,7 @@ float PointLightComponent::getRadius() const noexcept
 void PointLightComponent::setColor(Color3 color) noexcept
 {
     m_parameters.color = color;
-    Engine::renderer().setPointLightParameters(m_handle, m_parameters);
+    m_handle->setParameters(m_parameters);
 }
 Color3 PointLightComponent::getColor() const noexcept
 {

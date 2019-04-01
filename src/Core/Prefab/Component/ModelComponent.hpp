@@ -5,6 +5,7 @@
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Asset/AssetReference.hpp>
 #include <Core/Asset/Model.hpp>
+#include <Core/Renderer/Scene/RendererStaticmesh.hpp>
 
 #include <vector>
 
@@ -30,6 +31,6 @@ namespace ax
         TransformComponent& transform;
 
     private:
-        std::vector<std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>> m_elements;
+        std::vector<std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>> m_elements;
     };
 }

@@ -136,7 +136,7 @@ const std::vector<Vertex>& Mesh::getVertices() const noexcept
     return m_vertices;
 }
 
-Id Mesh::getHandle() const noexcept
+RendererMeshHandle Mesh::getHandle() const noexcept
 {
     return m_handle;
 }

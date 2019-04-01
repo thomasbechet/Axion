@@ -6,6 +6,7 @@
 #include <Core/Asset/Shader.hpp>
 #include <Core/Asset/AssetReference.hpp>
 #include <Core/Asset/AssetHolder.hpp>
+#include <Core/Renderer/Asset/RendererMaterial.hpp>
 
 #include <memory>
 
@@ -54,7 +55,7 @@ namespace ax
 
         AssetReference<Shader> getShader() const noexcept;
 
-        Id getHandle() const noexcept;
+        RendererMaterialHandle getHandle() const noexcept;
 
     private:
         void update() noexcept;
@@ -75,6 +76,6 @@ namespace ax
 
         AssetReference<Shader> m_shader;
 
-        Id m_handle;
+        RendererMaterialHandle m_handle;
     };
 }

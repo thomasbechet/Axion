@@ -2,8 +2,9 @@
 
 #include <Core/Export.hpp>
 #include <Core/Math/Vector.hpp>
-#include <Core/Utility/Types.hpp>
 #include <Core/Utility/Path.hpp>
+#include <Core/Utility/Types.hpp>
+#include <Core/Renderer/Asset/RendererTexture.hpp>
 
 #include <unordered_map>
 #include <memory>
@@ -35,7 +36,7 @@ namespace ax
         Vector2u getSize() const noexcept;
         TextureFormat getFormat() const noexcept;
 
-        Id getHandle() const noexcept;
+        RendererTextureHandle getHandle() const noexcept;
 
     private:
         std::string m_name;
@@ -46,6 +47,6 @@ namespace ax
         Vector2u m_size = Vector2u(0, 0);
         Byte* m_data = nullptr;
 
-        Id m_handle;
+        RendererTextureHandle m_handle;
     };
 }

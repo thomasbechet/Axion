@@ -5,10 +5,10 @@
 
 #include <memory>
 
+class GLFWwindow;
+
 namespace ax
 {
-    class GLFWwindow;
-
     class AXION_GLFW_API InputGLFW : public Input
     {
     public:

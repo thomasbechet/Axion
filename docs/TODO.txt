@@ -3,3 +3,5 @@ TODO:
 -hdr
 -TBN full implementation
 -Asset asynchron
+
+-CustomShapeComponent

@@ -10,7 +10,7 @@ CameraComponent::CameraComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createCamera();
-    Engine::renderer().setCameraTransform(m_handle, &transform);
+    m_handle->setTransform(&transform);
     updateRendererParameters();
 }
 CameraComponent::~CameraComponent()
@@ -20,11 +20,15 @@ CameraComponent::~CameraComponent()
 
 void CameraComponent::bindDefaultViewport() noexcept
 {
-    Engine::renderer().setViewportCamera(Renderer::DefaultViewport, m_handle);
+    RendererViewportHandle viewport = Engine::renderer().getDefaultViewport();
+    if(Engine::renderer().getDefaultViewport()) 
+    {
+        viewport->setCamera(m_handle);
+    }
 }
-void CameraComponent::bindViewport(Id viewport) noexcept
+void CameraComponent::bindViewport(RendererViewportHandle viewport) noexcept
 {   
-    Engine::renderer().setViewportCamera(viewport, m_handle);
+    viewport->setCamera(m_handle);
 }
 
 void CameraComponent::setFov(float fov) noexcept
@@ -63,5 +67,5 @@ float CameraComponent::getNearPlane() const noexcept
 
 void CameraComponent::updateRendererParameters() noexcept
 {
-    Engine::renderer().setCameraParameters(m_handle, m_parameters);
+    m_handle->setParameters(m_parameters);
 }

@@ -6,9 +6,15 @@
 #include <Core/Asset/Material.hpp>
 #include <Core/Asset/Texture.hpp>
 #include <Core/Renderer/RenderMode.hpp>
-#include <Core/Renderer/Asset/Parameter/RendererMaterialParameters.hpp>
-#include <Core/Renderer/Scene/Parameter/RendererCameraParameters.hpp>
-#include <Core/Renderer/Scene/Parameter/Light/RendererDirectionalLightParameters.hpp>
+#include <Core/Renderer/Asset/RendererMaterial.hpp>
+#include <Core/Renderer/Asset/RendererMesh.hpp>
+#include <Core/Renderer/Asset/RendererShader.hpp>
+#include <Core/Renderer/Asset/RendererTexture.hpp>
+#include <Core/Renderer/Scene/RendererCamera.hpp>
+#include <Core/Renderer/Scene/RendererDirectionalLight.hpp>
+#include <Core/Renderer/Scene/RendererPointLight.hpp>
+#include <Core/Renderer/Scene/RendererStaticmesh.hpp>
+#include <Core/Renderer/GUI/RendererViewport.hpp>
 
 #include <string>
 
@@ -19,9 +25,6 @@ namespace ax
     class AXION_CORE_API Renderer
     {
     public:
-        static constexpr const Id DefaultViewport = 1;
-
-    public:
         virtual ~Renderer() = default;
 
         virtual void initialize() noexcept = 0;
@@ -31,57 +34,60 @@ namespace ax
         //ASSET//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Mesh
-        virtual RendererMeshPointer createMesh(const std::vector<Vertex>& vertices) = 0;
-        virtual void destroyMesh(RendererMesh& mesh) = 0;
+        virtual RendererMeshHandle createMesh(const std::vector<Vertex>& vertices) = 0;
+        virtual void destroyMesh(RendererMeshHandle& mesh) = 0;
 
         //Texture
-        virtual RendererTexturePointer createTexture(Vector2u size, TextureFormat format, const Byte* data) = 0;
-        virtual void destroyTexture(RendererTexture& texture) = 0;
+        virtual RendererTextureHandle createTexture(Vector2u size, TextureFormat format, const Byte* data) = 0;
+        virtual void destroyTexture(RendererTextureHandle& texture) = 0;
 
         //Shader
-        virtual RendererShaderPointer createShader(
-            const std::string* vertex = nullptr,
-            const std::string* fragment = nullptr
-        ) = 0;
-        virtual void destroyShader(Id id) = 0;
-
-        virtual RendererShader 
+        virtual RendererShaderHandle createShader(const std::string* vertex = nullptr, const std::string* fragment = nullptr) = 0;
+        virtual void destroyShader(RendererShaderHandle& shader) = 0;
 
         //Material
-        virtual Id createMaterial(const RendererMaterialParameters& settings) = 0;
-        virtual void destroyMaterial(Id id) = 0;
-        virtual void updateMaterial(Id id, const RendererMaterialParameters& settings) = 0;
+        virtual RendererMaterialHandle createMaterial(const RendererMaterialParameters& settings) = 0;
+        virtual void destroyMaterial(RendererMaterialHandle& material) = 0;
 
         //SCENE///////////////////////////////////////////////////////////////////////////////////////////////
 
         //Camera
-        virtual RendererCameraPointer createCamera() = 0;
-        virtual void destroyCamera(RendererCameraPointer& camera) = 0;
+        virtual RendererCameraHandle createCamera() = 0;
+        virtual void destroyCamera(RendererCameraHandle& camera) = 0;
 
         //Staticmesh
-        virtual RendererStaticmeshPointer createStaticmesh() = 0;
-        virtual void destroyStaticmesh(RendererStaticmeshPointer& staticmesh) = 0;
+        virtual RendererStaticmeshHandle createStaticmesh() = 0;
+        virtual void destroyStaticmesh(RendererStaticmeshHandle& staticmesh) = 0;
 
         //PointLight
-        virtual RendererPointLightPointer createPointLight() = 0;
-        virtual void destroyPointLight(RendererPointLightPointer& pointlight) = 0;
+        virtual RendererPointLightHandle createPointLight() = 0;
+        virtual void destroyPointLight(RendererPointLightHandle& pointlight) = 0;
 
         //DirectionalLight
-        virtual RendererDirectionalLightPointer createDirectionalLight() = 0;
-        virtual void destroyDirectionalLight(RendererDirectionalLightPointer& directionallight) = 0;
+        virtual RendererDirectionalLightHandle createDirectionalLight() = 0;
+        virtual void destroyDirectionalLight(RendererDirectionalLightHandle& directionallight) = 0;
 
         //GUI////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Viewport
-        virtual RendererViewport createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) = 0;
+        virtual RendererViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) = 0;
         virtual void destroyViewport(RendererViewport& viewport) = 0;
 
         //Layout
-        virtual RendererGUILayout& createGUILayout() = 0;
-        virtual void destroyGUILayout(RendererGUILayout& layout) = 0;
+        //virtual RendererGUILayout& createGUILayout() = 0;
+        //virtual void destroyGUILayout(RendererGUILayout& layout) = 0;
 
         //GUIButton
-        virtual RendererGUIButton& createGUIButton() = 0;
-        virtual void destroyGUIButton(RendererGUIButton& button) = 0;
+        //virtual RendererGUIButton& createGUIButton() = 0;
+        //virtual void destroyGUIButton(RendererGUIButton& button) = 0;
+    
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public:
+        void setDefaultViewport(RendererViewportHandle viewport) noexcept;
+        RendererViewportHandle getDefaultViewport() const noexcept;
+
+    private:
+        RendererViewportHandle m_defaultViewport = nullptr; 
     };
 }

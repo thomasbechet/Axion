@@ -21,7 +21,7 @@ void ModelComponent::setModel(std::nullptr_t) noexcept
 {
     for(auto& reference : m_elements)
     {
-        Engine::renderer().destroyStaticmesh(std::get<Id>(reference));
+        Engine::renderer().destroyStaticmesh(std::get<RendererStaticmeshHandle>(reference));
         std::get<AssetReference<Mesh>>(reference).reset();
         std::get<AssetReference<Material>>(reference).reset();
     }
@@ -43,13 +43,13 @@ void ModelComponent::setModel(AssetReference<Model> model) noexcept
 
     for(size_t it = 0; it < meshes.size(); it++)
     {
-        Id id = Engine::renderer().createStaticmesh();
-        Engine::renderer().setStaticmeshTransform(id, &transform);
-        Engine::renderer().setStaticmeshMesh(id, meshes[it]->getHandle());
-        Engine::renderer().setStaticmeshMaterial(id, materials[it]->getHandle());
+        RendererStaticmeshHandle staticmesh = Engine::renderer().createStaticmesh();
+        staticmesh->setTransform(&transform);
+        staticmesh->setMesh(meshes[it]->getHandle());
+        staticmesh->setMaterial(materials[it]->getHandle());
 
-        m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>(
-            meshes[it], materials[it], id
+        m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>(
+            meshes[it], materials[it], staticmesh
         ));
     }
 }
@@ -59,23 +59,23 @@ void ModelComponent::setModel(AssetReference<Mesh> mesh) noexcept
 
     AssetReference<Material> material = Engine::assets().material(Material::Default);
 
-    Id id = Engine::renderer().createStaticmesh();
-    Engine::renderer().setStaticmeshTransform(id, &transform);
-    Engine::renderer().setStaticmeshMesh(id, mesh->getHandle());
-    Engine::renderer().setStaticmeshMaterial(id, material->getHandle());
+    RendererStaticmeshHandle staticmesh = Engine::renderer().createStaticmesh();
+    staticmesh->setTransform(&transform);
+    staticmesh->setMesh(mesh->getHandle());
+    staticmesh->setMaterial(material->getHandle());
 
-    m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>(
-        mesh, material, id
+    m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>(
+        mesh, material, staticmesh
     ));
 }
 
 void ModelComponent::setMaterial(std::nullptr_t ptr, Id component) noexcept
 {
-    std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>& reference = m_elements.at(component);
+    std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>& reference = m_elements.at(component);
 
     std::get<AssetReference<Material>>(reference).reset();
 
-    Engine::renderer().setStaticmeshMaterial(std::get<Id>(reference), 0);
+    std::get<RendererStaticmeshHandle>(reference)->setMaterial(nullptr);
 }
 void ModelComponent::setMaterial(std::string name, Id component) noexcept
 {
@@ -85,12 +85,12 @@ void ModelComponent::setMaterial(AssetReference<Material> material, Id component
 {
     if(material)
     {
-        std::tuple<AssetReference<Mesh>, AssetReference<Material>, Id>& reference = m_elements.at(component);
+        std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>& reference = m_elements.at(component);
 
         std::get<AssetReference<Material>>(reference).reset();
         std::get<AssetReference<Material>>(reference) = material;
 
-        Engine::renderer().setStaticmeshMaterial(std::get<Id>(reference), std::get<AssetReference<Material>>(reference)->getHandle());
+        std::get<RendererStaticmeshHandle>(reference)->setMaterial(std::get<AssetReference<Material>>(reference)->getHandle());
     }
     else
     {

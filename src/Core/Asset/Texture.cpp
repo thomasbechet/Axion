@@ -126,7 +126,7 @@ TextureFormat Texture::getFormat() const noexcept
     return m_format;
 }
 
-Id Texture::getHandle() const noexcept
+RendererTextureHandle Texture::getHandle() const noexcept
 {
     return m_handle;
 }

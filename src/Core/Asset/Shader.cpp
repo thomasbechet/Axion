@@ -73,7 +73,7 @@ bool Shader::loadFromJson(const std::string& json) noexcept
         if(!fragmentFile.is_open()) return false;
         std::string fragmentBuffer{std::istreambuf_iterator<char>(fragmentFile), std::istreambuf_iterator<char>()};
 
-        Id handle = Engine::renderer().createShader(&vertexBuffer, &fragmentBuffer);
+        RendererShaderHandle handle = Engine::renderer().createShader(&vertexBuffer, &fragmentBuffer);
         
         m_vertex = vertexBuffer;
         m_fragment = fragmentBuffer;
@@ -131,7 +131,7 @@ std::string Shader::getFragmentCode() const noexcept
     return m_fragment;
 }
 
-Id Shader::getHandle() const noexcept
+RendererShaderHandle Shader::getHandle() const noexcept
 {
     return m_handle;
 }

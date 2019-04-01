@@ -3,7 +3,8 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Color.hpp>
-#include <Core/Renderer/Light/DirectionalLightParameters.hpp>
+#include <Core/Renderer/Scene/Parameter/Light/RendererDirectionalLightParameters.hpp>
+#include <Core/Renderer/Scene/RendererDirectionalLight.hpp>
 #include <Core/World/Component/Component.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 
@@ -23,7 +24,7 @@ namespace ax
         TransformComponent& transform;
     
     private:
-        Id m_handle;
-        DirectionalLightParameters m_parameters;
+        RendererDirectionalLightHandle m_handle;
+        RendererDirectionalLightParameters m_parameters;
     };
 }

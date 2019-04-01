@@ -2,10 +2,10 @@
 
 #include <Core/Export.hpp>
 #include <Core/Math/Vector.hpp>
-#include <Core/Utility/Types.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Math/Geometry/Vertex.hpp>
 #include <Core/Asset/AssetReference.hpp>
+#include <Core/Renderer/Asset/RendererMesh.hpp>
 
 #include <string>
 #include <unordered_map>
@@ -31,7 +31,7 @@ namespace ax
 
         const std::vector<Vertex>& getVertices() const noexcept;
 
-        Id getHandle() const noexcept;
+        RendererMeshHandle getHandle() const noexcept;
 
     private:
         std::string m_name;
@@ -40,6 +40,6 @@ namespace ax
 
         std::vector<Vertex> m_vertices;
         
-        Id m_handle;
+        RendererMeshHandle m_handle;
     };
 }

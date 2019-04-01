@@ -4,7 +4,6 @@
 #include <Core/Asset/AssetManager.hpp>
 #include <Core/Logger/Logger.hpp>
 #include <Core/Renderer/Renderer.hpp>
-#include <Core/Renderer/RendererMaterialParameters.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
 using namespace ax;
@@ -175,7 +174,7 @@ AssetReference<Shader> Material::getShader() const noexcept
     return m_shader;
 }
 
-Id Material::getHandle() const noexcept
+RendererMaterialHandle Material::getHandle() const noexcept
 {
     return m_handle;
 }
@@ -207,7 +206,7 @@ void Material::update() noexcept
 
         try
         {
-            Engine::renderer().updateMaterial(m_handle, settings);
+            m_handle->update(settings);
         }
         catch(const RendererException& e)
         {

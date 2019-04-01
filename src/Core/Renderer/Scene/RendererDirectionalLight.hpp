@@ -6,12 +6,19 @@
 
 namespace ax
 {
-    using RendererDirectionalLightPointer = RendererDirectionalLight*;
-
     class AXION_CORE_API RendererDirectionalLight
     {
     public:
         virtual void setTransform(Transform* transform) = 0;
         virtual void setParameters(const RendererDirectionalLightParameters& parameters) = 0;
     };
+
+    class AXION_CORE_API NullRendererDirectionalLight : public RendererDirectionalLight
+    {
+    public:
+        void setTransform(Transform* transform) override {}
+        void setParameters(const RendererDirectionalLightParameters& parameters) override {}
+    };
+
+    using RendererDirectionalLightHandle = RendererDirectionalLight*;
 }

@@ -2,7 +2,7 @@
 
 #include <Core/Export.hpp>
 #include <Core/GUI/Widget/GUIButton.hpp>
-#include <Core/GUI/Widget/GUIText.hpp>
+#include <Core/GUI/Widget/GUILabel.hpp>
 
 #include <vector>
 #include <memory>
@@ -29,12 +29,12 @@ namespace ax
     protected:
         GUIButton& addButton() noexcept;
         void removeButton(GUIButton& button) noexcept;
-        GUIText& addText() noexcept;
-        void removeText(GUIText& text) noexcept;
+        GUILabel& addLabel() noexcept;
+        void removeLabel(GUILabel& label) noexcept;
 
     private:
         std::vector<std::unique_ptr<GUIButton>> m_buttons;
-        std::vector<std::unique_ptr<GUIText>> m_texts;
+        std::vector<std::unique_ptr<GUILabel>> m_labels;
         bool m_hasFocus = false;
         Id m_handle;
     };

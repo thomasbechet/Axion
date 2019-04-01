@@ -3,10 +3,10 @@
 #include <GLFW/Export.hpp>
 #include <Core/Window/Window.hpp>
 
+class GLFWwindow;
+
 namespace ax
 {
-    class GLFWwindow;
-
     class AXION_GLFW_API WindowGLFW : public Window
     {
     public:

@@ -8,64 +8,64 @@ namespace ax
 {
     class AXION_CORE_API NullRenderer : public Renderer
     {
-    protected:
+    public:
         void initialize() noexcept override {}
         void terminate() noexcept override {}
         void update(double alpha) noexcept override {}
 
-    public:
-        //Viewport
-        Id createViewport(const Vector2f& position, const Vector2f& size, RenderMode rendermode = RenderMode::Default) override {return 0;}
-        void destroyViewport(Id id) override {}
-        void setViewportRendermode(Id id, RenderMode mode) override {}
-        void setViewportCamera(Id viewport, Id camera) override {}
-        void setViewportResolution(Id id, const Vector2u& resolution) override {}
-        void setViewportRectangle(Id viewport, const Vector2f& position, const Vector2f& size) override {}
+        //ASSET//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Mesh
-        Id createMesh(const std::vector<Vertex>& vertices) override {return 0;}
-        void updateMesh(Id id, const std::vector<Vertex>& vertices) override {}
-        void destroyMesh(Id id) override {}
-        //Texture
-        Id createTexture(
-            Vector2u size,
-            TextureFormat format,
-            const Byte* data
-        ) override {return 0;}
-        void destroyTexture(Id id) override {}
-        //Shader
-        Id createShader(
-            const std::string* vertex = nullptr,
-            const std::string* fragment = nullptr
-        ) override {return 0;}
-        void destroyShader(Id id) override {}
-        //Material
-        Id createMaterial(const RendererMaterialParameters& settings) override {return 0;}
-        void destroyMaterial(Id id) override {}
-        void updateMaterial(Id id, const RendererMaterialParameters& settings) override {}
+        RendererMeshHandle createMesh(const std::vector<Vertex>& vertices) override {return &m_nullMesh;}
+        void destroyMesh(RendererMeshHandle& mesh) override {}
 
-        
+        //Texture
+        RendererTextureHandle createTexture(Vector2u size, TextureFormat format, const Byte* data) override {return &m_nullTexture;}
+        void destroyTexture(RendererTextureHandle& texture) override {}
+
+        //Shader
+        RendererShaderHandle createShader(const std::string* vertex = nullptr, const std::string* fragment = nullptr) override {return &m_nullShader;}
+        void destroyShader(RendererShaderHandle& shader) override {}
+
+        //Material
+        RendererMaterialHandle createMaterial(const RendererMaterialParameters& settings) override {return &m_nullMaterial;}
+        void destroyMaterial(RendererMaterialHandle& material) override {}
+
+        //SCENE///////////////////////////////////////////////////////////////////////////////////////////////
+
         //Camera
-        Id createCamera() override {return 0;}
-        void destroyCamera(Id id) override {}
-        void setCameraTransform(Id id, Transform* transform) override {}
-        void setCameraParameters(Id id, const RendererCameraParameters& settings) override {}
+        RendererCameraHandle createCamera() override {return &m_nullCamera;}
+        void destroyCamera(RendererCameraHandle& camera) override {}
+
         //Staticmesh
-        Id createStaticmesh() override {return 0;}
-        void destroyStaticmesh(Id id) override {}
-        void setStaticmeshMaterial(Id id, Id material) override {}
-        void setStaticmeshTransform(Id id, Transform* transform) override {}
-        void setStaticmeshMesh(Id id, Id mesh) override {}
+        RendererStaticmeshHandle createStaticmesh() override {return &m_nullStaticmesh;}
+        void destroyStaticmesh(RendererStaticmeshHandle& staticmesh) override {}
 
         //PointLight
-        Id createPointLight() override {return 0;}
-        void destroyPointLight(Id id) override {}
-        void setPointLightTransform(Id id, Transform* transform) override {}
-        void setPointLightParameters(Id id, const PointLightParameters& parameters) override {}
+        RendererPointLightHandle createPointLight() override {return &m_nullPointLight;}
+        void destroyPointLight(RendererPointLightHandle& pointlight) override {}
+
         //DirectionalLight
-        Id createDirectionalLight() override {return 0;}
-        void destroyDirectionalLight(Id id) override {}
-        void setDirectionalLightTransform(Id id, Transform* transform) override {}
-        void setDirectionalLightParameters(Id id, const DirectionalLightParameters& parameters) override {};
+        RendererDirectionalLightHandle createDirectionalLight() override {return &m_nullDirectionalLight;}
+        void destroyDirectionalLight(RendererDirectionalLightHandle& directionallight) override {}
+
+        //GUI////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //Viewport
+        RendererViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override {return &m_nullViewport;}
+        void destroyViewport(RendererViewport& viewport) override {}
+
+    private:
+        NullRendererMesh m_nullMesh;
+        NullRendererTexture m_nullTexture;
+        NullRendererShader m_nullShader;
+        NullRendererMaterial m_nullMaterial;
+
+        NullRendererViewport m_nullViewport;
+
+        NullRendererCamera m_nullCamera;
+        NullRendererStaticMesh m_nullStaticmesh;
+        NullRendererPointLight m_nullPointLight;
+        NullRendererDirectionalLight m_nullDirectionalLight;
     };
 }

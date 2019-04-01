@@ -35,9 +35,6 @@ ADD_LIBRARY(
     Asset/JsonAttributes.cpp
     Context/EngineContext.cpp
     Context/Engine.cpp
-    GUI/GUILayout.cpp
-    GUI/GUIRectangle.cpp
-    GUI/GUIWidget.cpp
     Prefab/System/BasicWindowSystem.cpp
     Prefab/System/BasicSpectatorSystem.cpp
     Prefab/System/RenderModeSystem.cpp
@@ -51,7 +48,7 @@ ADD_LIBRARY(
     Prefab/Component/Shape/UVSphereComponent.cpp
     Prefab/Component/Shape/RectangleComponent.cpp
     Prefab/Component/Shape/QuadComponent.cpp
-    Prefab/Layout/ConsoleLayout.cpp
+    Renderer/Renderer.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp
@@ -60,6 +57,7 @@ ADD_LIBRARY(
     Utility/ConfigParser.cpp
     Utility/LibraryLoader.cpp
     Utility/Path.cpp
+    GUI/GUI.cpp
     Input/Input.cpp
     Input/Button.cpp
     Input/Axis.cpp

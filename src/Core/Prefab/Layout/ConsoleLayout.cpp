@@ -2,8 +2,7 @@
 
 using namespace ax;
 
-ConsoleLayout::ConsoleLayout() :
-    m_textVersion(addButton())
+ConsoleLayout::ConsoleLayout()
 {
     
 }

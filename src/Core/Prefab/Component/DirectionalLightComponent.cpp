@@ -10,7 +10,7 @@ DirectionalLightComponent::DirectionalLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createDirectionalLight();
-    Engine::renderer().setDirectionalLightTransform(m_handle, &transform);
+    m_handle->setTransform(&transform);
 }
 DirectionalLightComponent::~DirectionalLightComponent()
 {
@@ -20,7 +20,7 @@ DirectionalLightComponent::~DirectionalLightComponent()
 void DirectionalLightComponent::setColor(Color3 color) noexcept
 {
     m_parameters.color = color;
-    Engine::renderer().setDirectionalLightParameters(m_handle, m_parameters);
+    m_handle->setParameters(m_parameters);
 }
 Color3 DirectionalLightComponent::getColor() const noexcept
 {

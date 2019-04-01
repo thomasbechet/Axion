@@ -19,11 +19,11 @@ void RenderModeSystem::onInitialize()
 void RenderModeSystem::onUpdate()
 {
     if(m_defaultModeButton->isJustPressed())
-        Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::ForwardPlusShading);
+        Engine::renderer().getDefaultViewport()->setRendermode(RenderMode::ForwardPlusShading);
     else if(m_wireframeModeButton->isJustPressed())
-        Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::Wireframe);
+        Engine::renderer().getDefaultViewport()->setRendermode(RenderMode::Wireframe);
     else if(m_debugModeButton->isJustPressed())
-        Engine::renderer().setViewportRendermode(Renderer::DefaultViewport, RenderMode::Debug0);
+        Engine::renderer().getDefaultViewport()->setRendermode(RenderMode::Debug0);
 }
 void RenderModeSystem::onTerminate()
 {

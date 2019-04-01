@@ -22,10 +22,10 @@ QuadComponent::QuadComponent(const Entity& entity, float x, float y, float facto
 
     //Staticmesh
     m_staticmesh = Engine::renderer().createStaticmesh();
-    Engine::renderer().setStaticmeshTransform(m_staticmesh, &transform);
-    Engine::renderer().setStaticmeshMesh(m_staticmesh, m_mesh);
+    m_staticmesh->setTransform(&transform);
+    m_staticmesh->setMesh(m_mesh);
     m_material = Engine::assets().material(Material::Default);
-    Engine::renderer().setStaticmeshMaterial(m_staticmesh, m_material->getHandle());
+    m_staticmesh->setMaterial(m_material->getHandle());
 }
 QuadComponent::~QuadComponent()
 {
@@ -36,7 +36,7 @@ QuadComponent::~QuadComponent()
 void QuadComponent::setMaterial(std::nullptr_t ptr) noexcept
 {
     m_material.reset();
-    Engine::renderer().setStaticmeshMaterial(m_staticmesh, 0);
+    m_staticmesh->setMaterial(nullptr);
 }
 void QuadComponent::setMaterial(std::string name) noexcept
 {
@@ -49,7 +49,7 @@ void QuadComponent::setMaterial(AssetReference<Material> material) noexcept
         m_material.reset();
         m_material = material;
 
-        Engine::renderer().setStaticmeshMaterial(m_staticmesh, m_material->getHandle());
+        m_staticmesh->setMaterial(m_material->getHandle());
     }
     else
     {
@@ -64,10 +64,8 @@ void QuadComponent::setCoordinateFactor(float factor) noexcept
 
 void QuadComponent::generate() noexcept
 {
-    Engine::renderer().updateMesh(m_mesh, 
-        Quad::vertices(
-            m_x, m_y,
-            m_coordinateFactor
-        )
-    );
+    m_mesh->update(Quad::vertices(
+        m_x, m_y,
+        m_coordinateFactor
+    ));
 }

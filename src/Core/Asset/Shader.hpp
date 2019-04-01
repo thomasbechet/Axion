@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/Utility/Types.hpp>
 #include <Core/Utility/Path.hpp>
+#include <Core/Renderer/Asset/RendererShader.hpp>
 
 #include <string>
 #include <memory>
@@ -26,7 +26,7 @@ namespace ax
         std::string getVertexCode() const noexcept;
         std::string getFragmentCode() const noexcept;
 
-        Id getHandle() const noexcept;
+        RendererShaderHandle getHandle() const noexcept;
 
     private:
         std::string m_name;
@@ -36,6 +36,6 @@ namespace ax
         std::string m_vertex;
         std::string m_fragment;
 
-        Id m_handle;
+        RendererShaderHandle m_handle;
     };
 }

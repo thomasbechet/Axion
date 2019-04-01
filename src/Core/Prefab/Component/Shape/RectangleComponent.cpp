@@ -34,10 +34,10 @@ RectangleComponent::RectangleComponent(const Entity& entity,
 
     //Staticmesh
     m_staticmesh = Engine::renderer().createStaticmesh();
-    Engine::renderer().setStaticmeshTransform(m_staticmesh, &transform);
-    Engine::renderer().setStaticmeshMesh(m_staticmesh, m_mesh);
+    m_staticmesh->setTransform(&transform);
+    m_staticmesh->setMesh(m_mesh);
     m_material = Engine::assets().material(Material::Default);
-    Engine::renderer().setStaticmeshMaterial(m_staticmesh, m_material->getHandle());
+    m_staticmesh->setMaterial(m_material->getHandle());
 }
 RectangleComponent::~RectangleComponent()
 {
@@ -48,7 +48,7 @@ RectangleComponent::~RectangleComponent()
 void RectangleComponent::setMaterial(std::nullptr_t ptr) noexcept
 {
     m_material.reset();
-    Engine::renderer().setStaticmeshMaterial(m_staticmesh, 0);
+    m_staticmesh->setMaterial(nullptr);
 }
 void RectangleComponent::setMaterial(std::string name) noexcept
 {
@@ -61,7 +61,7 @@ void RectangleComponent::setMaterial(AssetReference<Material> material) noexcept
         m_material.reset();
         m_material = material;
 
-        Engine::renderer().setStaticmeshMaterial(m_staticmesh, m_material->getHandle());
+        m_staticmesh->setMaterial(m_material->getHandle());
     }
     else
     {
@@ -76,12 +76,10 @@ void RectangleComponent::setCoordinateFactor(float factor) noexcept
 
 void RectangleComponent::generate() noexcept
 {
-    Engine::renderer().updateMesh(m_mesh, 
-        Rectangle::vertices(
-            m_xMin, m_xMax,
-            m_yMin, m_yMax,
-            m_zMin, m_zMax,
-            m_coordinateFactor
-        )
-    );
+    m_mesh->update(Rectangle::vertices(
+        m_xMin, m_xMax,
+        m_yMin, m_yMax,
+        m_zMin, m_zMax,
+        m_coordinateFactor
+    ));
 }

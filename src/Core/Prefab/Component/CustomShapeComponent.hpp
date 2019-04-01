@@ -23,7 +23,7 @@ namespace ax
         TransformComponent& transform;
 
     private:
-        Id m_handle;
+        //Id m_handle;
         std::vector<Vertex> m_vertices;
     };
 }

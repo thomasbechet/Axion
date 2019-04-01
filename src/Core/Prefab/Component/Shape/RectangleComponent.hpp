@@ -7,6 +7,8 @@
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Asset/AssetReference.hpp>
 #include <Core/Asset/Material.hpp>
+#include <Core/Renderer/Scene/RendererStaticmesh.hpp>
+#include <Core/Renderer/Asset/RendererMesh.hpp>
 
 namespace ax
 {
@@ -37,8 +39,8 @@ namespace ax
     private:
         float m_coordinateFactor = 1.0f;
 
-        Id m_staticmesh;
-        Id m_mesh;
+        RendererStaticmeshHandle m_staticmesh;
+        RendererMeshHandle m_mesh;
         AssetReference<Material> m_material;
     };
 }
