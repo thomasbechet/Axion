@@ -6,6 +6,8 @@
 
 namespace ax
 {
+    using RendererDirectionalLightPointer = RendererDirectionalLight*;
+
     class AXION_CORE_API RendererDirectionalLight
     {
     public:

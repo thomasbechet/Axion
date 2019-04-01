@@ -6,6 +6,8 @@
 
 namespace ax
 {
+    using RendererPointLightPointer = RendererPointLight*;
+
     class AXION_CORE_API RendererPointLight
     {
     public:
