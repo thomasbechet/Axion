@@ -3,6 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Math/Transform.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>
+#include <Core/Renderer/Asset/RendererMaterial.hpp>
 
 namespace ax
 {

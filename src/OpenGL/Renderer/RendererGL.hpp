@@ -6,7 +6,7 @@
 #include <OpenGL/Renderer/Asset/MaterialGL.hpp>
 #include <OpenGL/Renderer/Asset/ShaderGL.hpp>
 #include <OpenGL/Renderer/Scene/CameraGL.hpp>
-#include <OpenGL/Renderer/Scene/StaticmeshGL.hpp>
+#include <OpenGL/Renderer/Scene/RendererStaticmeshGL.hpp>
 #include <OpenGL/Renderer/Scene/Light/PointLightGL.hpp>
 #include <OpenGL/Renderer/Scene/Light/DirectionalLightGL.hpp>
 #include <OpenGL/Renderer/Buffer/MaterialUBO.hpp>
@@ -26,14 +26,15 @@ namespace ax
 {
     struct AXION_GL_API RenderContent
     {
-        IndexVector<std::pair<MaterialGL, std::vector<Id>>> materials;
-        IndexVector<MeshGL> meshes;
-        IndexVector<ShaderGL> shaders;
-        IndexVector<CameraGL> cameras;
-        IndexVector<StaticmeshGL> staticmeshes;
-        IndexVector<TextureGL> textures;
-        IndexVector<PointLightGL> pointLights;
-        IndexVector<DirectionalLightGL> directionalLights;
+        IndexVector<std::pair<std::unique_ptr<MaterialGL>, std::vector<RendererStaticmeshGL*>>> materials;
+        IndexVector<unique_ptr<RendererMeshGL>> meshes;
+        IndexVector<unique_ptr<RendererShaderGL>> shaders;
+        IndexVector<unique_ptr<RendererTextureGL>> textures;
+        
+        IndexVector<unique_ptr<RendererStaticmeshGL>> staticmeshes;
+        IndexVector<unique_ptr<RendererPointLightGL>> pointLights;
+        IndexVector<unique_ptr<RendererDirectionalLightGL>> directionalLights;
+        IndexVector<unique_ptr<RendererCameraGL>> cameras;
 
         GLuint quadVBO;
         GLuint quadVAO;
@@ -73,58 +74,55 @@ namespace ax
         void terminate() noexcept override;
         void update(double alpha) noexcept override;
 
-        //Viewport
-        Id createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override;
-        void destroyViewport(Id id) override;
-        void setViewportRendermode(Id id, RenderMode mode) override;
-        void setViewportCamera(Id viewport, Id camera) override;
-        void setViewportResolution(Id id, const Vector2u& resolution) override;
-        void setViewportRectangle(Id viewport, const Vector2f& position, const Vector2f& size) override;
+        //ASSET//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Mesh
-        Id createMesh(const std::vector<Vertex>& vertices) override;
-        void updateMesh(Id id, const std::vector<Vertex>& vertices) override;
-        void destroyMesh(Id id) override;
+        RendererMeshHandle createMesh(const std::vector<Vertex>& vertices) override;
+        void destroyMesh(RendererMeshHandle& mesh) override;
+
         //Texture
-        Id createTexture(
-            Vector2u size,
-            TextureFormat format,
-            const Byte* data
-        ) override;
-        void destroyTexture(Id id) override;
+        RendererTextureHandle createTexture(Vector2u size, TextureFormat format, const Byte* data) override;
+        void destroyTexture(RendererTextureHandle& texture) override;
+
         //Shader
-        Id createShader(
-            const std::string* vertex = nullptr,
-            const std::string* fragment = nullptr
-        ) override;
-        void destroyShader(Id id) override;
+        RendererShaderHandle createShader(const std::string* vertex = nullptr, const std::string* fragment = nullptr) override;
+        void destroyShader(RendererShaderHandle& shader) override;
+
         //Material
-        Id createMaterial(const RendererMaterialParameters& settings) override;
-        void destroyMaterial(Id id) override;
-        void updateMaterial(Id id, const RendererMaterialParameters& settings) override;
+        RendererMaterialHandle createMaterial(const RendererMaterialParameters& settings) override;
+        void destroyMaterial(RendererMaterialHandle& material) override;
+
+        //SCENE///////////////////////////////////////////////////////////////////////////////////////////////
 
         //Camera
-        Id createCamera() override;
-        void destroyCamera(Id id) override;
-        void setCameraTransform(Id id, Transform* transform) override;
-        void setCameraParameters(Id id, const RendererCameraParameters& settings) override;
+        RendererCameraHandle createCamera() override;
+        void destroyCamera(RendererCameraHandle& camera) override;
+
         //Staticmesh
-        Id createStaticmesh() override;
-        void destroyStaticmesh(Id id) override;
-        void setStaticmeshMaterial(Id id, Id material) override;
-        void setStaticmeshTransform(Id id, Transform* transform) override;
-        void setStaticmeshMesh(Id id, Id mesh) override;
+        RendererStaticmeshHandle createStaticmesh() override;
+        void destroyStaticmesh(RendererStaticmeshHandle& staticmesh) override;
 
         //PointLight
-        Id createPointLight() override;
-        void destroyPointLight(Id id) override;
-        void setPointLightTransform(Id id, Transform* transform) override;
-        void setPointLightParameters(Id id, const PointLightParameters& parameters) override;
+        RendererPointLightHandle createPointLight() override;
+        void destroyPointLight(RendererPointLightHandle& pointlight) override;
+
         //DirectionalLight
-        Id createDirectionalLight() override;
-        void destroyDirectionalLight(Id id) override;
-        void setDirectionalLightTransform(Id id, Transform* transform) override;
-        void setDirectionalLightParameters(Id id, const DirectionalLightParameters& parameters) override;
+        RendererDirectionalLightHandle createDirectionalLight() override;
+        void destroyDirectionalLight(RendererDirectionalLightHandle& directionallight) override;
+
+        //GUI////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //Viewport
+        RendererViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override;
+        void destroyViewport(RendererViewport& viewport) override;
+
+        //Layout
+        //virtual RendererGUILayout& createGUILayout() = 0;
+        //virtual void destroyGUILayout(RendererGUILayout& layout) = 0;
+
+        //GUIButton
+        //virtual RendererGUIButton& createGUIButton() = 0;
+        //virtual void destroyGUIButton(RendererGUIButton& button) = 0;
 
     private:
         RenderContent m_content;

@@ -93,6 +93,81 @@ void RendererGL::update(double alpha) noexcept
     }
 }
 
+RendererCameraHandle RendererGL::createCamera()
+{
+    Id id = m_content.cameras.add(std::make_unique<RendererCameraGL>());
+    RendererCameraGL* camera = m_content.cameras.get(id);
+    camera->id = id;
+
+    return camera;
+}
+void RendererGL::destroyCamera(RendererCameraHandle& cameraPointer)
+{
+    RendererCameraGL* camera = static_cast<RendererCameraGL*>(cameraPointer);
+    m_content.cameras.remove(camera->id);
+    cameraPointer = nullptr;
+}
+
+RendererStaticmeshHandle RendererGL::createStaticmesh()
+{
+    Id id = m_staticmesh.add(std::make_unique<RendererStaticmeshGL>());
+    RendererStaticmeshGL* staticmesh = m_staticmesh.get(id).get();
+    staticmesh->id = id;
+    staticmesh->content = m_content;
+    
+    return staticmesh;
+}
+void RendererGL::destroyStaticmesh(RendererStaticmeshHandle& staticmeshPointer)
+{
+    RendererStaticmeshGL* staticmesh = static_cast<RendererStaticmeshGL*>(staticmeshPointer);
+    staticmesh->setMaterial(nullptr);
+    Id id = staticmesh->id;
+    m_content.staticmeshes.remove(id);
+    staticmeshPointer = nullptr;
+}
+
+RendererPointLightHandle RendererGL::createPointLight()
+{
+    Id id = m_content.pointLights.add(std::make_unique<RendererPointLightGL>());
+    RendererPointLightGL* pointLight = *m_content.pointLights.get(id);
+    pointLight->id = id;
+    pointLight->content = m_content;
+
+    m_content.pointLightUBO->load(light);
+    m_content.pointLightUBO->updateLight(light);
+
+    return pointLight;
+}
+void RendererGL::destroyPointLight(RendererPointLightHandle& pointlightPointer)
+{
+    RendererPointLightGL* pointLight = static_cast<RendererPointLightGL*>(pointLightPointer);
+    m_content.pointLightUBO->unload(pointLight);
+    m_content.pointLights.remove(pointLight->id);
+
+    pointlightPointer = nullptr;
+}
+
+RendererDirectionalLightHandle RendererGL::createDirectionalLight()
+{
+    Id id = m_content.directionalLights.add(std::make_unique<RendererDirectionalLightGL>());
+    RendererDirectionalLightGL* directionalLight = *m_content.directionalLights.get(id).get();
+    directionalLight->id = id;
+    directionalLight->content = &m_content;
+
+    m_content.directionalLightUBO->load(directionalLight);
+    //m_content.pointLightUBO->updateLight(directionalLight);
+
+    return directionalLight;
+}
+void RendererGL::destroyDirectionalLight(RendererDirectionalLightHandle& directionallightPointer)
+{
+    RendererDirectionalLightGL* directionalLight = static_cast<RendererDirectionalLightGL*>(directionallightPointer);
+    m_content.directionalLightUBO->unload(directionalLight);
+    m_content.directionalLights.remove(directionalLight->id);
+
+    directionallightPointer = nullptr;
+}
+
 Id RendererGL::createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode)
 {
     Id id = m_viewports.add(std::make_unique<Viewport>());
