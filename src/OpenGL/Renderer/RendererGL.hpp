@@ -1,14 +1,14 @@
 #pragma once
 
 #include <OpenGL/Export.hpp>
-#include <OpenGL/Renderer/TextureGL.hpp>
-#include <OpenGL/Renderer/MeshGL.hpp>
-#include <OpenGL/Renderer/StaticmeshGL.hpp>
-#include <OpenGL/Renderer/MaterialGL.hpp>
-#include <OpenGL/Renderer/ShaderGL.hpp>
-#include <OpenGL/Renderer/CameraGL.hpp>
-#include <OpenGL/Renderer/Light/PointLightGL.hpp>
-#include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
+#include <OpenGL/Renderer/Asset/TextureGL.hpp>
+#include <OpenGL/Renderer/Asset/MeshGL.hpp>
+#include <OpenGL/Renderer/Asset/MaterialGL.hpp>
+#include <OpenGL/Renderer/Asset/ShaderGL.hpp>
+#include <OpenGL/Renderer/Scene/CameraGL.hpp>
+#include <OpenGL/Renderer/Scene/StaticmeshGL.hpp>
+#include <OpenGL/Renderer/Scene/Light/PointLightGL.hpp>
+#include <OpenGL/Renderer/Scene/Light/DirectionalLightGL.hpp>
 #include <OpenGL/Renderer/Buffer/MaterialUBO.hpp>
 #include <OpenGL/Renderer/Buffer/PointLightUBO.hpp>
 #include <OpenGL/Renderer/Buffer/DirectionalLightUBO.hpp>
