@@ -7,8 +7,9 @@
 
 namespace ax
 {
-    struct AXION_GL_API ShaderGL
+    class AXION_GL_API ShaderGL
     {
+    public:
         ShaderGLSL shader;
     };
 }
