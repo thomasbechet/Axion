@@ -1,6 +1,7 @@
 #pragma once
 
 #include <OpenGL/Export.hpp>
+#include <Core/Utility/Types.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>
 
 #include <GL/glew.h>

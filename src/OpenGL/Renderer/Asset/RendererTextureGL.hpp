@@ -1,6 +1,7 @@
 #pragma once
 
 #include <OpenGL/Export.hpp>
+#include <Core/Utility/Types.hpp>
 #include <Core/Renderer/Asset/RendererTexture.hpp>
 
 #include <GL/glew.h>

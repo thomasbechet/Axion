@@ -164,6 +164,49 @@ void RendererGL::destroyTexture(RendererTextureHandle& texturePointer)
     glDeleteTextures(1, &texture->id);
     m_content.textures.remove(texture->id);
 }
+RendererShaderHandle RendererGL::createShader(const std::string* vertex = nullptr, const std::string* fragment = nullptr)
+{
+    Id id = m_content.shaders.add(std::make_unique<RendererShaderGL>());
+    RendererShaderGL* shader = m_content.shaders.get(id).get();
+    shader->id = id;
+
+    if(!shader->shader.loadShader(vertex, fragment))
+    {
+        m_content.shaders.remove(id);
+        throw RendererException("Failed to load shader.");
+    }
+
+    return shader;
+}
+void RendererGL::destroyShader(RendererShaderHandle& shaderPointer)
+{
+    RendererShaderGL* shader = static_cast<RendererShaderGL*>(shaderPointer);
+    shader->shader.unload();
+    m_content.shaders.remove(shader->id);
+    shaderPointer = nullptr;
+}
+
+RendererMaterialHandle createMaterial(const RendererMaterialParameters& settings)
+{
+    Id id = m_content.materials.add(std::pair<RendererMaterialGL, std::vector<RendererMaterialGL*>>(
+        std::make_unique<RendererMaterialGL>, std::vector<RendererMaterialGL*>()
+    ));
+    RendererMaterialGL* material = m_content.materials.get(id).first.get();
+    material->id = id;
+    material->content = &m_content;
+
+    m_content.materialUBO->load(material);
+    material->update(settings);
+
+    return material;
+}
+void destroyMaterial(RendererMaterialHandle& materialPointer)
+{
+    RendererMaterialGL* material = static_cast<RendererMaterialGL*>(materialPointer);
+    m_content.materialUBO->unload(material);
+    m_content.materials.remove(material->id);
+    materialPointer = nullptr;
+}
 
 RendererCameraHandle RendererGL::createCamera()
 {

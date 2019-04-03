@@ -15,7 +15,6 @@
 #include <OpenGL/Renderer/Buffer/CameraUBO.hpp>
 #include <OpenGL/Renderer/Buffer/ConstantsUBO.hpp>
 #include <OpenGL/Renderer/Buffer/CullLightSSBO.hpp>
-#include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/Shader.hpp>
@@ -27,14 +26,14 @@ namespace ax
     struct AXION_GL_API RenderContent
     {
         IndexVector<std::pair<std::unique_ptr<MaterialGL>, std::vector<RendererStaticmeshGL*>>> materials;
-        IndexVector<unique_ptr<RendererMeshGL>> meshes;
-        IndexVector<unique_ptr<RendererShaderGL>> shaders;
-        IndexVector<unique_ptr<RendererTextureGL>> textures;
+        IndexVector<std::unique_ptr<RendererMeshGL>> meshes;
+        IndexVector<std::unique_ptr<RendererShaderGL>> shaders;
+        IndexVector<std::unique_ptr<RendererTextureGL>> textures;
         
-        IndexVector<unique_ptr<RendererStaticmeshGL>> staticmeshes;
-        IndexVector<unique_ptr<RendererPointLightGL>> pointLights;
-        IndexVector<unique_ptr<RendererDirectionalLightGL>> directionalLights;
-        IndexVector<unique_ptr<RendererCameraGL>> cameras;
+        IndexVector<std::unique_ptr<RendererStaticmeshGL>> staticmeshes;
+        IndexVector<std::unique_ptr<RendererPointLightGL>> pointLights;
+        IndexVector<std::unique_ptr<RendererDirectionalLightGL>> directionalLights;
+        IndexVector<std::unique_ptr<RendererCameraGL>> cameras;
 
         GLuint quadVBO;
         GLuint quadVAO;
@@ -53,6 +52,8 @@ namespace ax
         std::unique_ptr<CameraUBO> cameraUBO;
         std::unique_ptr<ConstantsUBO> constantsUBO;
         std::unique_ptr<CullLightSSBO> cullLightSSBO;
+
+        IndexVector<std::unique_ptr<RendererViewportGL>> viewports;
     };
 
     struct AXION_GL_API Viewport
