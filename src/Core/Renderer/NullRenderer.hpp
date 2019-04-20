@@ -53,7 +53,7 @@ namespace ax
 
         //Viewport
         RendererViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override {return &m_nullViewport;}
-        void destroyViewport(RendererViewport& viewport) override {}
+        void destroyViewport(RendererViewportHandle& viewport) override {}
 
     private:
         NullRendererMesh m_nullMesh;

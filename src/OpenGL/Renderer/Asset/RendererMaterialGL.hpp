@@ -19,7 +19,7 @@ namespace ax
         RendererMaterialParameters parameters;
         GLuint uboIndex;
 
-        RenderContent* content;
+        RenderContent* content = nullptr;
         Id id;
     };
 }

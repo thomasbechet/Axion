@@ -1,14 +1,15 @@
 #pragma once
 
 #include <OpenGL/Export.hpp>
-#include <OpenGL/Renderer/Asset/TextureGL.hpp>
-#include <OpenGL/Renderer/Asset/MeshGL.hpp>
-#include <OpenGL/Renderer/Asset/MaterialGL.hpp>
-#include <OpenGL/Renderer/Asset/ShaderGL.hpp>
-#include <OpenGL/Renderer/Scene/CameraGL.hpp>
+#include <OpenGL/Renderer/Asset/RendererTextureGL.hpp>
+#include <OpenGL/Renderer/Asset/RendererMeshGL.hpp>
+#include <OpenGL/Renderer/Asset/RendererMaterialGL.hpp>
+#include <OpenGL/Renderer/Asset/RendererShaderGL.hpp>
+#include <OpenGL/Renderer/Scene/RendererCameraGL.hpp>
 #include <OpenGL/Renderer/Scene/RendererStaticmeshGL.hpp>
-#include <OpenGL/Renderer/Scene/Light/PointLightGL.hpp>
-#include <OpenGL/Renderer/Scene/Light/DirectionalLightGL.hpp>
+#include <OpenGL/Renderer/Scene/RendererPointLightGL.hpp>
+#include <OpenGL/Renderer/Scene/RendererDirectionalLightGL.hpp>
+#include <OpenGL/Renderer/GUI/RendererViewportGL.hpp>
 #include <OpenGL/Renderer/Buffer/MaterialUBO.hpp>
 #include <OpenGL/Renderer/Buffer/PointLightUBO.hpp>
 #include <OpenGL/Renderer/Buffer/DirectionalLightUBO.hpp>
@@ -19,13 +20,11 @@
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/Shader.hpp>
 
-#include <unordered_map>
-
 namespace ax
 {
     struct AXION_GL_API RenderContent
     {
-        IndexVector<std::pair<std::unique_ptr<MaterialGL>, std::vector<RendererStaticmeshGL*>>> materials;
+        IndexVector<std::pair<std::unique_ptr<RendererMaterialGL>, std::vector<RendererStaticmeshGL*>>> materials;
         IndexVector<std::unique_ptr<RendererMeshGL>> meshes;
         IndexVector<std::unique_ptr<RendererShaderGL>> shaders;
         IndexVector<std::unique_ptr<RendererTextureGL>> textures;
@@ -54,18 +53,6 @@ namespace ax
         std::unique_ptr<CullLightSSBO> cullLightSSBO;
 
         IndexVector<std::unique_ptr<RendererViewportGL>> viewports;
-    };
-
-    struct AXION_GL_API Viewport
-    {
-        Color3 clearColor = Color3(0.0f, 0.0f, 0.0f);
-
-        Vector2u resolution = Vector2u(0, 0);
-        Vector2f position = Vector2f(0.0f, 0.0f);
-        Vector2f size = Vector2f(1.0f, 1.0f);
-
-        std::unique_ptr<RenderPass> renderPass;
-        Id camera = 0;
     };
 
     class AXION_GL_API RendererGL : public Renderer
@@ -115,7 +102,7 @@ namespace ax
 
         //Viewport
         RendererViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override;
-        void destroyViewport(RendererViewport& viewport) override;
+        void destroyViewport(RendererViewportHandle& viewport) override;
 
         //Layout
         //virtual RendererGUILayout& createGUILayout() = 0;
@@ -127,6 +114,5 @@ namespace ax
 
     private:
         RenderContent m_content;
-        IndexVector<std::unique_ptr<Viewport>> m_viewports;
     };
 }

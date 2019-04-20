@@ -8,7 +8,7 @@
 
 using namespace ax;
 
-WireframePass::WireframePass(RenderContent& content, Viewport& viewport) : RenderPass(content, viewport) {}
+WireframePass::WireframePass(RenderContent& content, RendererViewportGL& viewport) : RenderPass(content, viewport) {}
 
 void WireframePass::initialize() noexcept
 {
@@ -18,8 +18,10 @@ void WireframePass::initialize() noexcept
     glEnable(GL_MULTISAMPLE);
 
     //Load shaders
-    m_wireframeShader = content.shaders.get(content.wireframeShader->getHandle()).shader.getProgram();
-    m_quadTextureShader = content.shaders.get(content.quadTextureShader->getHandle()).shader.getProgram();
+    RendererShaderHandle wireframeShaderHandle = content.wireframeShader->getHandle();
+    m_wireframeShader = static_cast<RendererShaderGL&>(*wireframeShaderHandle).shader.getProgram();
+    RendererShaderHandle quadTextureShaderHandle = content.quadTextureShader->getHandle();
+    m_quadTextureShader = static_cast<RendererShaderGL&>(*quadTextureShaderHandle).shader.getProgram();
 
     //Load buffers
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
@@ -43,7 +45,7 @@ void WireframePass::render(double alpha) noexcept
     m_renderBuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    CameraGL& camera = content.cameras.get(viewport.camera);
+    RendererCameraGL& camera = *viewport.camera;
 
     Vector3f eye = camera.transform->getTranslation();
     Vector3f forward = camera.transform->getForwardVector();
@@ -68,20 +70,18 @@ void WireframePass::render(double alpha) noexcept
     //Render scene
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDisable(GL_CULL_FACE);
-    for(auto& materialIt : content.materials)
-    {
-        for(auto& staticmeshId : materialIt.second)
-        {
-            StaticmeshGL& staticmesh = content.staticmeshes.get(staticmeshId);
-            if(staticmesh.mesh)
-            {
-                MeshGL& mesh = content.meshes.get(staticmesh.mesh);
 
-                Matrix4f mvp = vp * staticmesh.transform->getWorldMatrix();
+    for(auto& materialIt : content.materials)
+    { 
+        for(auto& staticmesh : materialIt.second)
+        {
+            if(staticmesh->mesh)
+            {
+                Matrix4f mvp = vp * staticmesh->transform->getWorldMatrix();
                 glUniformMatrix4fv(MVP_MATRIX_LOCATION, 1, GL_FALSE, mvp.data());
 
-                glBindVertexArray(mesh.vao);
-                glDrawArrays(GL_TRIANGLES, 0, mesh.size);
+                glBindVertexArray(staticmesh->mesh->vao);
+                glDrawArrays(GL_TRIANGLES, 0, staticmesh->mesh->size);
                 glBindVertexArray(0);
             }
         }

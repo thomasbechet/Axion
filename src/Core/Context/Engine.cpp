@@ -118,7 +118,7 @@ void Engine::initialize() noexcept
     /////////////////////////////////////////////////////////////////////////////////
 
     //Create default viewport
-    RendererViewportHandle defaultViewport = Engine::renderer().createViewport(Vector2f(0.0f, 0.0f), Vector2f(1.0f, 1.0f), RenderMode::ForwardPlusShading);
+    RendererViewportHandle defaultViewport = Engine::renderer().createViewport(Vector2f(0.0f, 0.0f), Vector2f(1.0f, 1.0f), RenderMode::Wireframe);
     Engine::renderer().setDefaultViewport(defaultViewport);
 
     Vector2u defaultResolution;

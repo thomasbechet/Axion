@@ -5,6 +5,8 @@
 #include <Core/Utility/Types.hpp>
 #include <Core/Renderer/Scene/RendererPointLight.hpp>
 
+#include <GL/glew.h>
+
 namespace ax
 {
     class Transform;
@@ -25,6 +27,6 @@ namespace ax
         GLuint uboIndex;
 
         Id id;
-        RenderContent* content;
+        RenderContent* content = nullptr;
     };
 }

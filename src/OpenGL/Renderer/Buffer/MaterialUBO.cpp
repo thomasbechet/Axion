@@ -1,6 +1,6 @@
 #include <OpenGL/Renderer/Buffer/MaterialUBO.hpp>
 
-#include <OpenGL/Renderer/MaterialGL.hpp>
+#include <OpenGL/Renderer/Asset/RendererMaterialGL.hpp>
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 
 #include <cstring>
@@ -20,7 +20,7 @@ MaterialUBO::~MaterialUBO()
     glDeleteBuffers(1, &m_ubo);
 }
 
-void MaterialUBO::load(MaterialGL& material) noexcept
+void MaterialUBO::load(RendererMaterialGL& material) noexcept
 {
     if(!m_free.empty())
     {
@@ -33,11 +33,11 @@ void MaterialUBO::load(MaterialGL& material) noexcept
         m_next++;
     }
 }
-void MaterialUBO::unload(MaterialGL& material) noexcept
+void MaterialUBO::unload(RendererMaterialGL& material) noexcept
 {
     m_free.emplace_back(material.uboIndex);
 }
-void MaterialUBO::updateMaterial(const MaterialGL& material) noexcept
+void MaterialUBO::updateMaterial(const RendererMaterialGL& material) noexcept
 {
     glBindBuffer(GL_UNIFORM_BUFFER, m_ubo);
 

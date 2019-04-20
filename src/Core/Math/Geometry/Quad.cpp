@@ -33,7 +33,7 @@ std::vector<Vertex> Quad::vertices(
 {
     std::vector<Vertex> vertices;
 
-    vertices.resize(6);
+    vertices.reserve(6);
 
     float midX = x / 2.0f;
     float midY = y / 2.0f;

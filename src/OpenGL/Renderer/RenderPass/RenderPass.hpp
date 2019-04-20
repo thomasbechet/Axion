@@ -5,12 +5,12 @@
 namespace ax
 {
     class RenderContent;
-    class Viewport;
+    class RendererViewportGL;
 
     class AXION_GL_API RenderPass
     {
     public:
-        RenderPass(RenderContent& content, Viewport& viewport);
+        RenderPass(RenderContent& content, RendererViewportGL& viewport);
         virtual ~RenderPass() = default;
 
         virtual void initialize() noexcept = 0;
@@ -20,6 +20,6 @@ namespace ax
 
     protected:
         RenderContent& content;
-        Viewport& viewport;
+        RendererViewportGL& viewport;
     };
 }

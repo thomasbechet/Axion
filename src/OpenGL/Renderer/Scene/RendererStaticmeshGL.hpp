@@ -20,10 +20,10 @@ namespace ax
         void setMesh(RendererMeshHandle mesh) override;
 
         Transform* transform = nullptr;
-        RendererMeshGL* mesh = 0;
-        RendererMaterialGL* material = 0;
+        RendererMeshGL* mesh = nullptr;
+        RendererMaterialGL* material = nullptr;
 
         Id id;
-        RenderContent* content;
+        RenderContent* content = nullptr;
     };
 }

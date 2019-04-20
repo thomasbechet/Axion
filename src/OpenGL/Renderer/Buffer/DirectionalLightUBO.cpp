@@ -1,6 +1,6 @@
 #include <OpenGL/Renderer/Buffer/DirectionalLightUBO.hpp>
 
-#include <OpenGL/Renderer/Light/DirectionalLightGL.hpp>
+#include <OpenGL/Renderer/Scene/RendererDirectionalLightGL.hpp>
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 
 #include <algorithm>
@@ -20,21 +20,21 @@ DirectionalLightUBO::~DirectionalLightUBO()
     glDeleteBuffers(1, &m_uboLights);
 }
 
-void DirectionalLightUBO::load(DirectionalLightGL& light) noexcept
+void DirectionalLightUBO::load(RendererDirectionalLightGL& light) noexcept
 {
     light.uboIndex = m_directionalLights.add(DirectionalLightUBOData());
 }
-void DirectionalLightUBO::unload(DirectionalLightGL& light) noexcept
+void DirectionalLightUBO::unload(RendererDirectionalLightGL& light) noexcept
 {
     m_directionalLights.remove(light.uboIndex);
 }
 
-void DirectionalLightUBO::updateLight(const DirectionalLightGL& light) noexcept
+void DirectionalLightUBO::updateLight(const RendererDirectionalLightGL& light) noexcept
 {
     DirectionalLightUBOData& data = m_directionalLights.get(light.uboIndex);
     data.color = light.color;
 }
-void DirectionalLightUBO::updateMemory(IndexVector<DirectionalLightGL>& lights, const Matrix4f& view) noexcept
+void DirectionalLightUBO::updateMemory(IndexVector<std::unique_ptr<RendererDirectionalLightGL>>& lights, const Matrix4f& view) noexcept
 {
     glBindBuffer(GL_UNIFORM_BUFFER, m_uboLights);
     DirectionalLightUBOData* p = static_cast<DirectionalLightUBOData*>(glMapBufferRange(
@@ -47,7 +47,7 @@ void DirectionalLightUBO::updateMemory(IndexVector<DirectionalLightGL>& lights, 
     //Update light positions
     for(auto& light : lights)
     {
-        m_directionalLights.get(light.uboIndex).direction = Matrix3f(view) * light.transform->getForwardVector();
+        m_directionalLights.get(light->uboIndex).direction = Matrix3f(view) * light->transform->getForwardVector();
     }
 
     std::copy(m_directionalLights.begin(), m_directionalLights.end(), p);

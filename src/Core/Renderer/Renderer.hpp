@@ -71,7 +71,7 @@ namespace ax
 
         //Viewport
         virtual RendererViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) = 0;
-        virtual void destroyViewport(RendererViewport& viewport) = 0;
+        virtual void destroyViewport(RendererViewportHandle& viewport) = 0;
 
         //Layout
         //virtual RendererGUILayout& createGUILayout() = 0;

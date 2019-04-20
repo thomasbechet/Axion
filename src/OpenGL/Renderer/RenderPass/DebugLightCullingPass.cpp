@@ -10,7 +10,7 @@
 
 using namespace ax;
 
-DebugLightCullingPass::DebugLightCullingPass(RenderContent& content, Viewport& viewport) : RenderPass(content, viewport) {}
+DebugLightCullingPass::DebugLightCullingPass(RenderContent& content, RendererViewportGL& viewport) : RenderPass(content, viewport) {}
 
 void DebugLightCullingPass::initialize() noexcept
 {
@@ -20,9 +20,12 @@ void DebugLightCullingPass::initialize() noexcept
     glEnable(GL_MULTISAMPLE);
 
     //Load shaders
-    m_wireframeShader = content.shaders.get(content.wireframeShader->getHandle()).shader.getProgram();
-    m_quadTextureShader = content.shaders.get(content.quadTextureShader->getHandle()).shader.getProgram();
-    m_debugLightCullingShader = content.shaders.get(content.debugLightCullingShader->getHandle()).shader.getProgram();
+    RendererShaderHandle wireframeHandle = content.wireframeShader->getHandle();
+    m_wireframeShader = static_cast<RendererShaderGL&>(*wireframeHandle).shader.getProgram();
+    RendererShaderHandle quadTextureHandle = content.quadTextureShader->getHandle();
+    m_quadTextureShader = static_cast<RendererShaderGL&>(*quadTextureHandle).shader.getProgram();
+    RendererShaderHandle debugLightCullingShaderHandle = content.debugLightCullingShader->getHandle();
+    m_debugLightCullingShader = static_cast<RendererShaderGL&>(*debugLightCullingShaderHandle).shader.getProgram();
 
     //Load buffers
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
@@ -47,7 +50,7 @@ void DebugLightCullingPass::render(double alpha) noexcept
 void DebugLightCullingPass::updateUBOs() noexcept
 {
     //Compute camera matrix
-    CameraGL& camera = content.cameras.get(viewport.camera);
+    RendererCameraGL& camera = *viewport.camera;
 
     Vector3f eye = camera.transform->getTranslation();
     Vector3f forward = camera.transform->getForwardVector();
@@ -88,7 +91,8 @@ void DebugLightCullingPass::renderScene() noexcept
     m_renderBuffer->bindForWriting();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    CameraGL& camera = content.cameras.get(viewport.camera);
+    //DEJA FAIT ?!!
+    RendererCameraGL& camera = *viewport.camera;
 
     Vector3f eye = camera.transform->getTranslation();
     Vector3f forward = camera.transform->getForwardVector();
@@ -115,18 +119,15 @@ void DebugLightCullingPass::renderScene() noexcept
     glDisable(GL_CULL_FACE);
     for(auto& materialIt : content.materials)
     {
-        for(auto& staticmeshId : materialIt.second)
+        for(auto& staticmesh : materialIt.second)
         {
-            StaticmeshGL& staticmesh = content.staticmeshes.get(staticmeshId);
-            if(staticmesh.mesh)
+            if(staticmesh->mesh)
             {
-                MeshGL& mesh = content.meshes.get(staticmesh.mesh);
-
-                Matrix4f mvp = vp * staticmesh.transform->getWorldMatrix();
+                Matrix4f mvp = vp * staticmesh->transform->getWorldMatrix();
                 glUniformMatrix4fv(MVP_MATRIX_LOCATION, 1, GL_FALSE, mvp.data());
 
-                glBindVertexArray(mesh.vao);
-                glDrawArrays(GL_TRIANGLES, 0, mesh.size);
+                glBindVertexArray(staticmesh->mesh->vao);
+                glDrawArrays(GL_TRIANGLES, 0, staticmesh->mesh->size);
                 glBindVertexArray(0);
             }
         }

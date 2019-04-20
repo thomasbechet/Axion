@@ -20,12 +20,14 @@ ADD_LIBRARY(
     ../../extlibs/GLEW/src/glew.c
     Loader/Loader.cpp
     Renderer/RendererGL.cpp
-    Renderer/CameraGL.cpp
-    Renderer/ShaderGL.cpp
-    Renderer/MeshGL.cpp
-    Renderer/StaticmeshGL.cpp
-    Renderer/MaterialGL.cpp
-    Renderer/TextureGL.cpp
+    Renderer/Asset/RendererShaderGL.cpp
+    Renderer/Asset/RendererMeshGL.cpp
+    Renderer/Asset/RendererMaterialGL.cpp
+    Renderer/Asset/RendererTextureGL.cpp
+    Renderer/Scene/RendererStaticmeshGL.cpp
+    Renderer/Scene/RendererCameraGL.cpp
+    Renderer/Scene/RendererPointLightGL.cpp
+    Renderer/Scene/RendererDirectionalLightGL.cpp
     Renderer/FrameBuffer/ForwardPlusBuffers.cpp
     Renderer/FrameBuffer/RenderBuffer.cpp
     Renderer/Buffer/ConstantsUBO.cpp
@@ -35,9 +37,8 @@ ADD_LIBRARY(
     Renderer/Buffer/CameraUBO.cpp
     Renderer/Buffer/ConstantsUBO.cpp
     Renderer/Buffer/CullLightSSBO.cpp
+    Renderer/GUI/RendererViewportGL.cpp
     Renderer/Shader/ShaderGLSL.cpp
-    Renderer/Light/PointLightGL.cpp
-    Renderer/Light/DirectionalLightGL.cpp
     Renderer/RenderPass/RenderPass.cpp
     Renderer/RenderPass/ForwardPlusPass.cpp
     Renderer/RenderPass/WireframePass.cpp

@@ -128,7 +128,6 @@ public:
     void onStart() override
     {
         ax::Engine::assets().package.loadFromFile("mypackage", "../packages/package.json");
-        ax::Engine::assets().log();
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
         ax::BasicSpectatorSystem& cameraSystem = ax::Engine::systems().add<ax::BasicSpectatorSystem>();
@@ -174,6 +173,7 @@ public:
         #define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
             //ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(512, 288));
+            //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(512, 288));
             //ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(64, 36));
             //ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(3840, 2160));
         #endif
@@ -189,6 +189,8 @@ public:
 
         CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
         system.setSpawnTransform(&cameraTransform);
+
+        ax::Engine::assets().log();
     }
     void onStop() override
     {

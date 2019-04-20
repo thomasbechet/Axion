@@ -15,7 +15,7 @@ namespace ax
     class AXION_GL_API DebugLightCullingPass : public RenderPass
     {
     public:
-        DebugLightCullingPass(RenderContent& content, Viewport& viewport);
+        DebugLightCullingPass(RenderContent& content, RendererViewportGL& viewport);
 
         void initialize() noexcept override;
         void terminate() noexcept override;

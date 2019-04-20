@@ -9,7 +9,7 @@
 
 namespace ax
 {
-    class MaterialGL;
+    class RendererMaterialGL;
 
     class AXION_GL_API MaterialUBO
     {
@@ -26,9 +26,9 @@ namespace ax
         MaterialUBO();
         ~MaterialUBO();
 
-        void load(MaterialGL& material) noexcept;
-        void unload(MaterialGL& material) noexcept;
-        void updateMaterial(const MaterialGL& material) noexcept;
+        void load(RendererMaterialGL& material) noexcept;
+        void unload(RendererMaterialGL& material) noexcept;
+        void updateMaterial(const RendererMaterialGL& material) noexcept;
 
     private:
         GLuint m_ubo;

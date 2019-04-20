@@ -9,7 +9,7 @@
 
 using namespace ax;
 
-ForwardPlusPass::ForwardPlusPass(RenderContent& content, Viewport& viewport) : RenderPass(content, viewport) {}
+ForwardPlusPass::ForwardPlusPass(RenderContent& content, RendererViewportGL& viewport) : RenderPass(content, viewport) {}
 
 void ForwardPlusPass::initialize() noexcept
 {
@@ -23,16 +23,20 @@ void ForwardPlusPass::initialize() noexcept
     m_buffers = std::make_unique<ForwardPlusBuffers>(viewport.resolution);
 
     //Quad
-    m_quadTextureShader = content.shaders.get(content.quadTextureShader->getHandle()).shader.getProgram();
+    RendererShaderHandle quadTextureShader = content.quadTextureShader->getHandle();
+    m_quadTextureShader = static_cast<RendererShaderGL&>(*quadTextureShader).shader.getProgram();
 
     //Generic shader
-    m_genericShader = content.shaders.get(content.genericShader->getHandle()).shader.getProgram();
+    RendererShaderHandle genericShader = content.genericShader->getHandle();
+    m_genericShader = static_cast<RendererShaderGL&>(*genericShader).shader.getProgram();
 
     //Geometry shader
-    m_geometryShader = content.shaders.get(content.geometryShader->getHandle()).shader.getProgram();
+    RendererShaderHandle geometryShader = content.geometryShader->getHandle();
+    m_geometryShader = static_cast<RendererShaderGL&>(*geometryShader).shader.getProgram();
 
     //PostProcess shader
-    m_postProcessShader = content.shaders.get(content.postProcessShader->getHandle()).shader.getProgram();
+    RendererShaderHandle postProcessShader = content.postProcessShader->getHandle();
+    m_postProcessShader = static_cast<RendererShaderGL&>(*postProcessShader).shader.getProgram();
 
     //LightCullingCompute shader
     m_lightCullComputeShader = content.lightCullingComputeShader.getProgram();
@@ -61,7 +65,7 @@ void ForwardPlusPass::render(double alpha) noexcept
 void ForwardPlusPass::updateUBOs() noexcept
 {
     //Compute camera matrix
-    CameraGL& camera = content.cameras.get(viewport.camera);
+    RendererCameraGL& camera = *viewport.camera;
 
     Vector3f eye = camera.transform->getTranslation();
     Vector3f forward = camera.transform->getForwardVector();
@@ -102,24 +106,21 @@ void ForwardPlusPass::renderGeometryPass() noexcept
 
     for(auto& materialIt : content.materials)
     {
-        MaterialGL& material = materialIt.first;
+        RendererMaterialGL& material = *materialIt.first.get();
 
         glUniform1ui(MATERIAL_INDEX_LOCATION, material.uboIndex);
 
         if(material.parameters.useNormalTexture)
         {
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.parameters.normalTexture).id);
+            glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*material.parameters.normalTexture).texture);
         }
 
-        for(auto& staticmeshId : materialIt.second)
+        for(auto& staticmesh : materialIt.second)
         {
-            StaticmeshGL& staticmesh = content.staticmeshes.get(staticmeshId);
-            if(staticmesh.mesh)
+            if(staticmesh->mesh)
             {
-                MeshGL& mesh = content.meshes.get(staticmesh.mesh);
-
-                Matrix4f transform = staticmesh.transform->getWorldMatrix();
+                Matrix4f transform = staticmesh->transform->getWorldMatrix();
                 Matrix4f mvp = m_vpMatrix * transform;
                 Matrix3f normalToView = Matrix3f(m_viewMatrix) * Matrix3f::transpose(Matrix3f::inverse(Matrix3f(transform)));
 
@@ -127,8 +128,8 @@ void ForwardPlusPass::renderGeometryPass() noexcept
                 glUniformMatrix4fv(MVP_MATRIX_LOCATION, 1, GL_FALSE, mvp.data());
                 glUniformMatrix3fv(NORMALTOVIEW_MATRIX_LOCATION, 1, GL_FALSE, normalToView.data());
 
-                glBindVertexArray(mesh.vao);
-                glDrawArrays(GL_TRIANGLES, 0, mesh.size);
+                glBindVertexArray(staticmesh->mesh->vao);
+                glDrawArrays(GL_TRIANGLES, 0, staticmesh->mesh->size);
                 glBindVertexArray(0);
             }
         }
@@ -151,9 +152,9 @@ void ForwardPlusPass::renderLightPass() noexcept
 
     for(auto& materialIt : content.materials)
     {
-        MaterialGL& material = materialIt.first;
+        RendererMaterialGL& material = *materialIt.first.get();
 
-        GLuint shader = (material.parameters.shader) ? content.shaders.get(material.parameters.shader).shader.getProgram() : m_genericShader;
+        GLuint shader = (material.parameters.shader) ? static_cast<RendererShaderGL&>(*material.parameters.shader).shader.getProgram() : m_genericShader;
         glUseProgram(shader);
 
         glUniform1ui(MATERIAL_INDEX_LOCATION, material.uboIndex);
@@ -161,27 +162,24 @@ void ForwardPlusPass::renderLightPass() noexcept
         if(material.parameters.useDiffuseTexture)
         {
             glActiveTexture(GL_TEXTURE0 + DIFFUSE_TEXTURE_BINDING);
-            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.parameters.diffuseTexture).id);
+            glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*material.parameters.diffuseTexture).texture);
         }
         if(material.parameters.useNormalTexture)
         {
             glActiveTexture(GL_TEXTURE0 + NORMAL_TEXTURE_BINDING);
-            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.parameters.normalTexture).id);
+            glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*material.parameters.normalTexture).texture);
         }
         if(material.parameters.useSpecularTexture)
         {
             glActiveTexture(GL_TEXTURE0 + SPECULAR_TEXTURE_BINDING);
-            glBindTexture(GL_TEXTURE_2D, content.textures.get(material.parameters.specularTexture).id);
+            glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*material.parameters.specularTexture).texture);
         }
 
-        for(auto& staticmeshId : materialIt.second)
+        for(auto& staticmesh : materialIt.second)
         {
-            StaticmeshGL& staticmesh = content.staticmeshes.get(staticmeshId);
-            if(staticmesh.mesh)
+            if(staticmesh->mesh)
             {
-                MeshGL& mesh = content.meshes.get(staticmesh.mesh);
-
-                Matrix4f transform = staticmesh.transform->getWorldMatrix();
+                Matrix4f transform = staticmesh->transform->getWorldMatrix();
                 Matrix4f mvp = m_vpMatrix * transform;
                 Matrix3f normalToView = Matrix3f(m_viewMatrix) * Matrix3f::transpose(Matrix3f::inverse(Matrix3f(transform)));
 
@@ -189,8 +187,8 @@ void ForwardPlusPass::renderLightPass() noexcept
                 glUniformMatrix4fv(MVP_MATRIX_LOCATION, 1, GL_FALSE, mvp.data());
                 glUniformMatrix3fv(NORMALTOVIEW_MATRIX_LOCATION, 1, GL_FALSE, normalToView.data());
 
-                glBindVertexArray(mesh.vao);
-                glDrawArrays(GL_TRIANGLES, 0, mesh.size);
+                glBindVertexArray(staticmesh->mesh->vao);
+                glDrawArrays(GL_TRIANGLES, 0, staticmesh->mesh->size);
                 glBindVertexArray(0);
             }
         }

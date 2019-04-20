@@ -7,8 +7,6 @@
 
 namespace ax
 {
-    class CameraGL;
-
     class AXION_GL_API CameraUBO
     {
     private:

@@ -15,7 +15,7 @@ namespace ax
     class AXION_GL_API ForwardPlusPass : public RenderPass
     {
     public:
-        ForwardPlusPass(RenderContent& content, Viewport& viewport);
+        ForwardPlusPass(RenderContent& content, RendererViewportGL& viewport);
 
         void initialize() noexcept override;
         void terminate() noexcept override;

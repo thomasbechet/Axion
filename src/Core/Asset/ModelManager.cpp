@@ -61,8 +61,6 @@ bool ModelManager::unload(std::string name, bool tryUnloadMeshes, bool tryUnload
 
     if(m_models.at(name)->referenceCount() > 0) return false;
 
-    
-
     m_models.erase(name);
 
     return true;

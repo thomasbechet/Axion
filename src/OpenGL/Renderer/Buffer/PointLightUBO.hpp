@@ -9,10 +9,11 @@
 
 #include <vector>
 #include <array>
+#include <memory>
 
 namespace ax
 {
-    class PointLightGL;
+    class RendererPointLightGL;
 
     class AXION_GL_API PointLightUBO
     {
@@ -29,11 +30,11 @@ namespace ax
         PointLightUBO();
         ~PointLightUBO();
 
-        void load(PointLightGL& light) noexcept;
-        void unload(PointLightGL& light) noexcept;
+        void load(RendererPointLightGL& light) noexcept;
+        void unload(RendererPointLightGL& light) noexcept;
 
-        void updateLight(const PointLightGL& light) noexcept;
-        void updateMemory(IndexVector<PointLightGL>& lights, const Matrix4f& view) noexcept;
+        void updateLight(const RendererPointLightGL& light) noexcept;
+        void updateMemory(IndexVector<std::unique_ptr<RendererPointLightGL>>& lights, const Matrix4f& view) noexcept;
 
     private:
         GLuint m_uboLights;

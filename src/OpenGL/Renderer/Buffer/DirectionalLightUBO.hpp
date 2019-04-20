@@ -9,10 +9,11 @@
 
 #include <vector>
 #include <array>
+#include <memory>
 
 namespace ax
 {
-    class DirectionalLightGL;
+    class RendererDirectionalLightGL;
 
     class AXION_GL_API DirectionalLightUBO
     {
@@ -29,11 +30,11 @@ namespace ax
         DirectionalLightUBO();
         ~DirectionalLightUBO();
 
-        void load(DirectionalLightGL& light) noexcept;
-        void unload(DirectionalLightGL& light) noexcept;
+        void load(RendererDirectionalLightGL& light) noexcept;
+        void unload(RendererDirectionalLightGL& light) noexcept;
 
-        void updateLight(const DirectionalLightGL& light) noexcept;
-        void updateMemory(IndexVector<DirectionalLightGL>& lights, const Matrix4f& view) noexcept;
+        void updateLight(const RendererDirectionalLightGL& light) noexcept;
+        void updateMemory(IndexVector<std::unique_ptr<RendererDirectionalLightGL>>& lights, const Matrix4f& view) noexcept;
 
     private:
         GLuint m_uboLights;

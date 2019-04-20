@@ -1,7 +1,10 @@
 #pragma once
 
 #include <OpenGL/Export.hpp>
+#include <Core/Utility/Types.hpp>
 #include <Core/Renderer/Scene/RendererDirectionalLight.hpp>
+
+#include <GL/glew.h>
 
 namespace ax
 {
@@ -21,6 +24,6 @@ namespace ax
         GLuint uboIndex;
 
         Id id;
-        RenderContent* content;
+        RenderContent* content = nullptr;
     }; 
 }

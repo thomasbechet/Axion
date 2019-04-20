@@ -3,6 +3,8 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Color.hpp>
+#include <Core/Renderer/Asset/RendererTexture.hpp>
+#include <Core/Renderer/Asset/RendererShader.hpp>
 
 namespace ax
 {
