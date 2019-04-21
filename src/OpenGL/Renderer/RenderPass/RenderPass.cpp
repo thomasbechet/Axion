@@ -2,7 +2,7 @@
 
 using namespace ax;
 
-RenderPass::RenderPass(RenderContent& _content, RendererViewportGL& _viewport) : 
+RenderPass::RenderPass(RenderContent& _content, RendererGUIViewportGL& _viewport) : 
     content(_content),
     viewport(_viewport)
 {

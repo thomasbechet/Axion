@@ -10,7 +10,7 @@
 
 using namespace ax;
 
-DebugLightCullingPass::DebugLightCullingPass(RenderContent& content, RendererViewportGL& viewport) : RenderPass(content, viewport) {}
+DebugLightCullingPass::DebugLightCullingPass(RenderContent& content, RendererGUIViewportGL& viewport) : RenderPass(content, viewport) {}
 
 void DebugLightCullingPass::initialize() noexcept
 {

@@ -9,7 +9,8 @@
 #include <OpenGL/Renderer/Scene/RendererStaticmeshGL.hpp>
 #include <OpenGL/Renderer/Scene/RendererPointLightGL.hpp>
 #include <OpenGL/Renderer/Scene/RendererDirectionalLightGL.hpp>
-#include <OpenGL/Renderer/GUI/RendererViewportGL.hpp>
+#include <OpenGL/Renderer/GUI/RendererGUIViewportGL.hpp>
+#include <OpenGL/Renderer/GUI/RendererGUILayoutGL.hpp>
 #include <OpenGL/Renderer/Buffer/MaterialUBO.hpp>
 #include <OpenGL/Renderer/Buffer/PointLightUBO.hpp>
 #include <OpenGL/Renderer/Buffer/DirectionalLightUBO.hpp>
@@ -52,7 +53,8 @@ namespace ax
         std::unique_ptr<ConstantsUBO> constantsUBO;
         std::unique_ptr<CullLightSSBO> cullLightSSBO;
 
-        IndexVector<std::unique_ptr<RendererViewportGL>> viewports;
+        IndexVector<std::unique_ptr<RendererGUIViewportGL>> viewports;
+        IndexVector<std::unique_ptr<RendererGUILayoutGL>> layouts;
     };
 
     class AXION_GL_API RendererGL : public Renderer
@@ -101,16 +103,12 @@ namespace ax
         //GUI////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Viewport
-        RendererViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override;
-        void destroyViewport(RendererViewportHandle& viewport) override;
+        RendererGUIViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override;
+        void destroyViewport(RendererGUIViewportHandle& viewport) override;
 
         //Layout
-        //virtual RendererGUILayout& createGUILayout() = 0;
-        //virtual void destroyGUILayout(RendererGUILayout& layout) = 0;
-
-        //GUIButton
-        //virtual RendererGUIButton& createGUIButton() = 0;
-        //virtual void destroyGUIButton(RendererGUIButton& button) = 0;
+        RendererGUILayoutHandle createGUILayout() override;
+        void destroyGUILayout(RendererGUILayoutHandle& layout) override;
 
     private:
         RenderContent m_content;

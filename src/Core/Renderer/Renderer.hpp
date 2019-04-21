@@ -14,7 +14,8 @@
 #include <Core/Renderer/Scene/RendererDirectionalLight.hpp>
 #include <Core/Renderer/Scene/RendererPointLight.hpp>
 #include <Core/Renderer/Scene/RendererStaticmesh.hpp>
-#include <Core/Renderer/GUI/RendererViewport.hpp>
+#include <Core/Renderer/GUI/RendererGUIViewport.hpp>
+#include <Core/Renderer/GUI/RendererGUILayout.hpp>
 
 #include <string>
 
@@ -70,24 +71,20 @@ namespace ax
         //GUI////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Viewport
-        virtual RendererViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) = 0;
-        virtual void destroyViewport(RendererViewportHandle& viewport) = 0;
+        virtual RendererGUIViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) = 0;
+        virtual void destroyViewport(RendererGUIViewportHandle& viewport) = 0;
 
         //Layout
-        //virtual RendererGUILayout& createGUILayout() = 0;
-        //virtual void destroyGUILayout(RendererGUILayout& layout) = 0;
-
-        //GUIButton
-        //virtual RendererGUIButton& createGUIButton() = 0;
-        //virtual void destroyGUIButton(RendererGUIButton& button) = 0;
+        virtual RendererGUILayoutHandle createGUILayout() = 0;
+        virtual void destroyGUILayout(RendererGUILayoutHandle& layout) = 0;
     
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public:
-        void setDefaultViewport(RendererViewportHandle viewport) noexcept;
-        RendererViewportHandle getDefaultViewport() const noexcept;
+        void setDefaultViewport(RendererGUIViewportHandle viewport) noexcept;
+        RendererGUIViewportHandle getDefaultViewport() const noexcept;
 
     private:
-        RendererViewportHandle m_defaultViewport = nullptr; 
+        RendererGUIViewportHandle m_defaultViewport = nullptr; 
     };
 }

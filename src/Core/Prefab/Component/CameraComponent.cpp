@@ -20,13 +20,13 @@ CameraComponent::~CameraComponent()
 
 void CameraComponent::bindDefaultViewport() noexcept
 {
-    RendererViewportHandle viewport = Engine::renderer().getDefaultViewport();
+    RendererGUIViewportHandle viewport = Engine::renderer().getDefaultViewport();
     if(Engine::renderer().getDefaultViewport()) 
     {
         viewport->setCamera(m_handle);
     }
 }
-void CameraComponent::bindViewport(RendererViewportHandle viewport) noexcept
+void CameraComponent::bindViewport(RendererGUIViewportHandle viewport) noexcept
 {   
     viewport->setCamera(m_handle);
 }

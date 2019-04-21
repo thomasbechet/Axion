@@ -8,7 +8,7 @@
 
 using namespace ax;
 
-WireframePass::WireframePass(RenderContent& content, RendererViewportGL& viewport) : RenderPass(content, viewport) {}
+WireframePass::WireframePass(RenderContent& content, RendererGUIViewportGL& viewport) : RenderPass(content, viewport) {}
 
 void WireframePass::initialize() noexcept
 {

@@ -37,7 +37,10 @@ ADD_LIBRARY(
     Renderer/Buffer/CameraUBO.cpp
     Renderer/Buffer/ConstantsUBO.cpp
     Renderer/Buffer/CullLightSSBO.cpp
-    Renderer/GUI/RendererViewportGL.cpp
+    Renderer/GUI/RendererGUIViewportGL.cpp
+    Renderer/GUI/RendererGUILayoutGL.cpp
+    Renderer/GUI/RendererGUIRectangleGL.cpp
+    Renderer/GUI/RendererGUIScalableRectangleGL.cpp
     Renderer/Shader/ShaderGLSL.cpp
     Renderer/RenderPass/RenderPass.cpp
     Renderer/RenderPass/ForwardPlusPass.cpp

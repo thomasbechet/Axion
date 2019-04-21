@@ -2,11 +2,11 @@
 
 using namespace ax;
 
-void Renderer::setDefaultViewport(RendererViewportHandle viewport) noexcept
+void Renderer::setDefaultViewport(RendererGUIViewportHandle viewport) noexcept
 {
     m_defaultViewport = viewport;
 }
-RendererViewportHandle Renderer::getDefaultViewport() const noexcept
+RendererGUIViewportHandle Renderer::getDefaultViewport() const noexcept
 {
     return m_defaultViewport;
 }

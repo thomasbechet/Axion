@@ -11,7 +11,7 @@ namespace ax
     class AXION_GL_API WireframePass : public RenderPass
     {
     public:
-        WireframePass(RenderContent& content, RendererViewportGL& viewport);
+        WireframePass(RenderContent& content, RendererGUIViewportGL& viewport);
 
         void initialize() noexcept override;
         void terminate() noexcept override;

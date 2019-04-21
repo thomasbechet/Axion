@@ -9,7 +9,7 @@
 
 using namespace ax;
 
-ForwardPlusPass::ForwardPlusPass(RenderContent& content, RendererViewportGL& viewport) : RenderPass(content, viewport) {}
+ForwardPlusPass::ForwardPlusPass(RenderContent& content, RendererGUIViewportGL& viewport) : RenderPass(content, viewport) {}
 
 void ForwardPlusPass::initialize() noexcept
 {

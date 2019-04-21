@@ -2,10 +2,16 @@
 
 #include <Core/Export.hpp>
 #include <Core/Math/Transform.hpp>
-#include <Core/Renderer/Scene/Parameter/RendererCameraParameters.hpp>
 
 namespace ax
 {
+    struct AXION_CORE_API RendererCameraParameters
+    {
+        float fov = 90.0f;
+        float near = 0.01f;
+        float far = 100.0f;
+    };
+
     class AXION_CORE_API RendererCamera
     {
     public:

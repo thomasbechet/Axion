@@ -3,7 +3,6 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Color.hpp>
-#include <Core/Renderer/Scene/Parameter/Light/RendererPointLightParameters.hpp>
 #include <Core/Renderer/Scene/RendererPointLight.hpp>
 #include <Core/World/Component/Component.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>

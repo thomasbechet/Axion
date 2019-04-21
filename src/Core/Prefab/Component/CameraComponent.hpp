@@ -5,8 +5,7 @@
 #include <Core/World/Entity/Entity.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Renderer/Scene/RendererCamera.hpp>
-#include <Core/Renderer/Scene/Parameter/RendererCameraParameters.hpp>
-#include <Core/Renderer/GUI/RendererViewport.hpp>
+#include <Core/Renderer/GUI/RendererGUIViewport.hpp>
 
 #include <string>
 
@@ -21,7 +20,7 @@ namespace ax
         ~CameraComponent();
 
         void bindDefaultViewport() noexcept;
-        void bindViewport(RendererViewportHandle viewport) noexcept;
+        void bindViewport(RendererGUIViewportHandle viewport) noexcept;
 
         void setFov(float fov) noexcept;
         float getFov() const noexcept;

@@ -3,7 +3,6 @@
 #include <OpenGL/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Renderer/Asset/RendererMaterial.hpp>
-#include <Core/Renderer/Asset/Parameter/RendererMaterialParameters.hpp>
 
 #include <GL/glew.h>
 
