@@ -2,6 +2,15 @@
 
 using namespace ax;
 
+RendererGUIScalableRectangleGL::RendererGUIScalableRectangleGL()
+{
+
+}
+RendererGUIScalableRectangleGL::~RendererGUIScalableRectangleGL()
+{
+    
+}
+
 void RendererGUIScalableRectangleGL::setTransform(Transform2D* transform)
 {
     
@@ -25,4 +34,9 @@ void RendererGUIScalableRectangleGL::setDepth(unsigned depth)
 void RendererGUIScalableRectangleGL::setParameters(const RendererGUIScalableRectangleParameters& parameters)
 {
 
+}
+
+void RendererGUIScalableRectangleGL::draw() noexcept
+{
+    
 }

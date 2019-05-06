@@ -44,6 +44,7 @@ namespace ax
         AssetReference<Shader> postProcessShader;
         AssetReference<Shader> quadTextureShader;
         AssetReference<Shader> wireframeShader;
+        AssetReference<Shader> guiRectangleShader;
         ShaderGLSL lightCullingComputeShader;
 
         std::unique_ptr<MaterialUBO> materialUBO;

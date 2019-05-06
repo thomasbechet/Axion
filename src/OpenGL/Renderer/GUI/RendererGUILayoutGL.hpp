@@ -1,12 +1,12 @@
 #pragma once
 
 #include <OpenGL/Export.hpp>
-#include <OpenGL/Renderer/GUI/RendererGUIRectangleGL.hpp>
-#include <OpenGL/Renderer/GUI/RendererGUIScalableRectangleGL.hpp>
+#include <OpenGL/Renderer/GUI/RendererGUIComponentGL.hpp>
 #include <Core/Renderer/GUI/RendererGUILayout.hpp>
-#include <Core/Utility/IndexVector.hpp>
+#include <Core/Utility/Types.hpp>
 
 #include <memory>
+#include <vector>
 
 namespace ax
 {
@@ -19,9 +19,10 @@ namespace ax
         RendererGUIScalableRectangleHandle createScalableRectangle() override;
         void destroyScalableRectangle(RendererGUIScalableRectangleHandle& handle) override;
 
-        
+        void draw() noexcept;
 
-        IndexVector<std::unique_ptr<RendererGUIRectangleGL>> rectangles;
-        IndexVector<std::unique_ptr<RendererGUIRectangleGL>> scalableRectangles;
+        std::vector<std::pair<unsigned, std::unique_ptr<RendererGUIComponentGL>>> components;
+
+        Id id;
     };
 }

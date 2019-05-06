@@ -4,19 +4,16 @@
 #include <Core/Renderer/Asset/RendererTexture.hpp>
 #include <Core/Renderer/Asset/RendererShader.hpp>
 #include <Core/Math/Transform2D.hpp>
+#include <Core/Math/Rect.hpp>
 #include <Core/Utility/Color.hpp>
 
 namespace ax
 {
     struct AXION_CORE_API RendererGUIRectangleParameters
     {
-        unsigned width = 0;
-        unsigned height = 0;
-
-        unsigned uvLeft = 0;
-        unsigned uvRight = 0;
-        unsigned uvTop = 0;
-        unsigned uvBottom = 0;
+        Vector2u size;
+        Vector2i origin;
+        Rectu uv;
 
         RendererTextureHandle texture = nullptr;
         RendererShaderHandle shader = nullptr;

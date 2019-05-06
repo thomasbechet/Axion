@@ -22,9 +22,22 @@ void WireframePass::initialize() noexcept
     m_wireframeShader = static_cast<RendererShaderGL&>(*wireframeShaderHandle).shader.getProgram();
     RendererShaderHandle quadTextureShaderHandle = content.quadTextureShader->getHandle();
     m_quadTextureShader = static_cast<RendererShaderGL&>(*quadTextureShaderHandle).shader.getProgram();
+    RendererShaderHandle guiRectangleShaderHandle = content.guiRectangleShader->getHandle();
+    m_guiRectangleShader = static_cast<RendererShaderGL&>(*guiRectangleShaderHandle).shader.getProgram();
 
     //Load buffers
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
+
+    m_rectangle = std::make_unique<RendererGUIRectangleGL>();
+    RendererGUIRectangleParameters parameters;
+    parameters.size.x = 300;
+    parameters.size.y = 225;
+    parameters.texture = Engine::assets().texture("texture_image")->getHandle();
+    parameters.uv.bottom = 0;
+    parameters.uv.left = 0;
+    parameters.uv.width = 300;
+    parameters.uv.height = 225;
+    m_rectangle->setParameters(parameters);
 }
 void WireframePass::terminate() noexcept
 {
@@ -86,6 +99,24 @@ void WireframePass::render(double alpha) noexcept
             }
         }
     }
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDisable(GL_DEPTH_TEST);
+    glUseProgram(m_guiRectangleShader);
+
+    Transform2D transform;
+    transform.translate(Vector2f(100.0f, 30.0f));
+    Vector2f layoutSize(
+        Engine::window().getSize().x,
+        Engine::window().getSize().y);
+
+    glUniformMatrix3fv(TRANSFORM_MATRIX_LOCATION, 1, GL_FALSE, transform.getWorldMatrix().data());
+    glUniform2fv(LAYOUT_SIZE_LOCATION, 1, layoutSize.data());
+    glActiveTexture(GL_TEXTURE0 + GUI_TEXTURE_BINDING);
+    glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*m_rectangle->parameters.texture).texture);
+    m_rectangle->draw();
+
+    glEnable(GL_DEPTH_TEST);
 
     //Render texture to backbuffer
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

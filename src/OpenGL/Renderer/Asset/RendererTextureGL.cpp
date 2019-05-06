@@ -9,6 +9,8 @@ RendererTextureHandle RendererGL::createTexture(Vector2u size, TextureFormat for
     RendererTextureGL* texture = m_content.textures.get(id).get();
     texture->id = id;
 
+    texture->size = size;
+
     glGenTextures(1, &texture->texture);
     glBindTexture(GL_TEXTURE_2D, texture->texture);
 

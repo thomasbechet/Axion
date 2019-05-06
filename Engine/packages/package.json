@@ -1,11 +1,6 @@
 {
     "type":"package",
-    "texture_image":
-    {
-        "type":"texture",
-        "name":"texture_renomme",
-        "source":"$ENGINE_DIR/textures/image.png"
-    },
+    
     "texture_cube_normal":
     {
         "type":"texture",

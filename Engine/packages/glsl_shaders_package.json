@@ -1,0 +1,54 @@
+{
+    "type":"package",
+	
+	"texture_image":
+    {
+        "type":"texture",
+        "name":"texture_image",
+        "source":"$ENGINE_DIR/textures/image.png"
+    },
+
+    "glsl_debug_light_culling":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/debug_light_culling.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/debug_light_culling.frag"
+    },
+    "glsl_geometry":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/geometry.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/geometry.frag"
+    },
+    "glsl_generic":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/generic.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/generic.frag"
+    },
+    "glsl_post_process":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/post_process.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/post_process.frag"
+    },
+    "glsl_quad_texture":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/quad_texture.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/quad_texture.frag"
+    },
+    "glsl_wireframe":
+    {
+        "type":"shader",
+        "vertex":"$ENGINE_DIR/shaders/glsl/wireframe.vert",
+        "fragment":"$ENGINE_DIR/shaders/glsl/wireframe.frag"
+    },
+	
+	"glsl_gui_rectangle":
+	{
+		"type":"shader",
+		"vertex":"$ENGINE_DIR/shaders/glsl/gui/rectangle.vert",
+		"fragment":"$ENGINE_DIR/shaders/glsl/gui/rectangle.frag"
+	}
+}

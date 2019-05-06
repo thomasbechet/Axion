@@ -1,6 +1,6 @@
 #version 430 core
 
-layout(location = 0) in vec3 in_vertex;
+layout(location = 0) in vec3 in_position;
 layout(location = 1) in vec2 in_uv;
 layout(location = 2) in vec3 in_normal;
 layout(location = 3) in vec3 in_tangent;
@@ -26,7 +26,7 @@ layout(std140, binding = $CAMERA_UBO_BINDING_POINT) uniform Camera
 
 void main()
 {
-	vec4 position = mvp * vec4(in_vertex, 1.0f);
+	vec4 position = mvp * vec4(in_position, 1.0f);
 	gl_Position = position;
 
 	POSITION = vec3(inv_camera_projection * position);

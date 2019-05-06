@@ -49,13 +49,14 @@ void RendererGL::initialize() noexcept
     m_content.cullLightSSBO = std::make_unique<CullLightSSBO>(Vector2u(1, 1));
 
     //Load shaders
-    Engine::assets().package.loadFromFile("shaders_package", "$ENGINE_DIR/packages/opengl_shaders_package.json");
-    m_content.debugLightCullingShader = Engine::assets().shader("opengl_debug_light_culling");
-    m_content.geometryShader = Engine::assets().shader("opengl_geometry");
-    m_content.genericShader = Engine::assets().shader("opengl_generic");
-    m_content.postProcessShader = Engine::assets().shader("opengl_post_process");
-    m_content.quadTextureShader = Engine::assets().shader("opengl_quad_texture");
-    m_content.wireframeShader = Engine::assets().shader("opengl_wireframe");
+    Engine::assets().package.loadFromFile("glsl_shaders_package", "$ENGINE_DIR/packages/glsl_shaders_package.json");
+    m_content.debugLightCullingShader = Engine::assets().shader("glsl_debug_light_culling");
+    m_content.geometryShader = Engine::assets().shader("glsl_geometry");
+    m_content.genericShader = Engine::assets().shader("glsl_generic");
+    m_content.postProcessShader = Engine::assets().shader("glsl_post_process");
+    m_content.quadTextureShader = Engine::assets().shader("glsl_quad_texture");
+    m_content.wireframeShader = Engine::assets().shader("glsl_wireframe");
+    m_content.guiRectangleShader = Engine::assets().shader("glsl_gui_rectangle");
     
     //Compute shaders
     Path lightCullPath = "$ENGINE_DIR/shaders/glsl/light_culling.comp";
@@ -73,6 +74,7 @@ void RendererGL::terminate() noexcept
     m_content.postProcessShader.reset();
     m_content.quadTextureShader.reset();
     m_content.wireframeShader.reset();
+    m_content.guiRectangleShader.reset();
 
     for(auto& viewport : m_content.viewports)
     {

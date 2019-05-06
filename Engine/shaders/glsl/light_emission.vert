@@ -1,6 +1,6 @@
 #version 430 core
 
-layout(location = 0) in vec3 in_vertex;
+layout(location = 0) in vec3 in_position;
 
 //layout(location = $MVP_MATRIX_LOCATION) uniform mat4 mvp;
 
@@ -17,5 +17,5 @@ layout(std140, binding = $CAMERA_UBO_BINDING_POINT) uniform Camera
 
 void main()
 {
-	gl_Position = mvp * vec4(in_vertex, 1.0f);
+	gl_Position = mvp * vec4(in_position, 1.0f);
 }

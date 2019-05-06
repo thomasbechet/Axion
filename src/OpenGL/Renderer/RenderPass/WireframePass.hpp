@@ -4,6 +4,8 @@
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>
 
+#include <OpenGL/Renderer/GUI/RendererGUIRectangleGL.hpp>
+
 #include <memory>
 
 namespace ax
@@ -23,5 +25,8 @@ namespace ax
 
         GLuint m_quadTextureShader;
         GLuint m_wireframeShader;
+        GLuint m_guiRectangleShader;
+
+        std::unique_ptr<RendererGUIRectangleGL> m_rectangle;
     };
 }
