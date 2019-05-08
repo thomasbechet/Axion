@@ -4,7 +4,7 @@
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>
 
-#include <OpenGL/Renderer/GUI/RendererGUIRectangleGL.hpp>
+#include <OpenGL/Renderer/GUI/RendererGUILayoutGL.hpp>
 
 #include <memory>
 
@@ -27,6 +27,6 @@ namespace ax
         GLuint m_wireframeShader;
         GLuint m_guiRectangleShader;
 
-        std::unique_ptr<RendererGUIRectangleGL> m_rectangle;
+        std::unique_ptr<RendererGUILayoutGL> m_layout;
     };
 }

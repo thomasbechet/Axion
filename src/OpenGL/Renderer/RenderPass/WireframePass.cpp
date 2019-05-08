@@ -28,16 +28,16 @@ void WireframePass::initialize() noexcept
     //Load buffers
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
 
-    m_rectangle = std::make_unique<RendererGUIRectangleGL>();
-    RendererGUIRectangleParameters parameters;
-    parameters.size.x = 300;
-    parameters.size.y = 225;
-    parameters.texture = Engine::assets().texture("texture_image")->getHandle();
-    parameters.uv.bottom = 0;
-    parameters.uv.left = 0;
-    parameters.uv.width = 300;
-    parameters.uv.height = 225;
-    m_rectangle->setParameters(parameters);
+    m_layout = std::make_unique<RendererGUILayoutGL>();
+    RendererGUIRectangleHandle rectangle = m_layout->createRectangle();
+    rectangle->setTexture(Engine::assets().texture("texture_image")->getHandle());
+    rectangle->setSize(Vector2u(300, 225));
+    Rectu uv;
+    uv.bottom = 0;
+    uv.left = 0;
+    uv.width = 300;
+    uv.height = 225;
+    rectangle->setUV(uv);
 }
 void WireframePass::terminate() noexcept
 {
@@ -71,6 +71,9 @@ void WireframePass::render(double alpha) noexcept
 
     Matrix4f projectionMatrix = Matrix4f::perspectiveInversedZ(camera.fov, aspect, camera.near, camera.far);
     Matrix4f invProjectionMatrix = Matrix4f::inverse(Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far));
+
+    //Update constants
+    content.constantsUBO->setViewportResolution(viewport.resolution);
 
     content.cameraUBO->update(viewMatrix, projectionMatrix, invProjectionMatrix);
     content.constantsUBO->update();

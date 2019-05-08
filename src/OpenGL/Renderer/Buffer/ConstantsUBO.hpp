@@ -13,15 +13,17 @@ namespace ax
     private:
         struct ConstantsUBOData
         {
-            Vector2u resolution;
+            Vector2u viewportResolution;
+            Vector2u windowSize;
         };
 
     public:
         ConstantsUBO();
         ~ConstantsUBO();
 
-        void setResolution(const Vector2u& resolution) noexcept;
-        void update() const noexcept;
+        void setViewportResolution(const Vector2u& resolution) noexcept;
+        void setWindowSize(const Vector2u& size) noexcept;
+        void update() noexcept;
 
     private:
         GLuint m_ubo;

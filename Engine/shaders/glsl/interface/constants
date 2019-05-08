@@ -1,7 +1,8 @@
 //CONSTANTS//
 struct Constant
 {
-    ivec2 resolution;
+    uvec2 viewportResolution;
+	uvec2 windowSize;
 };
 layout(std140, binding = $CONSTANTS_UBO_BINDING_POINT) uniform Constants
 {

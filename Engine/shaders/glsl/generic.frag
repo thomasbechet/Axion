@@ -20,7 +20,8 @@ layout(binding = $GBUFFER_DEPTH_TEXTURE_BINDING) uniform sampler2D gbuffer_depth
 //CONSTANTS//
 struct Constant
 {
-    ivec2 resolution;
+    uvec2 viewportResolution;
+	uvec2 windowSize;
 };
 layout(std140, binding = $CONSTANTS_UBO_BINDING_POINT) uniform Constants
 {
@@ -50,7 +51,7 @@ layout(std140, binding = $POINT_LIGHT_UBO_BINDING_POINT) uniform PointLights
     uint getCullKey()
     {
         ivec2 tileID = ivec2(gl_FragCoord.xy) / $CULL_TILE_SIZE;
-        return (tileID.y * (constants.resolution.x / $CULL_TILE_SIZE) + tileID.x) * $CULL_POINT_LIGHT_MAX_PER_TILE;
+        return (tileID.y * (constants.viewportResolution.x / $CULL_TILE_SIZE) + tileID.x) * $CULL_POINT_LIGHT_MAX_PER_TILE;
     }
     PointLight getCullPointLight(uint index, uint cullKey)
     {

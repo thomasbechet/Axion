@@ -21,7 +21,7 @@ layout(std140, binding = $POINT_LIGHT_UBO_BINDING_POINT) uniform PointLights
     uint getCullKey()
     {
         ivec2 tileID = ivec2(gl_FragCoord.xy) / $CULL_TILE_SIZE;
-        return (tileID.y * (constants.resolution.x / $CULL_TILE_SIZE) + tileID.x) * $CULL_POINT_LIGHT_MAX_PER_TILE;
+        return (tileID.y * (constants.viewportResolution.x / $CULL_TILE_SIZE) + tileID.x) * $CULL_POINT_LIGHT_MAX_PER_TILE;
     }
     PointLight getCullPointLight(uint index, uint cullKey)
     {

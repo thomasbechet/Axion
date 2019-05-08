@@ -39,6 +39,7 @@ ADD_LIBRARY(
     Renderer/Buffer/CullLightSSBO.cpp
     Renderer/GUI/RendererGUIViewportGL.cpp
     Renderer/GUI/RendererGUILayoutGL.cpp
+    Renderer/GUI/RendererGUIComponentGL.cpp
     Renderer/GUI/RendererGUIRectangleGL.cpp
     Renderer/GUI/RendererGUIScalableRectangleGL.cpp
     Renderer/Shader/ShaderGLSL.cpp

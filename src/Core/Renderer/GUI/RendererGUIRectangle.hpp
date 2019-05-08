@@ -1,33 +1,21 @@
 #pragma once
 
 #include <Core/Export.hpp>
+#include <Core/Renderer/GUI/RendererGUIComponent.hpp>
 #include <Core/Renderer/Asset/RendererTexture.hpp>
 #include <Core/Renderer/Asset/RendererShader.hpp>
-#include <Core/Math/Transform2D.hpp>
 #include <Core/Math/Rect.hpp>
-#include <Core/Utility/Color.hpp>
 
 namespace ax
 {
-    struct AXION_CORE_API RendererGUIRectangleParameters
-    {
-        Vector2u size;
-        Vector2i origin;
-        Rectu uv;
-
-        RendererTextureHandle texture = nullptr;
-        RendererShaderHandle shader = nullptr;
-    };
-
-    class AXION_CORE_API RendererGUIRectangle
+    class AXION_CORE_API RendererGUIRectangle : public RendererGUIComponent
     {
     public:
-        virtual void setTransform(Transform2D* transform) = 0;
-        virtual void setVisible(bool toggle) = 0;
-        virtual void setTransparency(float transparency) = 0;
-        virtual void setColor(Color3 color) = 0;
-        virtual void setDepth(unsigned depth) = 0;
-        virtual void setParameters(const RendererGUIRectangleParameters& parameters) = 0;
+        virtual void setSize(Vector2u size) = 0;
+        virtual void setOrigin(Vector2i origin) = 0;
+        virtual void setUV(Rectu uv) = 0;
+        virtual void setTexture(RendererTextureHandle texture) = 0;
+        virtual void setShader(RendererShaderHandle shader) = 0;
     };
 
     class AXION_CORE_API NullRendererGUIRectangle : public RendererGUIRectangle
@@ -38,7 +26,12 @@ namespace ax
         void setTransparency(float transparency) override {}
         void setColor(Color3 color) override {}
         void setDepth(unsigned depth) override {}
-        void setParameters(const RendererGUIRectangleParameters& parameters) override {}
+
+        void setSize(Vector2u size) override {}
+        void setOrigin(Vector2i origin) override {}
+        void setUV(Rectu uv) override {}
+        void setTexture(RendererTextureHandle texture) override {}
+        void setShader(RendererShaderHandle shader) override {}
     };
 
     using RendererGUIRectangleHandle = RendererGUIRectangle*;

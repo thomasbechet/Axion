@@ -17,10 +17,7 @@ namespace ax
         void setTransparency(float transparency) override;
         void setColor(Color3 color) override;
         void setDepth(unsigned depth) override;
-        void setParameters(const RendererGUIScalableRectangleParameters& parameters) override;
 
         void draw() noexcept;
-
-        Id id;
     };
 }

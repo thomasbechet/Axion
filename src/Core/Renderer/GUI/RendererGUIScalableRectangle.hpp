@@ -1,10 +1,9 @@
 #pragma once
 
 #include <Core/Export.hpp>
+#include <Core/Renderer/GUI/RendererGUIComponent.hpp>
 #include <Core/Renderer/Asset/RendererTexture.hpp>
 #include <Core/Renderer/Asset/RendererShader.hpp>
-#include <Core/Math/Transform2D.hpp>
-#include <Core/Utility/Color.hpp>
 #include <Core/Utility/Types.hpp>
 
 namespace ax
@@ -18,34 +17,26 @@ namespace ax
         unsigned width = 0;
         unsigned height = 0;
 
+        //REVOIR LE SYSTEME UV
+
         unsigned marginLeft = 0;
         unsigned marginRight = 0;
         unsigned marginTop = 0;
         unsigned marginBottom = 0;  
 
-        unsigned uvInsideLeft = 0;
-        unsigned uvInsideRight = 0;
-        unsigned uvInsideTop = 0;
-        unsigned uvInsideBottom = 0;
-
-        unsigned uvBorderLeft = 0;
-        unsigned uvBorderRight = 0;
-        unsigned uvBorderTop = 0;
-        unsigned uvBorderBottom = 0;
-
         RendererTextureHandle texture = nullptr;
         RendererShaderHandle shader = nullptr;
     };
 
-    class AXION_CORE_API RendererGUIScalableRectangle
+    class AXION_CORE_API RendererGUIScalableRectangle : public RendererGUIComponent
     {
     public:
-        virtual void setTransform(Transform2D* transform) = 0;
-        virtual void setVisible(bool toggle) = 0;
-        virtual void setTransparency(float transparency) = 0;
-        virtual void setColor(Color3 color) = 0;
-        virtual void setDepth(unsigned depth) = 0;
-        virtual void setParameters(const RendererGUIScalableRectangleParameters& parameters) = 0;
+        /*virtual void setSize(Vector2u size) = 0;
+        //virtual void setMargin
+        virtual void setInsideUV(Rectu uv) = 0;
+        virtual void setBorderUV(Rectu uv) = 0;
+        virtual void setTexture(RendererTextureHandle texture) = 0;
+        virtual void setShader(RendererShaderHandle shader) = 0;*/
     };
 
     class AXION_CORE_API NullRendererGUIScalableRectangle : public RendererGUIScalableRectangle
@@ -56,7 +47,13 @@ namespace ax
         void setTransparency(float transparency) override {}
         void setColor(Color3 color) override {}
         void setDepth(unsigned depth) override {}
-        void setParameters(const RendererGUIScalableRectangleParameters& parameters) override {}
+        
+        /*virtual void setSize(Vector2u size) override {}
+        //virtual void setMargin
+        virtual void setInsideUV(Rectu uv) override {}
+        virtual void setBorderUV(Rectu uv) override {}
+        virtual void setTexture(RendererTextureHandle texture) override {}
+        virtual void setShader(RendererShaderHandle shader) override {}*/
     };
 
     using RendererGUIScalableRectangleHandle = RendererGUIScalableRectangle*;

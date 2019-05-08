@@ -3,7 +3,8 @@
 //CONSTANTS//
 struct Constant
 {
-    ivec2 resolution;
+    uvec2 viewportResolution;
+	uvec2 windowSize;
 };
 layout(std140, binding = $CONSTANTS_UBO_BINDING_POINT) uniform Constants
 {
@@ -46,7 +47,7 @@ void main()
 	//One thread compute frustum planes
 	if(gl_LocalInvocationIndex == 0)
 	{
-		vec2 tileScale = vec2(constants.resolution * (1.0f / float(2 * $CULL_TILE_SIZE)));
+		vec2 tileScale = vec2(constants.viewportResolution * (1.0f / float(2 * $CULL_TILE_SIZE)));
 		vec2 tileBias = tileScale - vec2(gl_WorkGroupID.xy);
 
 		vec4 col1 = vec4(-camera_projection[0][0] * tileScale.x, camera_projection[0][1], tileBias.x, camera_projection[0][3]);

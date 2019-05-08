@@ -12,7 +12,7 @@ namespace ax
     class AXION_GL_API RendererGUIRectangleGL : public RendererGUIRectangle, RendererGUIComponentGL
     {
     public:
-        RendererGUIRectangleGL();
+        RendererGUIRectangleGL(GLuint defaultShader);
         ~RendererGUIRectangleGL();
 
         void setTransform(Transform2D* transform) override;
@@ -20,25 +20,38 @@ namespace ax
         void setTransparency(float transparency) override;
         void setColor(Color3 color) override;
         void setDepth(unsigned depth) override;
-        void setParameters(const RendererGUIRectangleParameters& parameters) override;
+        
+        void setSize(Vector2u size) override;
+        void setOrigin(Vector2i origin) override;
+        void setUV(Rectu uv) override;
+        void setTexture(RendererTextureHandle texture) override;
+        void setShader(RendererShaderHandle shader) override;
 
         void draw() noexcept override;
 
-        Transform2D* transform = nullptr;
-        bool visible = true;
-        Color3 color;
-        unsigned depth = 0;
-        float transparency = 0.0f;
-        RendererGUIRectangleParameters parameters;
+    private:
+        Transform2D* m_transform = nullptr;
+        bool m_visible = true;
+        Color3 m_color;
+        unsigned m_depth = 0;
+        float m_transparency = 0.0f;
 
-        GLuint vao;
-        GLuint ibo;
-        GLuint uvsVBO;
-        GLuint positionsVBO;
+        Vector2u m_size;
+        Vector2i m_origin;
+        Rectu m_uv;
+        RendererTextureHandle m_texture;
+        RendererShaderHandle m_shader;
+
+        GLuint m_vao;
+        GLuint m_ibo;
+        GLuint m_uvVBO;
+        GLuint m_positionVBO;
+        GLuint m_defaultShader;
 
     private:
         void create() noexcept;
-        void update() noexcept;
         void destroy() noexcept;
+        void updatePositions() noexcept;
+        void updateUVs() noexcept;
     };
 }

@@ -82,7 +82,7 @@ void ForwardPlusPass::updateUBOs() noexcept
     m_vpMatrix = projectionMatrix * m_viewMatrix;
 
     //Update constants
-    content.constantsUBO->setResolution(viewport.resolution);
+    content.constantsUBO->setViewportResolution(viewport.resolution);
 
     //Updates Lights
     content.pointLightUBO->updateMemory(content.pointLights, m_viewMatrix);
