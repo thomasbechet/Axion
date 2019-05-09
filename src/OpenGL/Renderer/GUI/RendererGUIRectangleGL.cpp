@@ -4,9 +4,6 @@
 #include <OpenGL/Renderer/Asset/RendererShaderGL.hpp>
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 
-#include <Core/Context/Engine.hpp>
-#include <Core/Window/Window.hpp>
-
 #include <GL/glew.h>
 
 #include <array>
@@ -14,8 +11,7 @@
 using namespace ax;
 
 RendererGUIRectangleGL::RendererGUIRectangleGL(RendererGUILayoutGL& layout, GLuint defaultShader) :
-    RendererGUIComponentGL(layout),
-    m_defaultShader(defaultShader)
+    RendererGUIComponentGL(layout), m_defaultShader(defaultShader)
 {
     create();
 }
@@ -73,21 +69,18 @@ void RendererGUIRectangleGL::draw() noexcept
 {
     if(m_transform && m_visible)
     {
-        
-
         if(m_shader)
-        {
-            std::cout << "enter1" << std::endl;
             glUseProgram(static_cast<RendererShaderGL&>(*m_shader).shader.getProgram());
-        }
         else
-        {
-            std::cout << "enter" << std::endl;
             glUseProgram(m_defaultShader);
-        }
-            
 
         glUniformMatrix3fv(TRANSFORM_MATRIX_LOCATION, 1, GL_FALSE, m_transform->getWorldMatrix().data());
+        Vector4f colorAndTransparency;
+        colorAndTransparency.x = m_color.r;
+        colorAndTransparency.y = m_color.g;
+        colorAndTransparency.z = m_color.b;
+        colorAndTransparency.w = m_transparency;
+        glUniform4fv(GUI_COLOR_LOCATION, 1, (GLfloat*)&colorAndTransparency);
         glActiveTexture(GL_TEXTURE0 + GUI_TEXTURE_BINDING);
         glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*m_texture).texture);
 

@@ -38,6 +38,8 @@ void WireframePass::initialize() noexcept
     rectangle->setTransform(trans);
     rectangle->setTexture(Engine::assets().texture("texture_image")->getHandle());
     rectangle->setSize(Vector2u(300, 225));
+    rectangle->setTransparency(0.3f);
+    rectangle->setColor(Color3(1.0f, 0.0f, 0.0f));
     Rectu uv;
     uv.bottom = 0;
     uv.left = 0;
@@ -112,7 +114,11 @@ void WireframePass::render(double alpha) noexcept
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDisable(GL_DEPTH_TEST);
 
+    m_renderBuffer->bindForReading();
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     m_layout->draw();
+    glDisable(GL_BLEND);
 
     glEnable(GL_DEPTH_TEST);
 

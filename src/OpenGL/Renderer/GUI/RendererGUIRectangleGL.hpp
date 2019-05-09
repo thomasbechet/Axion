@@ -40,7 +40,7 @@ namespace ax
         Vector2i m_origin;
         Rectu m_uv;
         RendererTextureHandle m_texture = nullptr;
-        RendererShaderHandle m_shader;
+        RendererShaderHandle m_shader = nullptr;
 
         GLuint m_vao;
         GLuint m_ibo;
