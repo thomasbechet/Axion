@@ -165,7 +165,6 @@ void ShaderGLSL::injectConstants(std::string& code) noexcept
     replaceConstantInteger(code, MVP_MATRIX_LOCATION, "MVP_MATRIX_LOCATION");
     replaceConstantInteger(code, TRANSFORM_MATRIX_LOCATION, "TRANSFORM_MATRIX_LOCATION");
     replaceConstantInteger(code, NORMALTOVIEW_MATRIX_LOCATION, "NORMALTOVIEW_MATRIX_LOCATION");
-    replaceConstantInteger(code, LAYOUT_SIZE_LOCATION, "LAYOUT_SIZE_LOCATION");
 
     replaceConstantInteger(code, DIFFUSE_TEXTURE_BINDING, "DIFFUSE_TEXTURE_BINDING");
     replaceConstantInteger(code, NORMAL_TEXTURE_BINDING, "NORMAL_TEXTURE_BINDING");

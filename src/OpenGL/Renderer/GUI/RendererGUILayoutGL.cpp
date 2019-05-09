@@ -36,15 +36,15 @@ m_guiScalableRectangleShader(guiScalableRectangleShader)
 RendererGUIRectangleHandle RendererGUILayoutGL::createRectangle()
 {
     m_components.emplace_back(std::make_pair(
-        0, std::make_unique<RendererGUIRectangleGL>()
+        0, std::make_unique<RendererGUIRectangleGL>(*this, m_guiRectangleShader)
     ));
     return static_cast<RendererGUIRectangleGL*>(m_components.back().second.get());
 }
 void RendererGUILayoutGL::destroyRectangle(RendererGUIRectangleHandle& handle)
 {
     m_components.erase(std::remove_if(m_components.begin(), m_components.end(), 
-        [&](std::pair<unsigned, std::unique_ptr<RendererGUIComponentGL>> ptr)
-            {ptr.second.get() == handle;}));
+        [&](std::pair<unsigned, std::unique_ptr<RendererGUIComponentGL>>& ptr)
+            {return (ptr.second.get() == static_cast<RendererGUIRectangleGL*>(handle));}));
     handle = nullptr;
 }
 
@@ -52,6 +52,8 @@ RendererGUIScalableRectangleHandle RendererGUILayoutGL::createScalableRectangle(
 {
     //scalableRectangles.emplace_back(std::make_unique<RendererGUIScalableRectangleGL>());
     //return scalableRectangles.back().get();
+
+    return nullptr;
 }
 void RendererGUILayoutGL::destroyScalableRectangle(RendererGUIScalableRectangleHandle& handle)
 {
@@ -62,8 +64,6 @@ void RendererGUILayoutGL::destroyScalableRectangle(RendererGUIScalableRectangleH
 
 void RendererGUILayoutGL::draw() noexcept
 {
-
-
     for(auto& component : m_components)
         component.second->draw();
 }

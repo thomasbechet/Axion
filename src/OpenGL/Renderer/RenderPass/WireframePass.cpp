@@ -28,8 +28,14 @@ void WireframePass::initialize() noexcept
     //Load buffers
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
 
-    m_layout = std::make_unique<RendererGUILayoutGL>();
+    m_layout = std::make_unique<RendererGUILayoutGL>(
+        m_guiRectangleShader,
+        0
+    );
     RendererGUIRectangleHandle rectangle = m_layout->createRectangle();
+    Transform2D* trans = new Transform2D();
+    trans->translate(Vector2f(20.0f, 30.0f));
+    rectangle->setTransform(trans);
     rectangle->setTexture(Engine::assets().texture("texture_image")->getHandle());
     rectangle->setSize(Vector2u(300, 225));
     Rectu uv;
@@ -105,19 +111,8 @@ void WireframePass::render(double alpha) noexcept
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDisable(GL_DEPTH_TEST);
-    glUseProgram(m_guiRectangleShader);
 
-    Transform2D transform;
-    transform.translate(Vector2f(100.0f, 30.0f));
-    Vector2f layoutSize(
-        Engine::window().getSize().x,
-        Engine::window().getSize().y);
-
-    glUniformMatrix3fv(TRANSFORM_MATRIX_LOCATION, 1, GL_FALSE, transform.getWorldMatrix().data());
-    glUniform2fv(LAYOUT_SIZE_LOCATION, 1, layoutSize.data());
-    glActiveTexture(GL_TEXTURE0 + GUI_TEXTURE_BINDING);
-    glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*m_rectangle->parameters.texture).texture);
-    m_rectangle->draw();
+    m_layout->draw();
 
     glEnable(GL_DEPTH_TEST);
 

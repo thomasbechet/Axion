@@ -1,13 +1,20 @@
 #include <OpenGL/Renderer/GUI/RendererGUIRectangleGL.hpp>
 
 #include <OpenGL/Renderer/Asset/RendererTextureGL.hpp>
+#include <OpenGL/Renderer/Asset/RendererShaderGL.hpp>
+#include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
+
+#include <Core/Context/Engine.hpp>
+#include <Core/Window/Window.hpp>
+
 #include <GL/glew.h>
 
 #include <array>
 
 using namespace ax;
 
-RendererGUIRectangleGL::RendererGUIRectangleGL(GLuint defaultShader) :
+RendererGUIRectangleGL::RendererGUIRectangleGL(RendererGUILayoutGL& layout, GLuint defaultShader) :
+    RendererGUIComponentGL(layout),
     m_defaultShader(defaultShader)
 {
     create();
@@ -66,20 +73,23 @@ void RendererGUIRectangleGL::draw() noexcept
 {
     if(m_transform && m_visible)
     {
+        
+
         if(m_shader)
+        {
+            std::cout << "enter1" << std::endl;
             glUseProgram(static_cast<RendererShaderGL&>(*m_shader).shader.getProgram());
+        }
         else
+        {
+            std::cout << "enter" << std::endl;
             glUseProgram(m_defaultShader);
+        }
+            
 
-        Vector2f layoutSize(
-            Engine::window().getSize().x,
-            Engine::window().getSize().y);
-
-        glUniformMatrix3fv(TRANSFORM_MATRIX_LOCATION, 1, GL_FALSE, m_transform.getWorldMatrix().data());
-        glUniform2fv(LAYOUT_SIZE_LOCATION, 1, layoutSize.data());
+        glUniformMatrix3fv(TRANSFORM_MATRIX_LOCATION, 1, GL_FALSE, m_transform->getWorldMatrix().data());
         glActiveTexture(GL_TEXTURE0 + GUI_TEXTURE_BINDING);
         glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*m_texture).texture);
-        m_rectangle->draw();
 
         glBindVertexArray(m_vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

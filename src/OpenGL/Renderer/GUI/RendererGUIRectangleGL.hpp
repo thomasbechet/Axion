@@ -9,10 +9,10 @@
 
 namespace ax
 {
-    class AXION_GL_API RendererGUIRectangleGL : public RendererGUIRectangle, RendererGUIComponentGL
+    class AXION_GL_API RendererGUIRectangleGL : public RendererGUIRectangle, public RendererGUIComponentGL
     {
     public:
-        RendererGUIRectangleGL(GLuint defaultShader);
+        RendererGUIRectangleGL(RendererGUILayoutGL& layout, GLuint defaultShader);
         ~RendererGUIRectangleGL();
 
         void setTransform(Transform2D* transform) override;
@@ -39,7 +39,7 @@ namespace ax
         Vector2u m_size;
         Vector2i m_origin;
         Rectu m_uv;
-        RendererTextureHandle m_texture;
+        RendererTextureHandle m_texture = nullptr;
         RendererShaderHandle m_shader;
 
         GLuint m_vao;

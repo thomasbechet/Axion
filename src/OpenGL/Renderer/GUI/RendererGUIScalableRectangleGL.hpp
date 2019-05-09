@@ -2,14 +2,15 @@
 
 #include <OpenGL/Export.hpp>
 #include <OpenGL/Renderer/GUI/RendererGUIComponentGL.hpp>
+#include <OpenGL/Renderer/GUI/RendererGUILayoutGL.hpp>
 #include <Core/Renderer/GUI/RendererGUIScalableRectangle.hpp>
 
 namespace ax
 {
-    class AXION_GL_API RendererGUIScalableRectangleGL : public RendererGUIScalableRectangle, RendererGUIComponentGL
+    class AXION_GL_API RendererGUIScalableRectangleGL : public RendererGUIScalableRectangle, public RendererGUIComponentGL
     {
     public:
-        RendererGUIScalableRectangleGL();
+        RendererGUIScalableRectangleGL(RendererGUILayoutGL& layout, GLuint defaultShader);
         ~RendererGUIScalableRectangleGL();
 
         void setTransform(Transform2D* transform) override;
@@ -19,5 +20,8 @@ namespace ax
         void setDepth(unsigned depth) override;
 
         void draw() noexcept;
+
+    private:
+        GLuint m_defaultShader;
     };
 }

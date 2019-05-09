@@ -2,7 +2,9 @@
 
 using namespace ax;
 
-RendererGUIScalableRectangleGL::RendererGUIScalableRectangleGL()
+RendererGUIScalableRectangleGL::RendererGUIScalableRectangleGL(RendererGUILayoutGL& layout, GLuint defaultShader) :
+    RendererGUIComponentGL(layout),
+    m_defaultShader(defaultShader)
 {
 
 }
@@ -28,10 +30,6 @@ void RendererGUIScalableRectangleGL::setColor(Color3 color)
 
 }
 void RendererGUIScalableRectangleGL::setDepth(unsigned depth)
-{
-
-}
-void RendererGUIScalableRectangleGL::setParameters(const RendererGUIScalableRectangleParameters& parameters)
 {
 
 }
