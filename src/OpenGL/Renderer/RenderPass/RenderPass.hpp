@@ -4,6 +4,7 @@
 
 namespace ax
 {
+    class RenderBuffer;
     class RenderContent;
     class RendererGUIViewportGL;
 
@@ -17,6 +18,7 @@ namespace ax
         virtual void terminate() noexcept = 0;
         virtual void updateResolution() noexcept = 0;
         virtual void render(double alpha) noexcept = 0;
+        virtual RenderBuffer& getRenderBuffer() noexcept = 0; 
 
     protected:
         RenderContent& content;

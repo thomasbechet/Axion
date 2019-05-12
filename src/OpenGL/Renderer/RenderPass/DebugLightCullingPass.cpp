@@ -46,6 +46,10 @@ void DebugLightCullingPass::render(double alpha) noexcept
     renderDebug();
     renderViewportPass();
 }
+RenderBuffer& DebugLightCullingPass::getRenderBuffer() noexcept
+{
+    return *m_renderBuffer.get();
+}
 
 void DebugLightCullingPass::updateUBOs() noexcept
 {

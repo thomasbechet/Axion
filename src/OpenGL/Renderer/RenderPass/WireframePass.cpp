@@ -22,30 +22,9 @@ void WireframePass::initialize() noexcept
     m_wireframeShader = static_cast<RendererShaderGL&>(*wireframeShaderHandle).shader.getProgram();
     RendererShaderHandle quadTextureShaderHandle = content.quadTextureShader->getHandle();
     m_quadTextureShader = static_cast<RendererShaderGL&>(*quadTextureShaderHandle).shader.getProgram();
-    RendererShaderHandle guiRectangleShaderHandle = content.guiRectangleShader->getHandle();
-    m_guiRectangleShader = static_cast<RendererShaderGL&>(*guiRectangleShaderHandle).shader.getProgram();
 
     //Load buffers
     m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
-
-    m_layout = std::make_unique<RendererGUILayoutGL>(
-        m_guiRectangleShader,
-        0
-    );
-    RendererGUIRectangleHandle rectangle = m_layout->createRectangle();
-    Transform2D* trans = new Transform2D();
-    trans->translate(Vector2f(20.0f, 30.0f));
-    rectangle->setTransform(trans);
-    rectangle->setTexture(Engine::assets().texture("texture_image")->getHandle());
-    rectangle->setSize(Vector2u(300, 225));
-    rectangle->setTransparency(0.3f);
-    rectangle->setColor(Color3(1.0f, 0.0f, 0.0f));
-    Rectu uv;
-    uv.bottom = 0;
-    uv.left = 0;
-    uv.width = 300;
-    uv.height = 225;
-    rectangle->setUV(uv);
 }
 void WireframePass::terminate() noexcept
 {
@@ -111,17 +90,6 @@ void WireframePass::render(double alpha) noexcept
         }
     }
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDisable(GL_DEPTH_TEST);
-
-    m_renderBuffer->bindForReading();
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    m_layout->draw();
-    glDisable(GL_BLEND);
-
-    glEnable(GL_DEPTH_TEST);
-
     //Render texture to backbuffer
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
@@ -149,4 +117,8 @@ void WireframePass::render(double alpha) noexcept
     glEnable(GL_DEPTH_TEST);
 
     glUseProgram(0);
+}
+RenderBuffer& WireframePass::getRenderBuffer() noexcept
+{
+    return *m_renderBuffer.get();
 }

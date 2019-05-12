@@ -1,6 +1,6 @@
 #version 420 core
 
-out vec3 out_color;
+layout(location = 0) out vec3 out_color;
 
 layout(binding = 0) uniform sampler2D render_texture;
 

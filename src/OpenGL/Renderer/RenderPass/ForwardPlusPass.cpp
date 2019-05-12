@@ -61,6 +61,10 @@ void ForwardPlusPass::render(double alpha) noexcept
     renderPPPass();
     renderViewportPass();   
 }
+RenderBuffer& ForwardPlusPass::getRenderBuffer() noexcept
+{
+    return *m_renderBuffer.get();
+}
 
 void ForwardPlusPass::updateUBOs() noexcept
 {

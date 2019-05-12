@@ -21,6 +21,7 @@ namespace ax
         void terminate() noexcept override;
         void updateResolution() noexcept override;
         void render(double alpha) noexcept override;
+        RenderBuffer& getRenderBuffer() noexcept override;
 
     private:
         void updateUBOs() noexcept;

@@ -17,6 +17,7 @@
 #include <OpenGL/Renderer/Buffer/CameraUBO.hpp>
 #include <OpenGL/Renderer/Buffer/ConstantsUBO.hpp>
 #include <OpenGL/Renderer/Buffer/CullLightSSBO.hpp>
+#include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/Shader.hpp>
@@ -112,6 +113,12 @@ namespace ax
         void destroyGUILayout(RendererGUILayoutHandle& layout) override;
 
     private:
+        //Generic content
         RenderContent m_content;
+
+        //Specific content
+        GLuint m_guiRectangleShader;
+
+        std::unique_ptr<RendererGUILayoutGL> m_layout;
     };
 }

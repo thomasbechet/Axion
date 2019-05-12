@@ -19,7 +19,7 @@ namespace ax
         void setVisible(bool toggle) override;
         void setTransparency(float transparency) override;
         void setColor(Color3 color) override;
-        void setDepth(unsigned depth) override;
+        void setDepth(int depth) override;
         
         void setSize(Vector2u size) override;
         void setOrigin(Vector2i origin) override;
@@ -33,7 +33,6 @@ namespace ax
         Transform2D* m_transform = nullptr;
         bool m_visible = true;
         Color3 m_color;
-        unsigned m_depth = 0;
         float m_transparency = 0.0f;
 
         Vector2u m_size;

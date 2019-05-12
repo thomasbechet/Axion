@@ -27,9 +27,10 @@ namespace ax
         void destroyScalableRectangle(RendererGUIScalableRectangleHandle& handle) override;
 
         void draw() noexcept;
+        void changeDepthComponent(const RendererGUIComponentGL& component, int depth) noexcept;
     
     private:
-        std::vector<std::pair<unsigned, std::unique_ptr<RendererGUIComponentGL>>> m_components;
+        std::vector<std::pair<int, std::unique_ptr<RendererGUIComponentGL>>> m_components;
         GLuint m_guiRectangleShader;
         GLuint m_guiScalableRectangleShader;
     };

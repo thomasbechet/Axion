@@ -13,6 +13,6 @@ namespace ax
         virtual void setVisible(bool toggle) = 0;
         virtual void setTransparency(float transparency) = 0;
         virtual void setColor(Color3 color) = 0;
-        virtual void setDepth(unsigned depth) = 0;
+        virtual void setDepth(int depth) = 0;
     };
 }

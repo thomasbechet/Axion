@@ -4,8 +4,6 @@
 #include <OpenGL/Renderer/RenderPass/RenderPass.hpp>
 #include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>
 
-#include <OpenGL/Renderer/GUI/RendererGUILayoutGL.hpp>
-
 #include <memory>
 
 namespace ax
@@ -19,6 +17,7 @@ namespace ax
         void terminate() noexcept override;
         void updateResolution() noexcept override;
         void render(double alpha) noexcept override;
+        RenderBuffer& getRenderBuffer() noexcept override;
 
     private:
         std::unique_ptr<RenderBuffer> m_renderBuffer;
@@ -26,7 +25,5 @@ namespace ax
         GLuint m_quadTextureShader;
         GLuint m_wireframeShader;
         GLuint m_guiRectangleShader;
-
-        std::unique_ptr<RendererGUILayoutGL> m_layout;
     };
 }

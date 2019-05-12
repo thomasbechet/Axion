@@ -3,6 +3,7 @@
 #include <OpenGL/Renderer/Asset/RendererTextureGL.hpp>
 #include <OpenGL/Renderer/Asset/RendererShaderGL.hpp>
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
+#include <OpenGL/Renderer/GUI/RendererGUILayoutGL.hpp>
 
 #include <GL/glew.h>
 
@@ -36,9 +37,9 @@ void RendererGUIRectangleGL::setColor(Color3 color)
 {
     m_color = color; 
 }
-void RendererGUIRectangleGL::setDepth(unsigned depth)
+void RendererGUIRectangleGL::setDepth(int depth)
 {
-    m_depth = depth;
+    m_layout.changeDepthComponent(*this, depth);
 }
 
 void RendererGUIRectangleGL::setSize(Vector2u size)
@@ -79,7 +80,7 @@ void RendererGUIRectangleGL::draw() noexcept
         colorAndTransparency.x = m_color.r;
         colorAndTransparency.y = m_color.g;
         colorAndTransparency.z = m_color.b;
-        colorAndTransparency.w = m_transparency;
+        colorAndTransparency.w = 1.0f - m_transparency;
         glUniform4fv(GUI_COLOR_LOCATION, 1, (GLfloat*)&colorAndTransparency);
         glActiveTexture(GL_TEXTURE0 + GUI_TEXTURE_BINDING);
         glBindTexture(GL_TEXTURE_2D, static_cast<RendererTextureGL&>(*m_texture).texture);

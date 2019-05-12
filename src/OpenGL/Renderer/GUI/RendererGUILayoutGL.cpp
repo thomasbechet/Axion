@@ -36,14 +36,15 @@ m_guiScalableRectangleShader(guiScalableRectangleShader)
 RendererGUIRectangleHandle RendererGUILayoutGL::createRectangle()
 {
     m_components.emplace_back(std::make_pair(
-        0, std::make_unique<RendererGUIRectangleGL>(*this, m_guiRectangleShader)
+        m_components.empty() ? 0 : m_components.back().first, 
+        std::make_unique<RendererGUIRectangleGL>(*this, m_guiRectangleShader)
     ));
     return static_cast<RendererGUIRectangleGL*>(m_components.back().second.get());
 }
 void RendererGUILayoutGL::destroyRectangle(RendererGUIRectangleHandle& handle)
 {
     m_components.erase(std::remove_if(m_components.begin(), m_components.end(), 
-        [&](std::pair<unsigned, std::unique_ptr<RendererGUIComponentGL>>& ptr)
+        [&](std::pair<int, std::unique_ptr<RendererGUIComponentGL>>& ptr)
             {return (ptr.second.get() == static_cast<RendererGUIRectangleGL*>(handle));}));
     handle = nullptr;
 }
@@ -65,5 +66,21 @@ void RendererGUILayoutGL::destroyScalableRectangle(RendererGUIScalableRectangleH
 void RendererGUILayoutGL::draw() noexcept
 {
     for(auto& component : m_components)
+    {
         component.second->draw();
+    }
+}
+void RendererGUILayoutGL::changeDepthComponent(const RendererGUIComponentGL& component, int depth) noexcept
+{
+    auto iterator = std::find_if(m_components.begin(), m_components.end(), 
+        [&](const auto& element){return element.second.get() == &component;}
+    );
+
+    if(iterator != m_components.end() && iterator->first != depth)
+    {
+        iterator->first = depth;
+        std::sort(m_components.begin(), m_components.end(), 
+            [](const auto& e1, const auto& e2){return e1.first < e2.first;}
+        );
+    }
 }

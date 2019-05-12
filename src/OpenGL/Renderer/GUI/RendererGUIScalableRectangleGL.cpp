@@ -29,7 +29,7 @@ void RendererGUIScalableRectangleGL::setColor(Color3 color)
 {
 
 }
-void RendererGUIScalableRectangleGL::setDepth(unsigned depth)
+void RendererGUIScalableRectangleGL::setDepth(int depth)
 {
 
 }

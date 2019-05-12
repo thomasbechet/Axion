@@ -57,7 +57,7 @@ void RendererGL::initialize() noexcept
     m_content.quadTextureShader = Engine::assets().shader("glsl_quad_texture");
     m_content.wireframeShader = Engine::assets().shader("glsl_wireframe");
     m_content.guiRectangleShader = Engine::assets().shader("glsl_gui_rectangle");
-    
+
     //Compute shaders
     Path lightCullPath = "$ENGINE_DIR/shaders/glsl/light_culling.comp";
     std::ifstream lightCullFile(lightCullPath.path());
@@ -65,6 +65,46 @@ void RendererGL::initialize() noexcept
     std::string lightCullCode{std::istreambuf_iterator<char>(lightCullFile), std::istreambuf_iterator<char>()};
     if(!m_content.lightCullingComputeShader.loadCompute(lightCullCode))
         Engine::interrupt("Failed to load compute shader.");
+
+    //Specific content
+    RendererShaderHandle guiRectangleShaderHandle = m_content.guiRectangleShader->getHandle();
+    m_guiRectangleShader = static_cast<RendererShaderGL&>(*guiRectangleShaderHandle).shader.getProgram();
+
+    m_layout = std::make_unique<RendererGUILayoutGL>(
+        m_guiRectangleShader,
+        0
+    );
+
+    RendererGUIRectangleHandle rectangle1 = m_layout->createRectangle();
+    Transform2D* trans = new Transform2D();
+    trans->translate(Vector2f(20.0f, 30.0f));
+    rectangle1->setTransform(trans);
+    rectangle1->setColor(Color3(1.0f, 0.0f, 0.0f));
+    rectangle1->setTexture(Engine::assets().texture("texture_image")->getHandle());
+    rectangle1->setSize(Vector2u(300, 225));
+    Rectu uv;
+    uv.bottom = 0;
+    uv.left = 0;
+    uv.width = 300;
+    uv.height = 225;
+    rectangle1->setUV(uv);
+
+    RendererGUIRectangleHandle rectangle2 = m_layout->createRectangle();
+    trans = new Transform2D();
+    trans->translate(Vector2f(270.0f, 30.0f));
+    trans->rotate(30.0f);
+    rectangle2->setTransform(trans);
+    rectangle2->setColor(Color3(0.0f, 1.0f, 0.0f));
+    rectangle2->setTexture(Engine::assets().texture("texture_image")->getHandle());
+    rectangle2->setSize(Vector2u(300, 225));
+    uv.bottom = 0;
+    uv.left = 0;
+    uv.width = 300;
+    uv.height = 225;
+    rectangle2->setUV(uv);
+
+    //rectangle1->setDepth(1);
+    rectangle2->setDepth(-1);
 }
 void RendererGL::terminate() noexcept
 {
@@ -90,4 +130,11 @@ void RendererGL::update(double alpha) noexcept
             viewport.get()->renderPass->render(alpha);
         }
     }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    m_layout->draw();
+    glDisable(GL_BLEND);
 }
