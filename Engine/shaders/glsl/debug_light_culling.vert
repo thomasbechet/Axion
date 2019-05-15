@@ -1,4 +1,4 @@
-#version 430 core
+#version $GLSL_VERSION
 
 layout(location = 0) in vec2 in_position;
 

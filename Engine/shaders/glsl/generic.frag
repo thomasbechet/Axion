@@ -1,7 +1,7 @@
-//////////////////////////
-//THIS BLOCK IS REQUIRED//
-//////////////////////////
-#version 430 core
+#version $GLSL_VERSION
+#if __VERSION__ < 430
+	#extension GL_ARB_explicit_uniform_location : require
+#endif
 
 layout(early_fragment_tests) in;
 layout(location = 0) out vec3 out_color;

@@ -24,6 +24,7 @@ namespace ax
         bool compileCompute(const std::string& compute) noexcept;
         void injectConstants(std::string& code) noexcept;
         void replaceConstantInteger(std::string& code, int value, std::string name) noexcept;
+        void replaceConstantString(std::string& code, std::string value, std::string name) noexcept;
 
         bool m_isLoaded = false;
         GLuint m_handle;

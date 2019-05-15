@@ -56,7 +56,9 @@ void ForwardPlusPass::render(double alpha) noexcept
 {
     updateUBOs();
     renderGeometryPass();
-    processCullPass();
+    #if (USE_LIGHT_CULLING == 1)
+        processCullPass();
+    #endif
     renderLightPass();
     renderPPPass();
     renderViewportPass();   

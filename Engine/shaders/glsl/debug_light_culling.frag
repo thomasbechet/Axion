@@ -1,4 +1,7 @@
-#version 430 core
+#version $GLSL_VERSION
+#if __VERSION__ < 430
+    #extension GL_ARB_explicit_uniform_location : require
+#endif
 
 out vec3 out_color;
 
@@ -89,30 +92,30 @@ DirectionalLight getDirectionalLight(uint index)
 
 void main()
 {
-	vec3 color = vec3(0.0f, 0.0f, 1.0f);
-
     #if ($USE_LIGHT_CULLING == 1)
+        vec3 color = vec3(0.0f, 0.0f, 1.0f);
+
 		uint cullKey = getCullKey();
 		uint count = getCullPointLightCount(cullKey);
+
+        float I = float(count) / 64.0f;
+
+        if(I > 0.0f)
+        {
+            vec3 start = vec3(0.0f, 1.0f, 0.0f);
+            vec3 end = vec3(1.0f, 0.0f, 0.0f);
+            color = mix(start, end, I);
+        }
+
+        vec3 image = texture(render_texture, UV).xyz;
+
+        out_color = image * 0.5 + color * 0.5;
+
+        if(int(gl_FragCoord.x) % $CULL_TILE_SIZE == 0 || int(gl_FragCoord.y) % $CULL_TILE_SIZE == 0)
+        {
+            out_color = vec3(0, 0, 0);
+        }
 	#else
-        uint count = 0;
-	#endif
-
-	float I = float(count) / 64.0f;
-
-    if(I > 0.0f)
-    {
-        vec3 start = vec3(0.0f, 1.0f, 0.0f);
-        vec3 end = vec3(1.0f, 0.0f, 0.0f);
-        color = mix(start, end, I);
-    }
-
-    vec3 image = texture2D(render_texture, UV).xyz;
-
-	out_color = image * 0.5 + color * 0.5;
-
-    if(int(gl_FragCoord.x) % $CULL_TILE_SIZE == 0 || int(gl_FragCoord.y) % $CULL_TILE_SIZE == 0)
-    {
         out_color = vec3(0, 0, 0);
-    }
+	#endif
 }   

@@ -1,4 +1,4 @@
-#version 420 core
+#version $GLSL_VERSION
 
 layout(location = 0) out vec3 out_color;
 

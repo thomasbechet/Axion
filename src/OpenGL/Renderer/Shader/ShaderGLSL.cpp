@@ -137,6 +137,8 @@ bool ShaderGLSL::compileCompute(const std::string& computeCode) noexcept
 
 void ShaderGLSL::injectConstants(std::string& code) noexcept
 {
+    replaceConstantString(code, GLSL_VERSION, "GLSL_VERSION");
+
     replaceConstantInteger(code, MATERIAL_UBO_BINDING_POINT, "MATERIAL_UBO_BINDING_POINT");
     replaceConstantInteger(code, MATERIAL_MAX_NUMBER, "MATERIAL_MAX_NUMBER");
     replaceConstantInteger(code, MATERIAL_USE_DIFFUSE_TEXTURE, "MATERIAL_USE_DIFFUSE_TEXTURE");
@@ -178,4 +180,8 @@ void ShaderGLSL::injectConstants(std::string& code) noexcept
 void ShaderGLSL::replaceConstantInteger(std::string& code, int value, std::string name) noexcept
 {
     code = std::regex_replace(code, std::regex("\\$" + name), std::to_string(value), std::regex_constants::format_default);
+}
+void ShaderGLSL::replaceConstantString(std::string& code, std::string value, std::string name) noexcept
+{
+    code = std::regex_replace(code, std::regex("\\$" + name), value, std::regex_constants::format_default);
 }

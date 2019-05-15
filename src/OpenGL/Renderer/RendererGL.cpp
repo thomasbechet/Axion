@@ -2,6 +2,7 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
+#include <Core/Logger/Logger.hpp>
 #include <Core/Asset/AssetManager.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
@@ -16,6 +17,10 @@ void RendererGL::initialize() noexcept
     glewExperimental = GL_TRUE;
     if(glewInit() != GLEW_OK)
         Engine::interrupt("Failed to initialize GLEW");
+
+    //Version information
+    Engine::logger().log("GL version: " + std::string((const char*)glGetString(GL_VERSION)), Logger::Severity::Info);
+    Engine::logger().log("GLSL version: " + std::string((const char*)glGetString(GL_SHADING_LANGUAGE_VERSION)), Logger::Severity::Info);
 
     //Generate fullscreen quad
     float vertices[] =
@@ -58,13 +63,15 @@ void RendererGL::initialize() noexcept
     m_content.wireframeShader = Engine::assets().shader("glsl_wireframe");
     m_content.guiRectangleShader = Engine::assets().shader("glsl_gui_rectangle");
 
-    //Compute shaders
-    Path lightCullPath = "$ENGINE_DIR/shaders/glsl/light_culling.comp";
-    std::ifstream lightCullFile(lightCullPath.path());
-    if(!lightCullFile.is_open()) Engine::interrupt("Failed to load compute file: " + lightCullPath);
-    std::string lightCullCode{std::istreambuf_iterator<char>(lightCullFile), std::istreambuf_iterator<char>()};
-    if(!m_content.lightCullingComputeShader.loadCompute(lightCullCode))
-        Engine::interrupt("Failed to load compute shader.");
+    //Compute shader
+    #if (USE_LIGHT_CULLING == 1)
+        Path lightCullPath = "$ENGINE_DIR/shaders/glsl/light_culling.comp";
+        std::ifstream lightCullFile(lightCullPath.path());
+        if(!lightCullFile.is_open()) Engine::interrupt("Failed to load compute file: " + lightCullPath);
+        std::string lightCullCode{std::istreambuf_iterator<char>(lightCullFile), std::istreambuf_iterator<char>()};
+        if(!m_content.lightCullingComputeShader.loadCompute(lightCullCode))
+            Engine::interrupt("Failed to load compute shader.");
+    #endif
 
     //Specific content
     RendererShaderHandle guiRectangleShaderHandle = m_content.guiRectangleShader->getHandle();

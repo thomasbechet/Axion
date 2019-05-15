@@ -1,4 +1,7 @@
-#version 430 core
+#version $GLSL_VERSION
+#if __VERSION__ < 430
+	#extension GL_ARB_explicit_uniform_location : require
+#endif
 
 out vec4 out_color;
 

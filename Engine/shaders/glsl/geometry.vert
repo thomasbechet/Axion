@@ -1,4 +1,7 @@
-#version 430 core
+#version $GLSL_VERSION
+#if __VERSION__ < 430
+	#extension GL_ARB_explicit_uniform_location : require
+#endif
 
 layout(location = 0) in vec3 in_position;
 layout(location = 1) in vec2 in_uv;

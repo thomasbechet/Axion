@@ -17,7 +17,7 @@
 #define DIRECTIONAL_LIGHT_UBO_BINDING_POINT 4
 #define DIRECTIONAL_LIGHT_MAX_NUMBER 50
 
-#define USE_LIGHT_CULLING 1
+#define USE_LIGHT_CULLING 0
 #define CULL_POINT_LIGHT_SSBO_BINDING_POINT 1
 #define CULL_POINT_LIGHT_MAX_PER_TILE 512
 #define CULL_TILE_SIZE 32
@@ -38,3 +38,10 @@
 
 #define GBUFFER_NORMAL_TEXTURE_BINDING 3
 #define GBUFFER_DEPTH_TEXTURE_BINDING 4
+
+//GLSL VERSION
+#if (USE_LIGHT_CULLING == 1)
+    #define GLSL_VERSION "430 core" //Require compute shaders
+#else
+    #define GLSL_VERSION "420 core" //Require explicit texture binding
+#endif
