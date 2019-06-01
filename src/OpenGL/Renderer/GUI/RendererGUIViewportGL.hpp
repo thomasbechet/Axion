@@ -14,21 +14,33 @@ namespace ax
     class AXION_GL_API RendererGUIViewportGL : public RendererGUIViewport
     {
     public:
+        RendererGUIViewportGL(RenderContent& content, const Vector2u& rect, const Vector2u& resolution, RenderMode mode);
+        ~RendererGUIViewportGL();
+
+    public:
         void setRendermode(RenderMode mode) override;
         void setCamera(RendererCameraHandle camera) override;
         void setResolution(const Vector2u& resolution) override;
-        void setRectangle(const Vector2f& position, const Vector2f& size) override;
+        void setViewport(const Rectu& rect) override;     
 
-        Color3 clearColor = Color3(0.0f, 0.0f, 0.0f);
+    public:
+        void render(double alpha) const noexcept;
+        RenderBuffer& getRenderBuffer() const noexcept;
+        Rectu getViewport() const noexcept;
 
-        Vector2u resolution = Vector2u(0, 0);
-        Vector2f position = Vector2f(0.0f, 0.0f);
-        Vector2f size = Vector2f(1.0f, 1.0f);
+        void setID(Id id) noexcept;
+        Id getID() const noexcept;
 
-        std::unique_ptr<RenderPass> renderPass;
-        RendererCameraGL* camera = nullptr;
+    private:
+        Color3 m_clearColor = Color3(0.0f, 0.0f, 0.0f);
+        Rectu m_viewport; 
+        Vector2u m_resolution;
 
-        RenderContent* content = nullptr;
-        Id id;
+        std::unique_ptr<RenderPass> m_renderPass;
+        std::unique_ptr<RenderBuffer> m_renderBuffer;
+        RendererCameraGL* m_camera = nullptr;
+        RenderContent& m_content;
+
+        Id m_id;
     };
 }

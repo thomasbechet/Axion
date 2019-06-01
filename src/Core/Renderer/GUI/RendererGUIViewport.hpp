@@ -2,6 +2,7 @@
 
 #include <Core/Export.hpp>
 #include <Core/Math/Vector.hpp>
+#include <Core/Math/Rect.hpp>
 #include <Core/Renderer/RenderMode.hpp>
 #include <Core/Renderer/Scene/RendererCamera.hpp>
 
@@ -13,7 +14,7 @@ namespace ax
         virtual void setRendermode(RenderMode mode) = 0;
         virtual void setCamera(RendererCameraHandle camera) = 0;
         virtual void setResolution(const Vector2u& resolution) = 0;
-        virtual void setRectangle(const Vector2f& position, const Vector2f& size) = 0;
+        virtual void setViewport(const Rectu& rect) = 0; 
     };
 
     class AXION_CORE_API NullRendererGUIViewport : public RendererGUIViewport
@@ -22,7 +23,7 @@ namespace ax
         void setRendermode(RenderMode mode) override {}
         void setCamera(RendererCameraHandle camera) override {}
         void setResolution(const Vector2u& resolution) override {}
-        void setRectangle(const Vector2f& position, const Vector2f& size) override {}
+        void setViewport(const Rectu& rect) override {}
     };
 
     using RendererGUIViewportHandle = RendererGUIViewport*;

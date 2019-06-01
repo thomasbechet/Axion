@@ -13,12 +13,12 @@ namespace ax
         RenderBuffer(Vector2u dimension);
         ~RenderBuffer();
 
-        void bindForWriting();
-        void bindForReading();
+        void bindForWriting() noexcept;
+        void bindForReading() noexcept;
+        void clear(Color3 color) noexcept;
 
     private:
         GLuint m_fbo;
-
         GLuint m_renderTexture;
     };
 }

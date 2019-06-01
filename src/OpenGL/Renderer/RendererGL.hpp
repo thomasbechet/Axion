@@ -105,7 +105,7 @@ namespace ax
         //GUI////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Viewport
-        RendererGUIViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) override;
+        RendererGUIViewportHandle createViewport(const Rectu& viewport, const Vector2u& resolution, RenderMode mode = RenderMode::Default) override;
         void destroyViewport(RendererGUIViewportHandle& viewport) override;
 
         //Layout
@@ -117,6 +117,7 @@ namespace ax
         RenderContent m_content;
 
         //Specific content
+        GLuint m_quadTextureShader;
         GLuint m_guiRectangleShader;
 
         std::unique_ptr<RendererGUILayoutGL> m_layout;

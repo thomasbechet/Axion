@@ -74,6 +74,8 @@ void RendererGL::initialize() noexcept
     #endif
 
     //Specific content
+    RendererShaderHandle quadTextureShaderHandle = m_content.quadTextureShader->getHandle();
+    m_quadTextureShader = static_cast<RendererShaderGL&>(*quadTextureShaderHandle).shader.getProgram();
     RendererShaderHandle guiRectangleShaderHandle = m_content.guiRectangleShader->getHandle();
     m_guiRectangleShader = static_cast<RendererShaderGL&>(*guiRectangleShaderHandle).shader.getProgram();
 
@@ -132,14 +134,22 @@ void RendererGL::update(double alpha) noexcept
 {
     for(auto& viewport : m_content.viewports)
     {
-        if(viewport.get()->camera)
-        {
-            viewport.get()->renderPass->render(alpha);
-        }
+        viewport.get()->render(alpha);
     }
-
+    
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDisable(GL_DEPTH_TEST);
+    glBindVertexArray(content.quadVAO);
+    glUseProgram(m_quadTextureShader);
+    for(auto& viewport : m_content.viewports)
+    {
+        Rectu viewport = viewport->getViewport();
+        glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+        viewport->getRenderBuffer().bindForReading();
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+    glBindVertexArray(0);
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     m_layout->draw();

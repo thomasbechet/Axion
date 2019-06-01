@@ -2,9 +2,8 @@
 
 using namespace ax;
 
-RenderPass::RenderPass(RenderContent& _content, RendererGUIViewportGL& _viewport) : 
-    content(_content),
-    viewport(_viewport)
+RenderPass::RenderPass(RenderContent& _content, RendererGUIViewportGL& viewport) : 
+    content(_content)
 {
     
 }
