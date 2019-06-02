@@ -118,9 +118,6 @@ void Engine::initialize() noexcept
     /////////////////////////////////////////////////////////////////////////////////
 
     //Create default viewport
-    RendererGUIViewportHandle defaultViewport = Engine::renderer().createViewport(Vector2f(0.0f, 0.0f), Vector2f(1.0f, 1.0f), RenderMode::Wireframe);
-    Engine::renderer().setDefaultViewport(defaultViewport);
-
     Vector2u defaultResolution;
 
     if(Engine::context().config().getString("Renderer", "default_viewport_width", "default") != "default")
@@ -133,7 +130,14 @@ void Engine::initialize() noexcept
     else
         defaultResolution.y = Engine::window().getSize().y;
 
-    defaultViewport->setResolution(defaultResolution);
+    Rectf viewport;
+    viewport.bottom = 0.0f;
+    viewport.left = 0.0f;
+    viewport.width = 1.0f;
+    viewport.height = 1.0f;
+
+    RendererGUIViewportHandle defaultViewport = Engine::renderer().createViewport(viewport, defaultResolution, RenderMode::ForwardPlusShading);
+    Engine::renderer().setDefaultViewport(defaultViewport);
 
     //Create default material
     MaterialParameters defaultMaterial;

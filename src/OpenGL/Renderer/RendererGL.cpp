@@ -124,11 +124,6 @@ void RendererGL::terminate() noexcept
     m_content.quadTextureShader.reset();
     m_content.wireframeShader.reset();
     m_content.guiRectangleShader.reset();
-
-    for(auto& viewport : m_content.viewports)
-    {
-        viewport.get()->renderPass->terminate();
-    }
 }
 void RendererGL::update(double alpha) noexcept
 {
@@ -138,17 +133,23 @@ void RendererGL::update(double alpha) noexcept
     }
     
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);
-    glBindVertexArray(content.quadVAO);
+    glBindVertexArray(m_content.quadVAO);
     glUseProgram(m_quadTextureShader);
     for(auto& viewport : m_content.viewports)
     {
-        Rectu viewport = viewport->getViewport();
-        glViewport(viewport.x, viewport.y, viewport.width, viewport.height);
+        Rectu rect = viewport->getViewport();
+        glViewport(rect.left, rect.bottom, rect.width, rect.height);
         viewport->getRenderBuffer().bindForReading();
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
     glBindVertexArray(0);
+
+    Vector2u windowSize = Engine::window().getSize();
+    glViewport(0, 0, windowSize.x, windowSize.y);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

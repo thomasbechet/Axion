@@ -105,7 +105,7 @@ namespace ax
         //GUI////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Viewport
-        RendererGUIViewportHandle createViewport(const Rectu& viewport, const Vector2u& resolution, RenderMode mode = RenderMode::Default) override;
+        RendererGUIViewportHandle createViewport(const Rectf& viewport, const Vector2u& resolution, RenderMode mode = RenderMode::Default) override;
         void destroyViewport(RendererGUIViewportHandle& viewport) override;
 
         //Layout

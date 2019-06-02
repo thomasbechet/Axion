@@ -71,7 +71,7 @@ namespace ax
         //GUI////////////////////////////////////////////////////////////////////////////////////////////////
 
         //Viewport
-        virtual RendererGUIViewportHandle createViewport(const Vector2f& position, const Vector2f& size, RenderMode mode = RenderMode::Default) = 0;
+        virtual RendererGUIViewportHandle createViewport(const Rectf& viewport, const Vector2u& resolution, RenderMode mode = RenderMode::Default) = 0;
         virtual void destroyViewport(RendererGUIViewportHandle& viewport) = 0;
 
         //Layout

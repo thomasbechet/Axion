@@ -9,9 +9,14 @@
 
 using namespace ax;
 
-ForwardPlusPass::ForwardPlusPass(RenderContent& content, RendererGUIViewportGL& viewport) : RenderPass(content, viewport) {}
+ForwardPlusPass::ForwardPlusPass(RenderContent& content, RendererGUIViewportGL& viewport, bool lightCullingDebug) : 
+    RenderPass(content, viewport),
+    m_lightCullingDebug(lightCullingDebug)
+{
 
-void ForwardPlusPass::initialize() noexcept
+}
+
+void ForwardPlusPass::onInitialize(const Vector2u& resolution) noexcept
 {
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
     glClearDepth(0.0f);
@@ -19,8 +24,9 @@ void ForwardPlusPass::initialize() noexcept
     glCullFace(GL_BACK);
     glDepthRange(0.0f, 1.0f);
 
-    m_renderBuffer = std::make_unique<RenderBuffer>(viewport.resolution);
-    m_buffers = std::make_unique<ForwardPlusBuffers>(viewport.resolution);
+    m_resolution = resolution;
+
+    m_buffers = std::make_unique<ForwardPlusBuffers>(m_resolution);
 
     //Quad
     RendererShaderHandle quadTextureShader = content.quadTextureShader->getHandle();
@@ -38,49 +44,47 @@ void ForwardPlusPass::initialize() noexcept
     RendererShaderHandle postProcessShader = content.postProcessShader->getHandle();
     m_postProcessShader = static_cast<RendererShaderGL&>(*postProcessShader).shader.getProgram();
 
+    //DebugLightCulling shader
+    RendererShaderHandle debugLightCullingShaderHandle = content.debugLightCullingShader->getHandle();
+    m_debugLightCullingShader = static_cast<RendererShaderGL&>(*debugLightCullingShaderHandle).shader.getProgram();
+
     //LightCullingCompute shader
     m_lightCullComputeShader = content.lightCullingComputeShader.getProgram();
 }
-void ForwardPlusPass::terminate() noexcept
+void ForwardPlusPass::onTerminate() noexcept
 {
     //Unload buffers
     m_buffers.reset();
-    m_renderBuffer.reset();
 }
-void ForwardPlusPass::updateResolution() noexcept
+void ForwardPlusPass::onUpdateResolution(const Vector2u& resolution) noexcept
 {
-    m_renderBuffer.reset(new RenderBuffer(viewport.resolution));
-    m_buffers.reset(new ForwardPlusBuffers(viewport.resolution));
+    m_resolution = resolution;
+    m_buffers.reset(new ForwardPlusBuffers(m_resolution));
 }
-void ForwardPlusPass::render(double alpha) noexcept
+void ForwardPlusPass::onRender(const RenderBuffer& renderBuffer, const RendererCameraGL& camera, double alpha) noexcept
 {
-    updateUBOs();
+    glViewport(0, 0, m_resolution.x, m_resolution.y);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    updateUBOs(camera);
     renderGeometryPass();
     #if (USE_LIGHT_CULLING == 1)
         processCullPass();
     #endif
     renderLightPass();
-    renderPPPass();
-    renderViewportPass();   
-}
-RenderBuffer& ForwardPlusPass::getRenderBuffer() noexcept
-{
-    return *m_renderBuffer.get();
+    renderPPPass(renderBuffer);
+    if(m_lightCullingDebug) renderDebug(renderBuffer);
 }
 
-void ForwardPlusPass::updateUBOs() noexcept
+void ForwardPlusPass::updateUBOs(const RendererCameraGL& camera) noexcept
 {
-    //Compute camera matrix
-    RendererCameraGL& camera = *viewport.camera;
-
     Vector3f eye = camera.transform->getTranslation();
     Vector3f forward = camera.transform->getForwardVector();
     Vector3f up = camera.transform->getUpVector();
 
     m_viewMatrix = Matrix4f::view(eye, forward, up);
 
-    float aspect = (viewport.size.x * (float)Engine::window().getSize().x) /
-        (viewport.size.y * (float)Engine::window().getSize().y);
+    float aspect = (float)viewport.getViewport().width / (float)viewport.getViewport().height;
 
     Matrix4f projectionMatrix = Matrix4f::perspectiveInversedZ(camera.fov, aspect, camera.near, camera.far);
     Matrix4f invProjectionMatrix = Matrix4f::inverse(projectionMatrix);
@@ -88,7 +92,7 @@ void ForwardPlusPass::updateUBOs() noexcept
     m_vpMatrix = projectionMatrix * m_viewMatrix;
 
     //Update constants
-    content.constantsUBO->setViewportResolution(viewport.resolution);
+    content.constantsUBO->setViewportResolution(m_resolution);
 
     //Updates Lights
     content.pointLightUBO->updateMemory(content.pointLights, m_viewMatrix);
@@ -98,9 +102,6 @@ void ForwardPlusPass::updateUBOs() noexcept
 }
 void ForwardPlusPass::renderGeometryPass() noexcept
 {
-    //Viewport setup
-    glViewport(0, 0, viewport.resolution.x, viewport.resolution.y);
-
     //Maybe useless configuration ?
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_GREATER);
@@ -143,8 +144,8 @@ void ForwardPlusPass::renderGeometryPass() noexcept
 }
 void ForwardPlusPass::processCullPass() noexcept
 {
-    glUseProgram(content.lightCullingComputeShader.getProgram());
-    Vector2u dispatch = CullLightSSBO::dispatchSize(viewport.resolution);
+    glUseProgram(m_lightCullComputeShader);
+    Vector2u dispatch = CullLightSSBO::dispatchSize(m_resolution);
     glDispatchCompute(dispatch.x, dispatch.y, 1);
 }
 void ForwardPlusPass::renderLightPass() noexcept
@@ -200,11 +201,11 @@ void ForwardPlusPass::renderLightPass() noexcept
         }
     }
 }
-void ForwardPlusPass::renderPPPass() noexcept
+void ForwardPlusPass::renderPPPass(const RenderBuffer& renderBuffer) noexcept
 {
     glUseProgram(m_postProcessShader);
 
-    m_renderBuffer->bindForWriting();
+    renderBuffer.bindForWriting();
     m_buffers->bindForPPPass();
 
     glDisable(GL_DEPTH_TEST);
@@ -212,28 +213,14 @@ void ForwardPlusPass::renderPPPass() noexcept
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 }
-void ForwardPlusPass::renderViewportPass() noexcept
+void ForwardPlusPass::renderDebug(const  RenderBuffer& renderBuffer) noexcept
 {
-    //Render texture to backbuffer
-    Vector2u windowSize = Engine::window().getSize();
-    Vector2u position = Vector2u(
-        (unsigned)((float)windowSize.x * viewport.position.x),
-        (unsigned)((float)windowSize.y * viewport.position.y)
-    );
-    Vector2u size = Vector2u(
-        (unsigned)((float)windowSize.x * viewport.size.x),
-        (unsigned)((float)windowSize.y * viewport.size.y)
-    );
-    glViewport(position.x, position.y, size.x, size.y);
+    glUseProgram(m_debugLightCullingShader);
 
-    glUseProgram(m_quadTextureShader);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    renderBuffer.bindForWriting();
 
-    m_renderBuffer->bindForReading();
-
+    glDisable(GL_DEPTH_TEST);
     glBindVertexArray(content.quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
-
-    glUseProgram(0);
 }

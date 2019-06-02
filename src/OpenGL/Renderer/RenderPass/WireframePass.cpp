@@ -8,10 +8,12 @@
 
 using namespace ax;
 
-WireframePass::WireframePass(RenderContent& content) : RenderPass(content) {}
+WireframePass::WireframePass(RenderContent& content, RendererGUIViewportGL& viewport) : RenderPass(content, viewport) {}
 
-void WireframePass::onInitialize() noexcept
+void WireframePass::onInitialize(const Vector2u& resolution) noexcept
 {
+    m_resolution = resolution;
+
     glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
     glClearDepth(0.0f);
     glDepthFunc(GL_GREATER);
@@ -29,15 +31,15 @@ void WireframePass::onTerminate() noexcept
 }
 void WireframePass::onUpdateResolution(const Vector2u& resolution) noexcept
 {
-    
+    m_resolution = resolution;
 }
-void WireframePass::onRender(RenderBuffer& renderBuffer, RendererCameraGL& camera, double alpha) noexcept
+void WireframePass::onRender(const RenderBuffer& renderBuffer, const RendererCameraGL& camera, double alpha) noexcept
 {
     glDepthFunc(GL_GREATER);
     glClearDepth(0.0f);
     
     glUseProgram(m_wireframeShader);
-    renderBuffer->bindForWriting();
+    renderBuffer.bindForWriting();
 
     Vector3f eye = camera.transform->getTranslation();
     Vector3f forward = camera.transform->getForwardVector();
@@ -45,14 +47,13 @@ void WireframePass::onRender(RenderBuffer& renderBuffer, RendererCameraGL& camer
 
     Matrix4f viewMatrix = Matrix4f::view(eye, forward, up);
 
-    float aspect = (viewport.size.x * (float)Engine::window().getSize().x) /
-        (viewport.size.y * (float)Engine::window().getSize().y);
+    float aspect = (float)viewport.getViewport().width / (float)viewport.getViewport().height;
 
     Matrix4f projectionMatrix = Matrix4f::perspectiveInversedZ(camera.fov, aspect, camera.near, camera.far);
     Matrix4f invProjectionMatrix = Matrix4f::inverse(Matrix4f::perspective(camera.fov, aspect, camera.near, camera.far));
 
     //Update constants
-    content.constantsUBO->setViewportResolution(viewport.resolution);
+    content.constantsUBO->setViewportResolution(m_resolution);
 
     content.cameraUBO->update(viewMatrix, projectionMatrix, invProjectionMatrix);
     content.constantsUBO->update();
@@ -60,7 +61,7 @@ void WireframePass::onRender(RenderBuffer& renderBuffer, RendererCameraGL& camer
     Matrix4f vp = projectionMatrix * viewMatrix;
 
     //Setup viewport
-    glViewport(0, 0, viewport.resolution.x, viewport.resolution.y);
+    glViewport(0, 0, m_resolution.x, m_resolution.y);
 
     //Render scene
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

@@ -13,8 +13,6 @@ QuadComponent::QuadComponent(const Entity& entity, float x, float y, float facto
     m_coordinateFactor(factor)
 {
     //Mesh
-    std::cout << Quad::vertices(m_x, m_y, m_coordinateFactor).size() << std::endl;
-
     m_mesh = Engine::renderer().createMesh(
         Quad::vertices(
             m_x, m_y,

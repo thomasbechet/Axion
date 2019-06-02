@@ -3,12 +3,11 @@
 
 #include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
 #include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
-#include <OpenGL/Renderer/RenderPass/DebugLightCullingPass.hpp>
 #include <Core/Window/Window.hpp>
 
 using namespace ax;
 
-RendererGUIViewportHandle RendererGL::createViewport(const Rectu& rect, const Vector2u& resolution, RenderMode mode)
+RendererGUIViewportHandle RendererGL::createViewport(const Rectf& rect, const Vector2u& resolution, RenderMode mode)
 {
     Id id = m_content.viewports.add(std::make_unique<RendererGUIViewportGL>(m_content, rect, resolution, mode));
     RendererGUIViewportGL* viewport = m_content.viewports.get(id).get();
@@ -25,7 +24,7 @@ void RendererGL::destroyViewport(RendererGUIViewportHandle& viewportPointer)
     viewportPointer = nullptr;
 }
 
-RendererGUIViewportGL::RendererGUIViewportGL(RenderContent& content, const Vector2u& rect, const Vector2u& resolution, RenderMode mode) : 
+RendererGUIViewportGL::RendererGUIViewportGL(RenderContent& content, const Rectf& rect, const Vector2u& resolution, RenderMode mode) : 
     m_content(content),
     m_renderBuffer(std::make_unique<RenderBuffer>(resolution)),
     m_viewport(rect),
@@ -35,24 +34,24 @@ RendererGUIViewportGL::RendererGUIViewportGL(RenderContent& content, const Vecto
 }   
 RendererGUIViewportGL::~RendererGUIViewportGL()
 {
-    m_renderPass->terminate();
+    m_renderPass->onTerminate();
 }
 
 void RendererGUIViewportGL::setRendermode(RenderMode mode)
 {
-    if(m_renderPass) m_renderPass->terminate();
+    if(m_renderPass) m_renderPass->onTerminate();
     m_renderPass.reset();
 
     switch(mode)
     {
-        case RenderMode::Default: m_renderPass = std::make_unique<ForwardPlusPass>(*content); break;
-        case RenderMode::ForwardPlusShading: m_renderPass = std::make_unique<ForwardPlusPass>(*content); break;
-        case RenderMode::Wireframe: m_renderPass = std::make_unique<WireframePass>(*content); break;
-        case RenderMode::Debug0: m_renderPass = std::make_unique<DebugLightCullingPass>(*content); break;
-        default: m_renderPass = std::make_unique<ForwardPlusPass>(*content); break;
+        case RenderMode::Default: m_renderPass = std::make_unique<ForwardPlusPass>(m_content, *this, false); break;
+        case RenderMode::ForwardPlusShading: m_renderPass = std::make_unique<ForwardPlusPass>(m_content, *this, false); break;
+        case RenderMode::Wireframe: m_renderPass = std::make_unique<WireframePass>(m_content, *this); break;
+        case RenderMode::Debug0: m_renderPass = std::make_unique<ForwardPlusPass>(m_content, *this, true); break;
+        default: m_renderPass = std::make_unique<ForwardPlusPass>(m_content, *this, false); break;
     }
     
-    m_renderPass->initialize(m_resolution);
+    m_renderPass->onInitialize(m_resolution);
 }
 void RendererGUIViewportGL::setCamera(RendererCameraHandle cameraPointer)
 {
@@ -62,10 +61,10 @@ void RendererGUIViewportGL::setResolution(const Vector2u& newResolution)
 {
     m_resolution = newResolution;
     m_renderBuffer.reset(new RenderBuffer(m_resolution));
-    m_content->cullLightSSBO->setResolution(m_resolution);
-    m_renderPass->updateResolution(m_resolution);
+    m_content.cullLightSSBO->setResolution(m_resolution);
+    m_renderPass->onUpdateResolution(m_resolution);
 }
-void RendererGUIViewportGL::setViewport(const Rectu& rect)
+void RendererGUIViewportGL::setViewport(const Rectf& rect)
 {
     m_viewport = rect;
 }
@@ -86,7 +85,13 @@ RenderBuffer& RendererGUIViewportGL::getRenderBuffer() const noexcept
 }
 Rectu RendererGUIViewportGL::getViewport() const noexcept
 {
-    return m_viewport;
+    Rectu rect;
+    Vector2u windowSize = Engine::window().getSize();
+    rect.left = (unsigned)(m_viewport.left * (float)windowSize.x);
+    rect.bottom = (unsigned)(m_viewport.bottom * (float)windowSize.y);
+    rect.width = (unsigned)(m_viewport.width * (float)windowSize.x);
+    rect.height = (unsigned)(m_viewport.height * (float)windowSize.y);
+    return rect;
 }
 
 void RendererGUIViewportGL::setID(Id id) noexcept

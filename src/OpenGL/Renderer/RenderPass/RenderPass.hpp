@@ -1,6 +1,7 @@
 #pragma once
 
 #include <OpenGL/Export.hpp>
+#include <Core/Math/Vector.hpp>
 
 namespace ax
 {
@@ -15,11 +16,11 @@ namespace ax
         RenderPass(RenderContent& content, RendererGUIViewportGL& viewport);
         virtual ~RenderPass() = default;
 
-    protected:
+    public:
         virtual void onInitialize(const Vector2u& resolution) noexcept = 0;
         virtual void onTerminate() noexcept = 0;
         virtual void onUpdateResolution(const Vector2u& resolution) noexcept = 0;
-        virtual void onRender(RenderBuffer& renderBuffer, RendererCameraGL& camera, double alpha) noexcept = 0;
+        virtual void onRender(const RenderBuffer& renderBuffer, const RendererCameraGL& camera, double alpha) noexcept = 0;
 
     protected:
         RenderContent& content;

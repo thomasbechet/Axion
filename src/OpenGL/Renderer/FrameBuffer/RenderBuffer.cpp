@@ -31,20 +31,20 @@ RenderBuffer::~RenderBuffer()
     glDeleteTextures(1, &m_renderTexture);
 }
 
-void RenderBuffer::bindForWriting() noexcept
+void RenderBuffer::bindForWriting() const noexcept
 {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
     GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
     glDrawBuffers(1, buffers);
 }
-void RenderBuffer::bindForReading() noexcept
+void RenderBuffer::bindForReading() const noexcept
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_renderTexture);
 }
-void RenderBuffer::clear(Color3 color) noexcept
+void RenderBuffer::clear(Color3 color) const noexcept
 {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
-    glClearColor(color.x, color.y, color.z, 1.0f);
+    glClearColor(color.r, color.g, color.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }

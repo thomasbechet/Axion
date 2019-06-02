@@ -46,7 +46,6 @@ ADD_LIBRARY(
     Renderer/RenderPass/RenderPass.cpp
     Renderer/RenderPass/ForwardPlusPass.cpp
     Renderer/RenderPass/WireframePass.cpp
-    Renderer/RenderPass/DebugLightCullingPass.cpp
 )
 
 #Adding glfw dependency

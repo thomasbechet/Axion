@@ -11,16 +11,18 @@ namespace ax
     class AXION_GL_API WireframePass : public RenderPass
     {
     public:
-        WireframePass(RenderContent& content);
+        WireframePass(RenderContent& content, RendererGUIViewportGL& viewport);
 
         void onInitialize(const Vector2u& resolution) noexcept override;
         void onTerminate() noexcept override;
         void onUpdateResolution(const Vector2u& resolution) noexcept override;
-        void onRender(RenderBuffer& renderBuffer, RendererCameraGL& camera, double alpha) noexcept override;
+        void onRender(const RenderBuffer& renderBuffer, const RendererCameraGL& camera, double alpha) noexcept override;
 
     private:
         GLuint m_quadTextureShader;
         GLuint m_wireframeShader;
         GLuint m_guiRectangleShader;
+
+        Vector2u m_resolution;
     };
 }

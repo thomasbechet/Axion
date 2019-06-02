@@ -15,34 +15,36 @@ namespace ax
     class AXION_GL_API ForwardPlusPass : public RenderPass
     {
     public:
-        ForwardPlusPass(RenderContent& content, RendererGUIViewportGL& viewport);
+        ForwardPlusPass(RenderContent& content, RendererGUIViewportGL& viewport, bool lightCullingDebug = false);
 
-        void initialize() noexcept override;
-        void terminate() noexcept override;
-        void updateResolution() noexcept override;
-        void render(double alpha) noexcept override;
-        RenderBuffer& getRenderBuffer() noexcept override;
+        void onInitialize(const Vector2u& resolution) noexcept override;
+        void onTerminate() noexcept override;
+        void onUpdateResolution(const Vector2u& resolution) noexcept override;
+        void onRender(const RenderBuffer& renderBuffer, const RendererCameraGL& camera, double alpha) noexcept override;
 
     private:
-        void updateUBOs() noexcept;
+        void updateUBOs(const RendererCameraGL& camera) noexcept;
         void renderGeometryPass() noexcept;
         void processCullPass() noexcept;
         void renderLightPass() noexcept;
-        void renderPPPass() noexcept;
-        void renderViewportPass() noexcept;
+        void renderPPPass(const RenderBuffer& renderBuffer) noexcept;
+        void renderDebug(const RenderBuffer& renderBuffer) noexcept;
 
     private:
         Matrix4f m_viewMatrix;
         Matrix4f m_vpMatrix;
 
-    private:
         GLuint m_quadTextureShader;
         GLuint m_genericShader;
         GLuint m_geometryShader;
         GLuint m_postProcessShader;
         GLuint m_lightCullComputeShader;
+        GLuint m_debugLightCullingShader;
 
-        std::unique_ptr<RenderBuffer> m_renderBuffer;
         std::unique_ptr<ForwardPlusBuffers> m_buffers;
+
+        Vector2u m_resolution;
+
+        bool m_lightCullingDebug;
     };
 }
