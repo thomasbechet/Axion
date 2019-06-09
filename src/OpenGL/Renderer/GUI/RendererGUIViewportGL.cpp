@@ -1,6 +1,7 @@
 #include <OpenGL/Renderer/GUI/RendererGUIViewportGL.hpp>
 #include <OpenGL/Renderer/RendererGL.hpp>
 
+#include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
 #include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
 #include <Core/Window/Window.hpp>
@@ -13,7 +14,7 @@ RendererGUIViewportHandle RendererGL::createViewport(const Rectf& rect, const Ve
     RendererGUIViewportGL* viewport = m_content.viewports.get(id).get();
     viewport->setID(id);
 
-    m_content.cullLightSSBO->setResolution(resolution);
+    if(USE_LIGHT_CULLING) m_content.cullLightSSBO->setResolution(resolution);
 
     return viewport;
 }

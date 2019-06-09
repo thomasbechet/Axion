@@ -23,6 +23,7 @@ namespace ax
         bool compileShader(const std::string& vertex, const std::string& fragment) noexcept;
         bool compileCompute(const std::string& compute) noexcept;
         void injectConstants(std::string& code) noexcept;
+        void replaceConstantBoolean(std::string& code, bool value, std::string name) noexcept;
         void replaceConstantInteger(std::string& code, int value, std::string name) noexcept;
         void replaceConstantString(std::string& code, std::string value, std::string name) noexcept;
 

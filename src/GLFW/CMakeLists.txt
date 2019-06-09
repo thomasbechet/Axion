@@ -7,8 +7,8 @@ PROJECT(axion-glfw LANGUAGES CXX VERSION 0.0.1)
 INCLUDE_DIRECTORIES("../")
 INCLUDE_DIRECTORIES("../../extlibs/GLFW/include/")
 
-#Using std=c++14
-SET(CMAKE_CXX_STANDARD 14)
+#Using std=c++17
+SET(CMAKE_CXX_STANDARD 17)
 
 #Export macro definition
 ADD_DEFINITIONS(-DAXION_GLFW_EXPORT)

@@ -21,7 +21,6 @@ namespace ax
     private:
         GLuint m_quadTextureShader;
         GLuint m_wireframeShader;
-        GLuint m_guiRectangleShader;
 
         Vector2u m_resolution;
     };

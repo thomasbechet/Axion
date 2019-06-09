@@ -7,8 +7,8 @@ PROJECT(axion-opengl LANGUAGES CXX VERSION 0.0.1)
 INCLUDE_DIRECTORIES("../")
 INCLUDE_DIRECTORIES("../../extlibs/GLEW/include/")
 
-#Using std=c++14
-SET(CMAKE_CXX_STANDARD 14)
+#Using std=c++17
+SET(CMAKE_CXX_STANDARD 17)
 
 #Export macro definition
 ADD_DEFINITIONS(-DAXION_GL_EXPORT)

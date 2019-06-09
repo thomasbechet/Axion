@@ -44,12 +44,15 @@ void ForwardPlusPass::onInitialize(const Vector2u& resolution) noexcept
     RendererShaderHandle postProcessShader = content.postProcessShader->getHandle();
     m_postProcessShader = static_cast<RendererShaderGL&>(*postProcessShader).shader.getProgram();
 
-    //DebugLightCulling shader
-    RendererShaderHandle debugLightCullingShaderHandle = content.debugLightCullingShader->getHandle();
-    m_debugLightCullingShader = static_cast<RendererShaderGL&>(*debugLightCullingShaderHandle).shader.getProgram();
+    if(USE_LIGHT_CULLING)
+    {
+        //DebugLightCulling shader
+        RendererShaderHandle debugLightCullingShaderHandle = content.debugLightCullingShader->getHandle();
+        m_debugLightCullingShader = static_cast<RendererShaderGL&>(*debugLightCullingShaderHandle).shader.getProgram();
 
-    //LightCullingCompute shader
-    m_lightCullComputeShader = content.lightCullingComputeShader.getProgram();
+        //LightCullingCompute shader
+        m_lightCullComputeShader = content.lightCullingComputeShader.getProgram();
+    }
 }
 void ForwardPlusPass::onTerminate() noexcept
 {
@@ -68,9 +71,7 @@ void ForwardPlusPass::onRender(const RenderBuffer& renderBuffer, const RendererC
 
     updateUBOs(camera);
     renderGeometryPass();
-    #if (USE_LIGHT_CULLING == 1)
-        processCullPass();
-    #endif
+    if(USE_LIGHT_CULLING) processCullPass();
     renderLightPass();
     renderPPPass(renderBuffer);
     if(m_lightCullingDebug) renderDebug(renderBuffer);

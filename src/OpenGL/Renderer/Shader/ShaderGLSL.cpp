@@ -155,7 +155,7 @@ void ShaderGLSL::injectConstants(std::string& code) noexcept
     replaceConstantInteger(code, DIRECTIONAL_LIGHT_UBO_BINDING_POINT, "DIRECTIONAL_LIGHT_UBO_BINDING_POINT");
     replaceConstantInteger(code, DIRECTIONAL_LIGHT_MAX_NUMBER, "DIRECTIONAL_LIGHT_MAX_NUMBER");
 
-    replaceConstantInteger(code, USE_LIGHT_CULLING, "USE_LIGHT_CULLING");
+    replaceConstantBoolean(code, USE_LIGHT_CULLING, "USE_LIGHT_CULLING");
     replaceConstantInteger(code, CULL_POINT_LIGHT_SSBO_BINDING_POINT, "CULL_POINT_LIGHT_SSBO_BINDING_POINT");
     replaceConstantInteger(code, CULL_POINT_LIGHT_MAX_PER_TILE, "CULL_POINT_LIGHT_MAX_PER_TILE");
     replaceConstantInteger(code, CULL_TILE_SIZE, "CULL_TILE_SIZE");
@@ -176,6 +176,10 @@ void ShaderGLSL::injectConstants(std::string& code) noexcept
 
     replaceConstantInteger(code, GBUFFER_NORMAL_TEXTURE_BINDING, "GBUFFER_NORMAL_TEXTURE_BINDING");
     replaceConstantInteger(code, GBUFFER_DEPTH_TEXTURE_BINDING, "GBUFFER_DEPTH_TEXTURE_BINDING");
+}
+void ShaderGLSL::replaceConstantBoolean(std::string& code, bool value, std::string name) noexcept
+{
+    code = std::regex_replace(code, std::regex("\\$" + name), std::to_string(value), std::regex_constants::format_default);
 }
 void ShaderGLSL::replaceConstantInteger(std::string& code, int value, std::string name) noexcept
 {

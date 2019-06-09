@@ -1,5 +1,6 @@
 #include <OpenGL/Renderer/RendererGL.hpp>
 
+#include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Logger/Logger.hpp>
@@ -51,7 +52,7 @@ void RendererGL::initialize() noexcept
     m_content.pointLightUBO = std::make_unique<PointLightUBO>();
     m_content.directionalLightUBO = std::make_unique<DirectionalLightUBO>();
     m_content.constantsUBO = std::make_unique<ConstantsUBO>();
-    m_content.cullLightSSBO = std::make_unique<CullLightSSBO>(Vector2u(1, 1));
+    if(USE_LIGHT_CULLING) m_content.cullLightSSBO = std::make_unique<CullLightSSBO>(Vector2u(1, 1));
 
     //Load shaders
     Engine::assets().package.loadFromFile("glsl_shaders_package", "$ENGINE_DIR/packages/glsl_shaders_package.json");
@@ -64,14 +65,15 @@ void RendererGL::initialize() noexcept
     m_content.guiRectangleShader = Engine::assets().shader("glsl_gui_rectangle");
 
     //Compute shader
-    #if (USE_LIGHT_CULLING == 1)
+    if(USE_LIGHT_CULLING)
+    {
         Path lightCullPath = "$ENGINE_DIR/shaders/glsl/light_culling.comp";
         std::ifstream lightCullFile(lightCullPath.path());
         if(!lightCullFile.is_open()) Engine::interrupt("Failed to load compute file: " + lightCullPath);
         std::string lightCullCode{std::istreambuf_iterator<char>(lightCullFile), std::istreambuf_iterator<char>()};
         if(!m_content.lightCullingComputeShader.loadCompute(lightCullCode))
             Engine::interrupt("Failed to load compute shader.");
-    #endif
+    }
 
     //Specific content
     RendererShaderHandle quadTextureShaderHandle = m_content.quadTextureShader->getHandle();

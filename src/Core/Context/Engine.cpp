@@ -136,7 +136,7 @@ void Engine::initialize() noexcept
     viewport.width = 1.0f;
     viewport.height = 1.0f;
 
-    RendererGUIViewportHandle defaultViewport = Engine::renderer().createViewport(viewport, defaultResolution, RenderMode::ForwardPlusShading);
+    RendererGUIViewportHandle defaultViewport = Engine::renderer().createViewport(viewport, defaultResolution, RenderMode::Wireframe);
     Engine::renderer().setDefaultViewport(defaultViewport);
 
     //Create default material

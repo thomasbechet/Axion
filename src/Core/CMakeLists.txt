@@ -10,8 +10,8 @@ INCLUDE_DIRECTORIES("../../extlibs/TinyObjLoader/include/")
 INCLUDE_DIRECTORIES("../../extlibs/RapidXML/include/")
 INCLUDE_DIRECTORIES("../../extlibs/nlohmann/include/")
 
-#Using std=c++14
-SET(CMAKE_CXX_STANDARD 14)
+#Using std=c++17
+SET(CMAKE_CXX_STANDARD 17)
 
 #Export macro definition
 ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
@@ -66,7 +66,6 @@ ADD_LIBRARY(
     Logger/ConsoleLogger.cpp
     Math/Transform.cpp
     Math/Transform2D.cpp
-    Math/Math.cpp
     Math/Geometry/Shape.cpp
     Math/Geometry/Sphere.cpp
     Math/Geometry/UVSphere.cpp

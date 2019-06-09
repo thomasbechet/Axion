@@ -3,8 +3,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
 #Project declaration
 PROJECT(RuntimeTest LANGUAGES CXX VERSION 0.0.1)
 
-#Using std=c++14
-SET(CMAKE_CXX_STANDARD 14)
+#Using std=c++17
+SET(CMAKE_CXX_STANDARD 17)
 
 #Include headers
 INCLUDE_DIRECTORIES("../")
