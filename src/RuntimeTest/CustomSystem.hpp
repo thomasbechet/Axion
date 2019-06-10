@@ -101,8 +101,8 @@ public:
 
 private:
     std::vector<ax::TransformComponent*> m_pointlights;
-    int MAX_X = 35;
-    int MAX_Y = 35;
+    int MAX_X = 10;
+    int MAX_Y = 10;
 
     ax::TransformComponent* m_spawn;
     ax::Button* spawnButton;

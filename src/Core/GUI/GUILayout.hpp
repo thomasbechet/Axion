@@ -27,12 +27,16 @@ namespace ax
         virtual void onUpdate(){}
 
     protected:
-        GUIButton& addButton() noexcept;
-        void removeButton(GUIButton& button) noexcept;
-        GUILabel& addLabel() noexcept;
-        void removeLabel(GUILabel& label) noexcept;
+        template<typename T>
+        T& add() noexcept
+        {
+
+        }
+        void remove(GUIWidget& widget) noexcept;
 
     private:
+        
+
         std::vector<std::unique_ptr<GUIButton>> m_buttons;
         std::vector<std::unique_ptr<GUILabel>> m_labels;
         bool m_hasFocus = false;

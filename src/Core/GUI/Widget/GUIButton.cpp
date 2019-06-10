@@ -4,7 +4,7 @@ using namespace ax;
 
 GUIButton::GUIButton(GUILayout& layout) : GUIRectangle(layout)
 {
-    m_handle = Engine::gui().createButton(*this);
+    m_handle = Engine::renderer().createButton(*this);
 }
 GUIButton::~GUIButton()
 {
