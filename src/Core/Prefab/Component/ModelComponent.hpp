@@ -4,7 +4,7 @@
 #include <Core/World/Component/Component.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Asset/AssetReference.hpp>
-#include <Core/Asset/Model.hpp>
+#include <Core/Asset/Asset/Model.hpp>
 #include <Core/Renderer/Scene/RendererStaticmesh.hpp>
 
 #include <vector>

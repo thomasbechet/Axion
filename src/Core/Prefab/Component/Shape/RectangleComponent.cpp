@@ -1,7 +1,7 @@
 #include <Core/Prefab/Component/Shape/RectangleComponent.hpp>
 
 #include <Core/Renderer/Renderer.hpp>
-#include <Core/Asset/AssetManager.hpp>
+#include <Core/Asset/Assets.hpp>
 
 using namespace ax;
 

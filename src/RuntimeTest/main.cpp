@@ -31,8 +31,7 @@
 #include <Core/Prefab/Component/Shape/QuadComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/IndexVector.hpp>
-#include <Core/Asset/AssetManager.hpp>
-#include <Core/Asset/Texture.hpp>
+#include <Core/Asset/Assets.hpp>
 #include <Core/Asset/AssetHolder.hpp>
 #include <RuntimeTest/CustomSystem.hpp>
 #include <Core/Math/Transform2D.hpp>
@@ -127,11 +126,52 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        ax::Engine::assets().package.loadFromFile("mypackage", "../packages/package.json");
+        /*ax::Package::Parameters testPakParams;
+        testPakParams.source = "$ENGINE_DIR/packages/package_test.json";
+        ax::Engine::assets().package.load("package_test", testPakParams);
+
+        ax::Engine::assets().log();
+        ax::Engine::logger().log(ax::Engine::assets().model.exists("model_bunny"));
+        ax::Engine::assets().model("model_bunny");
+
+        ax::Engine::assets().model.unload("model_bunny");*/
 
         ax::Engine::systems().add<ax::BasicWindowSystem>();
-        ax::BasicSpectatorSystem& cameraSystem = ax::Engine::systems().add<ax::BasicSpectatorSystem>();
         ax::Engine::systems().add<ax::RenderModeSystem>();
+
+        ax::Texture::Parameters textureParameters;
+        textureParameters.source = "$ENGINE_DIR/textures/wall_normal2.bmp";
+        ax::Engine::assets().texture.load("mytexture", textureParameters);
+
+        ax::AssetReference<ax::Material> matdef = ax::Engine::assets().material(ax::Material::Default);        
+
+        ax::Package::Parameters packageParameters;
+        packageParameters.source = "../packages/package.json";
+        packageParameters.asyncLoading = true;
+        ax::Engine::assets().package.loadAsync("mypackage", packageParameters);
+
+
+
+        ax::Engine::assets().log();
+
+        std::string currentName;
+        while(ax::Engine::assets().getTotalPending() > 0)
+        {
+            std::string temp = ax::Engine::assets().getCurrentAssetName();
+            if(temp != currentName)
+            {
+                std::cout << temp << std::endl;
+                currentName = temp;
+            }
+        }
+
+        ax::Engine::assets().package.wait("mypackage");
+
+        ax::Engine::assets().log();
+
+        
+        ax::BasicSpectatorSystem& cameraSystem = ax::Engine::systems().add<ax::BasicSpectatorSystem>();
+        
 
         ax::Entity& camera0 = ax::Engine::world().entity.create();
         ax::TransformComponent& cameraTransform = camera0.addComponent<ax::TransformComponent>();
@@ -178,9 +218,9 @@ public:
         #endif
 
         //Plane
-        ax::MaterialParameters wallMaterialParams;
+        ax::Material::Parameters wallMaterialParams;
         wallMaterialParams.normalTexture = "wall_normal2";
-        ax::Engine::assets().material.loadFromMemory("wall_material", wallMaterialParams);
+        ax::Engine::assets().material.load("wall_material", wallMaterialParams);
 
         ax::Entity& plane = ax::Engine::world().entity.create();
         plane.addComponent<ax::TransformComponent>();
@@ -188,8 +228,6 @@ public:
 
         CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
         system.setSpawnTransform(&cameraTransform);
-
-        ax::Engine::assets().log();
     }
     void onStop() override
     {

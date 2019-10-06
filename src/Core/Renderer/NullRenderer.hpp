@@ -20,7 +20,7 @@ namespace ax
         void destroyMesh(RendererMeshHandle& mesh) override {mesh = nullptr;}
 
         //Texture
-        RendererTextureHandle createTexture(Vector2u size, TextureFormat format, const Byte* data) override {return &m_nullTexture;}
+        RendererTextureHandle createTexture(Vector2u size, Texture::Format format, const Byte* data) override {return &m_nullTexture;}
         void destroyTexture(RendererTextureHandle& texture) override {texture = nullptr;}
 
         //Shader

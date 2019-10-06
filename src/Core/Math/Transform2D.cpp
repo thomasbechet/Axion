@@ -77,11 +77,11 @@ bool Transform2D::hasChild() const noexcept
     return firstChild != nullptr;
 }
 
-Matrix3f Transform2D::getWorldMatrix() noexcept
+Matrix3f Transform2D::getWorldMatrix() const noexcept
 {
     return localToWorld();
 }
-Matrix3f Transform2D::getMatrix() noexcept
+Matrix3f Transform2D::getMatrix() const noexcept
 {
     return localToParent();
 }
@@ -109,14 +109,14 @@ void Transform2D::setParent(Transform2D* newParent) noexcept
         parent->firstChild = this;
     }
 }
-Matrix3f Transform2D::localToWorld() noexcept
+Matrix3f Transform2D::localToWorld() const noexcept
 {
     if(parent) 
         return parent->localToWorld() * localToParent();
     else 
         return localToParent();
 }
-Matrix3f Transform2D::localToParent() noexcept
+Matrix3f Transform2D::localToParent() const noexcept
 {
     if(m_requestCompute)
     {

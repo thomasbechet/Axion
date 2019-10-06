@@ -3,7 +3,7 @@
 
 using namespace ax;
 
-RendererTextureHandle RendererGL::createTexture(Vector2u size, TextureFormat format, const Byte* data)
+RendererTextureHandle RendererGL::createTexture(Vector2u size, Texture::Format format, const Byte* data)
 {
     Id id = m_content.textures.add(std::make_unique<RendererTextureGL>());
     RendererTextureGL* texture = m_content.textures.get(id).get();
@@ -19,15 +19,15 @@ RendererTextureHandle RendererGL::createTexture(Vector2u size, TextureFormat for
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-    if(format == TextureFormat::RGB)
+    if(format == Texture::Format::RGB)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size.x, size.y, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     }
-    else if(format == TextureFormat::RGBA)
+    else if(format == Texture::Format::RGBA)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     }
-    else if(format == TextureFormat::R)
+    else if(format == Texture::Format::R)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, size.x, size.y, 0, GL_RED, GL_UNSIGNED_BYTE, data);
     }

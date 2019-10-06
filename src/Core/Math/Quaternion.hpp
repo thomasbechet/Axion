@@ -34,10 +34,10 @@ namespace ax
 		///////////////////////
 		//OPERATORS
 		///////////////////////
-		Vector3<T> operator*(const Vector3<T>& v)
+		Vector3<T> operator*(const Vector3<T>& v) const
 		{
 			Vector3<T> u(x, y, z);
-			return 2 * Vector3<T>::dot(u, v) * u + (w * w - Vector3<T>::dot(u, u)) * v + 2 * w * Vector3<T>::cross(u, v);
+			return (T)2 * Vector3<T>::dot(u, v) * u + (w * w - Vector3<T>::dot(u, u)) * v + (T)2 * w * Vector3<T>::cross(u, v);
 		}
 		Quaternion<T> operator*(const Quaternion<T>& q)
 		{

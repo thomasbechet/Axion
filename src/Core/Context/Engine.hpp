@@ -18,7 +18,7 @@ namespace ax
     class EngineContext;
     class Window;
     class Input;
-    class AssetManager;
+    class Assets;
     class GUI;
     class GUIRenderer;
 
@@ -40,7 +40,7 @@ namespace ax
         static ThreadPool& threads() noexcept;
         static Window& window() noexcept;
         static Input& input() noexcept;
-        static AssetManager& assets() noexcept;
+        static Assets& assets() noexcept;
         static GUI& gui() noexcept;
 
         static const std::string EngineDirectory; //   Game/Engine/
@@ -56,7 +56,7 @@ namespace ax
         static EngineContext* m_context;
         static Window* m_window;
         static Input* m_input;
-        static AssetManager* m_assets;
+        static Assets* m_assets;
         static GUI* m_gui;
 
         static std::map<std::string, LibraryLoader> m_libraryHolder;

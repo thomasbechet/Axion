@@ -6,7 +6,7 @@
 #include <Core/World/Entity/Entity.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Asset/AssetReference.hpp>
-#include <Core/Asset/Material.hpp>
+#include <Core/Asset/Asset/Material.hpp>
 #include <Core/Renderer/Scene/RendererStaticmesh.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>
 

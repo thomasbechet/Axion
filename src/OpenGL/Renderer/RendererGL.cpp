@@ -4,7 +4,7 @@
 #include <Core/Context/Engine.hpp>
 #include <Core/Window/Window.hpp>
 #include <Core/Logger/Logger.hpp>
-#include <Core/Asset/AssetManager.hpp>
+#include <Core/Asset/Assets.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
 #include <GL/glew.h>
@@ -55,7 +55,9 @@ void RendererGL::initialize() noexcept
     if(USE_LIGHT_CULLING) m_content.cullLightSSBO = std::make_unique<CullLightSSBO>(Vector2u(1, 1));
 
     //Load shaders
-    Engine::assets().package.loadFromFile("glsl_shaders_package", "$ENGINE_DIR/packages/glsl_shaders_package.json");
+    Package::Parameters packageParameters;
+    packageParameters.source = "$ENGINE_DIR/packages/glsl_shaders_package.json";
+    Engine::assets().package.load("glsl_shaders_package", packageParameters);
     m_content.debugLightCullingShader = Engine::assets().shader("glsl_debug_light_culling");
     m_content.geometryShader = Engine::assets().shader("glsl_geometry");
     m_content.genericShader = Engine::assets().shader("glsl_generic");

@@ -2,9 +2,9 @@
 
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
-#include <Core/Asset/Mesh.hpp>
-#include <Core/Asset/Material.hpp>
-#include <Core/Asset/Texture.hpp>
+#include <Core/Asset/Asset/Mesh.hpp>
+#include <Core/Asset/Asset/Material.hpp>
+#include <Core/Asset/Asset/Texture.hpp>
 #include <Core/Renderer/RenderMode.hpp>
 #include <Core/Renderer/Asset/RendererMaterial.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>
@@ -39,7 +39,7 @@ namespace ax
         virtual void destroyMesh(RendererMeshHandle& mesh) = 0;
 
         //Texture
-        virtual RendererTextureHandle createTexture(Vector2u size, TextureFormat format, const Byte* data) = 0;
+        virtual RendererTextureHandle createTexture(Vector2u size, Texture::Format format, const Byte* data) = 0;
         virtual void destroyTexture(RendererTextureHandle& texture) = 0;
 
         //Shader

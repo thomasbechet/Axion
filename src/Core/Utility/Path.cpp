@@ -76,6 +76,10 @@ bool Path::fileExists() const noexcept
     std::ifstream f(m_path.c_str());
     return f.good();
 }
+bool Path::empty() const noexcept
+{
+    return m_path.empty();
+}
 
 Path::operator std::string() const
 {

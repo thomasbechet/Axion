@@ -11,14 +11,14 @@
 #include <Core/Renderer/NullRenderer.hpp>
 #include <Core/Window/NullWindow.hpp>
 #include <Core/Input/NullInput.hpp>
-#include <Core/Asset/AssetManager.hpp>
+#include <Core/Asset/Assets.hpp>
 #include <Core/GUI/GUI.hpp>
 
 using namespace ax;
 
-const std::string Engine::EngineDirectory = "../";
-const std::string Engine::GameDataDirectory = "../../GameData/";
-const std::string Engine::GameDirectory = "../../";
+const std::string Engine::EngineDirectory = "..";
+const std::string Engine::GameDataDirectory = "../../GameData";
+const std::string Engine::GameDirectory = "../..";
 
 Renderer* Engine::m_renderer = nullptr;
 SystemManager* Engine::m_systemManager = nullptr;
@@ -28,7 +28,7 @@ ThreadPool* Engine::m_threadPool = nullptr;
 EngineContext* Engine::m_context = nullptr;
 Window* Engine::m_window = nullptr;
 Input* Engine::m_input = nullptr;
-AssetManager* Engine::m_assets = nullptr;
+Assets* Engine::m_assets = nullptr;
 GUI* Engine::m_gui = nullptr;
 
 std::map<std::string, LibraryLoader> Engine::m_libraryHolder;
@@ -45,7 +45,7 @@ void Engine::initialize() noexcept
     else m_logger = new NullLogger();
 
     //Assets
-    m_assets = new AssetManager();
+    m_assets = new Assets();
 
     //System
     m_systemManager = new SystemManager();
@@ -140,8 +140,8 @@ void Engine::initialize() noexcept
     Engine::renderer().setDefaultViewport(defaultViewport);
 
     //Create default material
-    MaterialParameters defaultMaterial;
-    Engine::assets().material.loadFromMemory("default_material", defaultMaterial);
+    Material::Parameters defaultMaterial;
+    Engine::assets().material.load("default_material", defaultMaterial);
 }
 void Engine::terminate() noexcept
 {
@@ -202,7 +202,7 @@ Input& Engine::input() noexcept
 {
     return *m_input;
 }
-AssetManager& Engine::assets() noexcept
+Assets& Engine::assets() noexcept
 {
     return *m_assets;
 }

@@ -22,7 +22,7 @@ void Transform::setTranslation(const Vector3f& translation) noexcept
     m_translation = translation;
     m_requestCompute = true;
 }
-Vector3f Transform::getTranslation() noexcept
+Vector3f Transform::getTranslation() const noexcept
 {
     return m_translation;
 }
@@ -35,7 +35,7 @@ void Transform::setRotation(const Quaternionf& rotation) noexcept
     m_rotation = rotation;
     m_requestCompute = true;
 }
-Quaternionf Transform::getRotation() noexcept
+Quaternionf Transform::getRotation() const noexcept
 {
     return m_rotation;
 }
@@ -48,7 +48,7 @@ void Transform::setScale(const Vector3f& scale) noexcept
     m_scale = scale;
     m_requestCompute = true;
 }
-Vector3f Transform::getScale() noexcept
+Vector3f Transform::getScale() const noexcept
 {
     return m_scale;
 }   
@@ -64,27 +64,27 @@ void Transform::translate(Vector3f vec) noexcept
     m_requestCompute = true;
 }
 
-Vector3f Transform::getForwardVector() noexcept
+Vector3f Transform::getForwardVector() const noexcept
 {
     return Vector3f::normalize(m_rotation * Vector3f::forward);
 }
-Vector3f Transform::getBackwardVector() noexcept
+Vector3f Transform::getBackwardVector() const noexcept
 {
     return Vector3f::normalize(m_rotation * Vector3f::backward);
 }
-Vector3f Transform::getLeftVector() noexcept
+Vector3f Transform::getLeftVector() const noexcept
 {
     return Vector3f::normalize(m_rotation * Vector3f::left);
 }
-Vector3f Transform::getRightVector() noexcept
+Vector3f Transform::getRightVector() const noexcept
 {
     return Vector3f::normalize(m_rotation * Vector3f::right);
 }
-Vector3f Transform::getUpVector() noexcept
+Vector3f Transform::getUpVector() const noexcept
 {
     return Vector3f::normalize(m_rotation * Vector3f::up);
 }
-Vector3f Transform::getDownVector() noexcept
+Vector3f Transform::getDownVector() const noexcept
 {
     return Vector3f::normalize(m_rotation * Vector3f::down);
 }
@@ -106,11 +106,11 @@ bool Transform::hasChild() const noexcept
     return firstChild != nullptr;
 }
 
-Matrix4f Transform::getWorldMatrix() noexcept
+Matrix4f Transform::getWorldMatrix() const noexcept
 {
     return localToWorld();
 }
-Matrix4f Transform::getMatrix() noexcept
+Matrix4f Transform::getMatrix() const noexcept
 {
     return localToParent();
 }
@@ -138,14 +138,14 @@ void Transform::setParent(Transform* newParent) noexcept
         parent->firstChild = this;
     }
 }
-Matrix4f Transform::localToWorld() noexcept
+Matrix4f Transform::localToWorld() const noexcept
 {
     if(parent) 
         return parent->localToWorld() * localToParent();
     else 
         return localToParent();
 }
-Matrix4f Transform::localToParent() noexcept
+Matrix4f Transform::localToParent() const noexcept
 {
     if(m_requestCompute)
     {

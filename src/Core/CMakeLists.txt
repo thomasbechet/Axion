@@ -19,19 +19,15 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
-    Asset/AssetManager.cpp
-    Asset/Material.cpp
-    Asset/MaterialManager.cpp
-    Asset/Mesh.cpp
-    Asset/MeshManager.cpp
-    Asset/Model.cpp
-    Asset/ModelManager.cpp
-    Asset/Package.cpp
-    Asset/PackageManager.cpp
-    Asset/Shader.cpp
-    Asset/ShaderManager.cpp
-    Asset/Texture.cpp
-    Asset/TextureManager.cpp
+    Asset/Assets.cpp
+    Asset/AssetLoader.cpp
+    Asset/Asset.cpp
+    Asset/Asset/Material.cpp
+    Asset/Asset/Mesh.cpp
+    Asset/Asset/Model.cpp
+    Asset/Asset/Package.cpp
+    Asset/Asset/Shader.cpp
+    Asset/Asset/Texture.cpp
     Asset/JsonAttributes.cpp
     Context/EngineContext.cpp
     Context/Engine.cpp

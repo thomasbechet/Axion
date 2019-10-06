@@ -1,0 +1,9 @@
+{
+    "type":"package",
+
+    "model_bunny":
+    {
+        "type":"model",
+        "source":"$ENGINE_DIR/models/bunny/bunny.obj"
+    }
+}

@@ -35,20 +35,20 @@ namespace ax
         bool isAttached() const noexcept;
         bool hasChild() const noexcept;
 
-        Matrix3f getWorldMatrix() noexcept;
-        Matrix3f getMatrix() noexcept;
+        Matrix3f getWorldMatrix() const noexcept;
+        Matrix3f getMatrix() const noexcept;
 
     protected:
         void setParent(Transform2D* newParent) noexcept;
-        Matrix3f localToWorld() noexcept;
-        Matrix3f localToParent() noexcept;
+        Matrix3f localToWorld() const noexcept;
+        Matrix3f localToParent() const noexcept;
 
         Vector2f m_translation = Vector2f(0.0f, 0.0f);
         float m_rotation = 0.0f;
         Vector2f m_scale = Vector2f(1.0f, 1.0f);
  
-        Matrix3f m_transform;
-        bool m_requestCompute = true;
+        mutable Matrix3f m_transform;
+        mutable bool m_requestCompute = true;
 
         Transform2D* parent = nullptr;
         Transform2D* firstChild = nullptr;

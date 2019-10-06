@@ -2,7 +2,7 @@
 
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Math/Geometry/UVSphere.hpp>
-#include <Core/Asset/AssetManager.hpp>
+#include <Core/Asset/Assets.hpp>
 
 using namespace ax;
 

@@ -20,7 +20,6 @@
 #include <OpenGL/Renderer/FrameBuffer/RenderBuffer.hpp>
 #include <Core/Renderer/Renderer.hpp>
 #include <Core/Utility/IndexVector.hpp>
-#include <Core/Asset/Shader.hpp>
 
 namespace ax
 {
@@ -73,7 +72,7 @@ namespace ax
         void destroyMesh(RendererMeshHandle& mesh) override;
 
         //Texture
-        RendererTextureHandle createTexture(Vector2u size, TextureFormat format, const Byte* data) override;
+        RendererTextureHandle createTexture(Vector2u size, Texture::Format format, const Byte* data) override;
         void destroyTexture(RendererTextureHandle& texture) override;
 
         //Shader

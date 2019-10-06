@@ -21,6 +21,7 @@ namespace ax
         bool isDirectory() const noexcept;
         bool isFilename() const noexcept;
         bool fileExists() const noexcept;
+        bool empty() const noexcept;
 
         operator std::string() const;
         friend Path operator+(const Path& p1, const Path& p2) noexcept

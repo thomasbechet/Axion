@@ -11,7 +11,7 @@ namespace ax
     public:
         friend class AssetHolder<T>;
 
-        AssetReference<T>(){}
+        AssetReference<T>() = default;
         AssetReference<T>(AssetHolder<T>& holder)
         {
             holder.accessAsset(*this);

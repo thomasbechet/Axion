@@ -17,9 +17,10 @@ public:
         spawnButton = &ax::Engine::input().addButton("test");
         spawnButton->bind(ax::Keyboard::C);
 
-        ax::MaterialParameters lightMaterialParameters;
+        ax::Material::Parameters lightMaterialParameters;
         lightMaterialParameters.shader = "light_emission";
-        ax::AssetReference<ax::Material> m = ax::Engine::assets().material.loadFromMemory("light_emission_material", lightMaterialParameters);
+        ax::Engine::assets().material.load("light_emission_material", lightMaterialParameters);
+        ax::AssetReference<ax::Material> m = ax::Engine::assets().material("light_emission_material");
 
         m_pointlights.reserve(MAX_X * MAX_Y);
         for(int x = 0; x < MAX_X; x++)
