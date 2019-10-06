@@ -38,7 +38,7 @@ layout(packed, binding = $CULL_POINT_LIGHT_SSBO_BINDING_POINT) writeonly buffer 
 };
 
 shared vec4 frustum[4];
-shared uint visibleLightCount = 0;
+shared uint visibleLightCount;
 shared int visibleLightIndices[$CULL_POINT_LIGHT_MAX_PER_TILE];
 
 layout(local_size_x = $CULL_TILE_SIZE, local_size_y = $CULL_TILE_SIZE, local_size_z = 1) in;
@@ -47,6 +47,8 @@ void main()
 	//One thread compute frustum planes
 	if(gl_LocalInvocationIndex == 0)
 	{
+		visibleLightCount = 0;
+
 		vec2 tileScale = vec2(constants.viewportResolution * (1.0f / float(2 * $CULL_TILE_SIZE)));
 		vec2 tileBias = tileScale - vec2(gl_WorkGroupID.xy);
 

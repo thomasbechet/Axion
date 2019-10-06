@@ -146,7 +146,10 @@ bool Model::loadObjModelAsync(Path path) noexcept
                 {
                     Texture::Parameters textureParameters;
                     textureParameters.source = diffusePath;
-                    Engine::assets().texture.load(diffusePath.filename(), textureParameters);
+                    if(m_parameters.asyncLoading)
+                        Engine::assets().texture.loadAsync(diffusePath.filename(), textureParameters);
+                    else
+                        Engine::assets().texture.load(diffusePath.filename(), textureParameters);
                 }
                 materialParameters.diffuseTexture = diffusePath.filename();
             }
@@ -166,7 +169,10 @@ bool Model::loadObjModelAsync(Path path) noexcept
                 {
                     Texture::Parameters textureParameters;
                     textureParameters.source = normalPath;
-                    Engine::assets().texture.load(normalPath.filename(), textureParameters);
+                    if(m_parameters.asyncLoading)
+                        Engine::assets().texture.loadAsync(normalPath.filename(), textureParameters);
+                    else
+                        Engine::assets().texture.load(normalPath.filename(), textureParameters);
                 }
                 materialParameters.normalTexture = normalPath.filename();
                 materialParameters.isBumpTexture = false;
@@ -177,7 +183,10 @@ bool Model::loadObjModelAsync(Path path) noexcept
                 {
                     Texture::Parameters textureParameters;
                     textureParameters.source = bumpPath;
-                    Engine::assets().texture.load(bumpPath.filename(), textureParameters);
+                    if(m_parameters.asyncLoading)
+                        Engine::assets().texture.loadAsync(bumpPath.filename(), textureParameters);
+                    else
+                        Engine::assets().texture.load(bumpPath.filename(), textureParameters);
                 }
                 materialParameters.normalTexture = bumpPath.filename();
                 materialParameters.isBumpTexture = true;
@@ -191,7 +200,10 @@ bool Model::loadObjModelAsync(Path path) noexcept
                 {
                     Texture::Parameters textureParameters;
                     textureParameters.source = specularPath;
-                    Engine::assets().texture.load(specularPath.filename(), textureParameters);
+                    if(m_parameters.asyncLoading)
+                        Engine::assets().texture.loadAsync(specularPath.filename(), textureParameters);
+                    else
+                        Engine::assets().texture.load(specularPath.filename(), textureParameters);
                 }
                 materialParameters.specularTexture = specularPath.filename();
             }
@@ -201,7 +213,10 @@ bool Model::loadObjModelAsync(Path path) noexcept
             }
 
             //Load material as assets
-            Engine::assets().material.load(material.name, materialParameters);
+            if(m_parameters.asyncLoading)
+                Engine::assets().material.loadAsync(material.name, materialParameters);
+            else
+                Engine::assets().material.load(material.name, materialParameters);
         } 
     }
 
@@ -258,7 +273,10 @@ bool Model::loadObjModelAsync(Path path) noexcept
         meshParameters.vertices = it->second;
         meshParameters.computeTangent = true;
         meshParameters.computeNormal = attrib.normals.empty();
-        Engine::assets().mesh.load(meshName, meshParameters);
+        if(m_parameters.asyncLoading)
+            Engine::assets().mesh.loadAsync(meshName, meshParameters);
+        else
+            Engine::assets().mesh.load(meshName, meshParameters);
 
         if(it->first != -1)
         {

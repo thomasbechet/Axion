@@ -216,7 +216,7 @@ namespace ax
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 
-            Engine::logger().log("[" + T::name + "]", Logger::Info);
+            Engine::logger().log("=============== " + T::name + " ===============", Logger::Info);
     
             for(auto& it : m_assets)
             {
@@ -235,7 +235,7 @@ namespace ax
                 default:
                     stateString = "[None]      "; break;
                 }
-                Engine::logger().log(" \\_ " + stateString + it.first, Logger::Info);
+                Engine::logger().log("- " + stateString + "'" + it.first + "'", Logger::Info);
             }
         }
         

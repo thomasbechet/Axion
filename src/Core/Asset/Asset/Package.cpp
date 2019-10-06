@@ -187,6 +187,7 @@ bool Package::loadFromJsonAsync(std::string& json) noexcept
             {
                 Model::Parameters modelParameters;
                 modelParameters.json = item.dump();
+                modelParameters.asyncLoading = m_parameters.asyncLoading;
                 if(m_parameters.asyncLoading)
                     Engine::assets().model.loadAsync(name, modelParameters);
                 else

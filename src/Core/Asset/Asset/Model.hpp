@@ -21,6 +21,8 @@ namespace ax
             bool tryDestroyMeshes = true;
             bool tryDestroyMaterials = true;
             bool tryDestroyTextures = true;
+
+            bool asyncLoading = false;
         };
 
     public:

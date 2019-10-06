@@ -15,4 +15,6 @@ void main()
     mapped = pow(mapped, vec3(1.0 / gamma));
   
     out_color = mapped;
+    out_color = pow(hdrColor, vec3(1.0 / gamma));
+    //out_color = texture(render_texture, UV).rgb;
 }

@@ -261,7 +261,5 @@ void main()
 		//color += blinnDirectionalLight(light, POSITION, normal, albedo, specular);
 	}
 
-	out_color = vec3(specular / 10.0f);
-	out_color = normal;
 	out_color = color;
 }

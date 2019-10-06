@@ -226,6 +226,17 @@ public:
         plane.addComponent<ax::TransformComponent>();
         plane.addComponent<ax::QuadComponent>(plane, 500.0f, 500.0f, 100.0f).setMaterial("wall_material");
 
+        //Sponza
+        ax::Entity& sponza = ax::Engine::world().entity.create();
+        sponza.addComponent<ax::TransformComponent>().setScale(0.05f, 0.05f, 0.05f);
+        sponza.addComponent<ax::ModelComponent>(sponza).setModel("model_sponza");
+        //Directional light
+        ax::Entity& dlight = ax::Engine::world().entity.create();        
+        dlight.addComponent<ax::TransformComponent>().rotate(45.0f, ax::Vector3f(1.0f, 0.0f, 0.0f));
+        //dlight.addComponent<ax::DirectionalLightComponent>(dlight);
+        ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1366, 768));
+        //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1600, 900));
+
         CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
         system.setSpawnTransform(&cameraTransform);
     }

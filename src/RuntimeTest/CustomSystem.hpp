@@ -45,7 +45,7 @@ public:
         ax::Entity light = ax::Engine::world().entity.create();
         m_lightTransform = &light.addComponent<ax::TransformComponent>();
         ax::PointLightComponent& pointlight = light.addComponent<ax::PointLightComponent>(light);
-        pointlight.setRadius(30.0f);
+        pointlight.setRadius(80.0f);
         light.addComponent<ax::UVSphereComponent>(light, 0.2f, 20, 20).setMaterial(m);
 
         ax::Entity& cube = ax::Engine::world().entity.create();
@@ -102,8 +102,8 @@ public:
 
 private:
     std::vector<ax::TransformComponent*> m_pointlights;
-    int MAX_X = 10;
-    int MAX_Y = 10;
+    int MAX_X = 2;
+    int MAX_Y = 2;
 
     ax::TransformComponent* m_spawn;
     ax::Button* spawnButton;

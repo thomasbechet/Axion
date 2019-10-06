@@ -28,12 +28,16 @@ void Assets::dispose() noexcept
 }
 void Assets::log() const noexcept
 {
+    Engine::logger().log("############## ASSETS LOG ###############", Logger::Info);
+
     package.log();
     model.log();
     material.log();
     shader.log();
     mesh.log();
     texture.log();
+
+    Engine::logger().log("#########################################", Logger::Info);
 }
 unsigned Assets::getTotalPending() noexcept
 {

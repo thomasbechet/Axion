@@ -62,7 +62,7 @@ void RendererGUIViewportGL::setResolution(const Vector2u& newResolution)
 {
     m_resolution = newResolution;
     m_renderBuffer.reset(new RenderBuffer(m_resolution));
-    m_content.cullLightSSBO->setResolution(m_resolution);
+    if(USE_LIGHT_CULLING) m_content.cullLightSSBO->setResolution(m_resolution);
     m_renderPass->onUpdateResolution(m_resolution);
 }
 void RendererGUIViewportGL::setViewport(const Rectf& rect)
