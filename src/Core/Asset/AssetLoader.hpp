@@ -24,7 +24,7 @@ namespace ax
         void add(Asset& asset) noexcept;
         void wait(std::unique_lock<std::mutex>& lock) noexcept;
         unsigned getTotalPending() noexcept;
-        std::string getCurrentAssetName() noexcept;
+        Asset::Information getCurrentAssetInformation() noexcept;
 
     private:
         void routine() noexcept;
@@ -39,6 +39,6 @@ namespace ax
 
         std::atomic<bool> m_running {true};
         std::atomic<unsigned> m_totalPending {0};
-        std::string m_currentAssetName;
+        Asset::Information m_currentAssetInformation;
     };
 }

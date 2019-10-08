@@ -10,13 +10,18 @@
 
 using namespace ax;
 
-const std::string Model::name = "Model";
+const std::string Model::type = "Model";
 
 Model::Model(std::string name, const Parameters& parameters) :
     Asset(name),
     m_parameters(parameters)
 {
 
+}
+
+std::string Model::getType() const noexcept
+{
+    return Model::type;
 }
 
 const std::vector<AssetReference<Mesh>>& Model::getMeshes() const noexcept

@@ -13,13 +13,18 @@
 
 using namespace ax;
 
-const std::string Shader::name = "Shader";
+const std::string Shader::type = "Shader";
 
 Shader::Shader(std::string name, const Parameters& parameters) :
     Asset(name),
     m_parameters(parameters)
 {
 
+}
+
+std::string Shader::getType() const noexcept
+{
+    return Shader::type;
 }
 
 std::string Shader::getVertexCode() const noexcept

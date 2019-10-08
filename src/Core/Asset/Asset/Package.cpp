@@ -11,13 +11,18 @@
 
 using namespace ax;
 
-const std::string Package::name = "Package";
+const std::string Package::type = "Package";
 
 Package::Package(std::string name, const Parameters& parameters) :
     Asset(name),
     m_parameters(parameters)
 {
 
+}
+
+std::string Package::getType() const noexcept
+{
+    return Package::type;
 }
 
 const std::vector<AssetReference<Texture>>& Package::getTextures() const noexcept

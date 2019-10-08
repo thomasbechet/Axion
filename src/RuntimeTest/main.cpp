@@ -154,13 +154,13 @@ public:
 
         ax::Engine::assets().log();
 
-        std::string currentName;
+        ax::Asset::Information currentName;
         while(ax::Engine::assets().getTotalPending() > 0)
         {
-            std::string temp = ax::Engine::assets().getCurrentAssetName();
-            if(temp != currentName)
+            ax::Asset::Information temp = ax::Engine::assets().getCurrentAssetInformation();
+            if(temp.name != currentName.name)
             {
-                std::cout << temp << std::endl;
+                std::cout << temp.name << " <" << temp.type << ">" << std::endl;
                 currentName = temp;
             }
         }
@@ -234,8 +234,8 @@ public:
         ax::Entity& dlight = ax::Engine::world().entity.create();        
         dlight.addComponent<ax::TransformComponent>().rotate(45.0f, ax::Vector3f(1.0f, 0.0f, 0.0f));
         //dlight.addComponent<ax::DirectionalLightComponent>(dlight);
-        ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1366, 768));
-        //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1600, 900));
+        //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1366, 768));
+        ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1600, 900));
 
         CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
         system.setSpawnTransform(&cameraTransform);

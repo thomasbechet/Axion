@@ -2,7 +2,8 @@
 
 using namespace ax;
 
-Asset::Asset(const std::string& name) : m_name(name)
+Asset::Asset(const std::string& name) : 
+    m_name(name)
 {
 
 }
@@ -11,13 +12,22 @@ std::string Asset::getName() const noexcept
 {
     return m_name;
 }
+Asset::State Asset::getState() const noexcept
+{
+    return m_state.load();
+}
 bool Asset::isValidated() const noexcept
 {
     return m_state.load() == State::Validated;
 }
-Asset::State Asset::getState() const noexcept
+
+Asset::Information Asset::getInformation() const noexcept
 {
-    return m_state.load();
+    Information information;
+    information.name = getName();
+    information.type = getType();
+
+    return information;
 }
 
 bool Asset::load() noexcept

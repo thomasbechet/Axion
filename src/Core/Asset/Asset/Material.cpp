@@ -9,13 +9,18 @@
 using namespace ax;
 
 const std::string Material::Default = "default_material";
-const std::string Material::name = "Material";
+const std::string Material::type = "Material";
 
 Material::Material(std::string name, const Parameters& parameters) :
     Asset(name),
     m_parameters(parameters)
 {
 
+}
+
+std::string Material::getType() const noexcept
+{
+    return Material::type;
 }
 
 AssetReference<Texture> Material::getDiffuseTexture() const noexcept

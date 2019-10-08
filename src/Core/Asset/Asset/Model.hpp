@@ -26,9 +26,11 @@ namespace ax
         };
 
     public:
-        static const std::string name;
+        static const std::string type;
 
         Model(std::string name, const Parameters& parameters);
+
+        std::string getType() const noexcept override;
 
         const std::vector<AssetReference<Mesh>>& getMeshes() const noexcept;
         const std::vector<AssetReference<Material>>& getMaterials() const noexcept;

@@ -28,9 +28,11 @@ namespace ax
         };
 
     public:
-        static const std::string name;
+        static const std::string type;
 
         Texture(std::string name, const Parameters& parameters);
+
+        std::string getType() const noexcept override;
 
         Vector2u getSize() const noexcept;
         Format getFormat() const noexcept;

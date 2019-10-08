@@ -25,13 +25,22 @@ namespace ax
             Failed
         };
 
+        struct Information
+        {
+            std::string name;
+            std::string type;
+        };
+
     public:
         Asset(const std::string& name);
         virtual ~Asset() = default;
 
         std::string getName() const noexcept;
-        bool isValidated() const noexcept;
+        virtual std::string getType() const noexcept = 0;
         State getState() const noexcept;
+        bool isValidated() const noexcept;
+
+        Information getInformation() const noexcept;
 
     private:
         bool load() noexcept;

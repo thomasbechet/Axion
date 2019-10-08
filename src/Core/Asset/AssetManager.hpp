@@ -42,7 +42,7 @@ namespace ax
                     }
                     else
                     {
-                        Engine::logger().log("Failed to validate <" + T::name + "> '" + name + "'", Logger::Warning);
+                        Engine::logger().log("Failed to validate <" + T::type + "> '" + name + "'", Logger::Warning);
                         asset.error();
                     }
                 }
@@ -52,15 +52,15 @@ namespace ax
                 }
                 else if(state == Asset::State::Failed)
                 {
-                    Engine::logger().log("Failed to load <" + T::name + "> '" + name + "'", Logger::Warning);
+                    Engine::logger().log("Failed to load <" + T::type + "> '" + name + "'", Logger::Warning);
                     asset.error();
                 }
 
-                Engine::interrupt("Failed to access <" + T::name + "> '" + name + "'");
+                Engine::interrupt("Failed to access <" + T::type + "> '" + name + "'");
             }
             else
             {
-                Engine::interrupt("Failed to access <" + T::name + "> '" + name + "' because it doesn't exists");
+                Engine::interrupt("Failed to access <" + T::type + "> '" + name + "' because it doesn't exists");
             }
         }
         //ANY THREAD (validate = ONLY MAIN THREAD)
@@ -190,7 +190,7 @@ namespace ax
             }
             else
             {
-                Engine::logger().log("Failed to unload <" + T::name + "> '" + name + "' because it doesn't exists.", Logger::Warning);
+                Engine::logger().log("Failed to unload <" + T::type + "> '" + name + "' because it doesn't exists.", Logger::Warning);
                 return false;
             }
 
@@ -216,7 +216,7 @@ namespace ax
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 
-            Engine::logger().log("=============== " + T::name + " ===============", Logger::Info);
+            Engine::logger().log("=============== " + T::type + " ===============", Logger::Info);
     
             for(auto& it : m_assets)
             {

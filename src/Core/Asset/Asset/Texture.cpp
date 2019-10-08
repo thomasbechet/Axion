@@ -12,13 +12,18 @@
 
 using namespace ax;
 
-const std::string Texture::name = "Texture";
+const std::string Texture::type = "Texture";
 
 Texture::Texture(std::string name, const Parameters& parameters) : 
     Asset(name),
     m_parameters(parameters)
 {
     
+}
+
+std::string Texture::getType() const noexcept
+{
+    return Texture::type;
 }
 
 Vector2u Texture::getSize() const noexcept

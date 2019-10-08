@@ -32,10 +32,10 @@ unsigned AssetLoader::getTotalPending() noexcept
 {
     return m_totalPending;
 }
-std::string AssetLoader::getCurrentAssetName() noexcept
+Asset::Information AssetLoader::getCurrentAssetInformation() noexcept
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    return m_currentAssetName;
+    return m_currentAssetInformation;
 }
 
 void AssetLoader::routine() noexcept
@@ -47,14 +47,15 @@ void AssetLoader::routine() noexcept
         if(!m_running) break;
         Asset& asset = m_assets.back();
         m_assets.pop_back();
-        m_currentAssetName = asset.getName();
+        m_currentAssetInformation = asset.getInformation();
         lock.unlock();
         asset.load();
         m_totalPending--;
         if(m_totalPending == 0)
         {
             lock.lock();
-            m_currentAssetName = "";
+            m_currentAssetInformation.name = "";
+            m_currentAssetInformation.type = "";
             lock.unlock();
         }
         m_loadedCV.notify_all();

@@ -25,9 +25,11 @@ namespace ax
         };
 
     public:
-        static const std::string name;
+        static const std::string type;
 
         Mesh(std::string name, const Parameters& parameters);
+
+        std::string getType() const noexcept override;
 
         const std::vector<Vertex>& getVertices() const noexcept;
         RendererMeshHandle getHandle() const noexcept;

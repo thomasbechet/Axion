@@ -36,9 +36,11 @@ namespace ax
 
     public:
         static const std::string Default;
-        static const std::string name;
+        static const std::string type;
 
         Material(std::string name, const Parameters& parameters);
+
+        std::string getType() const noexcept override;
 
         AssetReference<Texture> getDiffuseTexture() const noexcept;
         Color3 getDiffuseColor() const noexcept;

@@ -43,7 +43,7 @@ unsigned Assets::getTotalPending() noexcept
 {
     return m_assetLoader.getTotalPending();
 }
-std::string Assets::getCurrentAssetName() noexcept
+Asset::Information Assets::getCurrentAssetInformation() noexcept
 {
-    return m_assetLoader.getCurrentAssetName();
+    return m_assetLoader.getCurrentAssetInformation();
 }

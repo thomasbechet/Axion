@@ -7,13 +7,18 @@
 
 using namespace ax;
 
-const std::string Mesh::name = "Mesh";
+const std::string Mesh::type = "Mesh";
 
 Mesh::Mesh(std::string name, const Parameters& parameters) :
     Asset(name),
     m_parameters(parameters)
 {
 
+}
+
+std::string Mesh::getType() const noexcept
+{
+    return Mesh::type;
 }
 
 const std::vector<Vertex>& Mesh::getVertices() const noexcept
