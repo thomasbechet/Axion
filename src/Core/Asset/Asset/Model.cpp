@@ -13,15 +13,10 @@ using namespace ax;
 const std::string Model::type = "Model";
 
 Model::Model(std::string name, const Parameters& parameters) :
-    Asset(name),
+    Asset(name, type),
     m_parameters(parameters)
 {
 
-}
-
-std::string Model::getType() const noexcept
-{
-    return Model::type;
 }
 
 const std::vector<AssetReference<Mesh>>& Model::getMeshes() const noexcept
@@ -39,7 +34,7 @@ bool Model::onLoad() noexcept
     {
         if(m_parameters.source.extension() == ".obj")
         {
-            return loadObjModelAsync(m_parameters.source);
+            return loadObjModel(m_parameters.source);
         }
         else
         {
@@ -64,7 +59,7 @@ bool Model::onLoad() noexcept
             Path source = jSource->get<std::string>();
             if(source.extension() == ".obj")
             {
-                return loadObjModelAsync(source);
+                return loadObjModel(source);
             }
             else
             {
@@ -122,7 +117,7 @@ void Model::onError() noexcept
     Engine::logger().log(m_error, Logger::Warning);
 }
 
-bool Model::loadObjModelAsync(Path path) noexcept
+bool Model::loadObjModel(Path path) noexcept
 {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;

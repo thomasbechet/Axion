@@ -32,8 +32,6 @@ namespace ax
 
         Texture(std::string name, const Parameters& parameters);
 
-        std::string getType() const noexcept override;
-
         Vector2u getSize() const noexcept;
         Format getFormat() const noexcept;
         RendererTextureHandle getHandle() const noexcept;

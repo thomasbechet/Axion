@@ -23,8 +23,6 @@ namespace ax
 
         Shader(std::string name, const Parameters& parameters);
 
-        std::string getType() const noexcept override;
-
         std::string getVertexCode() const noexcept;
         std::string getFragmentCode() const noexcept;
 

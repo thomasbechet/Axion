@@ -12,15 +12,10 @@ const std::string Material::Default = "default_material";
 const std::string Material::type = "Material";
 
 Material::Material(std::string name, const Parameters& parameters) :
-    Asset(name),
+    Asset(name, type),
     m_parameters(parameters)
 {
 
-}
-
-std::string Material::getType() const noexcept
-{
-    return Material::type;
 }
 
 AssetReference<Texture> Material::getDiffuseTexture() const noexcept

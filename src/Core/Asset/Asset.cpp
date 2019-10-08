@@ -2,8 +2,9 @@
 
 using namespace ax;
 
-Asset::Asset(const std::string& name) : 
-    m_name(name)
+Asset::Asset(const std::string& name, const std::string& type) : 
+    m_name(name),
+    m_type(type)
 {
 
 }
@@ -11,6 +12,10 @@ Asset::Asset(const std::string& name) :
 std::string Asset::getName() const noexcept
 {
     return m_name;
+}
+std::string Asset::getType() const noexcept
+{
+    return m_type;
 }
 Asset::State Asset::getState() const noexcept
 {

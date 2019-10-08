@@ -40,8 +40,6 @@ namespace ax
 
         Material(std::string name, const Parameters& parameters);
 
-        std::string getType() const noexcept override;
-
         AssetReference<Texture> getDiffuseTexture() const noexcept;
         Color3 getDiffuseColor() const noexcept;
         void setDiffuseColor(Color3 color) noexcept;

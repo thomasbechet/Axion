@@ -28,14 +28,17 @@ void AssetLoader::wait(std::unique_lock<std::mutex>& lock) noexcept
 {
     m_loadedCV.wait(lock);
 }
-unsigned AssetLoader::getTotalPending() noexcept
-{
-    return m_totalPending;
-}
-Asset::Information AssetLoader::getCurrentAssetInformation() noexcept
+AssetLoader::State AssetLoader::getState() noexcept
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    return m_currentAssetInformation;
+    
+    State state;
+    state.totalPending = m_totalPending;
+    state.totalLoaded = m_totalLoaded;
+    state.totalFailed = m_totalFailed;
+    state.currentAsset = m_currentAssetInformation;
+
+    return state;
 }
 
 void AssetLoader::routine() noexcept
@@ -43,19 +46,25 @@ void AssetLoader::routine() noexcept
     while(true)
     {
         std::unique_lock<std::mutex> lock(m_mutex);
+
         m_loopCV.wait(lock, [&](){return !m_assets.empty() || !m_running;});
         if(!m_running) break;
+
         Asset& asset = m_assets.back();
         m_assets.pop_back();
         m_currentAssetInformation = asset.getInformation();
         lock.unlock();
-        asset.load();
+
+        if(asset.load()) 
+            m_totalLoaded++;
+        else 
+            m_totalFailed++;
         m_totalPending--;
+
         if(m_totalPending == 0)
         {
             lock.lock();
-            m_currentAssetInformation.name = "";
-            m_currentAssetInformation.type = "";
+            m_currentAssetInformation = Asset::Information();
             lock.unlock();
         }
         m_loadedCV.notify_all();

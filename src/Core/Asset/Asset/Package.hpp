@@ -30,8 +30,6 @@ namespace ax
 
         Package(std::string name, const Parameters& parameters);
 
-        std::string getType() const noexcept override;
-
         const std::vector<AssetReference<Texture>>& getTextures() const noexcept;
         const std::vector<AssetReference<Mesh>>& getMeshes() const noexcept;
         const std::vector<AssetReference<Material>>& getMaterials() const noexcept;
@@ -45,7 +43,7 @@ namespace ax
         void onError() noexcept override;
 
     private:
-        bool loadFromJsonAsync(std::string& json) noexcept;
+        bool loadFromJson(std::string& json) noexcept;
 
     private:
         Parameters m_parameters;

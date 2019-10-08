@@ -16,15 +16,10 @@ using namespace ax;
 const std::string Shader::type = "Shader";
 
 Shader::Shader(std::string name, const Parameters& parameters) :
-    Asset(name),
+    Asset(name, type),
     m_parameters(parameters)
 {
 
-}
-
-std::string Shader::getType() const noexcept
-{
-    return Shader::type;
 }
 
 std::string Shader::getVertexCode() const noexcept
@@ -46,10 +41,10 @@ bool Shader::onLoad() noexcept
     std::string json;
     if(!m_parameters.source.empty())
     {
-        std::ifstream jsonFile(m_parameters.source.path());
+        std::ifstream jsonFile(m_parameters.source.str());
         if(!jsonFile.is_open())
         {
-            m_error = "Failed to json file '" + m_parameters.source.path() + "'";
+            m_error = "Failed to json file '" + m_parameters.source.str() + "'";
             return false;
         }
         json.assign(
@@ -88,10 +83,10 @@ bool Shader::onLoad() noexcept
     Path vertex = jVertex->get<std::string>();
     Path fragment = jFragment->get<std::string>();
 
-    std::ifstream vertexFile(vertex.path());
+    std::ifstream vertexFile(vertex.str());
     if(!vertexFile.is_open())
     {
-        m_error = "Failed to open vertex file '" + vertex.path() + "'";
+        m_error = "Failed to open vertex file '" + vertex.str() + "'";
         return false;
     }
     m_vertex.assign(
@@ -99,10 +94,10 @@ bool Shader::onLoad() noexcept
         (std::istreambuf_iterator<char>())
     );
 
-    std::ifstream fragmentFile(fragment.path());
+    std::ifstream fragmentFile(fragment.str());
     if(!fragmentFile.is_open())
     {
-        m_error = "Failed to open fragment file '" + fragment.path() + "'";
+        m_error = "Failed to open fragment file '" + fragment.str() + "'";
         return false;
     }
     m_fragment.assign(

@@ -22,8 +22,7 @@ namespace ax
 
         void dispose() noexcept;
         void log() const noexcept;
-        unsigned getTotalPending() noexcept;
-        Asset::Information getCurrentAssetInformation() noexcept;
+        AssetLoader::State getLoaderState() noexcept;
 
         AssetManager<Texture> texture;
         AssetManager<Mesh> mesh;

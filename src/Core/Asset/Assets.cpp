@@ -1,8 +1,5 @@
 #include <Core/Asset/Assets.hpp>
 
-#include <sstream>
-#include <iomanip>
-
 using namespace ax;
 
 Assets::Assets() :
@@ -31,11 +28,7 @@ void Assets::dispose() noexcept
 }
 void Assets::log() const noexcept
 {
-    std::stringstream ss;
-    ss << std::setfill('#') << std::setw(30) << " ASSETS LOG ";
-    //ss << "##############" << std::setw(12) << " ASSETS LOG " << std::setw(0) << "##############";
-    //Engine::logger().log("############## ASSETS LOG ###############", Logger::Info);
-    Engine::logger().log(ss.str(), Logger::Info);
+    Engine::logger().log("==================== ASSETS =====================", Logger::Info);
 
     package.log();
     model.log();
@@ -44,13 +37,9 @@ void Assets::log() const noexcept
     mesh.log();
     texture.log();
 
-    Engine::logger().log("#########################################", Logger::Info);
+    Engine::logger().log("=================================================", Logger::Info);
 }
-unsigned Assets::getTotalPending() noexcept
+AssetLoader::State Assets::getLoaderState() noexcept
 {
-    return m_assetLoader.getTotalPending();
-}
-Asset::Information Assets::getCurrentAssetInformation() noexcept
-{
-    return m_assetLoader.getCurrentAssetInformation();
-}
+    return m_assetLoader.getState();
+}   

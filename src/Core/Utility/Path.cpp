@@ -49,7 +49,7 @@ std::string Path::extension() const noexcept
     else
         return m_path.substr(posDot, m_path.length());
 }
-std::string Path::path() const noexcept
+std::string Path::str() const noexcept
 {
     return m_path;
 }
@@ -83,7 +83,7 @@ bool Path::empty() const noexcept
 
 Path::operator std::string() const
 {
-    return path();
+    return str();
 }
 
 std::string Path::sanitize(std::string path) noexcept

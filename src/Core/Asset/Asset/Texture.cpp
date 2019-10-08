@@ -15,15 +15,10 @@ using namespace ax;
 const std::string Texture::type = "Texture";
 
 Texture::Texture(std::string name, const Parameters& parameters) : 
-    Asset(name),
+    Asset(name, type),
     m_parameters(parameters)
 {
     
-}
-
-std::string Texture::getType() const noexcept
-{
-    return Texture::type;
 }
 
 Vector2u Texture::getSize() const noexcept
@@ -47,7 +42,7 @@ bool Texture::onLoad() noexcept
     m_data = stbi_load(m_parameters.source.c_str(), &width, &height, &bpp, 0);
     if(!m_data)
     {
-        m_error = "Failed to load texture '" + m_parameters.source.path() + "'.";
+        m_error = "Failed to load texture '" + m_parameters.source.str() + "'.";
         return false;
     }
 

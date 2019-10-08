@@ -70,7 +70,7 @@ void RendererGL::initialize() noexcept
     if(USE_LIGHT_CULLING)
     {
         Path lightCullPath = "$ENGINE_DIR/shaders/glsl/light_culling.comp";
-        std::ifstream lightCullFile(lightCullPath.path());
+        std::ifstream lightCullFile(lightCullPath.str());
         if(!lightCullFile.is_open()) Engine::interrupt("Failed to load compute file: " + lightCullPath);
         std::string lightCullCode{std::istreambuf_iterator<char>(lightCullFile), std::istreambuf_iterator<char>()};
         if(!m_content.lightCullingComputeShader.loadCompute(lightCullCode))

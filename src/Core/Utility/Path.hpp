@@ -16,7 +16,7 @@ namespace ax
         std::string directory() const noexcept;
         std::string filename() const noexcept;
         std::string extension() const noexcept;
-        std::string path() const noexcept;
+        std::string str() const noexcept;
         const char* c_str() const noexcept;
         bool isDirectory() const noexcept;
         bool isFilename() const noexcept;

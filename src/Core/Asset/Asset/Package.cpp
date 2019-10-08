@@ -14,15 +14,10 @@ using namespace ax;
 const std::string Package::type = "Package";
 
 Package::Package(std::string name, const Parameters& parameters) :
-    Asset(name),
+    Asset(name, type),
     m_parameters(parameters)
 {
 
-}
-
-std::string Package::getType() const noexcept
-{
-    return Package::type;
 }
 
 const std::vector<AssetReference<Texture>>& Package::getTextures() const noexcept
@@ -56,19 +51,19 @@ bool Package::onLoad() noexcept
             return false;
         }
 
-        std::ifstream jsonFile(m_parameters.source.path());
+        std::ifstream jsonFile(m_parameters.source.str());
         if(!jsonFile.is_open())
         {
-            m_error = "Failed to load package from file '" + m_parameters.source.path() + "'";
+            m_error = "Failed to load package from file '" + m_parameters.source.str() + "'";
             return false;
         }
         std::string jsonBuffer{std::istreambuf_iterator<char>(jsonFile), std::istreambuf_iterator<char>()};
 
-        return loadFromJsonAsync(jsonBuffer);
+        return loadFromJson(jsonBuffer);
     }
     else if(!m_parameters.json.empty())
     {
-        return loadFromJsonAsync(m_parameters.json);
+        return loadFromJson(m_parameters.json);
     }
     else
     {
@@ -135,7 +130,7 @@ void Package::onError() noexcept
     Engine::logger().log(m_error, Logger::Warning);
 }
 
-bool Package::loadFromJsonAsync(std::string& json) noexcept
+bool Package::loadFromJson(std::string& json) noexcept
 {
     //Parse json string
     nlohmann::json j = nlohmann::json::parse(json);

@@ -13,7 +13,7 @@ void ConfigParser::parse(const Path& path) noexcept
 
     m_sections.emplace("default", std::unordered_map<std::string, std::string>()); //Create default section
 
-    std::ifstream infile(path.path());
+    std::ifstream infile(path.str());
     if(infile.is_open())
     {
         std::string currentSection = "default";

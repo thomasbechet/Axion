@@ -7,6 +7,8 @@
 
 #include <mutex>
 #include <unordered_map>
+#include <sstream>
+#include <iomanip>
 
 namespace ax
 {
@@ -216,7 +218,15 @@ namespace ax
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 
-            Engine::logger().log("----------------- " + T::type + " -----------------", Logger::Info);
+            const int length = 50;
+
+            std::stringstream ssTitle;
+            std::string str = " " + T::type + " ";
+
+            int len = str.length();
+            if(len % 2 == 0) str += " ";
+            ssTitle << std::setfill('-') << std::setw((length / 2) + (len / 2)) << std::right << str << std::left << std::string(length - ((length / 2) + (len / 2)) - 1, '-'); 
+            Engine::logger().log(ssTitle.str(), Logger::Info);
     
             for(auto& it : m_assets)
             {
@@ -225,17 +235,19 @@ namespace ax
                 switch(state)
                 {
                 case Asset::State::Pending:
-                    stateString = "[Pending]   "; break;
+                    stateString = "[Pending  ]"; break;
                 case Asset::State::Loaded:
-                    stateString = "[Loaded]    "; break;
+                    stateString = "[Loaded   ]"; break;
                 case Asset::State::Validated:
-                    stateString = "[Validated] "; break;
+                    stateString = "[Validated]"; break;
                 case Asset::State::Failed:
-                    stateString = "[Failed]    "; break;
+                    stateString = "[Failed   ]"; break;
                 default:
-                    stateString = "[None]      "; break;
+                    stateString = "[None     ]"; break;
                 }
-                Engine::logger().log("- " + stateString + "'" + it.first + "'", Logger::Info);
+                std::stringstream ssLine;
+                ssLine << std::left << std::setw(length - 12) << ("- '" + it.first + "' ") << std::left << stateString;
+                Engine::logger().log(ssLine.str(), Logger::Info);
             }
         }
         
