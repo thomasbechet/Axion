@@ -216,7 +216,7 @@ namespace ax
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 
-            Engine::logger().log("=============== " + T::type + " ===============", Logger::Info);
+            Engine::logger().log("----------------- " + T::type + " -----------------", Logger::Info);
     
             for(auto& it : m_assets)
             {

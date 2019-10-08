@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 #include <Core/Math/Vector.hpp>
 #include <Core/Math/Matrix.hpp>
@@ -160,7 +161,7 @@ public:
             ax::Asset::Information temp = ax::Engine::assets().getCurrentAssetInformation();
             if(temp.name != currentName.name)
             {
-                std::cout << temp.name << " <" << temp.type << ">" << std::endl;
+                std::cout << std::setw(8) << ("<" + temp.type + "> ") << temp.name << std::endl;
                 currentName = temp;
             }
         }

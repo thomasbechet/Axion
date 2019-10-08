@@ -1,5 +1,8 @@
 #include <Core/Asset/Assets.hpp>
 
+#include <sstream>
+#include <iomanip>
+
 using namespace ax;
 
 Assets::Assets() :
@@ -28,7 +31,11 @@ void Assets::dispose() noexcept
 }
 void Assets::log() const noexcept
 {
-    Engine::logger().log("############## ASSETS LOG ###############", Logger::Info);
+    std::stringstream ss;
+    ss << std::setfill('#') << std::setw(30) << " ASSETS LOG ";
+    //ss << "##############" << std::setw(12) << " ASSETS LOG " << std::setw(0) << "##############";
+    //Engine::logger().log("############## ASSETS LOG ###############", Logger::Info);
+    Engine::logger().log(ss.str(), Logger::Info);
 
     package.log();
     model.log();
