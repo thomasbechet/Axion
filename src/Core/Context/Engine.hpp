@@ -20,7 +20,6 @@ namespace ax
     class Input;
     class Assets;
     class GUI;
-    class GUIRenderer;
 
     class AXION_CORE_API Engine
     {

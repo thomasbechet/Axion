@@ -19,17 +19,28 @@ namespace ax
     class AXION_CORE_API AssetLoader : public NonCopyable
     {
     public:
-        struct State
+        struct Record
         {
             std::string str() const noexcept
             {
                 std::stringstream ss;
-                ss << 
+                ss << std::left << ("[" + std::to_string(totalPending) + " " + std::to_string(totalLoaded) + " " 
+                    + std::to_string(totalFailed) + "]");
+                if(totalPending > 0)
+                {
+                    ss << " <" << currentAsset.type << "> '" << currentAsset.name << "'";
+                }
+                else
+                {
+                    ss << " Nothing to load";
+                }
+                
+                return ss.str();
             }
 
-            unsigned totalPending;
-            unsigned totalLoaded;
-            unsigned totalFailed;
+            unsigned totalPending = 0;
+            unsigned totalLoaded = 0;
+            unsigned totalFailed = 0;
             Asset::Information currentAsset;
         };
 
@@ -37,25 +48,27 @@ namespace ax
         AssetLoader();
         ~AssetLoader();
 
+        void restartRecord() noexcept;
+        Record getRecord() noexcept;
+
+    private:
+        template<typename T>
+        friend class AssetManager;
+
         void add(Asset& asset) noexcept;
         void wait(std::unique_lock<std::mutex>& lock) noexcept;
-        State getState() noexcept;
+        void waitAll(std::unique_lock<std::mutex>& lock) noexcept;
 
     private:
         void routine() noexcept;
 
         std::thread m_thread;
         std::atomic<bool> m_running {true};
-
         std::mutex m_mutex;
         std::condition_variable m_loopCV;
         std::condition_variable m_loadedCV;
 
         std::vector<std::reference_wrapper<Asset>> m_assets;
-        
-        std::atomic<unsigned> m_totalPending {0};
-        std::atomic<unsigned> m_totalLoaded {0};
-        std::atomic<unsigned> m_totalFailed {0};
-        Asset::Information m_currentAssetInformation;
+        Record m_record;
     };
 }

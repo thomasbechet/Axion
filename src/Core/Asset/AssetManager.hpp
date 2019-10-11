@@ -16,7 +16,7 @@ namespace ax
     class AXION_CORE_API AssetManager
     {
     public:
-        AssetManager(AssetLoader& assetLoader) : m_assetLoader(assetLoader) {}
+        AssetManager(AssetLoader& loader) : m_loader(loader) {}
 
         //MAIN THREAD ONLY
         AssetReference<T> operator()(std::string name) const noexcept
@@ -30,7 +30,7 @@ namespace ax
 
                 while(state == Asset::State::Pending)
                 {
-                    m_assetLoader.wait(lock);
+                    m_loader.wait(lock);
                     state = asset.getState();
                 }
 
@@ -60,10 +60,8 @@ namespace ax
 
                 Engine::interrupt("Failed to access <" + T::type + "> '" + name + "'");
             }
-            else
-            {
-                Engine::interrupt("Failed to access <" + T::type + "> '" + name + "' because it doesn't exists");
-            }
+            
+            Engine::interrupt("Failed to access <" + T::type + "> '" + name + "' because it doesn't exists");
         }
         //ANY THREAD (validate = ONLY MAIN THREAD)
         bool load(std::string name, const typename T::Parameters& parameters, bool validate = false) noexcept
@@ -91,20 +89,14 @@ namespace ax
                             return true;
                         }
                     }
-                    else 
-                    {
-                        return true;
-                    }
+                    
+                    return true;
                 }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
+                
                 return false;
             }
+            
+            return false;
         }
         //ANY THREAD
         bool loadAsync(std::string name, const typename T::Parameters& parameters) noexcept
@@ -114,13 +106,11 @@ namespace ax
             if(!existsNotSafe(name))
             {
                 m_assets.emplace(name, std::make_unique<AssetHolder<T>>(name, parameters));
-                m_assetLoader.add(*m_assets.at(name)->get());
+                m_loader.add(*m_assets.at(name)->get());
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
         //ANY THREAD
         bool exists(std::string name) const noexcept
@@ -150,7 +140,7 @@ namespace ax
                     }
                     else if(state == Asset::State::Pending)
                     {
-                        m_assetLoader.wait(lock);
+                        m_loader.wait(lock);
                     }
                     else if(state == Asset::State::Failed)
                     {
@@ -159,10 +149,7 @@ namespace ax
                     }
                 }
             }
-            else
-            {
-                return false;
-            }            
+            else return false;            
         }
         //MAIN THREAD ONLY
         bool unload(std::string name) noexcept
@@ -185,17 +172,11 @@ namespace ax
                         }
                     }
                 }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                Engine::logger().log("Failed to unload <" + T::type + "> '" + name + "' because it doesn't exists.", Logger::Warning);
+                
                 return false;
             }
-
+            
+            Engine::logger().log("Failed to unload <" + T::type + "> '" + name + "' because it doesn't exists.", Logger::Warning);
             return false;
         }
 
@@ -260,6 +241,6 @@ namespace ax
     private:
         std::unordered_map<std::string, std::unique_ptr<AssetHolder<T>>> m_assets;
         mutable std::mutex m_mutex;
-        AssetLoader& m_assetLoader;
+        AssetLoader& m_loader;
     };
 }

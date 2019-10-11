@@ -22,7 +22,6 @@ namespace ax
 
         void dispose() noexcept;
         void log() const noexcept;
-        AssetLoader::State getLoaderState() noexcept;
 
         AssetManager<Texture> texture;
         AssetManager<Mesh> mesh;
@@ -31,7 +30,6 @@ namespace ax
         AssetManager<Model> model;
         AssetManager<Package> package;
 
-    private:
-        AssetLoader m_assetLoader;
+        AssetLoader loader;
     };
 }

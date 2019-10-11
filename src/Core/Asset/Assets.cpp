@@ -3,14 +3,14 @@
 using namespace ax;
 
 Assets::Assets() :
-    texture(m_assetLoader),
-    mesh(m_assetLoader),
-    shader(m_assetLoader),
-    material(m_assetLoader),
-    model(m_assetLoader),
-    package(m_assetLoader)
+    package(loader),
+    model(loader),
+    material(loader),
+    shader(loader),
+    mesh(loader),
+    texture(loader)
 {
-    
+
 }
 Assets::~Assets()
 {
@@ -38,8 +38,4 @@ void Assets::log() const noexcept
     texture.log();
 
     Engine::logger().log("=================================================", Logger::Info);
-}
-AssetLoader::State Assets::getLoaderState() noexcept
-{
-    return m_assetLoader.getState();
-}   
+} 

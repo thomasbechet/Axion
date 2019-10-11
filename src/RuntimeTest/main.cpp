@@ -155,20 +155,23 @@ public:
 
         ax::Engine::assets().log();
 
-        ax::Asset::Information currentName;
-        while(ax::Engine::assets().getTotalPending() > 0)
+        ax::AssetLoader::Record record;
+        std::string lastName;
+        do
         {
-            ax::Asset::Information temp = ax::Engine::assets().getCurrentAssetInformation();
-            if(temp.name != currentName.name)
+            record = ax::Engine::assets().loader.getRecord();
+            if(lastName != record.currentAsset.name)
             {
-                std::cout << std::setw(8) << ("<" + temp.type + "> ") << temp.name << std::endl;
-                currentName = temp;
+                std::cout << record.str() << std::endl;
+                std::cout << (float)record.totalLoaded / 110.0f << std::endl;
+                lastName = record.currentAsset.name;
             }
         }
+        while(record.totalPending > 0);
 
         ax::Engine::assets().package.wait("mypackage");
 
-        ax::Engine::assets().log();
+        //ax::Engine::assets().log();
 
         
         ax::BasicSpectatorSystem& cameraSystem = ax::Engine::systems().add<ax::BasicSpectatorSystem>();
