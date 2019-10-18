@@ -1,0 +1,46 @@
+{
+	"type":"scene",
+	
+	"insertion":"override",
+	"gamemode":"mygamemode",
+	"packages":
+	[
+		{
+			"name":"mypackage", 
+			"source":"$ENGINE_DIR/packages/package_test.json"
+		},
+		{
+			"name":"glsl_package", 
+			"source":"$ENGINE_DIR/packages/glsl_package.json"
+		}
+	],
+	"systems":
+	[
+		"monsystem0",
+		"monsystem2"
+	],
+	"entities":
+	[
+		{
+			"tag":"mon_entité",
+			"components":{
+				"Transform":{
+					"translation":[0, 1, 342],
+					"rotation":[0, 4, 2]
+				},
+				"Model":{
+					"model":"mon_model"
+				}
+			},
+			"childs":
+			[
+				{
+					
+				},
+				{
+				
+				}
+			]
+		}
+	]
+}
