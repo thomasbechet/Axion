@@ -17,6 +17,8 @@ void BasicWindowSystem::onInitialize()
     m_borderlessButton->bind(Keyboard::F10);
     m_closeButton = &Engine::input().addButton("basicwindow_close");
     m_closeButton->bind(Keyboard::Escape);
+    m_vsyncButton = &Engine::input().addButton("basicwindow_vsync");
+    m_vsyncButton->bind(Keyboard::F9);
 }
 void BasicWindowSystem::onUpdate()
 {
@@ -35,11 +37,18 @@ void BasicWindowSystem::onUpdate()
             Engine::window().setMode(WindowMode::Windowed);
     }
     else if(m_closeButton->isJustPressed() || Engine::window().shouldClose())
+    {
         Engine::context().requestStop();
+    }
+    else if(m_vsyncButton->isJustPressed())
+    {
+        Engine::window().setVerticalSync(!Engine::window().getVerticalSync());
+    }
 }
 void BasicWindowSystem::onTerminate()
 {
     Engine::input().removeButton("basicwindow_fullscreen");
     Engine::input().removeButton("basicwindow_borderless");
     Engine::input().removeButton("basicwindow_close");
+    Engine::input().removeButton("basicwindow_vsync");
 }

@@ -65,11 +65,11 @@ void WindowModuleGLFW::terminate() noexcept
 void WindowModuleGLFW::update() noexcept
 {
     glfwPollEvents();
-    //glfwWaitEvents();
 }
 
 void WindowModuleGLFW::swapBuffers() noexcept
 {
+    glfwSwapInterval(m_verticalSync);
     glfwSwapBuffers(m_window);
 }
 

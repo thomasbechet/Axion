@@ -21,5 +21,6 @@ namespace ax
         Button* m_fullscreenButton = nullptr;
         Button* m_borderlessButton = nullptr;
         Button* m_closeButton = nullptr;
+        Button* m_vsyncButton = nullptr;
     };
 }
