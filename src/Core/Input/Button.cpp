@@ -1,7 +1,7 @@
 #include <Core/Input/Button.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Input/Input.hpp>
+#include <Core/Input/InputModule.hpp>
 
 using namespace ax;
 

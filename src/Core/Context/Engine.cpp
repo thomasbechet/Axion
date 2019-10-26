@@ -1,18 +1,17 @@
 #include <Core/Context/Engine.hpp>
 
-#include <Core/System/SystemManager.hpp>
-#include <Core/World/World.hpp>
-#include <Core/Logger/NullLogger.hpp>
-#include <Core/Logger/ConsoleLogger.hpp>
-#include <Core/Utility/ThreadPool.hpp>
+#include <Core/Scene/System/SystemManager.hpp>
+#include <Core/Scene/SceneModule.hpp>
+#include <Core/Logger/NullLoggerModule.hpp>
+#include <Core/Logger/ConsoleLoggerModule.hpp>
 #include <Core/Utility/LibraryLoader.hpp>
-#include <Core/Context/EngineContext.hpp>
-#include <Core/Context/GameMode.hpp>
-#include <Core/Renderer/NullRenderer.hpp>
-#include <Core/Window/NullWindow.hpp>
-#include <Core/Input/NullInput.hpp>
-#include <Core/Asset/Assets.hpp>
-#include <Core/GUI/GUI.hpp>
+#include <Core/Context/ContextModule.hpp>
+#include <Core/Scene/GameMode/GameMode.hpp>
+#include <Core/Renderer/NullRendererModule.hpp>
+#include <Core/Window/NullWindowModule.hpp>
+#include <Core/Input/NullInputModule.hpp>
+#include <Core/Asset/AssetModule.hpp>
+#include <Core/Scene/UI/UIManager.hpp>
 
 using namespace ax;
 
@@ -20,42 +19,36 @@ const std::string Engine::EngineDirectory = "..";
 const std::string Engine::GameDataDirectory = "../../GameData";
 const std::string Engine::GameDirectory = "../..";
 
-Renderer* Engine::m_renderer = nullptr;
-SystemManager* Engine::m_systemManager = nullptr;
-World* Engine::m_world = nullptr;
-Logger* Engine::m_logger = nullptr;
-ThreadPool* Engine::m_threadPool = nullptr;
-EngineContext* Engine::m_context = nullptr;
-Window* Engine::m_window = nullptr;
-Input* Engine::m_input = nullptr;
-Assets* Engine::m_assets = nullptr;
-GUI* Engine::m_gui = nullptr;
+AssetModule* Engine::m_asset = nullptr;
+ContextModule* Engine::m_context = nullptr;
+InputModule* Engine::m_input = nullptr;
+LoggerModule* Engine::m_logger = nullptr;
+RendererModule* Engine::m_renderer = nullptr;
+SceneModule* Engine::m_scene = nullptr;
+WindowModule* Engine::m_window = nullptr;
 
 std::map<std::string, LibraryLoader> Engine::m_libraryHolder;
 
 void Engine::initialize() noexcept
 {
     //Context
-    m_context = new EngineContext();
-    m_context->config().parse("../Engine.ini");
+    m_context = new ContextModule();
+    m_context->config.parse("../Engine.ini");
 
     //Logger
-    std::string typeLogger = Engine::context().config().getString("Logger", "type", "none");
-    if(typeLogger == "console") m_logger = new ConsoleLogger();
-    else m_logger = new NullLogger();
+    std::string typeLogger = Engine::context().config.getString("Logger", "type", "none");
+    if(typeLogger == "console") m_logger = new ConsoleLoggerModule();
+    else m_logger = new NullLoggerModule();
 
     //Assets
-    m_assets = new Assets();
+    m_asset = new AssetModule();
 
-    //System
-    m_systemManager = new SystemManager();
-
-    //World
-    m_world = new World();
+    //Scene
+    m_scene = new SceneModule();
 
     //Renderer
-    std::string typeRenderer = Engine::context().config().getString("Renderer", "type", "none");
-    typedef Renderer* (*CreateRenderer)();
+    std::string typeRenderer = Engine::context().config.getString("Renderer", "type", "none");
+    typedef RendererModule* (*CreateRenderer)();
 
     if(typeRenderer == "opengl") 
     {
@@ -66,11 +59,11 @@ void Engine::initialize() noexcept
             Engine::interrupt("Failed to access function <create_renderer>");
         m_renderer = createRenderer();
     }
-    else m_renderer = new NullRenderer();
+    else m_renderer = new NullRendererModule();
 
     //Window
-    std::string typeWindow = Engine::context().config().getString("Window", "type", "none");
-    typedef Window* (*CreateWindow)();
+    std::string typeWindow = Engine::context().config.getString("Window", "type", "none");
+    typedef WindowModule* (*CreateWindow)();
 
     if(typeWindow == "glfw")
     {
@@ -81,11 +74,11 @@ void Engine::initialize() noexcept
             Engine::interrupt("Failed to access function <create_window>");
         m_window = createWindow();
     }
-    else m_window = new NullWindow();
+    else m_window = new NullWindowModule();
 
     //Input
-    std::string typeInput = Engine::context().config().getString("Input", "type", "none");
-    typedef Input* (*CreateInput)();
+    std::string typeInput = Engine::context().config.getString("Input", "type", "none");
+    typedef InputModule* (*CreateInput)();
 
     if(typeInput == "glfw")
     {
@@ -96,37 +89,30 @@ void Engine::initialize() noexcept
             Engine::interrupt("Failed to access function <create_input>");
         m_input = createInput();
     }
-    else m_input = new NullInput();
-
-    //GUI
-    m_gui = new GUI();
-
-    //ThreadPool
-    m_threadPool = new ThreadPool();
+    else m_input = new NullInputModule();
 
     ////////////////////////////////////////////////////////////////////////////////
 
     //Configure Logger
-    Engine::logger().displayDate(Engine::context().config().getBoolean("Logger", "show_time", true));
+    Engine::logger().displayDate(Engine::context().config.getBoolean("Logger", "show_time", true));
 
     //Initializes engine
     Engine::window().initialize();
     Engine::input().initialize();
     Engine::renderer().initialize();
-    Engine::gui().initialize();
 
     /////////////////////////////////////////////////////////////////////////////////
 
     //Create default viewport
     Vector2u defaultResolution;
 
-    if(Engine::context().config().getString("Renderer", "default_viewport_width", "default") != "default")
-        defaultResolution.x = Engine::context().config().getUnsigned("Renderer", "default_viewport_width", 1920);
+    if(Engine::context().config.getString("Renderer", "default_viewport_width", "default") != "default")
+        defaultResolution.x = Engine::context().config.getUnsigned("Renderer", "default_viewport_width", 1920);
     else
         defaultResolution.x = Engine::window().getSize().x;
 
-    if(Engine::context().config().getString("Renderer", "default_viewport_height", "default") != "default")
-        defaultResolution.y = Engine::context().config().getUnsigned("Renderer", "default_viewport_height", 1080);
+    if(Engine::context().config.getString("Renderer", "default_viewport_height", "default") != "default")
+        defaultResolution.y = Engine::context().config.getUnsigned("Renderer", "default_viewport_height", 1080);
     else
         defaultResolution.y = Engine::window().getSize().y;
 
@@ -141,23 +127,19 @@ void Engine::initialize() noexcept
 
     //Create default material
     Material::Parameters defaultMaterial;
-    Engine::assets().material.load("default_material", defaultMaterial);
+    Engine::asset().material.load("default_material", defaultMaterial);
 }
 void Engine::terminate() noexcept
 {
     if(Engine::context().isRunning()) return;
 
     //Terminates engine
-    Engine::gui().terminate();
     Engine::renderer().terminate();
     Engine::input().terminate();
     Engine::window().terminate();
 
-    delete m_systemManager;
-    delete m_world;
-    delete m_assets;
-    delete m_threadPool; //ThreadPool depends on Logger
-    delete m_gui;
+    delete m_scene;
+    delete m_asset;
     delete m_renderer;
     delete m_input;
     delete m_window;
@@ -166,47 +148,35 @@ void Engine::terminate() noexcept
 }
 void Engine::interrupt(std::string message) noexcept
 {
-    Engine::logger().log(message, Logger::Fatal);
+    Engine::logger().log(message, Severity::Fatal);
     std::abort();
 }
 
-Renderer& Engine::renderer() noexcept
+AssetModule& Engine::asset() noexcept
 {
-    return *m_renderer;
+    return *m_asset;
 }
-SystemManager& Engine::systems() noexcept
-{
-    return *m_systemManager;
-}
-World& Engine::world() noexcept
-{
-    return *m_world;
-}
-Logger& Engine::logger() noexcept
-{
-    return *m_logger;
-}
-ThreadPool& Engine::threads() noexcept
-{
-    return *m_threadPool;
-}
-EngineContext& Engine::context() noexcept
+ContextModule& Engine::context() noexcept
 {
     return *m_context;
 }
-Window& Engine::window() noexcept
-{
-    return *m_window;
-}
-Input& Engine::input() noexcept
+InputModule& Engine::input() noexcept
 {
     return *m_input;
 }
-Assets& Engine::assets() noexcept
+LoggerModule& Engine::logger() noexcept
 {
-    return *m_assets;
+    return *m_logger;
 }
-GUI& Engine::gui() noexcept
+RendererModule& Engine::renderer() noexcept
 {
-    return *m_gui;
+    return *m_renderer;
+}
+SceneModule& Engine::scene() noexcept
+{
+    return *m_scene;
+}
+WindowModule& Engine::window() noexcept
+{
+    return *m_window;
 }

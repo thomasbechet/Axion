@@ -3,7 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Math/Geometry/UVSphere.hpp>
-#include <Core/World/Entity/Entity.hpp>
+#include <Core/Scene/Entity/Entity.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Asset/AssetReference.hpp>
 #include <Core/Asset/Asset/Material.hpp>
@@ -15,7 +15,7 @@ namespace ax
     struct AXION_CORE_API UVSphereComponent : public UVSphere, public Component
     {
     public:
-        static const std::string name;
+        static const std::string type;
         
         UVSphereComponent(const Entity& entity,
             float radius = 1.0f,

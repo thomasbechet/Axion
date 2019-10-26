@@ -17,7 +17,7 @@ namespace ax
         struct Parameters
         {
             Path source;
-            std::string json;
+            Json json;
 
             bool tryDestroyTextures = true;
             bool tryDestroyShader = true;

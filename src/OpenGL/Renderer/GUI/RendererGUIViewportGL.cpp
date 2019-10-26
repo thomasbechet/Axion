@@ -1,14 +1,14 @@
 #include <OpenGL/Renderer/GUI/RendererGUIViewportGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
 #include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
-#include <Core/Window/Window.hpp>
+#include <Core/Window/WindowModule.hpp>
 
 using namespace ax;
 
-RendererGUIViewportHandle RendererGL::createViewport(const Rectf& rect, const Vector2u& resolution, RenderMode mode)
+RendererGUIViewportHandle RendererModuleGL::createViewport(const Rectf& rect, const Vector2u& resolution, RenderMode mode)
 {
     Id id = m_content.viewports.add(std::make_unique<RendererGUIViewportGL>(m_content, rect, resolution, mode));
     RendererGUIViewportGL* viewport = m_content.viewports.get(id).get();
@@ -18,7 +18,7 @@ RendererGUIViewportHandle RendererGL::createViewport(const Rectf& rect, const Ve
 
     return viewport;
 }
-void RendererGL::destroyViewport(RendererGUIViewportHandle& viewportPointer)
+void RendererModuleGL::destroyViewport(RendererGUIViewportHandle& viewportPointer)
 {
     RendererGUIViewportGL* viewport = static_cast<RendererGUIViewportGL*>(viewportPointer);
     m_content.viewports.remove(viewport->getID());

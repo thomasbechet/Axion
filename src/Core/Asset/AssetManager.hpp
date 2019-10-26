@@ -3,7 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Asset/AssetLoader.hpp>
 #include <Core/Asset/AssetReference.hpp>
-#include <Core/Logger/Logger.hpp>
+#include <Core/Logger/LoggerModule.hpp>
 
 #include <mutex>
 #include <unordered_map>
@@ -44,7 +44,7 @@ namespace ax
                     }
                     else
                     {
-                        Engine::logger().log("Failed to validate <" + T::type + "> '" + name + "'", Logger::Warning);
+                        Engine::logger().log("Failed to validate <" + T::type + "> '" + name + "'", Severity::Warning);
                         asset.error();
                     }
                 }
@@ -54,7 +54,7 @@ namespace ax
                 }
                 else if(state == Asset::State::Failed)
                 {
-                    Engine::logger().log("Failed to load <" + T::type + "> '" + name + "'", Logger::Warning);
+                    Engine::logger().log("Failed to load <" + T::type + "> '" + name + "'", Severity::Warning);
                     asset.error();
                 }
 
@@ -176,7 +176,7 @@ namespace ax
                 return false;
             }
             
-            Engine::logger().log("Failed to unload <" + T::type + "> '" + name + "' because it doesn't exists.", Logger::Warning);
+            Engine::logger().log("Failed to unload <" + T::type + "> '" + name + "' because it doesn't exists.", Severity::Warning);
             return false;
         }
 
@@ -207,7 +207,7 @@ namespace ax
             int len = str.length();
             if(len % 2 == 0) str += " ";
             ssTitle << std::setfill('-') << std::setw((length / 2) + (len / 2)) << std::right << str << std::left << std::string(length - ((length / 2) + (len / 2)) - 1, '-'); 
-            Engine::logger().log(ssTitle.str(), Logger::Info);
+            Engine::logger().log(ssTitle.str(), Severity::Info);
     
             for(auto& it : m_assets)
             {
@@ -216,19 +216,22 @@ namespace ax
                 switch(state)
                 {
                 case Asset::State::Pending:
-                    stateString = "[Pending  ]"; break;
+                    stateString = "[Pending]"; break;
                 case Asset::State::Loaded:
-                    stateString = "[Loaded   ]"; break;
+                    stateString = "[Loaded]"; break;
                 case Asset::State::Validated:
                     stateString = "[Validated]"; break;
                 case Asset::State::Failed:
-                    stateString = "[Failed   ]"; break;
+                    stateString = "[Failed]"; break;
                 default:
-                    stateString = "[None     ]"; break;
+                    stateString = "[None]"; break;
                 }
+
+                stateString += ("[" + std::to_string(it.second.get()->referenceCount()) + "]");
+
                 std::stringstream ssLine;
-                ssLine << std::left << std::setw(length - 12) << ("- '" + it.first + "' ") << std::left << stateString;
-                Engine::logger().log(ssLine.str(), Logger::Info);
+                ssLine << std::left << std::setw(length - stateString.length() - 1) << ("- '" + it.first + "'") << std::left << stateString;
+                Engine::logger().log(ssLine.str(), Severity::Info);
             }
         }
         

@@ -16,10 +16,10 @@ ADD_DEFINITIONS(-DAXION_GLFW_EXPORT)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
-    Window/WindowGLFW.cpp
-    Window/WrapperWindowGLFW.cpp
-    Input/InputGLFW.cpp
-    Input/WrapperInputGLFW.cpp
+    Window/WindowModuleGLFW.cpp
+    Window/WrapperWindowModuleGLFW.cpp
+    Input/InputModuleGLFW.cpp
+    Input/WrapperInputModuleGLFW.cpp
     Loader/Loader.cpp
 )
 
@@ -43,7 +43,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     endif(MINGW)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-        "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-vc2015/glfw3.lib"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../extlibs/GLFW/lib-vc2019/glfw3.lib"
         "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/axion-core.lib"
     )
 endif()

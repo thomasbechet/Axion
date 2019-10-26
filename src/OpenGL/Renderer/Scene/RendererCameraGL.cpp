@@ -1,9 +1,9 @@
 #include <OpenGL/Renderer/Scene/RendererCameraGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 using namespace ax;
 
-RendererCameraHandle RendererGL::createCamera()
+RendererCameraHandle RendererModuleGL::createCamera()
 {
     Id id = m_content.cameras.add(std::make_unique<RendererCameraGL>());
     RendererCameraGL* camera = m_content.cameras.get(id).get();
@@ -11,7 +11,7 @@ RendererCameraHandle RendererGL::createCamera()
 
     return camera;
 }
-void RendererGL::destroyCamera(RendererCameraHandle& cameraPointer)
+void RendererModuleGL::destroyCamera(RendererCameraHandle& cameraPointer)
 {
     RendererCameraGL* camera = static_cast<RendererCameraGL*>(cameraPointer);
     m_content.cameras.remove(camera->id);

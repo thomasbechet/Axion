@@ -19,7 +19,7 @@ namespace ax
     class AXION_CORE_API Button
     {
     public:
-        friend class Input;
+        friend class InputModule;
 
         Button(std::string name);
 

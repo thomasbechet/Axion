@@ -1,9 +1,9 @@
 #include <OpenGL/Renderer/Scene/RendererPointLightGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 using namespace ax;
 
-RendererPointLightHandle RendererGL::createPointLight()
+RendererPointLightHandle RendererModuleGL::createPointLight()
 {
     Id id = m_content.pointLights.add(std::make_unique<RendererPointLightGL>());
     RendererPointLightGL* pointLight = m_content.pointLights.get(id).get();
@@ -15,7 +15,7 @@ RendererPointLightHandle RendererGL::createPointLight()
 
     return pointLight;
 }
-void RendererGL::destroyPointLight(RendererPointLightHandle& pointLightPointer)
+void RendererModuleGL::destroyPointLight(RendererPointLightHandle& pointLightPointer)
 {
     RendererPointLightGL* pointLight = static_cast<RendererPointLightGL*>(pointLightPointer);
     m_content.pointLightUBO->unload(*pointLight);

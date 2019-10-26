@@ -1,9 +1,9 @@
 #include <OpenGL/Renderer/Asset/RendererMaterialGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 using namespace ax;
 
-RendererMaterialHandle RendererGL::createMaterial(const RendererMaterialParameters& settings)
+RendererMaterialHandle RendererModuleGL::createMaterial(const RendererMaterialParameters& settings)
 {
     Id id = m_content.materials.add(std::make_pair(
         std::make_unique<RendererMaterialGL>(), std::vector<RendererStaticmeshGL*>()
@@ -17,7 +17,7 @@ RendererMaterialHandle RendererGL::createMaterial(const RendererMaterialParamete
 
     return material;
 }
-void RendererGL::destroyMaterial(RendererMaterialHandle& materialPointer)
+void RendererModuleGL::destroyMaterial(RendererMaterialHandle& materialPointer)
 {
     RendererMaterialGL* material = static_cast<RendererMaterialGL*>(materialPointer);
     m_content.materialUBO->unload(*material);

@@ -1,10 +1,10 @@
 #include <Core/Prefab/Component/DirectionalLightComponent.hpp>
 
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
 
-const std::string DirectionalLightComponent::name = "DirectionalLight";
+const std::string DirectionalLightComponent::type = "DirectionalLight";
 
 DirectionalLightComponent::DirectionalLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())

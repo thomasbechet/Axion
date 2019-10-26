@@ -1,11 +1,11 @@
 #include <Core/Prefab/Component/Shape/RectangleComponent.hpp>
 
-#include <Core/Renderer/Renderer.hpp>
-#include <Core/Asset/Assets.hpp>
+#include <Core/Asset/AssetModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
 
-const std::string RectangleComponent::name = "Rectangle";
+const std::string RectangleComponent::type = "Rectangle";
 
 RectangleComponent::RectangleComponent(const Entity& entity,
         float xMin, float xMax,
@@ -36,7 +36,7 @@ RectangleComponent::RectangleComponent(const Entity& entity,
     m_staticmesh = Engine::renderer().createStaticmesh();
     m_staticmesh->setTransform(&transform);
     m_staticmesh->setMesh(m_mesh);
-    m_material = Engine::assets().material(Material::Default);
+    m_material = Engine::asset().material(Material::Default);
     m_staticmesh->setMaterial(m_material->getHandle());
 }
 RectangleComponent::~RectangleComponent()
@@ -52,7 +52,7 @@ void RectangleComponent::setMaterial(std::nullptr_t ptr) noexcept
 }
 void RectangleComponent::setMaterial(std::string name) noexcept
 {
-    setMaterial(Engine::assets().material(name));
+    setMaterial(Engine::asset().material(name));
 }
 void RectangleComponent::setMaterial(AssetReference<Material> material) noexcept
 {

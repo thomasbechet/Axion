@@ -7,18 +7,19 @@
 #include <Core/Math/Transform.hpp>
 #include <Core/Utility/ThreadPool.hpp>
 #include <Core/Utility/Timer.hpp>
-#include <Core/World/Entity/Entity.hpp>
-#include <Core/World/Entity/EntityManager.hpp>
+#include <Core/Scene/Entity/Entity.hpp>
+#include <Core/Scene/Entity/EntityManager.hpp>
+#include <Core/Scene/GameMode/GameModeManager.ipp>
 #include <Core/Context/Engine.hpp>
-#include <Core/Renderer/Renderer.hpp>
-#include <Core/World/Component/ComponentIterator.hpp>
-#include <Core/Logger/Logger.hpp>
+#include <Core/Renderer/RendererModule.hpp>
+#include <Core/Scene/Component/ComponentIterator.hpp>
+#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Utility/Memory.hpp>
-#include <Core/Context/EngineContext.hpp>
-#include <Core/System/System.hpp>
-#include <Core/System/SystemManager.hpp>
-#include <Core/Input/Input.hpp>
-#include <Core/Window/Window.hpp>
+#include <Core/Context/ContextModule.hpp>
+#include <Core/Scene/System/System.hpp>
+#include <Core/Scene/System/SystemManager.ipp>
+#include <Core/Input/InputModule.hpp>
+#include <Core/Window/WindowModule.hpp>
 #include <Core/Prefab/System/BasicWindowSystem.hpp>
 #include <Core/Prefab/System/BasicSpectatorSystem.hpp>
 #include <Core/Prefab/System/RenderModeSystem.hpp>
@@ -32,10 +33,11 @@
 #include <Core/Prefab/Component/Shape/QuadComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/IndexVector.hpp>
-#include <Core/Asset/Assets.hpp>
+#include <Core/Asset/AssetModule.hpp>
 #include <Core/Asset/AssetHolder.hpp>
 #include <RuntimeTest/CustomSystem.hpp>
 #include <Core/Math/Transform2D.hpp>
+#include <Core/Utility/Macro.hpp>
 
 struct Position : public ax::Component
 {
@@ -49,14 +51,14 @@ struct Position : public ax::Component
     {
         
     }
-    static const std::string name;
+    static const std::string type;
 
     float x;
     float y;
     float z;
 };
 
-const std::string Position::name = "Position";
+const std::string Position::type = "Position";
 
 struct Staticsponza : public ax::Component
 {
@@ -68,28 +70,15 @@ struct Staticsponza : public ax::Component
     {
         
     }
-    static std::string name(){return "Staticsponza";}
 
     ax::Id id;
     Position* position;
 };
 
-
-
-class MyGameState : public ax::GameState
-{
-public:
-    unsigned getCount(){return count;}
-    void increment(){count++;}
-
-private:
-    unsigned count = 0;
-};
-
 class StaticsponzaSystem : public ax::System
 {
 public:
-    static const std::string name;
+    static const std::string type;
 
     void onInitialize() override
     {
@@ -120,92 +109,79 @@ public:
     ax::Timer m_timer;
 };
 
-const std::string StaticsponzaSystem::name = "Staticsponza";
+const std::string StaticsponzaSystem::type = "Staticsponza";
 
 class MyGameMode : public ax::GameMode
 {
 public:
+
     void onStart() override
     {
-        /*ax::Package::Parameters testPakParams;
-        testPakParams.source = "$ENGINE_DIR/packages/package_test.json";
-        ax::Engine::assets().package.load("package_test", testPakParams);
-
-        ax::Engine::assets().log();
-        ax::Engine::logger().log(ax::Engine::assets().model.exists("model_bunny"));
-        ax::Engine::assets().model("model_bunny");
-
-        ax::Engine::assets().model.unload("model_bunny");*/
-
-        ax::Engine::systems().add<ax::BasicWindowSystem>();
-        ax::Engine::systems().add<ax::RenderModeSystem>();
+        ax::Engine::scene().system.add<ax::BasicWindowSystem>();
+        ax::Engine::scene().system.add<ax::RenderModeSystem>();
 
         ax::Texture::Parameters textureParameters;
         textureParameters.source = "$ENGINE_DIR/textures/wall_normal2.bmp";
-        ax::Engine::assets().texture.load("mytexture", textureParameters);
+        ax::Engine::asset().texture.load("mytexture", textureParameters);       
 
-        ax::AssetReference<ax::Material> matdef = ax::Engine::assets().material(ax::Material::Default);        
+        ax::Engine::asset().loader.resetLoadState();
 
         ax::Package::Parameters packageParameters;
         packageParameters.source = "../packages/package.json";
         packageParameters.asyncLoading = true;
-        ax::Engine::assets().package.loadAsync("mypackage", packageParameters);
+        ax::Engine::asset().package.loadAsync("mypackage", packageParameters);
 
-
-
-        ax::Engine::assets().log();
-
-        ax::AssetLoader::Record record;
+        ax::AssetLoader::LoadState loadState;
         std::string lastName;
         do
         {
-            record = ax::Engine::assets().loader.getRecord();
-            if(lastName != record.currentAsset.name)
+            loadState = ax::Engine::asset().loader.getLoadState();
+            if(lastName != loadState.lastAsset.name)
             {
-                std::cout << record.str() << std::endl;
-                std::cout << (float)record.totalLoaded / 110.0f << std::endl;
-                lastName = record.currentAsset.name;
+                ax::Engine::logger().log(loadState.str());
+                lastName = loadState.lastAsset.name;
             }
         }
-        while(record.totalPending > 0);
-
-        ax::Engine::assets().package.wait("mypackage");
-
-        //ax::Engine::assets().log();
+        while(loadState.isLoading);
+        ax::Engine::asset().loader.waitAll();
 
         
-        ax::BasicSpectatorSystem& cameraSystem = ax::Engine::systems().add<ax::BasicSpectatorSystem>();
+        ax::BasicSpectatorSystem& cameraSystem = ax::Engine::scene().system.add<ax::BasicSpectatorSystem>();
         
 
-        ax::Entity& camera0 = ax::Engine::world().entity.create();
+        //ax::Entity& test = ax::Engine::world().entity.create("test");
+        //ax::Entity& test = ax::Engine::world().scene.entity.create("test");
+
+
+        ax::Entity& camera0 = ax::Engine::scene().entity.create();
         ax::TransformComponent& cameraTransform = camera0.addComponent<ax::TransformComponent>();
-        ax::CameraComponent& cameraComponent0 = camera0.addComponent<ax::CameraComponent>(camera0);
+        ax::CameraComponent& cameraComponent0 = camera0.addComponent<ax::CameraComponent>();
         cameraComponent0.setFarPlane(100000000.0f);
         cameraComponent0.setFarPlane(100.0f);
         cameraComponent0.setNearPlane(0.01f);
         cameraComponent0.bindDefaultViewport();
-        ax::BasicSpectatorComponent& spectatorComponent0 = camera0.addComponent<ax::BasicSpectatorComponent>(camera0);
+        ax::BasicSpectatorComponent& spectatorComponent0 = camera0.addComponent<ax::BasicSpectatorComponent>();
         cameraSystem.add(spectatorComponent0);
 
         //#define USE_SNIPER
         #if defined USE_SNIPER
-            ax::Entity& sniper = ax::Engine::world().entities().create();
+            ax::Entity& sniper = ax::Engine::scene().entities().create();
             ax::TransformComponent& strans = sniper.addComponent<ax::TransformComponent>();
             strans.rotate(ax::radians(-90.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
             strans.setScale(0.3f, 0.3f, 0.3f);
             strans.setTranslation(-0.3f, -0.2f, 0.2f);
             strans.attachTo(camera0);
-            sniper.addComponent<ax::ModelComponent>(sniper).setModel("model_sniper");
+            sniper.addComponent<ax::ModelComponent>().setModel("model_sniper");
         #endif
         
 
         //#define USE_CAMERA
         #if defined USE_CAMERA
-            ax::Entity& camera1 = ax::Engine::world().entity.create();
+            ax::Entity& camera1 = ax::Engine::scene().entity.create();
             camera1.addComponent<ax::TransformComponent>();
-            ax::CameraComponent& cameraComponent1 = camera1.addComponent<ax::CameraComponent>(camera1);
+            ax::CameraComponent& cameraComponent1 = camera1.addComponent<ax::CameraComponent>();
             cameraComponent1.setFarPlane(300.0f);
-            ax::BasicSpectatorComponent& spectatorComponent1 = camera1.addComponent<ax::BasicSpectatorComponent>(camera1);
+            ax::BasicSpectatorComponent& spectatorComponent1 = camera1.addComponent<ax::BasicSpectatorComponent>();
             cameraSystem.add(spectatorComponent1);
 
             ax::Id viewport = ax::Engine::renderer().createViewport(ax::Vector2f(0.5f, 0.0f), ax::Vector2f(0.5f, 1.0f));
@@ -224,42 +200,34 @@ public:
         //Plane
         ax::Material::Parameters wallMaterialParams;
         wallMaterialParams.normalTexture = "wall_normal2";
-        ax::Engine::assets().material.load("wall_material", wallMaterialParams);
+        ax::Engine::asset().material.load("wall_material", wallMaterialParams);
 
-        ax::Entity& plane = ax::Engine::world().entity.create();
+        ax::Entity& plane = ax::Engine::scene().entity.create();
         plane.addComponent<ax::TransformComponent>();
-        plane.addComponent<ax::QuadComponent>(plane, 500.0f, 500.0f, 100.0f).setMaterial("wall_material");
+        plane.addComponent<ax::QuadComponent>(500.0f, 500.0f, 100.0f).setMaterial("wall_material");
 
         //Sponza
-        ax::Entity& sponza = ax::Engine::world().entity.create();
+        ax::Entity& sponza = ax::Engine::scene().entity.create();
         sponza.addComponent<ax::TransformComponent>().setScale(0.05f, 0.05f, 0.05f);
-        sponza.addComponent<ax::ModelComponent>(sponza).setModel("model_sponza");
+        sponza.addComponent<ax::ModelComponent>().setModel("model_sponza");
         //Directional light
-        ax::Entity& dlight = ax::Engine::world().entity.create();        
+        ax::Entity& dlight = ax::Engine::scene().entity.create();        
         dlight.addComponent<ax::TransformComponent>().rotate(45.0f, ax::Vector3f(1.0f, 0.0f, 0.0f));
         //dlight.addComponent<ax::DirectionalLightComponent>(dlight);
         //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1366, 768));
         //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1600, 900));
 
-        CustomSystem& system = ax::Engine::systems().add<CustomSystem>();
+        CustomSystem& system = ax::Engine::scene().system.add<CustomSystem>();
         system.setSpawnTransform(&cameraTransform);
+
+        ax::Engine::asset().log();
     }
     void onStop() override
     {
-        ax::Engine::systems().remove<ax::BasicWindowSystem>();
-        ax::Engine::systems().remove<ax::BasicSpectatorSystem>();
-        ax::Engine::systems().remove<ax::RenderModeSystem>();
+        ax::Engine::scene().system.remove<ax::BasicWindowSystem>();
+        ax::Engine::scene().system.remove<ax::BasicSpectatorSystem>();
+        ax::Engine::scene().system.remove<ax::RenderModeSystem>();
     }
 };
 
-int main(int argc, char* argv[])
-{
-    ax::Engine::initialize();
-    ax::Engine::world().setGameMode<MyGameMode>();
-    ax::Engine::context().run();
-    ax::Engine::terminate();
-
-    std::cout << "end reached" << std::endl;
-
-    return 0;
-}
+ENGINE_INIT(MyGameMode)

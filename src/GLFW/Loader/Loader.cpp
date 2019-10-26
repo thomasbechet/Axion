@@ -1,17 +1,17 @@
-#include <GLFW/Window/WindowGLFW.hpp>
-#include <GLFW/Input/InputGLFW.hpp>
+#include <GLFW/Window/WindowModuleGLFW.hpp>
+#include <GLFW/Input/InputModuleGLFW.hpp>
 
 using namespace ax;
 
 extern "C"
 {
-    Window* create_window()
+    WindowModule* create_window()
     {
-        return new WindowGLFW();
+        return new WindowModuleGLFW();
     }
 
-    Input* create_input()
+    InputModule* create_input()
     {
-        return new InputGLFW();
+        return new InputModuleGLFW();
     }
 }

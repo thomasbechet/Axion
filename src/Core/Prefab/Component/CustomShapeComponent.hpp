@@ -3,7 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Math/Geometry/Shape.hpp>
-#include <Core/World/Entity/Entity.hpp>
+#include <Core/Scene/Entity/Entity.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 
 namespace ax
@@ -11,7 +11,7 @@ namespace ax
     struct AXION_CORE_API CustomShapeComponent : public Component
     {
     public:
-        static const std::string name;
+        static const std::string type;
         
         CustomShapeComponent(const Entity& entity);
         ~CustomShapeComponent();

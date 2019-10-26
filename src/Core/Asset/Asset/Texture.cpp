@@ -1,14 +1,14 @@
 #include <Core/Asset/Asset/Texture.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Logger/Logger.hpp>
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Logger/LoggerModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
+#include <Core/Utility/Json.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
-#include <json/json.hpp>
 
 using namespace ax;
 
@@ -36,7 +36,7 @@ RendererTextureHandle Texture::getHandle() const noexcept
 
 bool Texture::onLoad() noexcept
 {
-    if(!m_parameters.json.empty() && !extractSourceFromJson()) return false;
+    if(!m_parameters.json.is_null() && !extractSourceFromJson()) return false;
 
     int width, height, bpp;
     m_data = stbi_load(m_parameters.source.c_str(), &width, &height, &bpp, 0);
@@ -97,22 +97,20 @@ bool Texture::onUnload() noexcept
 }
 void Texture::onError() noexcept
 {
-    Engine::logger().log(m_error, Logger::Warning);
+    Engine::logger().log(m_error, Severity::Warning);
 }
 
 bool Texture::extractSourceFromJson() noexcept
 {
-    nlohmann::json j = nlohmann::json::parse(m_parameters.json);
-
-    auto jType = j.find(JsonAttributes::type);
-    if(jType != j.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::textureType)
+    auto jType = m_parameters.json.find(JsonAttributes::type);
+    if(jType != m_parameters.json.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::textureType)
     {
         m_error = "Loading texture without texture type attribute.";
         return false;
     }
 
-    auto jSource = j.find(JsonAttributes::source);
-    if(jSource != j.end() && jSource->is_string())
+    auto jSource = m_parameters.json.find(JsonAttributes::source);
+    if(jSource != m_parameters.json.end() && jSource->is_string())
     {
         m_parameters.source = jSource->get<std::string>();
         return true;

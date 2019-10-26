@@ -2,6 +2,7 @@
 
 #include <Core/Export.hpp>
 #include <Core/Utility/Path.hpp>
+#include <Core/Utility/Json.hpp>
 #include <Core/Renderer/Asset/RendererShader.hpp>
 #include <Core/Asset/Asset.hpp>
 
@@ -15,7 +16,7 @@ namespace ax
         struct Parameters
         {
             Path source;
-            std::string json;
+            Json json;
         };
 
     public:

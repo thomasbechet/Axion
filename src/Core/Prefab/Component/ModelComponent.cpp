@@ -1,11 +1,11 @@
 #include <Core/Prefab/Component/ModelComponent.hpp>
 
-#include <Core/Renderer/Renderer.hpp>
-#include <Core/Asset/Assets.hpp>
+#include <Core/Asset/AssetModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
 
-const std::string ModelComponent::name = "Model";
+const std::string ModelComponent::type = "Model";
 
 ModelComponent::ModelComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
@@ -30,7 +30,7 @@ void ModelComponent::setModel(std::nullptr_t) noexcept
 }
 void ModelComponent::setModel(std::string name) noexcept
 {
-    setModel(Engine::assets().model(name));
+    setModel(Engine::asset().model(name));
 }
 void ModelComponent::setModel(AssetReference<Model> model) noexcept
 {
@@ -57,7 +57,7 @@ void ModelComponent::setModel(AssetReference<Mesh> mesh) noexcept
 {   
     setModel(nullptr);
 
-    AssetReference<Material> material = Engine::assets().material(Material::Default);
+    AssetReference<Material> material = Engine::asset().material(Material::Default);
 
     RendererStaticmeshHandle staticmesh = Engine::renderer().createStaticmesh();
     staticmesh->setTransform(&transform);
@@ -79,7 +79,7 @@ void ModelComponent::setMaterial(std::nullptr_t ptr, Id component) noexcept
 }
 void ModelComponent::setMaterial(std::string name, Id component) noexcept
 {
-    setMaterial(Engine::assets().material(name), component);
+    setMaterial(Engine::asset().material(name), component);
 }
 void ModelComponent::setMaterial(AssetReference<Material> material, Id component) noexcept
 {

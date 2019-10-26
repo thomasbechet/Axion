@@ -21,7 +21,7 @@ namespace ax
         struct Parameters
         {
             Path source;
-            std::string json;
+            Json json;
             bool asyncLoading = false;
         };
 
@@ -43,7 +43,7 @@ namespace ax
         void onError() noexcept override;
 
     private:
-        bool loadFromJson(std::string& json) noexcept;
+        bool loadFromJson(Json& json) noexcept;
 
     private:
         Parameters m_parameters;

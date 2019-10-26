@@ -1,11 +1,11 @@
 #include <OpenGL/Renderer/Scene/RendererStaticmeshGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 #include <algorithm>
 
 using namespace ax;
 
-RendererStaticmeshHandle RendererGL::createStaticmesh()
+RendererStaticmeshHandle RendererModuleGL::createStaticmesh()
 {
     Id id = m_content.staticmeshes.add(std::make_unique<RendererStaticmeshGL>());
     RendererStaticmeshGL* staticmesh = m_content.staticmeshes.get(id).get();
@@ -14,7 +14,7 @@ RendererStaticmeshHandle RendererGL::createStaticmesh()
     
     return staticmesh;
 }
-void RendererGL::destroyStaticmesh(RendererStaticmeshHandle& staticmeshPointer)
+void RendererModuleGL::destroyStaticmesh(RendererStaticmeshHandle& staticmeshPointer)
 {
     RendererStaticmeshGL* staticmesh = static_cast<RendererStaticmeshGL*>(staticmeshPointer);
     staticmesh->setMaterial(nullptr);

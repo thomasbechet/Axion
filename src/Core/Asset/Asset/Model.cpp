@@ -1,12 +1,12 @@
 #include <Core/Asset/Asset/Model.hpp>
 
-#include <Core/Asset/Assets.hpp>
-#include <Core/Logger/Logger.hpp>
+#include <Core/Asset/AssetModule.hpp>
+#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
+#include <Core/Utility/Json.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tinyobjloader/tiny_obj_loader.h>
-#include <json/json.hpp>
 
 using namespace ax;
 
@@ -42,19 +42,17 @@ bool Model::onLoad() noexcept
             return false;
         }
     }
-    else if(!m_parameters.json.empty())
+    else if(!m_parameters.json.is_null())
     {
-        nlohmann::json j = nlohmann::json::parse(m_parameters.json);
-
-        auto jType = j.find(JsonAttributes::type);
-        if(jType != j.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::modelType)
+        auto jType = m_parameters.json.find(JsonAttributes::type);
+        if(jType != m_parameters.json.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::modelType)
         {
             m_error = "Loading model without model type attribute.";
             return false;
         }
 
-        auto jSource = j.find(JsonAttributes::source);
-        if(jSource != j.end() && jSource->is_string())
+        auto jSource = m_parameters.json.find(JsonAttributes::source);
+        if(jSource != m_parameters.json.end() && jSource->is_string())
         {
             Path source = jSource->get<std::string>();
             if(source.extension() == ".obj")
@@ -81,8 +79,8 @@ bool Model::onValidate() noexcept
 {
     for(auto& it : m_dummyModels)
     {
-        m_meshes.emplace_back(Engine::assets().mesh(it.first));
-        m_materials.emplace_back(Engine::assets().material(it.second));
+        m_meshes.emplace_back(Engine::asset().mesh(it.first));
+        m_materials.emplace_back(Engine::asset().material(it.second));
     }
 
     return true;
@@ -95,7 +93,7 @@ bool Model::onUnload() noexcept
         {
             std::string meshName = it->get()->getName();
             it->reset();
-            Engine::assets().mesh.unload(meshName);
+            Engine::asset().mesh.unload(meshName);
         }
     }
     m_meshes.clear();
@@ -105,7 +103,7 @@ bool Model::onUnload() noexcept
         {
             std::string materialName = it.get()->getName();
             it.reset();
-            Engine::assets().material.unload(materialName);            
+            Engine::asset().material.unload(materialName);            
         }
     }
     m_materials.clear();
@@ -114,7 +112,7 @@ bool Model::onUnload() noexcept
 }
 void Model::onError() noexcept
 {
-    Engine::logger().log(m_error, Logger::Warning);
+    Engine::logger().log(m_error, Severity::Warning);
 }
 
 bool Model::loadObjModel(Path path) noexcept
@@ -134,7 +132,7 @@ bool Model::loadObjModel(Path path) noexcept
     //Loading materials
     for(const auto& material : materials)
     {
-        if(!Engine::assets().material.exists(material.name))
+        if(!Engine::asset().material.exists(material.name))
         {
             Material::Parameters materialParameters;
 
@@ -142,14 +140,14 @@ bool Model::loadObjModel(Path path) noexcept
             Path diffusePath = path.directory() + material.diffuse_texname;
             if(!diffusePath.filename().empty())
             {
-                if(!Engine::assets().texture.exists(diffusePath.filename()))
+                if(!Engine::asset().texture.exists(diffusePath.filename()))
                 {
                     Texture::Parameters textureParameters;
                     textureParameters.source = diffusePath;
                     if(m_parameters.asyncLoading)
-                        Engine::assets().texture.loadAsync(diffusePath.filename(), textureParameters);
+                        Engine::asset().texture.loadAsync(diffusePath.filename(), textureParameters);
                     else
-                        Engine::assets().texture.load(diffusePath.filename(), textureParameters);
+                        Engine::asset().texture.load(diffusePath.filename(), textureParameters);
                 }
                 materialParameters.diffuseTexture = diffusePath.filename();
             }
@@ -165,28 +163,28 @@ bool Model::loadObjModel(Path path) noexcept
             Path bumpPath = path.directory() + material.bump_texname;
             if(!normalPath.filename().empty())
             {
-                if(!Engine::assets().texture.exists(normalPath.filename()))
+                if(!Engine::asset().texture.exists(normalPath.filename()))
                 {
                     Texture::Parameters textureParameters;
                     textureParameters.source = normalPath;
                     if(m_parameters.asyncLoading)
-                        Engine::assets().texture.loadAsync(normalPath.filename(), textureParameters);
+                        Engine::asset().texture.loadAsync(normalPath.filename(), textureParameters);
                     else
-                        Engine::assets().texture.load(normalPath.filename(), textureParameters);
+                        Engine::asset().texture.load(normalPath.filename(), textureParameters);
                 }
                 materialParameters.normalTexture = normalPath.filename();
                 materialParameters.isBumpTexture = false;
             }
             else if(!bumpPath.filename().empty())
             {
-                if(!Engine::assets().texture.exists(bumpPath.filename()))
+                if(!Engine::asset().texture.exists(bumpPath.filename()))
                 {
                     Texture::Parameters textureParameters;
                     textureParameters.source = bumpPath;
                     if(m_parameters.asyncLoading)
-                        Engine::assets().texture.loadAsync(bumpPath.filename(), textureParameters);
+                        Engine::asset().texture.loadAsync(bumpPath.filename(), textureParameters);
                     else
-                        Engine::assets().texture.load(bumpPath.filename(), textureParameters);
+                        Engine::asset().texture.load(bumpPath.filename(), textureParameters);
                 }
                 materialParameters.normalTexture = bumpPath.filename();
                 materialParameters.isBumpTexture = true;
@@ -196,14 +194,14 @@ bool Model::loadObjModel(Path path) noexcept
             Path specularPath = path.directory() + material.specular_texname;
             if(!specularPath.filename().empty())
             {
-                if(!Engine::assets().texture.exists(specularPath.filename()))
+                if(!Engine::asset().texture.exists(specularPath.filename()))
                 {
                     Texture::Parameters textureParameters;
                     textureParameters.source = specularPath;
                     if(m_parameters.asyncLoading)
-                        Engine::assets().texture.loadAsync(specularPath.filename(), textureParameters);
+                        Engine::asset().texture.loadAsync(specularPath.filename(), textureParameters);
                     else
-                        Engine::assets().texture.load(specularPath.filename(), textureParameters);
+                        Engine::asset().texture.load(specularPath.filename(), textureParameters);
                 }
                 materialParameters.specularTexture = specularPath.filename();
             }
@@ -214,9 +212,9 @@ bool Model::loadObjModel(Path path) noexcept
 
             //Load material as assets
             if(m_parameters.asyncLoading)
-                Engine::assets().material.loadAsync(material.name, materialParameters);
+                Engine::asset().material.loadAsync(material.name, materialParameters);
             else
-                Engine::assets().material.load(material.name, materialParameters);
+                Engine::asset().material.load(material.name, materialParameters);
         } 
     }
 
@@ -274,9 +272,9 @@ bool Model::loadObjModel(Path path) noexcept
         meshParameters.computeTangent = true;
         meshParameters.computeNormal = attrib.normals.empty();
         if(m_parameters.asyncLoading)
-            Engine::assets().mesh.loadAsync(meshName, meshParameters);
+            Engine::asset().mesh.loadAsync(meshName, meshParameters);
         else
-            Engine::assets().mesh.load(meshName, meshParameters);
+            Engine::asset().mesh.load(meshName, meshParameters);
 
         if(it->first != -1)
         {

@@ -1,12 +1,12 @@
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
 
-void Renderer::setDefaultViewport(RendererGUIViewportHandle viewport) noexcept
+void RendererModule::setDefaultViewport(RendererGUIViewportHandle viewport) noexcept
 {
     m_defaultViewport = viewport;
 }
-RendererGUIViewportHandle Renderer::getDefaultViewport() const noexcept
+RendererGUIViewportHandle RendererModule::getDefaultViewport() const noexcept
 {
     return m_defaultViewport;
 }

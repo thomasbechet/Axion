@@ -1,10 +1,10 @@
 #include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
 
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <Core/Context/Engine.hpp>
-#include <Core/Window/Window.hpp>
-#include <Core/Asset/Assets.hpp>
+#include <Core/Window/WindowModule.hpp>
+#include <Core/Asset/AssetModule.hpp>
 
 using namespace ax;
 

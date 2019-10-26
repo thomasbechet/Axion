@@ -1,10 +1,10 @@
 #include <Core/Prefab/Component/PointLightComponent.hpp>
 
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
 
-const std::string PointLightComponent::name = "PointLight";
+const std::string PointLightComponent::type = "PointLight";
 
 PointLightComponent::PointLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())

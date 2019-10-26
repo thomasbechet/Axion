@@ -3,6 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Math/Vector.hpp>
 #include <Core/Utility/Path.hpp>
+#include <Core/Utility/Json.hpp>
 #include <Core/Math/Geometry/Vertex.hpp>
 #include <Core/Asset/Asset.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>
@@ -18,7 +19,7 @@ namespace ax
         struct Parameters
         {
             Path source;
-            std::string json;
+            Json json;
             std::vector<Vertex> vertices;
             bool computeTangent = false;
             bool computeNormal = false;

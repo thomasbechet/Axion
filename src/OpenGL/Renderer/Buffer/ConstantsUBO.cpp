@@ -2,7 +2,7 @@
 
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <Core/Context/Engine.hpp>
-#include <Core/Window/Window.hpp>
+#include <Core/Window/WindowModule.hpp>
 
 using namespace ax;
 

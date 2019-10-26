@@ -1,8 +1,8 @@
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 using namespace ax;
 
-RendererMeshHandle RendererGL::createMesh(const std::vector<Vertex>& vertices)
+RendererMeshHandle RendererModuleGL::createMesh(const std::vector<Vertex>& vertices)
 {
     Id id = m_content.meshes.add(std::make_unique<RendererMeshGL>());
     RendererMeshGL* mesh = m_content.meshes.get(id).get();
@@ -33,7 +33,7 @@ RendererMeshHandle RendererGL::createMesh(const std::vector<Vertex>& vertices)
 
     return mesh;
 }
-void RendererGL::destroyMesh(RendererMeshHandle& meshPointer)
+void RendererModuleGL::destroyMesh(RendererMeshHandle& meshPointer)
 {
     RendererMeshGL* mesh = static_cast<RendererMeshGL*>(meshPointer);
     glDeleteVertexArrays(1, &mesh->vao);

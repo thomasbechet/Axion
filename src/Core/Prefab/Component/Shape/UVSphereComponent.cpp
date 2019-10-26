@@ -1,12 +1,12 @@
 #include <Core/Prefab/Component/Shape/UVSphereComponent.hpp>
 
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Asset/AssetModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 #include <Core/Math/Geometry/UVSphere.hpp>
-#include <Core/Asset/Assets.hpp>
 
 using namespace ax;
 
-const std::string UVSphereComponent::name = "UVSphere";
+const std::string UVSphereComponent::type = "UVSphere";
 
 UVSphereComponent::UVSphereComponent(const Entity& entity,
         float radius,
@@ -27,7 +27,7 @@ UVSphereComponent::UVSphereComponent(const Entity& entity,
     m_staticmesh = Engine::renderer().createStaticmesh();
     m_staticmesh->setTransform(&transform);
     m_staticmesh->setMesh(m_mesh);
-    m_material = Engine::assets().material(Material::Default);
+    m_material = Engine::asset().material(Material::Default);
     m_staticmesh->setMaterial(m_material->getHandle());
 }
 UVSphereComponent::~UVSphereComponent()
@@ -43,7 +43,7 @@ void UVSphereComponent::setMaterial(std::nullptr_t ptr) noexcept
 }
 void UVSphereComponent::setMaterial(std::string name) noexcept
 {
-    setMaterial(Engine::assets().material(name));
+    setMaterial(Engine::asset().material(name));
 }
 void UVSphereComponent::setMaterial(AssetReference<Material> material) noexcept
 {

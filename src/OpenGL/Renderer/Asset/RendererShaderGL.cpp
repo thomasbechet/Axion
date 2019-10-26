@@ -1,11 +1,11 @@
 #include <OpenGL/Renderer/Asset/RendererShaderGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 #include <Core/Renderer/RendererException.hpp>
 
 using namespace ax;
 
-RendererShaderHandle RendererGL::createShader(const std::string* vertex, const std::string* fragment)
+RendererShaderHandle RendererModuleGL::createShader(const std::string* vertex, const std::string* fragment)
 {
     Id id = m_content.shaders.add(std::make_unique<RendererShaderGL>());
     RendererShaderGL* shader = m_content.shaders.get(id).get();
@@ -19,7 +19,7 @@ RendererShaderHandle RendererGL::createShader(const std::string* vertex, const s
 
     return shader;
 }
-void RendererGL::destroyShader(RendererShaderHandle& shaderPointer)
+void RendererModuleGL::destroyShader(RendererShaderHandle& shaderPointer)
 {
     RendererShaderGL* shader = static_cast<RendererShaderGL*>(shaderPointer);
     shader->shader.unload();

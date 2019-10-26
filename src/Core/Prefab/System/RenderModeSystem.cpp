@@ -1,11 +1,11 @@
 #include <Core/Prefab/System/RenderModeSystem.hpp>
 
-#include <Core/Input/Input.hpp>
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Input/InputModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
 
-const std::string RenderModeSystem::name = "RenderMode";
+const std::string RenderModeSystem::type = "RenderMode";
 
 void RenderModeSystem::onInitialize()
 {

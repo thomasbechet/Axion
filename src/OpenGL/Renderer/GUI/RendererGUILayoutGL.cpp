@@ -1,5 +1,5 @@
 #include <OpenGL/Renderer/GUI/RendererGUILayoutGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 #include <OpenGL/Renderer/GUI/RendererGUIRectangleGL.hpp>
 #include <OpenGL/Renderer/GUI/RendererGUIScalableRectangleGL.hpp>
@@ -8,7 +8,7 @@
 
 using namespace ax;
 
-RendererGUILayoutHandle RendererGL::createGUILayout()
+RendererGUILayoutHandle RendererModuleGL::createGUILayout()
 {
     //Id id = m_content.layouts.add(std::make_unique<RendererGUILayoutGL>());
     //RendererGUILayoutGL* layout = m_content.layouts.get(id).get();
@@ -16,7 +16,7 @@ RendererGUILayoutHandle RendererGL::createGUILayout()
 
     return nullptr;
 }
-void RendererGL::destroyGUILayout(RendererGUILayoutHandle& layout)
+void RendererModuleGL::destroyGUILayout(RendererGUILayoutHandle& layout)
 {
     //RendererGUILayoutGL* layout = static_cast<RendererGUILayoutGL*>(layout);
     //m_content.layouts.remove(layout->id);

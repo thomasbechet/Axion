@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/System/System.hpp>
+#include <Core/Scene/System/System.hpp>
 #include <Core/Input/Button.hpp>
 
 #include <string>
@@ -11,7 +11,7 @@ namespace ax
     class AXION_CORE_API RenderModeSystem : public System
     {
     public:
-        static const std::string name;
+        static const std::string type;
 
         void onInitialize() override;
         void onUpdate() override;

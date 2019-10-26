@@ -2,7 +2,7 @@
 
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <Core/Context/Engine.hpp>
-#include <Core/Logger/Logger.hpp>
+#include <Core/Logger/LoggerModule.hpp>
 
 #include <fstream>
 #include <streambuf>
@@ -14,7 +14,7 @@ bool ShaderGLSL::loadShader(const std::string* vertex, const std::string* fragme
 {
     if(vertex == nullptr || fragment == nullptr)
     {
-        Engine::logger().log("One of the shader source is not given. Both vertex and fragment sources are required for this version.", Logger::Warning);
+        Engine::logger().log("One of the shader source is not given. Both vertex and fragment sources are required for this version.", Severity::Warning);
         return false;
     }
 
@@ -66,7 +66,7 @@ bool ShaderGLSL::compileShader(const std::string& vertexCode, const std::string&
     if(!success)
     {
         glGetShaderInfoLog(vertexId, 512, nullptr, infoLog);
-        Engine::logger().log(std::string(infoLog), Logger::Warning);
+        Engine::logger().log(std::string(infoLog), Severity::Warning);
         return false;
     }
 
@@ -78,7 +78,7 @@ bool ShaderGLSL::compileShader(const std::string& vertexCode, const std::string&
     if(!success)
     {
         glGetShaderInfoLog(fragmentId, 512, nullptr, infoLog);
-        Engine::logger().log(std::string(infoLog), Logger::Warning);
+        Engine::logger().log(std::string(infoLog), Severity::Warning);
         return false;
     }
 
@@ -93,7 +93,7 @@ bool ShaderGLSL::compileShader(const std::string& vertexCode, const std::string&
     if(!success)
     {
         glGetProgramInfoLog(m_handle, 512, nullptr, infoLog);
-        Engine::logger().log(std::string(infoLog), Logger::Warning);
+        Engine::logger().log(std::string(infoLog), Severity::Warning);
         return false;
     }
 
@@ -120,7 +120,7 @@ bool ShaderGLSL::compileCompute(const std::string& computeCode) noexcept
     {
         glGetShaderInfoLog(compute, 512, nullptr, infoLog);
 
-        Engine::logger().log(std::string(infoLog), Logger::Warning);
+        Engine::logger().log(std::string(infoLog), Severity::Warning);
         return false;
     }
 

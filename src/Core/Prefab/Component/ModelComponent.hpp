@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/World/Component/Component.hpp>
+#include <Core/Scene/Component/Component.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Asset/AssetReference.hpp>
 #include <Core/Asset/Asset/Model.hpp>
@@ -14,7 +14,7 @@ namespace ax
     struct AXION_CORE_API ModelComponent : public Component
     {
     public:
-        static const std::string name;
+        static const std::string type;
 
         ModelComponent(const Entity& entity);
         ~ModelComponent();

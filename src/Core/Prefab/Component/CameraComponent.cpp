@@ -1,10 +1,10 @@
 #include <Core/Prefab/Component/CameraComponent.hpp>
 
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
 
-const std::string CameraComponent::name = "Camera";
+const std::string CameraComponent::type = "Camera";
 
 CameraComponent::CameraComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())

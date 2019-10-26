@@ -4,7 +4,7 @@
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Color.hpp>
 #include <Core/Renderer/Scene/RendererPointLight.hpp>
-#include <Core/World/Component/Component.hpp>
+#include <Core/Scene/Component/Component.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 
 namespace ax
@@ -12,7 +12,7 @@ namespace ax
     struct AXION_CORE_API PointLightComponent : public Component
     {
     public:
-        static const std::string name;
+        static const std::string type;
 
         PointLightComponent(const Entity& entity);
         ~PointLightComponent();

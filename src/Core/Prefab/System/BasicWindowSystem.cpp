@@ -1,13 +1,13 @@
 #include <Core/Prefab/System/BasicWindowSystem.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Context/EngineContext.hpp>
-#include <Core/Window/Window.hpp>
-#include <Core/Input/Input.hpp>
+#include <Core/Context/ContextModule.hpp>
+#include <Core/Window/WindowModule.hpp>
+#include <Core/Input/InputModule.hpp>
 
 using namespace ax;
 
-const std::string BasicWindowSystem::name = "BasicWindow";
+const std::string BasicWindowSystem::type = "BasicWindow";
 
 void BasicWindowSystem::onInitialize()
 {

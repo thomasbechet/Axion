@@ -29,7 +29,6 @@ namespace ax
         bool operator<=(const Time& t) const;
         bool operator==(const Time& t) const;
         bool operator!=(const Time& t) const;
-        
 
         unsigned long long asNanoseconds() const noexcept;
         float asMicroseconds() const noexcept;

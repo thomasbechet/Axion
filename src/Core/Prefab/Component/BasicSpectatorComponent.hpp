@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/World/Entity/Entity.hpp>
-#include <Core/World/Component/Component.hpp>
+#include <Core/Scene/Entity/Entity.hpp>
+#include <Core/Scene/Component/Component.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Prefab/Component/CameraComponent.hpp>
 
@@ -11,7 +11,7 @@ namespace ax
     struct AXION_CORE_API BasicSpectatorComponent : public Component
     {
     public:
-        static const std::string name;
+        static const std::string type;
 
         BasicSpectatorComponent(const Entity& entity);
 

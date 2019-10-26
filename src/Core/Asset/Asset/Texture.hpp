@@ -5,6 +5,7 @@
 #include <Core/Math/Vector.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Types.hpp>
+#include <Core/Utility/Json.hpp>
 #include <Core/Renderer/Asset/RendererTexture.hpp>
 
 namespace ax
@@ -15,7 +16,7 @@ namespace ax
         struct Parameters
         {
             Path source;
-            std::string json;
+            Json json;
         };
 
         enum Format

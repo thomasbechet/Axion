@@ -1,9 +1,9 @@
 #include <OpenGL/Renderer/Scene/RendererDirectionalLightGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 using namespace ax;
 
-RendererDirectionalLightHandle RendererGL::createDirectionalLight()
+RendererDirectionalLightHandle RendererModuleGL::createDirectionalLight()
 {
     Id id = m_content.directionalLights.add(std::make_unique<RendererDirectionalLightGL>());
     RendererDirectionalLightGL* directionalLight = m_content.directionalLights.get(id).get();
@@ -15,7 +15,7 @@ RendererDirectionalLightHandle RendererGL::createDirectionalLight()
 
     return directionalLight;
 }
-void RendererGL::destroyDirectionalLight(RendererDirectionalLightHandle& directionallightPointer)
+void RendererModuleGL::destroyDirectionalLight(RendererDirectionalLightHandle& directionallightPointer)
 {
     RendererDirectionalLightGL* directionalLight = static_cast<RendererDirectionalLightGL*>(directionallightPointer);
     m_content.directionalLightUBO->unload(*directionalLight);

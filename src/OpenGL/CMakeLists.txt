@@ -19,7 +19,7 @@ ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
     ../../extlibs/GLEW/src/glew.c
     Loader/Loader.cpp
-    Renderer/RendererGL.cpp
+    Renderer/RendererModuleGL.cpp
     Renderer/Asset/RendererShaderGL.cpp
     Renderer/Asset/RendererMeshGL.cpp
     Renderer/Asset/RendererMaterialGL.cpp

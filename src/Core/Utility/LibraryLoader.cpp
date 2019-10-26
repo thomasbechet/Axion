@@ -1,7 +1,7 @@
 #include <Core/Utility/LibraryLoader.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Logger/Logger.hpp>
+#include <Core/Logger/LoggerModule.hpp>
 
 using namespace ax;
 
@@ -48,7 +48,7 @@ Path LibraryLoader::getPath() const noexcept
 
         m_library = LoadLibraryA(path.c_str());
         if(!m_library)
-            Engine::logger().log("Failed to load dynamic library " + path, Logger::Warning);
+            Engine::logger().log("Failed to load dynamic library " + path, Severity::Warning);
     }
     void LibraryLoader::doClose() noexcept
     {
@@ -70,7 +70,7 @@ Path LibraryLoader::getPath() const noexcept
             result = reinterpret_cast<void*>(GetProcAddress(static_cast<HMODULE>(m_library), name.c_str()));
             SetErrorMode(oldMode);
         }
-        else Engine::logger().log("Failed to load function <" + name + "> because dynamic library is not loaded", Logger::Severity::Warning);
+        else Engine::logger().log("Failed to load function <" + name + "> because dynamic library is not loaded", Severity::Warning);
 
         return result;
     }
@@ -85,7 +85,7 @@ Path LibraryLoader::getPath() const noexcept
         m_library = dlopen(path.c_str(), RTLD_LAZY);
 
         if(!m_library)
-            Engine::logger().log("Failed to load dynamic library " + path, Logger::Warning);
+            Engine::logger().log("Failed to load dynamic library " + path, Severity::Warning);
     }
     void LibraryLoader::doClose() noexcept
     {
@@ -103,7 +103,7 @@ Path LibraryLoader::getPath() const noexcept
         {
             result = reinterpret_cast<void*>(dlsym(m_library, name.c_str()));
         }
-        else Engine::logger().log("Failed to load function <" + name + "> because dynamic library is not loaded", Logger::Severity::Warning);
+        else Engine::logger().log("Failed to load function <" + name + "> because dynamic library is not loaded", Severity::Warning);
     
         return result;
     }

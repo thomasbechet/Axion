@@ -1,11 +1,11 @@
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 using namespace ax;
 
 extern "C"
 {
-    Renderer* create_renderer()
+    RendererModule* create_renderer()
     {
-        return new RendererGL();
+        return new RendererModuleGL();
     }
 }

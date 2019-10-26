@@ -3,7 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Math/Geometry/Quad.hpp>
-#include <Core/World/Entity/Entity.hpp>
+#include <Core/Scene/Entity/Entity.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Asset/AssetReference.hpp>
 #include <Core/Asset/Asset/Material.hpp>
@@ -15,7 +15,7 @@ namespace ax
     struct AXION_CORE_API QuadComponent : public Quad, public Component
     {
     public:
-        static const std::string name;
+        static const std::string type;
         
         QuadComponent(const Entity& entity, float x = 1.0f, float y = 1.0f, float factor = 1.0f);
         ~QuadComponent();

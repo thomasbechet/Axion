@@ -16,7 +16,7 @@ namespace ax
         struct Parameters
         {
             Path source;
-            std::string json;
+            Json json;
 
             bool tryDestroyMeshes = true;
             bool tryDestroyMaterials = true;

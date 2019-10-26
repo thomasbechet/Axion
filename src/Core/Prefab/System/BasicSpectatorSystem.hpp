@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/System/System.hpp>
-#include <Core/World/Component/ComponentList.hpp>
+#include <Core/Scene/System/System.hpp>
+#include <Core/Scene/Component/ComponentList.hpp>
 #include <Core/Prefab/Component/BasicSpectatorComponent.hpp>
 #include <Core/Input/Button.hpp>
 #include <Core/Input/Axis.hpp>
@@ -12,7 +12,7 @@ namespace ax
     class AXION_CORE_API BasicSpectatorSystem : public System
     {
     public:
-        static const std::string name;
+        static const std::string type;
 
         void onInitialize() override;
         void onUpdate() override;

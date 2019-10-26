@@ -1,9 +1,9 @@
 #include <Core/Asset/Asset/Material.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Asset/Assets.hpp>
-#include <Core/Logger/Logger.hpp>
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Asset/AssetModule.hpp>
+#include <Core/Logger/LoggerModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
 using namespace ax;
@@ -68,19 +68,19 @@ bool Material::onLoad() noexcept
 bool Material::onValidate() noexcept
 {
     if(!m_parameters.diffuseTexture.empty())
-        m_diffuseTexture = Engine::assets().texture(m_parameters.diffuseTexture);
+        m_diffuseTexture = Engine::asset().texture(m_parameters.diffuseTexture);
     m_diffuseColor = m_parameters.diffuseColor;
 
     if(!m_parameters.normalTexture.empty())
-        m_normalTexture = Engine::assets().texture(m_parameters.normalTexture);
+        m_normalTexture = Engine::asset().texture(m_parameters.normalTexture);
     m_isBumpTexture = m_parameters.isBumpTexture;
 
     if(!m_parameters.specularTexture.empty())
-        m_specularTexture = Engine::assets().texture(m_parameters.specularTexture);
+        m_specularTexture = Engine::asset().texture(m_parameters.specularTexture);
     m_specularUniform = m_parameters.specularUniform;
 
     if(!m_parameters.shader.empty())
-        m_shader = Engine::assets().shader(m_parameters.shader);
+        m_shader = Engine::asset().shader(m_parameters.shader);
 
     try
     {
@@ -107,21 +107,21 @@ bool Material::onUnload() noexcept
             {
                 std::string diffuseTexName = m_diffuseTexture->getName();
                 m_diffuseTexture.reset();
-                Engine::assets().texture.unload(diffuseTexName);
+                Engine::asset().texture.unload(diffuseTexName);
             }
 
             if(m_normalTexture)
             {
                 std::string normalTexName = m_normalTexture->getName();
                 m_normalTexture.reset();
-                Engine::assets().texture.unload(normalTexName);
+                Engine::asset().texture.unload(normalTexName);
             }
 
             if(m_specularTexture)
             {
                 std::string specularTexName = m_specularTexture->getName();
                 m_specularTexture.reset();
-                Engine::assets().texture.unload(specularTexName);
+                Engine::asset().texture.unload(specularTexName);
             }
         }
 
@@ -131,7 +131,7 @@ bool Material::onUnload() noexcept
             {
                 std::string shaderName = m_shader->getName();
                 m_shader.reset();
-                Engine::assets().shader.unload(shaderName);
+                Engine::asset().shader.unload(shaderName);
             }
         }
 
@@ -147,7 +147,7 @@ bool Material::onUnload() noexcept
 }
 void Material::onError() noexcept
 {
-    Engine::logger().log(m_error, Logger::Warning);
+    Engine::logger().log(m_error, Severity::Warning);
 }
 
 void Material::update() noexcept
@@ -179,6 +179,6 @@ void Material::update() noexcept
     }
     catch(const RendererException& e)
     {
-        Engine::logger().log("Failed to update material '" + getName() + "'", Logger::Warning);
+        Engine::logger().log("Failed to update material '" + getName() + "'", Severity::Warning);
     }
 }

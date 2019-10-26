@@ -2,7 +2,7 @@
 
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
-#include <Core/World/Entity/Entity.hpp>
+#include <Core/Scene/Entity/Entity.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
 #include <Core/Renderer/Scene/RendererCamera.hpp>
 #include <Core/Renderer/GUI/RendererGUIViewport.hpp>
@@ -14,7 +14,7 @@ namespace ax
     struct AXION_CORE_API CameraComponent : public Component
     {
     public:
-        static const std::string name;
+        static const std::string type;
         
         CameraComponent(const Entity& entity);
         ~CameraComponent();

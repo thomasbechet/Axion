@@ -1,13 +1,13 @@
 #include <Core/Prefab/System/BasicSpectatorSystem.hpp>
 
-#include <Core/Input/Input.hpp>
+#include <Core/Input/InputModule.hpp>
 #include <Core/Math/Math.hpp>
-#include <Core/World/Component/ComponentIterator.hpp>
-#include <Core/Context/EngineContext.hpp>
+#include <Core/Scene/Component/ComponentIterator.hpp>
+#include <Core/Context/ContextModule.hpp>
 
 using namespace ax;
 
-const std::string BasicSpectatorSystem::name = "BasicSpectator";
+const std::string BasicSpectatorSystem::type = "BasicSpectator";
 
 void BasicSpectatorSystem::onInitialize()
 {

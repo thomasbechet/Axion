@@ -22,7 +22,7 @@
 	"entities":
 	[
 		{
-			"tag":"mon_entité",
+			"tag":"mon_entite",
 			"components":{
 				"Transform":{
 					"translation":[0, 1, 342],

@@ -2,7 +2,7 @@
 
 using namespace ax;
 
-const std::string BasicSpectatorComponent::name = "BasicSpectator";
+const std::string BasicSpectatorComponent::type = "BasicSpectator";
 
 BasicSpectatorComponent::BasicSpectatorComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>()),

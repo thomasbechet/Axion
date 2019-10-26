@@ -1,9 +1,9 @@
 #include <OpenGL/Renderer/Asset/RendererTextureGL.hpp>
-#include <OpenGL/Renderer/RendererGL.hpp>
+#include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 using namespace ax;
 
-RendererTextureHandle RendererGL::createTexture(Vector2u size, Texture::Format format, const Byte* data)
+RendererTextureHandle RendererModuleGL::createTexture(Vector2u size, Texture::Format format, const Byte* data)
 {
     Id id = m_content.textures.add(std::make_unique<RendererTextureGL>());
     RendererTextureGL* texture = m_content.textures.get(id).get();
@@ -36,7 +36,7 @@ RendererTextureHandle RendererGL::createTexture(Vector2u size, Texture::Format f
 
     return texture;
 }
-void RendererGL::destroyTexture(RendererTextureHandle& texturePointer)
+void RendererModuleGL::destroyTexture(RendererTextureHandle& texturePointer)
 {
     RendererTextureGL* texture = static_cast<RendererTextureGL*>(texturePointer);
     glDeleteTextures(1, &texture->id);

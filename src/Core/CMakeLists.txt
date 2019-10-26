@@ -12,6 +12,7 @@ INCLUDE_DIRECTORIES("../../extlibs/nlohmann/include/")
 
 #Using std=c++17
 SET(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #Export macro definition
 ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
@@ -19,7 +20,7 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
-    Asset/Assets.cpp
+    Asset/AssetModule.cpp
     Asset/AssetLoader.cpp
     Asset/Asset.cpp
     Asset/Asset/Material.cpp
@@ -28,8 +29,9 @@ ADD_LIBRARY(
     Asset/Asset/Package.cpp
     Asset/Asset/Shader.cpp
     Asset/Asset/Texture.cpp
+    Asset/Asset/Scene.cpp
     Asset/JsonAttributes.cpp
-    Context/EngineContext.cpp
+    Context/ContextModule.cpp
     Context/Engine.cpp
     Prefab/System/BasicWindowSystem.cpp
     Prefab/System/BasicSpectatorSystem.cpp
@@ -53,13 +55,12 @@ ADD_LIBRARY(
     Utility/ConfigParser.cpp
     Utility/LibraryLoader.cpp
     Utility/Path.cpp
-    GUI/GUI.cpp
-    Input/Input.cpp
+    Input/InputModule.cpp
     Input/Button.cpp
     Input/Axis.cpp
-    Window/Window.cpp
-    Logger/Logger.cpp
-    Logger/ConsoleLogger.cpp
+    Window/WindowModule.cpp
+    Logger/LoggerModule.cpp
+    Logger/ConsoleLoggerModule.cpp
     Math/Transform.cpp
     Math/Transform2D.cpp
     Math/Geometry/Shape.cpp
@@ -68,10 +69,13 @@ ADD_LIBRARY(
     Math/Geometry/IcoSphere.cpp
     Math/Geometry/Rectangle.cpp
     Math/Geometry/Quad.cpp
-    System/System.cpp
-    System/SystemManager.cpp
-    World/Entity/EntityManager.cpp
-    World/World.cpp
+    Scene/SceneModule.cpp
+    Scene/GameMode/GameModeManager.cpp
+    Scene/Entity/EntityManager.cpp
+    Scene/Entity/Entity.cpp
+    Scene/Component/ComponentManager.cpp
+    Scene/System/System.cpp
+    Scene/System/SystemManager.cpp
 )
 
 #Adding pthread dependency

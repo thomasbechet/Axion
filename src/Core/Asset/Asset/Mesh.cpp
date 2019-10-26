@@ -1,8 +1,8 @@
 #include <Core/Asset/Asset/Mesh.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Logger/Logger.hpp>
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Logger/LoggerModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
 using namespace ax;
@@ -110,5 +110,5 @@ bool Mesh::onUnload() noexcept
 }
 void Mesh::onError() noexcept
 {
-    Engine::logger().log(m_error, Logger::Warning);
+    Engine::logger().log(m_error, Severity::Warning);
 }

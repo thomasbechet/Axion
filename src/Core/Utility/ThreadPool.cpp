@@ -1,7 +1,7 @@
 #include <Core/Utility/ThreadPool.hpp>
 
 #include <iostream>
-#include <Core/Logger/Logger.hpp>
+#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Context/Engine.hpp>
 
 using namespace ax;
@@ -31,7 +31,7 @@ void ThreadPool::start(unsigned workerCount) noexcept
             m_threads.push_back(std::thread(&ThreadPool::worker_main, this));
         }
 
-        Engine::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads created", Logger::Info);
+        Engine::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads created", Severity::Info);
     }
 }
 void ThreadPool::stop() noexcept
@@ -50,7 +50,7 @@ void ThreadPool::stop() noexcept
             it->join();
         }
 
-        Engine::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads destroyed", Logger::Info);
+        Engine::logger().log("ThreadPool: " + std::to_string(m_thread_count) + " threads destroyed", Severity::Info);
     }
 }
 

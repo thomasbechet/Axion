@@ -1,12 +1,11 @@
 #include <Core/Asset/Asset/Shader.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Logger/Logger.hpp>
-#include <Core/Renderer/Renderer.hpp>
+#include <Core/Logger/LoggerModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
-
-#include <json/json.hpp>
+#include <Core/Utility/Json.hpp>
 
 #include <fstream>
 #include <streambuf>
@@ -38,7 +37,7 @@ RendererShaderHandle Shader::getHandle() const noexcept
 
 bool Shader::onLoad() noexcept
 {
-    std::string json;
+    Json json;
     if(!m_parameters.source.empty())
     {
         std::ifstream jsonFile(m_parameters.source.str());
@@ -47,34 +46,31 @@ bool Shader::onLoad() noexcept
             m_error = "Failed to json file '" + m_parameters.source.str() + "'";
             return false;
         }
-        json.assign(
-            (std::istreambuf_iterator<char>(jsonFile)),
-            (std::istreambuf_iterator<char>())
-        );
+        std::string str((std::istreambuf_iterator<char>(jsonFile)),
+                         std::istreambuf_iterator<char>());
+        json = Json::parse(str);
     }
     else
     {
         json = m_parameters.json;
     }
 
-    nlohmann::json j = nlohmann::json::parse(json);
-
-    auto jType = j.find(JsonAttributes::type);
-    if(jType != j.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::shaderType)
+    auto jType = json.find(JsonAttributes::type);
+    if(jType != json.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::shaderType)
     {
         m_error = "Loading shader without shader type attribute.";
         return false;
     }
 
-    auto jVertex = j.find(JsonAttributes::vertex);
-    if(jVertex == j.end() || !jVertex->is_string())
+    auto jVertex = json.find(JsonAttributes::vertex);
+    if(jVertex == json.end() || !jVertex->is_string())
     {
         m_error = "Shader doesn't contains vertex attribute.";
         return false;
     }
 
-    auto jFragment = j.find(JsonAttributes::fragment);
-    if(jFragment == j.end() || !jFragment->is_string())
+    auto jFragment = json.find(JsonAttributes::fragment);
+    if(jFragment == json.end() || !jFragment->is_string())
     {
         m_error = "Shader doesn't contains fragment attribute.";
         return false;
@@ -137,5 +133,5 @@ bool Shader::onUnload() noexcept
 }
 void Shader::onError() noexcept
 {
-    Engine::logger().log(m_error, Logger::Warning);
+    Engine::logger().log(m_error, Severity::Warning);
 }

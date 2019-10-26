@@ -1,11 +1,11 @@
 #include <Core/Prefab/Component/Shape/QuadComponent.hpp>
 
-#include <Core/Renderer/Renderer.hpp>
-#include <Core/Asset/Assets.hpp>
+#include <Core/Asset/AssetModule.hpp>
+#include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
 
-const std::string QuadComponent::name = "Quad";
+const std::string QuadComponent::type = "Quad";
 
 QuadComponent::QuadComponent(const Entity& entity, float x, float y, float factor) :
     Quad(x, y),
@@ -24,7 +24,7 @@ QuadComponent::QuadComponent(const Entity& entity, float x, float y, float facto
     m_staticmesh = Engine::renderer().createStaticmesh();
     m_staticmesh->setTransform(&transform);
     m_staticmesh->setMesh(m_mesh);
-    m_material = Engine::assets().material(Material::Default);
+    m_material = Engine::asset().material(Material::Default);
     m_staticmesh->setMaterial(m_material->getHandle());
 }
 QuadComponent::~QuadComponent()
@@ -40,7 +40,7 @@ void QuadComponent::setMaterial(std::nullptr_t ptr) noexcept
 }
 void QuadComponent::setMaterial(std::string name) noexcept
 {
-    setMaterial(Engine::assets().material(name));
+    setMaterial(Engine::asset().material(name));
 }
 void QuadComponent::setMaterial(AssetReference<Material> material) noexcept
 {
