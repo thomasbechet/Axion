@@ -6,6 +6,7 @@
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Types.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/Macro.hpp>
 #include <Core/Renderer/Asset/RendererTexture.hpp>
 
 namespace ax
@@ -29,9 +30,9 @@ namespace ax
         };
 
     public:
-        static const std::string type;
-
-        Texture(std::string name, const Parameters& parameters);
+        ASSET_IDENTIFIER("texture")
+        
+        Texture(const std::string& name, const Parameters& parameters);
 
         Vector2u getSize() const noexcept;
         Format getFormat() const noexcept;

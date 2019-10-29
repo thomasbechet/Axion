@@ -11,8 +11,10 @@ namespace ax
     struct AXION_CORE_API CustomShapeComponent : public Component
     {
     public:
-        static const std::string type;
+        COMPONENT_IDENTIFIER("custom_shape")
+        COMPONENT_REQUIREMENT(TransformComponent)
         
+        CustomShapeComponent(const Entity& entity, const Json& json);
         CustomShapeComponent(const Entity& entity);
         ~CustomShapeComponent();
 

@@ -26,9 +26,9 @@ namespace ax
         };
 
     public:
-        static const std::string type;
-
-        Model(std::string name, const Parameters& parameters);
+        ASSET_IDENTIFIER("model")
+        
+        Model(const std::string& name, const Parameters& parameters);
 
         const std::vector<AssetReference<Mesh>>& getMeshes() const noexcept;
         const std::vector<AssetReference<Material>>& getMaterials() const noexcept;

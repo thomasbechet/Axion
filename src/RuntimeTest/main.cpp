@@ -28,9 +28,9 @@
 #include <Core/Prefab/Component/ModelComponent.hpp>
 #include <Core/Prefab/Component/PointLightComponent.hpp>
 #include <Core/Prefab/Component/DirectionalLightComponent.hpp>
-#include <Core/Prefab/Component/Shape/UVSphereComponent.hpp>
-#include <Core/Prefab/Component/Shape/RectangleComponent.hpp>
-#include <Core/Prefab/Component/Shape/QuadComponent.hpp>
+#include <Core/Prefab/Component/Shape/UVSphereShapeComponent.hpp>
+#include <Core/Prefab/Component/Shape/RectangleShapeComponent.hpp>
+#include <Core/Prefab/Component/Shape/QuadShapeComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/AssetModule.hpp>
@@ -38,9 +38,16 @@
 #include <RuntimeTest/CustomSystem.hpp>
 #include <Core/Math/Transform2D.hpp>
 #include <Core/Utility/Macro.hpp>
+#include <Core/Builder/BuilderModule.hpp>
+#include <Core/Utility/ChunkContainer.ipp>
 
 struct Position : public ax::Component
 {
+    COMPONENT_IDENTIFIER("Position")
+    COMPONENT_REQUIREMENT(ax::TransformComponent, ax::ModelComponent)
+
+    Position(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+
     void load(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) noexcept
     {
         x = _x;
@@ -58,10 +65,10 @@ struct Position : public ax::Component
     float z;
 };
 
-const std::string Position::type = "Position";
-
 struct Staticsponza : public ax::Component
 {
+    COMPONENT_IDENTIFIER("StaticSponza")
+
     void load(const ax::Entity& e) noexcept
     {
         position = &e.getComponent<Position>();       
@@ -78,7 +85,7 @@ struct Staticsponza : public ax::Component
 class StaticsponzaSystem : public ax::System
 {
 public:
-    static const std::string type;
+    SYSTEM_IDENTIFIER("StaticSponza")
 
     void onInitialize() override
     {
@@ -109,14 +116,22 @@ public:
     ax::Timer m_timer;
 };
 
-const std::string StaticsponzaSystem::type = "Staticsponza";
-
 class MyGameMode : public ax::GameMode
 {
 public:
-
     void onStart() override
     {
+        ax::ChunkContainer<Position, 1000> chunks;
+        for(int i = 0; i < 1000000; i++) {
+            chunks.add(1 * i, 2, 3);
+        }
+        chunks.remove(55555);
+        std::cout << chunks.add(1, 2, 3) << std::endl;
+        chunks.remove(1000002);
+        std::cout << chunks.size() << std::endl;
+
+        std::cin.get();
+
         ax::Engine::scene().system.add<ax::BasicWindowSystem>();
         ax::Engine::scene().system.add<ax::RenderModeSystem>();
 
@@ -166,12 +181,12 @@ public:
         //#define USE_SNIPER
         #if defined USE_SNIPER
             ax::Entity& sniper = ax::Engine::scene().entities().create();
-            ax::TransformComponent& strans = sniper.addComponent<ax::TransformComponent>();
+            ax::TransformComponent& strans = sniper.add<ax::TransformComponent>();
             strans.rotate(ax::radians(-90.0f), ax::Vector3f(0.0f, 1.0f, 0.0f));
             strans.setScale(0.3f, 0.3f, 0.3f);
             strans.setTranslation(-0.3f, -0.2f, 0.2f);
             strans.attachTo(camera0);
-            sniper.addComponent<ax::ModelComponent>().setModel("model_sniper");
+            sniper.add<ax::ModelComponent>().setModel("model_sniper");
         #endif
         
 
@@ -204,7 +219,7 @@ public:
 
         ax::Entity& plane = ax::Engine::scene().entity.create();
         plane.addComponent<ax::TransformComponent>();
-        plane.addComponent<ax::QuadComponent>(500.0f, 500.0f, 100.0f).setMaterial("wall_material");
+        plane.addComponent<ax::QuadShapeComponent>(500.0f, 500.0f, 100.0f).setMaterial("wall_material");
 
         //Sponza
         ax::Entity& sponza = ax::Engine::scene().entity.create();

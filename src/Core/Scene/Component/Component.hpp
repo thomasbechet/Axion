@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/Export.hpp>
+#include <Core/Utility/Json.hpp>
 
 namespace ax
 {
@@ -13,6 +14,6 @@ namespace ax
     struct AXION_CORE_API Component
     {
     public:
-        
+        virtual Json json() const noexcept;
     };
 }

@@ -10,10 +10,8 @@
 
 using namespace ax;
 
-const std::string Model::type = "Model";
-
-Model::Model(std::string name, const Parameters& parameters) :
-    Asset(name, type),
+Model::Model(const std::string& name, const Parameters& parameters) :
+    Asset(name, identifier),
     m_parameters(parameters)
 {
 
@@ -44,17 +42,23 @@ bool Model::onLoad() noexcept
     }
     else if(!m_parameters.json.is_null())
     {
-        auto jType = m_parameters.json.find(JsonAttributes::type);
-        if(jType != m_parameters.json.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::modelType)
+        try
         {
-            m_error = "Loading model without model type attribute.";
+            if(m_parameters.json[JsonAttributes::type] != Model::identifier)
+            {
+                m_error = "Loading model without model type attribute.";
+                return false;
+            }
+        }
+        catch(const std::exception& e)
+        {
+            m_error = "Model doesn't have type attribute.";
             return false;
         }
 
-        auto jSource = m_parameters.json.find(JsonAttributes::source);
-        if(jSource != m_parameters.json.end() && jSource->is_string())
+        try
         {
-            Path source = jSource->get<std::string>();
+            Path source = m_parameters.json[JsonAttributes::source].get<std::string>();
             if(source.extension() == ".obj")
             {
                 return loadObjModel(source);
@@ -65,9 +69,9 @@ bool Model::onLoad() noexcept
                 return false;
             }
         }
-        else
+        catch(const std::exception& e)
         {
-            m_error = "Laading model without source attribute.";
+            m_error = "Model doesn't have source attribute.";
             return false;
         }
     }

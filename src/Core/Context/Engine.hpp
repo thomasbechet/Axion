@@ -9,7 +9,8 @@
 
 namespace ax
 {
-    class AssetModule; 
+    class AssetModule;
+    class BuilderModule;
     class ContextModule;
     class InputModule;
     class LoggerModule;
@@ -28,6 +29,7 @@ namespace ax
         static void interrupt(std::string message = "") noexcept;
         
         static AssetModule& asset() noexcept;
+        static BuilderModule& builder() noexcept;
         static ContextModule& context() noexcept;
         static InputModule& input() noexcept;
         static LoggerModule& logger() noexcept;
@@ -40,7 +42,8 @@ namespace ax
         static const std::string GameDirectory;   //   Game/
 
     private:       
-        static AssetModule* m_asset; 
+        static AssetModule* m_asset;
+        static BuilderModule* m_builder;
         static ContextModule* m_context;
         static InputModule* m_input;
         static LoggerModule* m_logger;

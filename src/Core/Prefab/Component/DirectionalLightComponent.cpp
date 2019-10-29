@@ -4,8 +4,11 @@
 
 using namespace ax;
 
-const std::string DirectionalLightComponent::type = "DirectionalLight";
+DirectionalLightComponent::DirectionalLightComponent(const Entity& entity, const Json& json) :
+    transform(entity.getComponent<TransformComponent>())
+{
 
+}
 DirectionalLightComponent::DirectionalLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {

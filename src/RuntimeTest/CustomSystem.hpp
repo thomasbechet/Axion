@@ -1,11 +1,12 @@
 #pragma once
 
 #include <Core/Scene/System/System.hpp>
+#include <Core/Utility/Macro.hpp>
 
 class CustomSystem : public ax::System
 {
 public:
-    static const std::string type;
+    SYSTEM_IDENTIFIER("Custom")
 
     void setSpawnTransform(ax::TransformComponent* transform)
     {
@@ -37,7 +38,7 @@ public:
                 int g = rand() % 256;
                 int b = rand() % 256;
                 pointLightComponent.setColor(ax::Color3(r, g, b));
-                pointLight.addComponent<ax::UVSphereComponent>(0.2f).setMaterial(m);
+                pointLight.addComponent<ax::UVSphereShapeComponent>(0.2f).setMaterial(m);
             }
         }
 
@@ -46,16 +47,16 @@ public:
         m_lightTransform = &light.addComponent<ax::TransformComponent>();
         ax::PointLightComponent& pointlight = light.addComponent<ax::PointLightComponent>();
         pointlight.setRadius(80.0f);
-        light.addComponent<ax::UVSphereComponent>(0.2f, 20, 20).setMaterial(m);
+        light.addComponent<ax::UVSphereShapeComponent>(0.2f, 20, 20).setMaterial(m);
 
         ax::Entity& cube = ax::Engine::scene().entity.create();
         m_cubeTransform = &cube.addComponent<ax::TransformComponent>();
         m_cubeTransform->setTranslation(ax::Vector3f(0.0f, 1.5f, 0.0f));
-        cube.addComponent<ax::UVSphereComponent>(1.0f, 100, 100, true, 8.0f);
+        cube.addComponent<ax::UVSphereShapeComponent>(1.0f, 100, 100, true, 8.0f);
 
         ax::Entity& directionalLight = ax::Engine::scene().entity.create();
         directionalLight.addComponent<ax::TransformComponent>().rotate(ax::radians(45.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
-        //directionalLight.addComponent<ax::DirectionalLightComponent>();
+        //directionalLight.add<ax::DirectionalLightComponent>();
 
         ax::Entity& monkey = ax::Engine::scene().entity.create();
         monkey.addComponent<ax::TransformComponent>().setTranslation(10.0f, 3.0f, 0.0f);
@@ -87,7 +88,7 @@ public:
             ax::Entity& light = ax::Engine::scene().entity.create();
             light.addComponent<ax::TransformComponent>().setTranslation(m_spawn->getTranslation() + m_spawn->getForwardVector());
             light.addComponent<ax::PointLightComponent>().setRadius(5);
-            light.addComponent<ax::UVSphereComponent>(0.2f, 20, 20).setMaterial("light_emission_material"); 
+            light.addComponent<ax::UVSphereShapeComponent>(0.2f, 20, 20).setMaterial("light_emission_material"); 
         }
 
         ax::Vector3f lightPos;
@@ -113,5 +114,3 @@ private:
     
     float m_time = 0.0f;
 };
-
-const std::string CustomSystem::type = "Custom";

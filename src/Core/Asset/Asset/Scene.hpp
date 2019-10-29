@@ -4,6 +4,7 @@
 #include <Core/Asset/Asset.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/Macro.hpp>
 
 #include <string>
 
@@ -18,10 +19,21 @@ namespace ax
             Json json;
         };
 
-    public:
-        static const std::string type;
+        enum InsertionMethod
+        {
+            Override,
+            Additive
+        };
 
-        Scene(std::string name, const Parameters& parameters);
+    public:
+        ASSET_IDENTIFIER("scene")
+        
+        Scene(const std::string& name, const Parameters& parameters);
+
+        InsertionMethod getInsertionMethod() const noexcept;
+        std::string getGameMode() const noexcept;
+        std::vector<std::string> getSystems() const noexcept;
+        const std::vector<const std::reference_wrapper<Json>&>& getEntities() const noexcept;
 
     private:
         bool onLoad() noexcept override;
@@ -31,6 +43,8 @@ namespace ax
 
     private:
         Parameters m_parameters;
+
+        InsertionMethod m_insertionMethod;
 
         std::string m_error;
     };

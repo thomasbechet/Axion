@@ -5,9 +5,14 @@
 namespace ax
 {
     template<typename C>
-    std::string ComponentList<C>::type() const noexcept
+    std::string ComponentList<C>::identifier() const noexcept
     {
-        return C::type;
+        return C::identifier;
+    }
+    template<typename C>
+    Component& ComponentList<C>::getComponent(unsigned offset) const noexcept
+    {
+        return static_cast<Component&>(get(offset));
     }
 
     template<typename C>
@@ -23,7 +28,7 @@ namespace ax
 
         //Release memory
         for(auto& it : m_chunks)
-            m_allocator.deallocate(it, 1); //Release memory
+            m_allocator.deallocate(it, 1);
     }
 
     template<typename C>
@@ -75,7 +80,7 @@ namespace ax
     C& ComponentList<C>::get(unsigned offset) const noexcept
     {
         if(offset >= m_length)
-            Engine::interrupt("Tried to access non valid component <" + C::type + "> from list with [id=" + std::to_string(offset) + "]");
+            Engine::interrupt("Tried to access non valid component <" + C::identifier + "> from list with [id=" + std::to_string(offset) + "]");
 
         return m_chunks.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first;
     }

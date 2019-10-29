@@ -3,6 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Scene/System/System.hpp>
 #include <Core/Input/Button.hpp>
+#include <Core/Utility/Macro.hpp>
 
 #include <string>
 
@@ -11,7 +12,7 @@ namespace ax
     class AXION_CORE_API RenderModeSystem : public System
     {
     public:
-        static const std::string type;
+        SYSTEM_IDENTIFIER("render_mode")
 
         void onInitialize() override;
         void onUpdate() override;

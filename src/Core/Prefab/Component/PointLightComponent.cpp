@@ -4,8 +4,11 @@
 
 using namespace ax;
 
-const std::string PointLightComponent::type = "PointLight";
+PointLightComponent::PointLightComponent(const Entity& entity, const Json& json) :
+    transform(entity.getComponent<TransformComponent>())
+{
 
+}
 PointLightComponent::PointLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {

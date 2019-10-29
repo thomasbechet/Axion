@@ -10,34 +10,36 @@
 
 using namespace ax;
 
-const std::string Package::type = "Package";
-
-Package::Package(std::string name, const Parameters& parameters) :
-    Asset(name, type),
+Package::Package(const std::string& name, const Parameters& parameters) :
+    Asset(name, identifier),
     m_parameters(parameters)
 {
 
 }
 
-const std::vector<AssetReference<Texture>>& Package::getTextures() const noexcept
+const std::vector<AssetReference<Material>>& Package::getMaterials() const noexcept
 {
-    return m_textures;
+    return m_materials;
 }
 const std::vector<AssetReference<Mesh>>& Package::getMeshes() const noexcept
 {
     return m_meshes;
 }
-const std::vector<AssetReference<Material>>& Package::getMaterials() const noexcept
-{
-    return m_materials;
-}
 const std::vector<AssetReference<Model>>& Package::getModels() const noexcept
 {
     return m_models;
 }
+const std::vector<AssetReference<Scene>>& Package::getScenes() const noexcept
+{
+    return m_scenes;
+}
 const std::vector<AssetReference<Shader>>& Package::getShaders() const noexcept
 {
     return m_shaders;
+}
+const std::vector<AssetReference<Texture>>& Package::getTextures() const noexcept
+{
+    return m_textures;
 }
 
 bool Package::onLoad() noexcept
@@ -64,7 +66,7 @@ bool Package::onLoad() noexcept
             Json json = Json::parse(jsonBuffer);
             return loadFromJson(json);
         }
-        catch(Json::parse_error& error)
+        catch(const Json::parse_error& error)
         {
             m_error = error.what();
             return false;
@@ -87,6 +89,8 @@ bool Package::onValidate() noexcept
     m_dummyMeshes.clear();
     for(auto& it : m_dummyModels) m_models.emplace_back(Engine::asset().model(it));
     m_dummyMaterials.clear();
+    for(auto& it : m_dummyScenes) m_scenes.emplace_back(Engine::asset().scene(it));
+    m_dummyScenes.clear();
     for(auto& it : m_dummyShaders) m_shaders.emplace_back(Engine::asset().shader(it));
     m_dummyShaders.clear();
     for(auto& it : m_dummyTextures) m_textures.emplace_back(Engine::asset().texture(it));
@@ -142,16 +146,21 @@ void Package::onError() noexcept
 bool Package::loadFromJson(Json& json) noexcept
 {
     //Test package type
-    auto jType = json.find(JsonAttributes::type);
-    if(jType != json.end() && jType->is_string())
+    try
     {
-        std::string type = jType->get<std::string>(); 
+        auto jType = json[JsonAttributes::type];
+        std::string type = jType.get<std::string>(); 
         json.erase(JsonAttributes::type);
-        if(type != JsonAttributes::packageType)
+        if(type != Package::identifier)
         {
             m_error = "Loading package without package type attribute.";
             return false;
         }
+    }
+    catch(const std::exception& e)
+    {
+        m_error = "Package doesn't have type attribute.";
+        return false;
     }
 
     //Load each items
@@ -159,6 +168,7 @@ bool Package::loadFromJson(Json& json) noexcept
     {
         Json item = it.value();
         std::string name = it.key();
+
         auto jItemType = item.find(JsonAttributes::type);  
         if(jItemType != item.end() && jItemType->is_string())
         {
@@ -169,7 +179,7 @@ bool Package::loadFromJson(Json& json) noexcept
             }
 
             std::string itemType = jItemType->get<std::string>();
-            if(itemType == JsonAttributes::materialType)
+            if(itemType == Material::identifier)
             {
                 Material::Parameters materialParameters;
                 materialParameters.json = item;
@@ -179,7 +189,7 @@ bool Package::loadFromJson(Json& json) noexcept
                     Engine::asset().material.load(name, materialParameters);
                 m_dummyMaterials.emplace_back(name);
             }
-            else if(itemType == JsonAttributes::meshType)
+            else if(itemType == Mesh::identifier)
             {
                 Mesh::Parameters meshParameters;
                 meshParameters.json = item;
@@ -189,7 +199,7 @@ bool Package::loadFromJson(Json& json) noexcept
                     Engine::asset().mesh.load(name, meshParameters);
                 m_dummyMeshes.emplace_back(name);
             }
-            else if(itemType == JsonAttributes::modelType)
+            else if(itemType == Model::identifier)
             {
                 Model::Parameters modelParameters;
                 modelParameters.json = item;
@@ -200,11 +210,21 @@ bool Package::loadFromJson(Json& json) noexcept
                     Engine::asset().model.load(name, modelParameters);
                 m_dummyModels.emplace_back(name);
             }
-            else if(itemType == JsonAttributes::packageType)
+            else if(itemType == Package::identifier)
             {
                 
             }
-            else if(itemType == JsonAttributes::shaderType)
+            else if(itemType == Scene::identifier)
+            {
+                Scene::Parameters sceneParameters;
+                sceneParameters.json = item;
+                if(m_parameters.asyncLoading)
+                    Engine::asset().scene.loadAsync(name, sceneParameters);
+                else
+                    Engine::asset().scene.load(name, sceneParameters);
+                m_dummyScenes.emplace_back(name);
+            }
+            else if(itemType == Shader::identifier)
             {
                 Shader::Parameters shaderParameters;
                 shaderParameters.json = item;
@@ -214,7 +234,7 @@ bool Package::loadFromJson(Json& json) noexcept
                     Engine::asset().shader.load(name, shaderParameters);
                 m_dummyShaders.emplace_back(name);
             }
-            else if(itemType == JsonAttributes::textureType)
+            else if(itemType == Texture::identifier)
             {
                 Texture::Parameters textureParameters;
                 textureParameters.json = item;

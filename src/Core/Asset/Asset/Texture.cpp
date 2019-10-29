@@ -12,10 +12,8 @@
 
 using namespace ax;
 
-const std::string Texture::type = "Texture";
-
-Texture::Texture(std::string name, const Parameters& parameters) : 
-    Asset(name, type),
+Texture::Texture(const std::string& name, const Parameters& parameters) : 
+    Asset(name, identifier),
     m_parameters(parameters)
 {
     
@@ -68,7 +66,7 @@ bool Texture::onValidate() noexcept
             m_data
         );
     }
-    catch(RendererException exception)
+    catch(const RendererException& exception)
     {
         m_error = exception.what();
         stbi_image_free(m_data);
@@ -84,7 +82,7 @@ bool Texture::onUnload() noexcept
     {
         Engine::renderer().destroyTexture(m_handle);
     }
-    catch(RendererException e)
+    catch(const RendererException& e)
     {
         m_error = e.what();
 
@@ -102,18 +100,29 @@ void Texture::onError() noexcept
 
 bool Texture::extractSourceFromJson() noexcept
 {
-    auto jType = m_parameters.json.find(JsonAttributes::type);
-    if(jType != m_parameters.json.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::textureType)
+    try
     {
-        m_error = "Loading texture without texture type attribute.";
+        if(m_parameters.json[JsonAttributes::type] != Texture::identifier)
+        {
+            m_error = "Loading texture without texture type attribute.";
+            return false;
+        }
+    }
+    catch(const std::exception& e)
+    {
+        m_error = "Texture doesn't have type attribute.";
         return false;
     }
 
-    auto jSource = m_parameters.json.find(JsonAttributes::source);
-    if(jSource != m_parameters.json.end() && jSource->is_string())
+    try
     {
-        m_parameters.source = jSource->get<std::string>();
+        m_parameters.source = m_parameters.json[JsonAttributes::source].get<std::string>();
         return true;
+    }
+    catch(const std::exception& e)
+    {
+        m_error = "Texture doesn't have source attribute.";
+        return false;
     }
 
     return false;

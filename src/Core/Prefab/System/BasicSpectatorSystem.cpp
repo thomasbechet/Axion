@@ -7,8 +7,6 @@
 
 using namespace ax;
 
-const std::string BasicSpectatorSystem::type = "BasicSpectator";
-
 void BasicSpectatorSystem::onInitialize()
 {
     m_forward = &Engine::input().addButton("basicspectator_forward");

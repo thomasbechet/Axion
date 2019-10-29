@@ -27,5 +27,8 @@ namespace ax
         bool m_running = false;
         Timer m_timer;
         Time m_deltaTime;
+
+    private:
+        void preRun() noexcept;
     };
 }

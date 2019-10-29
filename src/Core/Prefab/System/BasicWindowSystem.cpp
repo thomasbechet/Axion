@@ -7,8 +7,6 @@
 
 using namespace ax;
 
-const std::string BasicWindowSystem::type = "BasicWindow";
-
 void BasicWindowSystem::onInitialize()
 {
     m_fullscreenButton = &Engine::input().addButton("basicwindow_fullscreen");

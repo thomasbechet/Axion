@@ -41,7 +41,7 @@ Entity& EntityManager::create(const std::string& name) noexcept
 void EntityManager::destroy(Entity& entity) noexcept
 {
     unsigned id = entity.m_id;
-    m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.removeAll();
+    m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).first.removeAllComponents();
     m_chunks.at(id / ENTITY_CHUNK_SIZE)->at(id % ENTITY_CHUNK_SIZE).second = false;
     m_free.emplace_back(id);
 }

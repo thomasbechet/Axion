@@ -4,8 +4,11 @@
 
 using namespace ax;
 
-const std::string CameraComponent::type = "Camera";
+CameraComponent::CameraComponent(const Entity& entity, const Json& json) :
+    transform(entity.getComponent<TransformComponent>())
+{
 
+}
 CameraComponent::CameraComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {

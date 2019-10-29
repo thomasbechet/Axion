@@ -10,16 +10,15 @@ namespace ax
     {
     public:
         virtual ~IComponentFactory() = default;
-        virtual void create(Entity& entity, const Json& json) noexcept = 0; 
+        virtual void add(Entity& entity, const Json& json) noexcept = 0;
+        virtual void remove(Entity& entity) noexcept = 0;
     };
 
     template<typename C>
     class AXION_CORE_API ComponentFactory : public IComponentFactory
     {
     public:
-        void create(const Entity& entity, const Json& json) noexcept override
-        {
-            entity.addComponent<C>(json);
-        }
+        void add(Entity& entity, const Json& json) noexcept override;
+        void remove(Entity& entity) noexcept override;
     };
 }

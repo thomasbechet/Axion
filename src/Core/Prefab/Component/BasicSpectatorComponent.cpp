@@ -2,8 +2,12 @@
 
 using namespace ax;
 
-const std::string BasicSpectatorComponent::type = "BasicSpectator";
+BasicSpectatorComponent::BasicSpectatorComponent(const Entity& entity, const Json& json) :
+    transform(entity.getComponent<TransformComponent>()),
+    camera(entity.getComponent<CameraComponent>())
+{
 
+}
 BasicSpectatorComponent::BasicSpectatorComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>()),
     camera(entity.getComponent<CameraComponent>())

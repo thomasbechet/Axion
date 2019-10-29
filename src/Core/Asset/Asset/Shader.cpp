@@ -12,10 +12,8 @@
 
 using namespace ax;
 
-const std::string Shader::type = "Shader";
-
-Shader::Shader(std::string name, const Parameters& parameters) :
-    Asset(name, type),
+Shader::Shader(const std::string& name, const Parameters& parameters) :
+    Asset(name, identifier),
     m_parameters(parameters)
 {
 
@@ -55,51 +53,63 @@ bool Shader::onLoad() noexcept
         json = m_parameters.json;
     }
 
-    auto jType = json.find(JsonAttributes::type);
-    if(jType != json.end() && jType->is_string() && jType->get<std::string>() != JsonAttributes::shaderType)
+    try
     {
-        m_error = "Loading shader without shader type attribute.";
+        if(json[JsonAttributes::type] != Shader::identifier)
+        {
+            m_error = "Loading shader without shader type attribute.";
+            return false;
+        }
+    }
+    catch(const Json::parse_error& e)
+    {
+        m_error = e.what();
         return false;
     }
 
-    auto jVertex = json.find(JsonAttributes::vertex);
-    if(jVertex == json.end() || !jVertex->is_string())
+    try
+    {
+        auto jVertex = json[JsonAttributes::vertex];
+        try
+        {
+            auto jFragment = json[JsonAttributes::fragment];
+
+            Path vertex = jVertex.get<std::string>();
+            Path fragment = jFragment.get<std::string>();
+
+            std::ifstream vertexFile(vertex.str());
+            if(!vertexFile.is_open())
+            {
+                m_error = "Failed to open vertex file '" + vertex.str() + "'";
+                return false;
+            }
+            m_vertex.assign(
+                (std::istreambuf_iterator<char>(vertexFile)),
+                (std::istreambuf_iterator<char>())
+            );
+
+            std::ifstream fragmentFile(fragment.str());
+            if(!fragmentFile.is_open())
+            {
+                m_error = "Failed to open fragment file '" + fragment.str() + "'";
+                return false;
+            }
+            m_fragment.assign(
+                (std::istreambuf_iterator<char>(fragmentFile)),
+                (std::istreambuf_iterator<char>())
+            );
+        }
+        catch(const std::exception& e)
+        {
+            m_error = "Shader doesn't contains fragment attribute.";
+            return false;
+        }
+    }
+    catch(const std::exception& e)
     {
         m_error = "Shader doesn't contains vertex attribute.";
         return false;
     }
-
-    auto jFragment = json.find(JsonAttributes::fragment);
-    if(jFragment == json.end() || !jFragment->is_string())
-    {
-        m_error = "Shader doesn't contains fragment attribute.";
-        return false;
-    }
-
-    Path vertex = jVertex->get<std::string>();
-    Path fragment = jFragment->get<std::string>();
-
-    std::ifstream vertexFile(vertex.str());
-    if(!vertexFile.is_open())
-    {
-        m_error = "Failed to open vertex file '" + vertex.str() + "'";
-        return false;
-    }
-    m_vertex.assign(
-        (std::istreambuf_iterator<char>(vertexFile)),
-        (std::istreambuf_iterator<char>())
-    );
-
-    std::ifstream fragmentFile(fragment.str());
-    if(!fragmentFile.is_open())
-    {
-        m_error = "Failed to open fragment file '" + fragment.str() + "'";
-        return false;
-    }
-    m_fragment.assign(
-        (std::istreambuf_iterator<char>(fragmentFile)),
-        (std::istreambuf_iterator<char>())
-    );
 
     return true;
 }

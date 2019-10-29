@@ -4,6 +4,7 @@
 #include <Core/Math/Vector.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/Macro.hpp>
 #include <Core/Math/Geometry/Vertex.hpp>
 #include <Core/Asset/Asset.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>
@@ -26,9 +27,9 @@ namespace ax
         };
 
     public:
-        static const std::string type;
-
-        Mesh(std::string name, const Parameters& parameters);
+        ASSET_IDENTIFIER("mesh")
+        
+        Mesh(const std::string& name, const Parameters& parameters);
 
         const std::vector<Vertex>& getVertices() const noexcept;
         RendererMeshHandle getHandle() const noexcept;

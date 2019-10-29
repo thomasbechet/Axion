@@ -14,45 +14,43 @@ namespace ax
     C& Entity::addComponent(Args&&... args) noexcept
     {
         if(hasComponent<C>())
-            Engine::interrupt("Entity [id " + std::to_string(m_id) + "] already owns component <" + C::type + ">");
+            Engine::interrupt("Entity [id " + std::to_string(m_id) + "] already owns component <" + C::identifier + ">");
 
         ComponentHandle handle = Engine::scene().component.create<C>(const_cast<const Entity&>(*this), args...);
-        m_handles.emplace_back(handle);
+        m_handles.emplace(C::identifier, handle);
 
         return Engine::scene().component.get<C>(handle);
     }
     template<typename C>
     void Entity::removeComponent() noexcept
     {
-        unsigned section = Engine::scene().component.componentSection<C>();
-        for(auto it = m_handles.begin(); it != m_handles.end(); it++)
+        try
         {
-            if(it->section == section)
-            {
-                Engine::scene().component.destroy(*it);
-                m_handles.erase(it);
-                return;
-            }
+            Engine::scene().component.destroy(m_handles.at(C::identifier));
+            m_handles.erase(C::identifier);
         }
-
-        Engine::logger().log("Try to remove nonexistent component <" + C::type + "> from Entity [id=" + std::to_string(m_id) + "]", Severity::Warning);
+        catch(const std::out_of_range& e)
+        {
+            Engine::logger().log("Try to remove nonexistent component <" + C::identifier + "> from Entity [id=" + std::to_string(m_id) + "]", Severity::Warning);
+        }        
     }
     template<typename C>
     C& Entity::getComponent() const noexcept
     {
-        unsigned section = Engine::scene().component.componentSection<C>();
-        for(auto& it : m_handles)
-            if(it.section == section) return Engine::scene().component.get<C>(it);
-
-        Engine::interrupt("Component <" + C::type + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");
+        std::optional<std::reference_wrapper<C>> component;
+        try
+        {
+            component = Engine::scene().component.get<C>(m_handles.at(C::identifier));
+        }
+        catch(const std::out_of_range& e)
+        {
+            Engine::interrupt("Component <" + C::identifier + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");
+        }
+        return component.value();
     }
     template<typename C>
     bool Entity::hasComponent() const noexcept
     {
-        unsigned section = Engine::scene().component.componentSection<C>();
-        for(auto& it : m_handles)
-            if(it.section == section) return true;
-            
-        return false;
+        return (m_handles.find(C::identifier) != m_handles.end());
     }
 }

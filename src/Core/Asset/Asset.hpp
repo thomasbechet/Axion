@@ -28,15 +28,15 @@ namespace ax
         struct Information
         {
             std::string name;
-            std::string type;
+            std::string identifier;
         };
 
     public:
-        Asset(const std::string& name, const std::string& type);
+        Asset(const std::string& name, const std::string& identifier);
         virtual ~Asset() = default;
 
         std::string getName() const noexcept;
-        std::string getType() const noexcept;
+        std::string getIdentifier() const noexcept;
         State getState() const noexcept;
         bool isValidated() const noexcept;
 
@@ -56,7 +56,7 @@ namespace ax
 
     private:
         const std::string m_name;
-        const std::string m_type;
+        const std::string m_identifier;
         std::atomic<State> m_state {State::Pending};
     };  
 }

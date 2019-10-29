@@ -6,13 +6,14 @@
 #include <Core/Prefab/Component/BasicSpectatorComponent.hpp>
 #include <Core/Input/Button.hpp>
 #include <Core/Input/Axis.hpp>
+#include <Core/Utility/Macro.hpp>
 
 namespace ax
 {
     class AXION_CORE_API BasicSpectatorSystem : public System
     {
     public:
-        static const std::string type;
+        SYSTEM_IDENTIFIER("basic_spectator")
 
         void onInitialize() override;
         void onUpdate() override;

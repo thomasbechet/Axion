@@ -26,7 +26,7 @@ namespace ax
                 ss << std::left << ("[P:" + std::to_string(totalPending) + " L:" + std::to_string(totalLoaded) + " F:" 
                     + std::to_string(totalFailed) + "]");
                 if(isLoading)
-                    ss << " <" << lastAsset.type << "> '" << lastAsset.name << "'";
+                    ss << " <" << lastAsset.identifier << "> '" << lastAsset.name << "'";
                 else
                     ss << " <NOT LOADING>";
                 

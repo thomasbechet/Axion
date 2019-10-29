@@ -7,10 +7,8 @@
 
 using namespace ax;
 
-const std::string Mesh::type = "Mesh";
-
-Mesh::Mesh(std::string name, const Parameters& parameters) :
-    Asset(name, type),
+Mesh::Mesh(const std::string& name, const Parameters& parameters) :
+    Asset(name, identifier),
     m_parameters(parameters)
 {
 

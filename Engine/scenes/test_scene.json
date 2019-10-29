@@ -3,8 +3,7 @@
 	
 	"insertion":"override",
 	"gamemode":"mygamemode",
-	"packages":
-	[
+	"packages":[
 		{
 			"name":"mypackage", 
 			"source":"$ENGINE_DIR/packages/package_test.json"
@@ -14,33 +13,27 @@
 			"source":"$ENGINE_DIR/packages/glsl_package.json"
 		}
 	],
-	"systems":
-	[
-		"monsystem0",
-		"monsystem2"
-	],
-	"entities":
-	[
+	"systems":["monsystem0", "monsystem2"],
+	"entities":[
 		{
 			"tag":"mon_entite",
 			"components":{
-				"Transform":{
+				"transform":{
 					"translation":[0, 1, 342],
 					"rotation":[0, 4, 2]
 				},
-				"Model":{
+				"model":{
 					"model":"mon_model"
 				}
-			},
-			"childs":
-			[
-				{
-					
-				},
-				{
-				
+			}
+		},
+		{
+			"tag":"child_entite",
+			"components":{
+				"transform":{
+					"attachTo":"mon_entite"
 				}
-			]
+			}
 		}
 	]
 }

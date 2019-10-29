@@ -3,6 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/Macro.hpp>
 #include <Core/Renderer/Asset/RendererShader.hpp>
 #include <Core/Asset/Asset.hpp>
 
@@ -20,9 +21,9 @@ namespace ax
         };
 
     public:
-        static const std::string type;
-
-        Shader(std::string name, const Parameters& parameters);
+        ASSET_IDENTIFIER("shader")
+        
+        Shader(const std::string& name, const Parameters& parameters);
 
         std::string getVertexCode() const noexcept;
         std::string getFragmentCode() const noexcept;

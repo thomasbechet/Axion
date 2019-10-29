@@ -35,10 +35,11 @@ namespace ax
         };
 
     public:
-        static const std::string Default;
-        static const std::string type;
+        static inline const std::string Default = "default_material";
 
-        Material(std::string name, const Parameters& parameters);
+        ASSET_IDENTIFIER("material")
+
+        Material(const std::string& name, const Parameters& parameters);
 
         AssetReference<Texture> getDiffuseTexture() const noexcept;
         Color3 getDiffuseColor() const noexcept;

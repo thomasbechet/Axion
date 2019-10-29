@@ -12,8 +12,10 @@ namespace ax
     struct AXION_CORE_API PointLightComponent : public Component
     {
     public:
-        static const std::string type;
-
+        COMPONENT_IDENTIFIER("point_light")
+        COMPONENT_REQUIREMENT(TransformComponent)
+        
+        PointLightComponent(const Entity& entity, const Json& json);
         PointLightComponent(const Entity& entity);
         ~PointLightComponent();
 

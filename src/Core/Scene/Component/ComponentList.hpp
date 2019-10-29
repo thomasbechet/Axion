@@ -4,6 +4,7 @@
 #include <Core/Context/Engine.hpp>
 #include <Core/Utility/NonCopyable.hpp>
 #include <Core/Utility/Memory.hpp>
+#include <Core/Scene/Component/Component.hpp>
 
 #include <string>
 #include <memory>
@@ -22,7 +23,8 @@ namespace ax
     public:
         virtual ~IComponentList() = default; //Make sure the component list will be released
         virtual void destroy(unsigned offset) noexcept = 0;
-        virtual std::string type() const noexcept = 0;
+        virtual std::string identifier() const noexcept = 0;
+        virtual Component& getComponent(unsigned offset) const noexcept = 0;
     };
 
     constexpr unsigned COMPONENT_CHUNK_SIZE = 128;
@@ -35,7 +37,8 @@ namespace ax
         using Chunk = std::array<std::pair<C, bool>, COMPONENT_CHUNK_SIZE>;
 
     public:
-        std::string type() const noexcept;
+        std::string identifier() const noexcept;
+        Component& getComponent(unsigned offset) const noexcept;
 
     public:
         ~ComponentList();

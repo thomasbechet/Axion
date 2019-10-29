@@ -5,8 +5,11 @@
 
 using namespace ax;
 
-const std::string ModelComponent::type = "Model";
+ModelComponent::ModelComponent(const Entity& entity, const Json& json) :
+    transform(entity.getComponent<TransformComponent>())
+{
 
+}
 ModelComponent::ModelComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
@@ -28,7 +31,7 @@ void ModelComponent::setModel(std::nullptr_t) noexcept
 
     m_elements.clear();
 }
-void ModelComponent::setModel(std::string name) noexcept
+void ModelComponent::setModel(const std::string& name) noexcept
 {
     setModel(Engine::asset().model(name));
 }
@@ -77,7 +80,7 @@ void ModelComponent::setMaterial(std::nullptr_t ptr, Id component) noexcept
 
     std::get<RendererStaticmeshHandle>(reference)->setMaterial(nullptr);
 }
-void ModelComponent::setMaterial(std::string name, Id component) noexcept
+void ModelComponent::setMaterial(const std::string& name, Id component) noexcept
 {
     setMaterial(Engine::asset().material(name), component);
 }

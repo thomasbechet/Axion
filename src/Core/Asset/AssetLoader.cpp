@@ -81,9 +81,6 @@ void AssetLoader::routine() noexcept
         else 
             m_loadState.totalFailed++;
 
-        //if(m_loadState.totalPending == 0)
-        //    m_loadState.lastAsset = Asset::Information();
-
         lock.unlock();
 
         m_loadedCV.notify_all();

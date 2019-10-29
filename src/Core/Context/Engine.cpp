@@ -12,6 +12,7 @@
 #include <Core/Input/NullInputModule.hpp>
 #include <Core/Asset/AssetModule.hpp>
 #include <Core/Scene/UI/UIManager.hpp>
+#include <Core/Builder/BuilderModule.hpp>
 
 using namespace ax;
 
@@ -20,6 +21,7 @@ const std::string Engine::GameDataDirectory = "../../GameData";
 const std::string Engine::GameDirectory = "../..";
 
 AssetModule* Engine::m_asset = nullptr;
+BuilderModule* Engine::m_builder = nullptr;
 ContextModule* Engine::m_context = nullptr;
 InputModule* Engine::m_input = nullptr;
 LoggerModule* Engine::m_logger = nullptr;
@@ -31,6 +33,9 @@ std::map<std::string, LibraryLoader> Engine::m_libraryHolder;
 
 void Engine::initialize() noexcept
 {
+    //Builder
+    m_builder = new BuilderModule();
+
     //Context
     m_context = new ContextModule();
     m_context->config.parse("../Engine.ini");
@@ -144,6 +149,7 @@ void Engine::terminate() noexcept
     delete m_input;
     delete m_window;
     delete m_logger;
+    delete m_builder;
     delete m_context;
 }
 void Engine::interrupt(std::string message) noexcept
@@ -155,6 +161,10 @@ void Engine::interrupt(std::string message) noexcept
 AssetModule& Engine::asset() noexcept
 {
     return *m_asset;
+}
+BuilderModule& Engine::builder() noexcept
+{
+    return *m_builder;
 }
 ContextModule& Engine::context() noexcept
 {

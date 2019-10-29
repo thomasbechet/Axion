@@ -23,45 +23,46 @@ namespace ax
         {
             std::unique_lock<std::mutex> lock(m_mutex);
 
-            if(existsNotSafe(name))
+            if(!existsNotSafe(name))
             {
-                Asset& asset = *m_assets.at(name)->get();
-                Asset::State state = asset.getState();
+                Engine::interrupt("Failed to access <" + T::identifier + "> '" + name + "' because it doesn't exists");
+            }
 
-                while(state == Asset::State::Pending)
-                {
-                    m_loader.wait(lock);
-                    state = asset.getState();
-                }
+            Asset& asset = *m_assets.at(name)->get();
+            Asset::State state = asset.getState();
 
-                lock.unlock();
+            while(state == Asset::State::Pending)
+            {
+                m_loader.wait(lock);
+                state = asset.getState();
+            }
 
-                if(state == Asset::State::Loaded)
-                {
-                    if(asset.validate())
-                    {
-                        return m_assets.at(name)->reference();
-                    }
-                    else
-                    {
-                        Engine::logger().log("Failed to validate <" + T::type + "> '" + name + "'", Severity::Warning);
-                        asset.error();
-                    }
-                }
-                else if(state == Asset::State::Validated)
+            lock.unlock();
+
+            if(state == Asset::State::Failed)
+            {
+                Engine::logger().log("Failed to load <" + T::identifier + "> '" + name + "'", Severity::Warning);
+                asset.error();
+                Engine::interrupt("Failed to access <" + T::identifier + "> '" + name + "'");
+            }
+            else if(state == Asset::State::Unloaded)
+            {
+                Engine::interrupt("Failed to access <" + T::identifier + "> '" + name + "' because it is unloaded");
+            }
+            else if(state == Asset::State::Loaded)
+            {
+                if(asset.validate())
                 {
                     return m_assets.at(name)->reference();
                 }
-                else if(state == Asset::State::Failed)
+                else
                 {
-                    Engine::logger().log("Failed to load <" + T::type + "> '" + name + "'", Severity::Warning);
+                    Engine::logger().log("Failed to validate <" + T::identifier + "> '" + name + "'", Severity::Warning);
                     asset.error();
                 }
-
-                Engine::interrupt("Failed to access <" + T::type + "> '" + name + "'");
             }
-            
-            Engine::interrupt("Failed to access <" + T::type + "> '" + name + "' because it doesn't exists");
+
+            return m_assets.at(name)->reference(); 
         }
         //ANY THREAD (validate = ONLY MAIN THREAD)
         bool load(std::string name, const typename T::Parameters& parameters, bool validate = false) noexcept
@@ -176,7 +177,7 @@ namespace ax
                 return false;
             }
             
-            Engine::logger().log("Failed to unload <" + T::type + "> '" + name + "' because it doesn't exists.", Severity::Warning);
+            Engine::logger().log("Failed to unload <" + T::identifier + "> '" + name + "' because it doesn't exists.", Severity::Warning);
             return false;
         }
 
@@ -202,7 +203,7 @@ namespace ax
             const int length = 50;
 
             std::stringstream ssTitle;
-            std::string str = " " + T::type + " ";
+            std::string str = " " + T::identifier + " ";
 
             int len = str.length();
             if(len % 2 == 0) str += " ";

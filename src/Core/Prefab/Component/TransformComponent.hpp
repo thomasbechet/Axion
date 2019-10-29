@@ -5,6 +5,7 @@
 #include <Core/Scene/Component/Component.hpp>
 #include <Core/Math/Transform.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/Macro.hpp>
 
 #include <string>
 
@@ -12,9 +13,9 @@ namespace ax
 {
     struct AXION_CORE_API TransformComponent : public Component, public Transform
     {
-        static const std::string type;
-        //static inline const std::string type = "Transform";
-
+        COMPONENT_IDENTIFIER("transform")
+        COMPONENT_REQUIREMENT()
+        
         TransformComponent(const Entity& entity, const Json& json);
         TransformComponent(
             const Entity& entity,

@@ -1,14 +1,29 @@
 #include <Core/Context/ContextModule.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Scene/System/SystemManager.hpp>
 #include <Core/Logger/LoggerModule.hpp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Utility/ThreadPool.hpp>
 #include <Core/Utility/TimeRecorder.hpp>
 #include <Core/Scene/SceneModule.hpp>
+#include <Core/Scene/System/SystemManager.hpp>
 #include <Core/Window/WindowModule.hpp>
 #include <Core/Input/InputModule.hpp>
+#include <Core/Builder/BuilderModule.hpp>
+
+#include <Core/Prefab/Component/Shape/QuadShapeComponent.hpp>
+#include <Core/Prefab/Component/Shape/RectangleShapeComponent.hpp>
+#include <Core/Prefab/Component/Shape/UVSphereShapeComponent.hpp>
+#include <Core/Prefab/Component/BasicSpectatorComponent.hpp>
+#include <Core/Prefab/Component/CameraComponent.hpp>
+#include <Core/Prefab/Component/CustomShapeComponent.hpp>
+#include <Core/Prefab/Component/DirectionalLightComponent.hpp>
+#include <Core/Prefab/Component/ModelComponent.hpp>
+#include <Core/Prefab/Component/PointLightComponent.hpp>
+#include <Core/Prefab/Component/TransformComponent.hpp>
+#include <Core/Prefab/System/BasicSpectatorSystem.hpp>
+#include <Core/Prefab/System/BasicWindowSystem.hpp>
+#include <Core/Prefab/System/RenderModeSystem.hpp>
 
 using namespace ax;
 
@@ -16,9 +31,30 @@ bool ContextModule::isRunning() const noexcept
 {
     return m_running;
 }
+void ContextModule::preRun() noexcept
+{
+    //Record components
+    Engine::builder().component.record<QuadShapeComponent>();
+    Engine::builder().component.record<RectangleShapeComponent>();
+    Engine::builder().component.record<UVSphereShapeComponent>();
+    Engine::builder().component.record<BasicSpectatorComponent>();
+    Engine::builder().component.record<CameraComponent>();
+    Engine::builder().component.record<CustomShapeComponent>();
+    Engine::builder().component.record<DirectionalLightComponent>();
+    Engine::builder().component.record<ModelComponent>();
+    Engine::builder().component.record<PointLightComponent>();
+    Engine::builder().component.record<TransformComponent>();
+
+    //Record systems
+    Engine::builder().system.record<BasicSpectatorSystem>();
+    Engine::builder().system.record<BasicWindowSystem>();
+    Engine::builder().system.record<RenderModeSystem>();
+}
 void ContextModule::run() noexcept
 {
     if(isRunning()) return;
+
+    preRun();
 
     m_running = true;
 
@@ -96,7 +132,6 @@ void ContextModule::run() noexcept
             m_deltaTime = delta;
             //------> FRAME SYSTEMS UPDATE
             Engine::scene().system.update();
-            
             
             const double alpha = accumulator.asSeconds() / FIXED_TIMESTEP.asSeconds();
 

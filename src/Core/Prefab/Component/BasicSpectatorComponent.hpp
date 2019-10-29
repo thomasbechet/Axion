@@ -11,8 +11,10 @@ namespace ax
     struct AXION_CORE_API BasicSpectatorComponent : public Component
     {
     public:
-        static const std::string type;
-
+        COMPONENT_IDENTIFIER("basic_spectator")
+        COMPONENT_REQUIREMENT(TransformComponent, CameraComponent)
+        
+        BasicSpectatorComponent(const Entity& entity, const Json& json);
         BasicSpectatorComponent(const Entity& entity);
 
         TransformComponent& transform;

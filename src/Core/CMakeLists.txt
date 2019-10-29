@@ -30,7 +30,7 @@ ADD_LIBRARY(
     Asset/Asset/Shader.cpp
     Asset/Asset/Texture.cpp
     Asset/Asset/Scene.cpp
-    Asset/JsonAttributes.cpp
+    Builder/ComponentFactories.cpp
     Context/ContextModule.cpp
     Context/Engine.cpp
     Prefab/System/BasicWindowSystem.cpp
@@ -43,9 +43,9 @@ ADD_LIBRARY(
     Prefab/Component/PointLightComponent.cpp
     Prefab/Component/DirectionalLightComponent.cpp
     Prefab/Component/CustomShapeComponent.cpp
-    Prefab/Component/Shape/UVSphereComponent.cpp
-    Prefab/Component/Shape/RectangleComponent.cpp
-    Prefab/Component/Shape/QuadComponent.cpp
+    Prefab/Component/Shape/UVSphereShapeComponent.cpp
+    Prefab/Component/Shape/RectangleShapeComponent.cpp
+    Prefab/Component/Shape/QuadShapeComponent.cpp
     Renderer/Renderer.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
@@ -58,7 +58,6 @@ ADD_LIBRARY(
     Input/InputModule.cpp
     Input/Button.cpp
     Input/Axis.cpp
-    Window/WindowModule.cpp
     Logger/LoggerModule.cpp
     Logger/ConsoleLoggerModule.cpp
     Math/Transform.cpp
@@ -73,6 +72,7 @@ ADD_LIBRARY(
     Scene/GameMode/GameModeManager.cpp
     Scene/Entity/EntityManager.cpp
     Scene/Entity/Entity.cpp
+    Scene/Component/Component.cpp
     Scene/Component/ComponentManager.cpp
     Scene/System/System.cpp
     Scene/System/SystemManager.cpp

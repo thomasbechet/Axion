@@ -32,6 +32,8 @@ namespace ax
         template<typename C>
         C& get(ComponentHandle handle) noexcept;
 
+        Component& get(ComponentHandle handle) noexcept;
+
         template<typename C>
         ComponentList<C>& getList() noexcept;
 
