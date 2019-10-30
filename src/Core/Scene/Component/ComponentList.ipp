@@ -2,6 +2,8 @@
 
 #include <Core/Scene/Component/ComponentList.hpp>
 
+#include <optional>
+
 namespace ax
 {
     template<typename C>
@@ -10,106 +12,43 @@ namespace ax
         return C::identifier;
     }
     template<typename C>
-    Component& ComponentList<C>::getComponent(unsigned offset) const noexcept
+    Component& ComponentList<C>::getComponent(Id id) const noexcept
     {
-        return static_cast<Component&>(get(offset));
+        return static_cast<Component&>(get(id));
     }
 
     template<typename C>
     ComponentList<C>::~ComponentList()
     {
-        //Destroy every components
-        for(unsigned i = 0; i < m_length; i++)
-        {
-            if(m_chunks.at(i / COMPONENT_CHUNK_SIZE)->at(i % COMPONENT_CHUNK_SIZE).second)
-                m_chunks.at(i / COMPONENT_CHUNK_SIZE)->at(i % COMPONENT_CHUNK_SIZE).first.~C();
-        }
-        m_length = 0;
-
-        //Release memory
-        for(auto& it : m_chunks)
-            m_allocator.deallocate(it, 1);
+        m_container.clear();
     }
 
     template<typename C>
     template<typename... Args>
-    unsigned ComponentList<C>::create(const Entity& entity, Args&&... args) noexcept
+    Id ComponentList<C>::create(const Entity& entity, Args&&... args) noexcept
     {
-        if(!m_free.empty()) //Free spaces
+        return m_container.add(entity, args...);
+    }
+
+    template<typename C>
+    void ComponentList<C>::destroy(Id id) noexcept
+    {
+        m_container.remove(id);
+    }
+
+    template<typename C>
+    C& ComponentList<C>::get(Id id) const noexcept
+    {
+        std::optional<std::reference_wrapper<C>> ref;
+        try
         {
-            unsigned back = m_free.back();
-            m_free.pop_back();
-            m_chunks.at(back / COMPONENT_CHUNK_SIZE)->at(back % COMPONENT_CHUNK_SIZE).second = true;
-            new (&m_chunks.at(back / COMPONENT_CHUNK_SIZE)->at(back % COMPONENT_CHUNK_SIZE).first) C(entity, args...);
-
-            return back;
+            ref = m_container.get(id);
         }
-        else
+        catch(const std::out_of_range& e)
         {
-            m_length++;
-
-            if((m_length / COMPONENT_CHUNK_SIZE) + 1 > m_chunks.size()) //Need to allocate a new chunk
-                m_chunks.push_back(m_allocator.allocate(1));
-
-            unsigned id = m_length - 1;
-
-            m_chunks.at(id / COMPONENT_CHUNK_SIZE)->at(id % COMPONENT_CHUNK_SIZE).second = true;
-            new (&m_chunks.at(id / COMPONENT_CHUNK_SIZE)->at(id % COMPONENT_CHUNK_SIZE).first) C(entity, args...);
-
-            return id;
+            Engine::interrupt("Tried to access non valid component <" + C::identifier + "> from list with [id=" + std::to_string(id) + "]");
         }
-    }
-
-    template<typename C>
-    void ComponentList<C>::destroy(unsigned offset) noexcept
-    {
-        m_chunks.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).second = false;
-        m_chunks.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first.~C();
-        
-        if(offset + 1 == m_length)
-        {
-            m_length--;
-        }
-        else
-        {
-            m_free.emplace_back(offset);
-        }
-    }
-
-    template<typename C>
-    C& ComponentList<C>::get(unsigned offset) const noexcept
-    {
-        if(offset >= m_length)
-            Engine::interrupt("Tried to access non valid component <" + C::identifier + "> from list with [id=" + std::to_string(offset) + "]");
-
-        return m_chunks.at(offset / COMPONENT_CHUNK_SIZE)->at(offset % COMPONENT_CHUNK_SIZE).first;
-    }
-
-    template<typename C>
-    unsigned ComponentList<C>::size() const noexcept
-    {
-        return m_length - m_free.size();
-    }
-    template<typename C>
-    unsigned ComponentList<C>::free() const noexcept
-    {
-        return m_free.size();
-    }
-    template<typename C>
-    unsigned ComponentList<C>::length() const noexcept
-    {
-        return m_length;
-    }
-    template<typename C>
-    Memory ComponentList<C>::memory() const noexcept
-    {
-        return m_chunks.size() * sizeof(Chunk);
-    }
-
-    template<typename C>
-    ComponentIterator<C> ComponentList<C>::iterator() const noexcept
-    {
-        return ComponentIterator<C>(*this, 0, m_length);
+        return ref.value();
     }
 
     template<typename C>
@@ -143,5 +82,16 @@ namespace ax
                 return f.target() == function.target();
             }
         ), m_destroyFunctions.end());
+    }
+
+    template<typename C>
+    typename ComponentList<C>::ChunkContainer::ChunkContainerIterator begin() noexcept
+    {
+        return m_container.begin();
+    }
+    template<typename C>
+    typename ComponentList<C>::iterator ComponentList<C>::end() noexcept
+    {
+        return m_container.end();
     }
 }

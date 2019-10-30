@@ -12,7 +12,6 @@
 #include <Core/Scene/GameMode/GameModeManager.ipp>
 #include <Core/Context/Engine.hpp>
 #include <Core/Renderer/RendererModule.hpp>
-#include <Core/Scene/Component/ComponentIterator.hpp>
 #include <Core/Logger/LoggerModule.hpp>
 #include <Core/Utility/Memory.hpp>
 #include <Core/Context/ContextModule.hpp>
@@ -58,7 +57,6 @@ struct Position : public ax::Component
     {
         
     }
-    static const std::string type;
 
     float x;
     float y;
@@ -121,14 +119,20 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        ax::ChunkContainer<Position, 1000> chunks;
-        for(int i = 0; i < 1000000; i++) {
+        ax::ChunkContainer<Position, 5> chunks;
+        for(int i = 0; i < 10; i++) {
             chunks.add(1 * i, 2, 3);
         }
-        chunks.remove(55555);
-        std::cout << chunks.add(1, 2, 3) << std::endl;
-        chunks.remove(1000002);
-        std::cout << chunks.size() << std::endl;
+        chunks.remove(3);
+        chunks.remove(7);
+        chunks.add(66, 0, 0);
+
+        std::cout << "START" << std::endl;
+        for(auto it : chunks)
+        {
+            std::cout << it.x << std::endl;
+        }
+        std::cout << "STOP" << std::endl;
 
         std::cin.get();
 

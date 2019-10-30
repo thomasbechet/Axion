@@ -2,7 +2,6 @@
 
 #include <Core/Input/InputModule.hpp>
 #include <Core/Math/Math.hpp>
-#include <Core/Scene/Component/ComponentIterator.hpp>
 #include <Core/Context/ContextModule.hpp>
 
 using namespace ax;

@@ -2,6 +2,7 @@
 
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
+#include <Core/Utility/NonCopyable.hpp>
 
 #include <array>
 #include <memory>
@@ -10,7 +11,7 @@
 namespace ax
 {
     template<typename T, size_t ChunkSize>
-    class AXION_CORE_API ChunkContainer
+    class AXION_CORE_API ChunkContainer : public NonCopyable
     {
     public:
         using Pair = std::pair<bool, T>;
@@ -37,5 +38,39 @@ namespace ax
         size_t m_count = 0;
 
         std::allocator<Chunk> m_allocator;
+
+    public:
+        class ChunkContainerIterator
+        {
+        public:
+            using type = T;
+            using reference = T&;
+            using pointer = T*;
+
+            ChunkContainerIterator(ChunkContainer& chunk, Id position, T* ptr);
+
+            reference operator*();
+            pointer operator->();
+
+            ChunkContainerIterator& operator++();
+            
+            bool operator==(const ChunkContainerIterator& it);
+            bool operator!=(const ChunkContainerIterator& it);
+        
+        private:
+            ChunkContainer& m_container;
+            T* m_ptr; 
+            Id m_position;
+        };
+
+    public:
+        using iterator = ChunkContainerIterator;
+        friend class ChunkContainerIterator;
+
+        iterator begin() noexcept;
+        iterator end() noexcept;
+
+    private:
+        T* nextId(Id& id) const noexcept;
     };
 }
