@@ -42,7 +42,6 @@ namespace ax
         bool onLoad() noexcept override;
         bool onValidate() noexcept override;
         bool onUnload() noexcept override;
-        void onError() noexcept override;
 
     private:
         bool extractSourceFromJson() noexcept;
@@ -54,7 +53,5 @@ namespace ax
         Vector2u m_size = Vector2u(0, 0);
         Byte* m_data = nullptr;
         RendererTextureHandle m_handle;
-
-        std::string m_error;
     };
 }

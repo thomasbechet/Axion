@@ -40,34 +40,6 @@
 #include <Core/Builder/BuilderModule.hpp>
 #include <Core/Utility/ChunkContainer.ipp>
 
-struct Position : public ax::Component
-{
-    COMPONENT_IDENTIFIER("Position")
-    COMPONENT_REQUIREMENT(ax::TransformComponent, ax::ModelComponent)
-
-    Position(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {
-        std::cout << "contruct" << std::endl;
-    }
-    ~Position() {
-        std::cout << "destruct" << std::endl;
-    }
-
-    void load(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) noexcept
-    {
-        x = _x;
-        y = _y;
-        z = _z;
-    }
-    void unload()
-    {
-        
-    }
-
-    float x;
-    float y;
-    float z;
-};
-
 struct Staticsponza : public ax::Component
 {
     COMPONENT_IDENTIFIER("StaticSponza")

@@ -48,8 +48,8 @@ namespace ax
     public: 
         using container = ChunkContainer<C, 128>;
 
-        //typename container::iterator begin() noexcept;
-        //typename container::iterator end() noexcept;
+        typename container::iterator begin() noexcept;
+        typename container::iterator end() noexcept;
 
     private:
         container m_container;

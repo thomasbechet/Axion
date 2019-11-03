@@ -153,8 +153,9 @@ void ContextModule::run() noexcept
         if(Engine::scene().gamemode.hasNext()) restart = true;
     }
 
-    //Removing all systems
+    //Cleaning the scene
     ax::Engine::scene().system.removeAll();
+    ax::Engine::scene().entity.destroyAll();
 
     //Stopping threads
     thread.stop();

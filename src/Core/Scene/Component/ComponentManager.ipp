@@ -47,7 +47,7 @@ namespace ax
     }
 
     template<typename C>
-    ComponentList<C>& ComponentManager::getList() noexcept
+    ComponentList<C>& ComponentManager::list() noexcept
     {
         return static_cast<ComponentList<C>&>(*m_componentLists.at(componentSection<C>()).get());
     }

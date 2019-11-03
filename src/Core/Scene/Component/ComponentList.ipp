@@ -74,7 +74,7 @@ namespace ax
         ), m_destroyFunctions.end());
     }
 
-    /*template<typename C>
+    template<typename C>
     typename ComponentList<C>::container::iterator ComponentList<C>::begin() noexcept
     {
         return m_container.begin();
@@ -83,5 +83,5 @@ namespace ax
     typename ComponentList<C>::container::iterator ComponentList<C>::end() noexcept
     {
         return m_container.end();
-    }*/
+    }
 }

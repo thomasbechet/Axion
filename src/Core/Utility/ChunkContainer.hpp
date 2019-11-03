@@ -29,10 +29,13 @@ namespace ax
 
         void clear() noexcept;
 
+        size_t size() const noexcept;
+
     private:
         std::vector<Chunk*> m_chunks;
         std::vector<Id> m_free;
         size_t m_length = 0;
+        size_t m_size = 0;
 
         std::allocator<Chunk> m_allocator;
 

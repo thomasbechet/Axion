@@ -35,7 +35,7 @@ namespace ax
         Component& get(ComponentHandle handle) noexcept;
 
         template<typename C>
-        ComponentList<C>& getList() noexcept;
+        ComponentList<C>& list() noexcept;
 
     private:
         std::vector<std::unique_ptr<IComponentList>> m_componentLists;

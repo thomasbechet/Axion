@@ -56,7 +56,7 @@ bool Shader::onLoad() noexcept
     {
         if(json[JsonAttributes::type] != Shader::identifier)
         {
-             logLoadError("Loading <" + Shader::identifier + "> without '" + Shader::identifier + "' value for '" + JsonAttributes::type + "' attribute");
+            logLoadError("Loading <" + Shader::identifier + "> without '" + Shader::identifier + "' value for '" + JsonAttributes::type + "' attribute");
             return false;
         }
     }
@@ -79,7 +79,7 @@ bool Shader::onLoad() noexcept
             std::ifstream vertexFile(vertex.str());
             if(!vertexFile.is_open())
             {
-                m_error = "Failed to open vertex file '" + vertex.str() + "'";
+                logLoadError("Failed to open file '" + vertex.str() + "'");
                 return false;
             }
             m_vertex.assign(
@@ -90,7 +90,7 @@ bool Shader::onLoad() noexcept
             std::ifstream fragmentFile(fragment.str());
             if(!fragmentFile.is_open())
             {
-                m_error = "Failed to open fragment file '" + fragment.str() + "'";
+                logLoadError("Failed to open file '" + fragment.str() + "'");
                 return false;
             }
             m_fragment.assign(
@@ -100,13 +100,13 @@ bool Shader::onLoad() noexcept
         }
         catch(const std::exception& e)
         {
-            m_error = "Shader doesn't contains fragment attribute.";
+            logLoadError("Loading <" + Shader::identifier + "> without '" + JsonAttributes::fragment + "' attribute");
             return false;
         }
     }
     catch(const std::exception& e)
     {
-        m_error = "Shader doesn't contains vertex attribute.";
+        logLoadError("Loading <" + Shader::identifier + "> without '" + JsonAttributes::vertex + "' attribute");
         return false;
     }
 
@@ -120,7 +120,7 @@ bool Shader::onValidate() noexcept
     }
     catch(const RendererException& exception)
     {     
-        m_error = exception.what();
+        logValidateError(exception.what());
         return false;
     }
 
@@ -134,13 +134,9 @@ bool Shader::onUnload() noexcept
     }
     catch(const RendererException& exception)
     {
-        m_error = exception.what();
+        logUnloadError(exception.what());
         return false;
     }
 
     return true;
-}
-void Shader::onError() noexcept
-{
-    Engine::logger().log(m_error, Severity::Warning);
 }

@@ -23,6 +23,8 @@ namespace ax
             m_chunks.at(back / ChunkSize)->at(back % ChunkSize).first = true;
             new (&m_chunks.at(back / ChunkSize)->at(back % ChunkSize).second) T(args...);
 
+            m_size++;
+
             return back;
         }
         else
@@ -36,6 +38,8 @@ namespace ax
 
             m_chunks.at(id / ChunkSize)->at(id % ChunkSize).first = true;
             new (&m_chunks.at(id / ChunkSize)->at(id % ChunkSize).second) T(args...);
+
+            m_size++;
 
             return id;
         }
@@ -52,6 +56,8 @@ namespace ax
             m_length--;
         else
             m_free.emplace_back(id);
+
+        m_size--;
     }
 
     template<typename T, size_t ChunkSize>
@@ -74,6 +80,7 @@ namespace ax
                 m_chunks.at(i / ChunkSize)->at(i % ChunkSize).second.~T();
 
         m_length = 0;
+        m_size = 0;
 
         //Release memory
         for(auto& it : m_chunks)
@@ -81,6 +88,12 @@ namespace ax
 
         //Release chunks
         m_chunks.clear();
+    }
+
+    template<typename T, size_t ChunkSize>
+    size_t ChunkContainer<T, ChunkSize>::size() const noexcept
+    {
+        return m_size;
     }
 }
 

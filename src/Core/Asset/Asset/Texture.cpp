@@ -1,7 +1,6 @@
 #include <Core/Asset/Asset/Texture.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
@@ -40,7 +39,7 @@ bool Texture::onLoad() noexcept
     m_data = stbi_load(m_parameters.source.c_str(), &width, &height, &bpp, 0);
     if(!m_data)
     {
-        m_error = "Failed to load texture '" + m_parameters.source.str() + "'.";
+        logLoadError("Failed to load texture '" + m_parameters.source.str() + "'");
         return false;
     }
 
@@ -68,7 +67,7 @@ bool Texture::onValidate() noexcept
     }
     catch(const RendererException& exception)
     {
-        m_error = exception.what();
+        logValidateError(exception.what());
         stbi_image_free(m_data);
         
         return false;
@@ -84,18 +83,13 @@ bool Texture::onUnload() noexcept
     }
     catch(const RendererException& e)
     {
-        m_error = e.what();
-
+        logUnloadError(e.what());
         return false;
     }
 
     stbi_image_free(m_data);
 
     return true;
-}
-void Texture::onError() noexcept
-{
-    Engine::logger().log(m_error, Severity::Warning);
 }
 
 bool Texture::extractSourceFromJson() noexcept
@@ -104,13 +98,13 @@ bool Texture::extractSourceFromJson() noexcept
     {
         if(m_parameters.json[JsonAttributes::type] != Texture::identifier)
         {
-            m_error = "Loading texture without texture type attribute.";
+            logLoadError("Loading <" + Texture::identifier + "> without '" + Texture::identifier + "' value for '" + JsonAttributes::type + "' attribute");
             return false;
         }
     }
     catch(const std::exception& e)
     {
-        m_error = "Texture doesn't have type attribute.";
+        logLoadError("Loading <" + Texture::identifier + "> without '" + JsonAttributes::type + "' attribute");
         return false;
     }
 
@@ -121,7 +115,7 @@ bool Texture::extractSourceFromJson() noexcept
     }
     catch(const std::exception& e)
     {
-        m_error = "Texture doesn't have source attribute.";
+        logLoadError("Loading <" + Texture::identifier + "> without '" + JsonAttributes::source + "' attribute");
         return false;
     }
 

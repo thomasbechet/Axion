@@ -41,9 +41,7 @@ namespace ax
 
             if(state == Asset::State::Failed)
             {
-                Engine::logger().log("Failed to load <" + T::identifier + "> '" + name + "'", Severity::Warning);
-                asset.error();
-                Engine::interrupt("Failed to access <" + T::identifier + "> '" + name + "'");
+                Engine::interrupt("Failed to access <" + T::identifier + "> '" + name + "' because it is failed state");
             }
             else if(state == Asset::State::Unloaded)
             {
@@ -51,14 +49,9 @@ namespace ax
             }
             else if(state == Asset::State::Loaded)
             {
-                if(asset.validate())
+                if(!asset.validate())
                 {
-                    return m_assets.at(name)->reference();
-                }
-                else
-                {
-                    Engine::logger().log("Failed to validate <" + T::identifier + "> '" + name + "'", Severity::Warning);
-                    asset.error();
+                    Engine::interrupt("Failed to access <" + T::identifier + "> '" + name + "' because it could not be validated");
                 }
             }
 
@@ -80,15 +73,7 @@ namespace ax
                 {
                     if(validate)
                     {
-                        if(!asset.validate())
-                        {
-                            asset.error();
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
+                        return asset.validate();
                     }
                     
                     return true;
@@ -145,7 +130,6 @@ namespace ax
                     }
                     else if(state == Asset::State::Failed)
                     {
-                        asset.error();
                         return false;
                     }
                 }
@@ -177,7 +161,7 @@ namespace ax
                 return false;
             }
             
-            Engine::logger().log("Failed to unload <" + T::identifier + "> '" + name + "' because it doesn't exists.", Severity::Warning);
+            Engine::logger().log("Failed to unload <" + T::identifier + "> '" + name + "' because it doesn't exists", Severity::Warning);
             return false;
         }
 
