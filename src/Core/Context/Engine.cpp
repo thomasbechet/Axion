@@ -45,12 +45,6 @@ void Engine::initialize() noexcept
     if(typeLogger == "console") m_logger = new ConsoleLoggerModule();
     else m_logger = new NullLoggerModule();
 
-    //Assets
-    m_asset = new AssetModule();
-
-    //Scene
-    m_scene = new SceneModule();
-
     //Renderer
     std::string typeRenderer = Engine::context().config.getString("Renderer", "type", "none");
     typedef RendererModule* (*CreateRenderer)();
@@ -96,9 +90,16 @@ void Engine::initialize() noexcept
     }
     else m_input = new NullInputModule();
 
+    //Assets
+    m_asset = new AssetModule();
+
+    //Scene
+    m_scene = new SceneModule();
+
     ////////////////////////////////////////////////////////////////////////////////
 
     //Configure Logger
+    Engine::logger().initialize();
     Engine::logger().displayDate(Engine::context().config.getBoolean("Logger", "show_time", true));
 
     //Initializes engine
@@ -142,6 +143,9 @@ void Engine::terminate() noexcept
     Engine::renderer().terminate();
     Engine::input().terminate();
     Engine::window().terminate();
+
+    //Shutdown logger
+    Engine::logger().terminate();
 
     delete m_scene;
     delete m_asset;

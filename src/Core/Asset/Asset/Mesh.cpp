@@ -1,7 +1,6 @@
 #include <Core/Asset/Asset/Mesh.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
@@ -84,8 +83,7 @@ bool Mesh::onValidate() noexcept
     }
     catch(const RendererException& exception)
     {
-        m_error = exception.what();
-
+        logValidateError(exception.what());
         return false;
     }
 
@@ -99,14 +97,9 @@ bool Mesh::onUnload() noexcept
     }
     catch(const RendererException& exception)
     {
-        m_error = exception.what();
-
+        logUnloadError(exception.what());
         return false;
     }
 
     return true;
-}
-void Mesh::onError() noexcept
-{
-    Engine::logger().log(m_error, Severity::Warning);
 }

@@ -38,13 +38,9 @@ namespace ax
         bool onLoad() noexcept override;
         bool onValidate() noexcept override;
         bool onUnload() noexcept override;
-        void onError() noexcept override;
 
     private:
         Parameters m_parameters;
-        
         RendererMeshHandle m_handle;
-
-        std::string m_error;
     };
 }

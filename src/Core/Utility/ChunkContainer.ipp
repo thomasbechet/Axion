@@ -2,6 +2,8 @@
 
 #include <Core/Utility/ChunkContainer.hpp>
 
+#include <iostream>
+
 namespace ax
 {
     template<typename T, size_t ChunkSize>
@@ -21,23 +23,19 @@ namespace ax
             m_chunks.at(back / ChunkSize)->at(back % ChunkSize).first = true;
             new (&m_chunks.at(back / ChunkSize)->at(back % ChunkSize).second) T(args...);
 
-            m_count++;
-
             return back;
         }
         else
         {
-            m_size++;
+            m_length++;
 
-            if((m_size / ChunkSize) >= m_chunks.size()) //Need to allocate a new chunk
+            if((m_length / ChunkSize) + 1 > m_chunks.size()) //Need to allocate a new chunk
                 m_chunks.emplace_back(m_allocator.allocate(1));
 
-            size_t id = m_size - 1;
+            size_t id = m_length - 1;
 
             m_chunks.at(id / ChunkSize)->at(id % ChunkSize).first = true;
             new (&m_chunks.at(id / ChunkSize)->at(id % ChunkSize).second) T(args...);
-
-            m_count++;
 
             return id;
         }
@@ -50,12 +48,10 @@ namespace ax
         pair.first = false;
         pair.second.~T();
         
-        if(id + 1 == m_size)
-            m_size--;
+        if(id + 1 == m_length)
+            m_length--;
         else
             m_free.emplace_back(id);
-
-        m_count--;
     }
 
     template<typename T, size_t ChunkSize>
@@ -70,25 +66,21 @@ namespace ax
     }
 
     template<typename T, size_t ChunkSize>
-    size_t ChunkContainer<T, ChunkSize>::size() const noexcept
-    {
-        return m_count;
-    }
-
-    template<typename T, size_t ChunkSize>
     void ChunkContainer<T, ChunkSize>::clear() noexcept
     {
         //Destroy every objects
-        for(size_t i = 0; i < m_size; i++)
+        for(size_t i = 0; i < m_length; i++)
             if(m_chunks.at(i / ChunkSize)->at(i % ChunkSize).first)
                 m_chunks.at(i / ChunkSize)->at(i % ChunkSize).second.~T();
 
-        m_size = 0;
-        m_count = 0;
+        m_length = 0;
 
         //Release memory
         for(auto& it : m_chunks)
             m_allocator.deallocate(it, 1);
+
+        //Release chunks
+        m_chunks.clear();
     }
 }
 
@@ -134,7 +126,7 @@ namespace ax
     template<typename T, size_t ChunkSize>
     typename ChunkContainer<T, ChunkSize>::iterator ChunkContainer<T, ChunkSize>::begin() noexcept
     {
-        if(m_size <= 0)
+        if(m_length <= 0)
             return ChunkContainer<T, ChunkSize>::ChunkContainerIterator(*this, 0, nullptr);
 
         Pair& first = m_chunks.at(0 / ChunkSize)->at(0 % ChunkSize);
@@ -151,7 +143,7 @@ namespace ax
     template<typename T, size_t ChunkSize>
     typename ChunkContainer<T, ChunkSize>::iterator ChunkContainer<T, ChunkSize>::end() noexcept
     {
-        return ChunkContainer<T, ChunkSize>::ChunkContainerIterator(*this, m_size, nullptr);
+        return ChunkContainer<T, ChunkSize>::ChunkContainerIterator(*this, m_length, nullptr);
     }
 
     template<typename T, size_t ChunkSize>
@@ -160,7 +152,7 @@ namespace ax
         while(true)
         {
             id++;
-            if(id >= m_size) break;
+            if(id >= m_length) break;
             Pair& pair = m_chunks.at(id / ChunkSize)->at(id % ChunkSize);
             if(pair.first) return &pair.second;
         }

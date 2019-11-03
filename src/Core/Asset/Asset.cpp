@@ -1,5 +1,10 @@
 #include <Core/Asset/Asset.hpp>
 
+#include <Core/Context/Engine.hpp>
+#include <Core/Logger/LoggerModule.hpp>
+
+#include <sstream>
+
 using namespace ax;
 
 Asset::Asset(const std::string& name, const std::string& identifier) : 
@@ -35,6 +40,28 @@ Asset::Information Asset::getInformation() const noexcept
     return information;
 }
 
+void Asset::logLoadError(const std::string& error) noexcept
+{
+    std::stringstream ss;
+    ss << "Failed to load asset <" << m_identifier << "> '" << m_name << "'" << std::endl;
+    ss << error;
+    Engine::logger().log(ss.str(), Severity::Warning);
+}
+void Asset::logValidateError(const std::string& error) noexcept
+{
+    std::stringstream ss;
+    ss << "Failed to validate asset <" << m_identifier << "> '" << m_name << "'" << std::endl;
+    ss << error;
+    Engine::logger().log(ss.str(), Severity::Warning);
+}
+void Asset::logUnloadError(const std::string& error) noexcept
+{
+    std::stringstream ss;
+    ss << "Failed to unload asset <" << m_identifier << "> '" << m_name << "'" << std::endl;
+    ss << error;
+    Engine::logger().log(ss.str(), Severity::Warning);
+}
+
 bool Asset::load() noexcept
 {
     bool state = onLoad();
@@ -56,10 +83,6 @@ bool Asset::unload() noexcept
     else m_state.store(State::Failed);
     return state;
 }
-void Asset::error() noexcept
-{
-    onError();
-}
 
 bool Asset::onLoad() noexcept
 {
@@ -72,8 +95,4 @@ bool Asset::onValidate() noexcept
 bool Asset::onUnload() noexcept
 {
     return true;
-}
-void Asset::onError() noexcept
-{
-
 }

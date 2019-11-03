@@ -37,16 +37,14 @@ namespace ax
     template<typename C>
     C& Entity::getComponent() const noexcept
     {
-        std::optional<std::reference_wrapper<C>> component;
         try
         {
-            component = Engine::scene().component.get<C>(m_handles.at(C::identifier));
+            return Engine::scene().component.get<C>(m_handles.at(C::identifier));
         }
         catch(const std::out_of_range& e)
         {
             Engine::interrupt("Component <" + C::identifier + "> from entity [id " + std::to_string(m_id) + "] doesn't exist");
         }
-        return component.value();
     }
     template<typename C>
     bool Entity::hasComponent() const noexcept

@@ -59,7 +59,6 @@ namespace ax
         bool onLoad() noexcept override;
         bool onValidate() noexcept override;
         bool onUnload() noexcept override;
-        void onError() noexcept override;
 
     private:
         void update() noexcept;
@@ -79,7 +78,5 @@ namespace ax
         AssetReference<Shader> m_shader;
 
         RendererMaterialHandle m_handle;
-
-        std::string m_error;
     };
 }

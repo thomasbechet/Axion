@@ -1,7 +1,6 @@
 #include <Core/Asset/Asset/Shader.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
@@ -41,7 +40,7 @@ bool Shader::onLoad() noexcept
         std::ifstream jsonFile(m_parameters.source.str());
         if(!jsonFile.is_open())
         {
-            m_error = "Failed to json file '" + m_parameters.source.str() + "'";
+            logLoadError("Failed to open file '" + m_parameters.source.str() + "'");
             return false;
         }
         std::string str((std::istreambuf_iterator<char>(jsonFile)),
@@ -57,13 +56,13 @@ bool Shader::onLoad() noexcept
     {
         if(json[JsonAttributes::type] != Shader::identifier)
         {
-            m_error = "Loading shader without shader type attribute.";
+             logLoadError("Loading <" + Shader::identifier + "> without '" + Shader::identifier + "' value for '" + JsonAttributes::type + "' attribute");
             return false;
         }
     }
     catch(const Json::parse_error& e)
     {
-        m_error = e.what();
+        logLoadError(e.what());
         return false;
     }
 

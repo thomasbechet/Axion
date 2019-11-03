@@ -33,8 +33,6 @@ namespace ax
         Component& getComponent(Id id) const noexcept;
 
     public:
-        ~ComponentList();
-
         template<typename... Args>
         Id create(const Entity& entity, Args&&... args) noexcept;
 
@@ -47,11 +45,14 @@ namespace ax
         void addDestructionCallback(std::function<void(C&)> function);
         void removeDestructionCallback(std::function<void(C&)> function);
 
-        typename ChunkContainer<C, 128>::iterator begin() noexcept;
-        typename ChunkContainer<C, 128>::iterator end() noexcept;
+    public: 
+        using container = ChunkContainer<C, 128>;
+
+        //typename container::iterator begin() noexcept;
+        //typename container::iterator end() noexcept;
 
     private:
-        ChunkContainer<C, 128> m_container;
+        container m_container;
 
         std::vector<std::function<void(C&)>> m_createFunctions;
         std::vector<std::function<void(C&)>> m_destroyFunctions;    

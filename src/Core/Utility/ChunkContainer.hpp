@@ -27,15 +27,12 @@ namespace ax
 
         T& get(Id id) const;
 
-        size_t size() const noexcept;
-
         void clear() noexcept;
 
     private:
         std::vector<Chunk*> m_chunks;
         std::vector<Id> m_free;
-        size_t m_size = 0;
-        size_t m_count = 0;
+        size_t m_length = 0;
 
         std::allocator<Chunk> m_allocator;
 

@@ -10,10 +10,6 @@ INCLUDE_DIRECTORIES("../../extlibs/TinyObjLoader/include/")
 INCLUDE_DIRECTORIES("../../extlibs/RapidXML/include/")
 INCLUDE_DIRECTORIES("../../extlibs/nlohmann/include/")
 
-#Using std=c++17
-SET(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 #Export macro definition
 ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 
@@ -58,7 +54,7 @@ ADD_LIBRARY(
     Input/InputModule.cpp
     Input/Button.cpp
     Input/Axis.cpp
-    Logger/LoggerModule.cpp
+    Logger/ThreadSafeLoggerModule.cpp
     Logger/ConsoleLoggerModule.cpp
     Math/Transform.cpp
     Math/Transform2D.cpp

@@ -2,8 +2,6 @@
 
 #include <Core/Scene/Component/ComponentList.hpp>
 
-#include <optional>
-
 namespace ax
 {
     template<typename C>
@@ -15,12 +13,6 @@ namespace ax
     Component& ComponentList<C>::getComponent(Id id) const noexcept
     {
         return static_cast<Component&>(get(id));
-    }
-
-    template<typename C>
-    ComponentList<C>::~ComponentList()
-    {
-        m_container.clear();
     }
 
     template<typename C>
@@ -39,16 +31,14 @@ namespace ax
     template<typename C>
     C& ComponentList<C>::get(Id id) const noexcept
     {
-        std::optional<std::reference_wrapper<C>> ref;
         try
         {
-            ref = m_container.get(id);
+            return m_container.get(id);
         }
         catch(const std::out_of_range& e)
         {
             Engine::interrupt("Tried to access non valid component <" + C::identifier + "> from list with [id=" + std::to_string(id) + "]");
         }
-        return ref.value();
     }
 
     template<typename C>
@@ -84,14 +74,14 @@ namespace ax
         ), m_destroyFunctions.end());
     }
 
-    template<typename C>
-    typename ComponentList<C>::ChunkContainer::ChunkContainerIterator begin() noexcept
+    /*template<typename C>
+    typename ComponentList<C>::container::iterator ComponentList<C>::begin() noexcept
     {
         return m_container.begin();
     }
     template<typename C>
-    typename ComponentList<C>::iterator ComponentList<C>::end() noexcept
+    typename ComponentList<C>::container::iterator ComponentList<C>::end() noexcept
     {
         return m_container.end();
-    }
+    }*/
 }

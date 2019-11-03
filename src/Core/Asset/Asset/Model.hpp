@@ -37,7 +37,6 @@ namespace ax
         bool onLoad() noexcept override;
         bool onValidate() noexcept override;
         bool onUnload() noexcept override;
-        void onError() noexcept override;
 
     private:
         bool loadObjModel(Path path) noexcept;
@@ -49,7 +48,5 @@ namespace ax
         std::vector<AssetReference<Material>> m_materials;
 
         std::vector<std::pair<std::string, std::string>> m_dummyModels;
-
-        std::string m_error;
     };
 }

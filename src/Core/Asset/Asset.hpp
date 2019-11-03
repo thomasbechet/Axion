@@ -42,17 +42,20 @@ namespace ax
 
         Information getInformation() const noexcept;
 
+    protected:
+        void logLoadError(const std::string& error) noexcept;
+        void logValidateError(const std::string& error) noexcept;
+        void logUnloadError(const std::string& error) noexcept;
+
     private:
         bool load() noexcept;
         bool validate() noexcept;
         bool unload() noexcept;
-        void error() noexcept;
 
     protected:
         virtual bool onLoad() noexcept = 0;
         virtual bool onValidate() noexcept = 0;
         virtual bool onUnload() noexcept = 0;
-        virtual void onError() noexcept = 0;
 
     private:
         const std::string m_name;

@@ -2,8 +2,6 @@
 
 #include <Core/Context/Engine.hpp>
 
-#include <optional>
-
 using namespace ax;
 
 void InputModule::updateInputs() noexcept
@@ -21,17 +19,14 @@ Button& InputModule::addButton(std::string name) noexcept
 }
 Button& InputModule::getButton(std::string name) noexcept
 {
-    std::optional<std::reference_wrapper<Button>> button;
     try
     {
-        button = m_buttons.at(name);
+        return m_buttons.at(name);
     }
     catch(std::out_of_range e)
     {
         Engine::interrupt("Button input <" + name + "> doesn't exists");
     }
-
-    return button.value();
 }
 void InputModule::removeButton(std::string name) noexcept
 {   
@@ -47,17 +42,14 @@ Axis& InputModule::addAxis(std::string name) noexcept
 }
 Axis& InputModule::getAxis(std::string name) noexcept
 {
-    std::optional<std::reference_wrapper<Axis>> axis;
     try
     {
-        axis = m_axis.at(name);
+        return m_axis.at(name);
     }
     catch(std::out_of_range e)
     {
         Engine::interrupt("Axis input <" + name + "> doesn't exists");
     }
-    
-    return axis.value();
 }
 void InputModule::removeAxis(std::string name) noexcept
 {

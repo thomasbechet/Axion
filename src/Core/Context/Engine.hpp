@@ -26,7 +26,7 @@ namespace ax
     public:
         static void initialize() noexcept;
         static void terminate() noexcept;
-        static void interrupt(std::string message = "") noexcept;
+        [[noreturn]] static void interrupt(std::string message = "") noexcept;
         
         static AssetModule& asset() noexcept;
         static BuilderModule& builder() noexcept;

@@ -45,7 +45,12 @@ struct Position : public ax::Component
     COMPONENT_IDENTIFIER("Position")
     COMPONENT_REQUIREMENT(ax::TransformComponent, ax::ModelComponent)
 
-    Position(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+    Position(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {
+        std::cout << "contruct" << std::endl;
+    }
+    ~Position() {
+        std::cout << "destruct" << std::endl;
+    }
 
     void load(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) noexcept
     {
@@ -119,23 +124,6 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        ax::ChunkContainer<Position, 5> chunks;
-        for(int i = 0; i < 10; i++) {
-            chunks.add(1 * i, 2, 3);
-        }
-        chunks.remove(3);
-        chunks.remove(7);
-        chunks.add(66, 0, 0);
-
-        std::cout << "START" << std::endl;
-        for(auto it : chunks)
-        {
-            std::cout << it.x << std::endl;
-        }
-        std::cout << "STOP" << std::endl;
-
-        std::cin.get();
-
         ax::Engine::scene().system.add<ax::BasicWindowSystem>();
         ax::Engine::scene().system.add<ax::RenderModeSystem>();
 
@@ -164,13 +152,7 @@ public:
         while(loadState.isLoading);
         ax::Engine::asset().loader.waitAll();
 
-        
         ax::BasicSpectatorSystem& cameraSystem = ax::Engine::scene().system.add<ax::BasicSpectatorSystem>();
-        
-
-        //ax::Entity& test = ax::Engine::world().entity.create("test");
-        //ax::Entity& test = ax::Engine::world().scene.entity.create("test");
-
 
         ax::Entity& camera0 = ax::Engine::scene().entity.create();
         ax::TransformComponent& cameraTransform = camera0.addComponent<ax::TransformComponent>();

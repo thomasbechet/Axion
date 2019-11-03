@@ -42,7 +42,6 @@ namespace ax
         bool onLoad() noexcept override;
         bool onValidate() noexcept override;
         bool onUnload() noexcept override;
-        void onError() noexcept override;
 
     private:
         bool loadFromJson(Json& json) noexcept;
@@ -63,7 +62,5 @@ namespace ax
         std::vector<std::string> m_dummyScenes;
         std::vector<std::string> m_dummyShaders;
         std::vector<std::string> m_dummyTextures;
-
-        std::string m_error;
     };
 }

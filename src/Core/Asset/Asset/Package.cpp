@@ -2,7 +2,6 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Asset/AssetModule.hpp>
-#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
 #include <Core/Utility/Json.hpp>
 
@@ -48,14 +47,14 @@ bool Package::onLoad() noexcept
     {
         if(m_parameters.source.extension() != ".json")
         {
-            m_error = "Failed to load package from file '" + m_parameters.source + "'";
+            logLoadError("Loading <" + Package::identifier + "> from file '" + m_parameters.source + "'");
             return false;
         }
 
         std::ifstream jsonFile(m_parameters.source.str());
         if(!jsonFile.is_open())
         {
-            m_error = "Failed to load package from file '" + m_parameters.source.str() + "'";
+            logLoadError("Failed to open file '" + m_parameters.source.str() + "'");
             return false;
         }
         std::string jsonBuffer{std::istreambuf_iterator<char>(jsonFile), std::istreambuf_iterator<char>()};
@@ -68,7 +67,7 @@ bool Package::onLoad() noexcept
         }
         catch(const Json::parse_error& error)
         {
-            m_error = error.what();
+            logLoadError(error.what());
             return false;
         }
     }
@@ -138,10 +137,6 @@ bool Package::onUnload() noexcept
 
     return true;
 }
-void Package::onError() noexcept
-{
-    Engine::logger().log(m_error, Severity::Warning);
-}
 
 bool Package::loadFromJson(Json& json) noexcept
 {
@@ -153,13 +148,13 @@ bool Package::loadFromJson(Json& json) noexcept
         json.erase(JsonAttributes::type);
         if(type != Package::identifier)
         {
-            m_error = "Loading package without package type attribute.";
+            logLoadError("Loading <" + Package::identifier + "> without '" + Package::identifier + "' value for '" + JsonAttributes::type + "' attribute");
             return false;
         }
     }
     catch(const std::exception& e)
     {
-        m_error = "Package doesn't have type attribute.";
+        logLoadError("Loading <" + Package::identifier + "> without '" + JsonAttributes::type + "' attribute");
         return false;
     }
 

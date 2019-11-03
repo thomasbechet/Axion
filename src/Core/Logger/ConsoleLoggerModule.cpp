@@ -11,7 +11,7 @@
 
 using namespace ax;
 
-void ConsoleLoggerModule::log(std::string message, Severity severity) noexcept
+void ConsoleLoggerModule::onLog(const std::string& message, Severity severity) noexcept
 {
     #if defined(AXION_PLATFORM_UNIX)
 

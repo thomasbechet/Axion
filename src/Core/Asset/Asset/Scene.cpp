@@ -26,7 +26,3 @@ bool Scene::onUnload() noexcept
 {
     return true;
 }
-void Scene::onError() noexcept
-{
-
-}

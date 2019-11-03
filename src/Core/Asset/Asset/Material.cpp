@@ -2,7 +2,6 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Asset/AssetModule.hpp>
-#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
@@ -88,7 +87,7 @@ bool Material::onValidate() noexcept
     }
     catch(const RendererException& exception)
     {
-        m_error = exception.what();
+        logValidateError(exception.what());
         return false;
     }
 
@@ -136,15 +135,11 @@ bool Material::onUnload() noexcept
     }
     catch(const RendererException& exception)
     {
-        m_error = exception.what();
+        logUnloadError(exception.what());
         return false;
     }
 
     return true;
-}
-void Material::onError() noexcept
-{
-    Engine::logger().log(m_error, Severity::Warning);
 }
 
 void Material::update() noexcept
@@ -176,6 +171,6 @@ void Material::update() noexcept
     }
     catch(const RendererException& e)
     {
-        Engine::logger().log("Failed to update material '" + getName() + "'", Severity::Warning);
+        Engine::logger().log("Failed to update asset <" + Material::identifier + "> '" + getName() + "'", Severity::Warning);
     }
 }

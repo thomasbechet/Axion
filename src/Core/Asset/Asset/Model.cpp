@@ -1,7 +1,6 @@
 #include <Core/Asset/Asset/Model.hpp>
 
 #include <Core/Asset/AssetModule.hpp>
-#include <Core/Logger/LoggerModule.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
 #include <Core/Utility/Json.hpp>
 
@@ -36,7 +35,7 @@ bool Model::onLoad() noexcept
         }
         else
         {
-            m_error = "Unknown extension file '" + m_parameters.source.extension() + "'";
+            logLoadError("Unknown extension file '" + m_parameters.source.extension() + "'");
             return false;
         }
     }
@@ -46,13 +45,13 @@ bool Model::onLoad() noexcept
         {
             if(m_parameters.json[JsonAttributes::type] != Model::identifier)
             {
-                m_error = "Loading model without model type attribute.";
+                logLoadError("Loading <" + Model::identifier + "> without '" + Model::identifier + "' value for '" + JsonAttributes::type + "' attribute");
                 return false;
             }
         }
         catch(const std::exception& e)
         {
-            m_error = "Model doesn't have type attribute.";
+            logLoadError("Loading <" + Model::identifier + "> without '" + JsonAttributes::type + "' attribute");
             return false;
         }
 
@@ -65,18 +64,18 @@ bool Model::onLoad() noexcept
             }
             else
             {
-                m_error = "Unknown extension file '" + source.extension() + "'";
+                logLoadError("Unknown extension file '" + source.extension() + "'");
                 return false;
             }
         }
         catch(const std::exception& e)
         {
-            m_error = "Model doesn't have source attribute.";
+            logLoadError("Loading <" + Model::identifier + "> without '" + JsonAttributes::source + "' attribute");
             return false;
         }
     }
 
-    m_error = "No input source for loading";
+    logLoadError("Loading <" + Model::identifier + "> without inputs parameters");
     return false;
 }
 bool Model::onValidate() noexcept
@@ -114,10 +113,6 @@ bool Model::onUnload() noexcept
 
     return true;
 }
-void Model::onError() noexcept
-{
-    Engine::logger().log(m_error, Severity::Warning);
-}
 
 bool Model::loadObjModel(Path path) noexcept
 {
@@ -129,7 +124,7 @@ bool Model::loadObjModel(Path path) noexcept
     bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, path.c_str(), path.directory().c_str(), true);
     if(!ret)
     {
-        m_error = "TINYOBJ Error: " + err;
+        logLoadError("TINYOBJ Error: " + err);
         return false;
     }
 

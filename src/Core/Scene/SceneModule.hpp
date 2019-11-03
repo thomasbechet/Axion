@@ -15,12 +15,12 @@ namespace ax
 {
     class AXION_CORE_API SceneModule
     {
-    public:
-        GameModeManager gamemode;
-        UIManager ui;
-        EntityManager entity;
+    public:    
         ComponentManager component;
+        EntityManager entity;
         SystemManager system;
+        UIManager ui;
+        GameModeManager gamemode;
 
     public:
         void open(const std::string& scene) noexcept;
