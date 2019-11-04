@@ -159,6 +159,7 @@ void Engine::terminate() noexcept
 void Engine::interrupt(std::string message) noexcept
 {
     Engine::logger().log(message, Severity::Fatal);
+    Engine::logger().flush();
     std::abort();
 }
 

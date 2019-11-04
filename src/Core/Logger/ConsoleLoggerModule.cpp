@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <chrono>
+#include <istream>
 
 #if defined(AXION_PLATFORM_WINDOWS)
     #include <windows.h>
@@ -44,7 +45,11 @@ void ConsoleLoggerModule::onLog(const std::string& message, Severity severity) n
         {
             std::time_t tt = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             struct std::tm* ptm = std::localtime(&tt);
-            std::cout << color << "[" << std::put_time(ptm, "%X") << "]" << sever << message << "\033[0m" << std::endl;
+            
+            std::istringstream stream(message);
+            std::string line;
+            while(std::getline(stream, line))
+                std::cout << color << "[" << std::put_time(ptm, "%X") << "]" << sever << line << "\033[0m" << std::endl;
         }
         else
         {
@@ -82,7 +87,11 @@ void ConsoleLoggerModule::onLog(const std::string& message, Severity severity) n
         {
             std::time_t tt = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             struct std::tm* ptm = std::localtime(&tt);
-            std::cout << "[" << std::put_time(ptm, "%X") << "]" << sever << message << std::endl;
+        
+            std::istringstream stream(message);
+            std::string line;
+            while(std::getline(stream, line))
+                std::cout << "[" << std::put_time(ptm, "%X") << "]" << sever << line << std::endl;
         }
         else
         {

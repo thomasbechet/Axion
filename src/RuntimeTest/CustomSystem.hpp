@@ -9,10 +9,10 @@ struct Position : public ax::Component
     COMPONENT_REQUIREMENT(ax::TransformComponent, ax::ModelComponent)
 
     Position(ax::Entity& entity, float _x, float _y, float _z) : x(_x), y(_y), z(_z) {
-        std::cout << "contruct" << std::endl;
+        
     }
     ~Position() {
-        std::cout << "destruct" << std::endl;
+        
     }
 
     void load(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) noexcept

@@ -14,7 +14,7 @@ RendererShaderHandle RendererModuleGL::createShader(const std::string* vertex, c
     if(!shader->shader.loadShader(vertex, fragment))
     {
         m_content.shaders.remove(id);
-        throw RendererException("Failed to load shader.");
+        throw RendererException("Failed to compile shader");
     }
 
     return shader;

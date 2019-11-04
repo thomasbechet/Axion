@@ -19,6 +19,16 @@ void ThreadSafeLoggerModule::log(const std::string& message, Severity severity) 
     m_queue.push(std::make_pair(message, severity));
     m_conditionVariable.notify_one();
 }
+void ThreadSafeLoggerModule::flush() noexcept
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    while(!m_queue.empty())
+    {
+        auto pair = m_queue.front();
+        m_queue.pop();
+        onLog(pair.first, pair.second);
+    }
+}
 
 void ThreadSafeLoggerModule::routine() noexcept
 {

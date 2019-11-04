@@ -25,5 +25,6 @@ namespace ax
 
         virtual void log(const std::string& message, Severity severity = Severity::None) noexcept = 0;
         virtual void displayDate(bool toggle) noexcept = 0;
+        virtual void flush() noexcept = 0;
     };
 }

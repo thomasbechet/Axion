@@ -140,7 +140,6 @@ bool Package::onUnload() noexcept
 
 bool Package::loadFromJson(Json& json) noexcept
 {
-    //Test package type
     try
     {
         auto jType = json[JsonAttributes::type];
@@ -158,88 +157,100 @@ bool Package::loadFromJson(Json& json) noexcept
         return false;
     }
 
-    //Load each items
-    for(auto& it : json.items())
+    try
     {
-        Json item = it.value();
-        std::string name = it.key();
+        auto jAssets = json[JsonAttributes::assets];
+        if(!jAssets.is_array())
+        {
+            logLoadError("Invalid '" + JsonAttributes::assets + "' attribute");
+            return false;
+        }
 
-        auto jItemType = item.find(JsonAttributes::type);  
-        if(jItemType != item.end() && jItemType->is_string())
+        //Load each items
+        for(auto& item : jAssets)
         {
             auto jItemName = item.find(JsonAttributes::name);
-            if(jItemName != item.end() && jItemName->is_string())
+            auto jItemType = item.find(JsonAttributes::type);              
+            if(jItemType != item.end() && jItemType->is_string() && jItemName != item.end() && jItemName->is_string())
             {
-                name = jItemName->get<std::string>();
-            }
+                std::string itemType = jItemType->get<std::string>();
+                std::string itemName = jItemName->get<std::string>();
 
-            std::string itemType = jItemType->get<std::string>();
-            if(itemType == Material::identifier)
-            {
-                Material::Parameters materialParameters;
-                materialParameters.json = item;
-                if(m_parameters.asyncLoading)
-                    Engine::asset().material.loadAsync(name, materialParameters);
-                else
-                    Engine::asset().material.load(name, materialParameters);
-                m_dummyMaterials.emplace_back(name);
-            }
-            else if(itemType == Mesh::identifier)
-            {
-                Mesh::Parameters meshParameters;
-                meshParameters.json = item;
-                if(m_parameters.asyncLoading)
-                    Engine::asset().mesh.loadAsync(name, meshParameters);
-                else
-                    Engine::asset().mesh.load(name, meshParameters);
-                m_dummyMeshes.emplace_back(name);
-            }
-            else if(itemType == Model::identifier)
-            {
-                Model::Parameters modelParameters;
-                modelParameters.json = item;
-                modelParameters.asyncLoading = m_parameters.asyncLoading;
-                if(m_parameters.asyncLoading)
-                    Engine::asset().model.loadAsync(name, modelParameters);
-                else
-                    Engine::asset().model.load(name, modelParameters);
-                m_dummyModels.emplace_back(name);
-            }
-            else if(itemType == Package::identifier)
-            {
+                //Remove name attribute because it is not required
+                item.erase(JsonAttributes::name);
                 
-            }
-            else if(itemType == Scene::identifier)
-            {
-                Scene::Parameters sceneParameters;
-                sceneParameters.json = item;
-                if(m_parameters.asyncLoading)
-                    Engine::asset().scene.loadAsync(name, sceneParameters);
-                else
-                    Engine::asset().scene.load(name, sceneParameters);
-                m_dummyScenes.emplace_back(name);
-            }
-            else if(itemType == Shader::identifier)
-            {
-                Shader::Parameters shaderParameters;
-                shaderParameters.json = item;
-                if(m_parameters.asyncLoading)
-                    Engine::asset().shader.loadAsync(name, shaderParameters);
-                else
-                    Engine::asset().shader.load(name, shaderParameters);
-                m_dummyShaders.emplace_back(name);
-            }
-            else if(itemType == Texture::identifier)
-            {
-                Texture::Parameters textureParameters;
-                textureParameters.json = item;
-                if(m_parameters.asyncLoading)
-                    Engine::asset().texture.loadAsync(name, textureParameters);
-                else
-                    Engine::asset().texture.load(name, textureParameters);
-                m_dummyTextures.emplace_back(name);
+                if(itemType == Material::identifier)
+                {
+                    Material::Parameters materialParameters;
+                    materialParameters.json = item;
+                    if(m_parameters.asyncLoading)
+                        Engine::asset().material.loadAsync(itemName, materialParameters);
+                    else
+                        Engine::asset().material.load(itemName, materialParameters);
+                    m_dummyMaterials.emplace_back(itemName);
+                }
+                else if(itemType == Mesh::identifier)
+                {
+                    Mesh::Parameters meshParameters;
+                    meshParameters.json = item;
+                    if(m_parameters.asyncLoading)
+                        Engine::asset().mesh.loadAsync(itemName, meshParameters);
+                    else
+                        Engine::asset().mesh.load(itemName, meshParameters);
+                    m_dummyMeshes.emplace_back(itemName);
+                }
+                else if(itemType == Model::identifier)
+                {
+                    Model::Parameters modelParameters;
+                    modelParameters.json = item;
+                    modelParameters.asyncLoading = m_parameters.asyncLoading;
+                    if(m_parameters.asyncLoading)
+                        Engine::asset().model.loadAsync(itemName, modelParameters);
+                    else
+                        Engine::asset().model.load(itemName, modelParameters);
+                    m_dummyModels.emplace_back(itemName);
+                }
+                else if(itemType == Package::identifier)
+                {
+                    
+                }
+                else if(itemType == Scene::identifier)
+                {
+                    Scene::Parameters sceneParameters;
+                    sceneParameters.json = item;
+                    if(m_parameters.asyncLoading)
+                        Engine::asset().scene.loadAsync(itemName, sceneParameters);
+                    else
+                        Engine::asset().scene.load(itemName, sceneParameters);
+                    m_dummyScenes.emplace_back(itemName);
+                }
+                else if(itemType == Shader::identifier)
+                {
+                    Shader::Parameters shaderParameters;
+                    shaderParameters.json = item;
+                    if(m_parameters.asyncLoading)
+                        Engine::asset().shader.loadAsync(itemName, shaderParameters);
+                    else
+                        Engine::asset().shader.load(itemName, shaderParameters);
+                    m_dummyShaders.emplace_back(itemName);
+                }
+                else if(itemType == Texture::identifier)
+                {
+                    Texture::Parameters textureParameters;
+                    textureParameters.json = item;
+                    if(m_parameters.asyncLoading)
+                        Engine::asset().texture.loadAsync(itemName, textureParameters);
+                    else
+                        Engine::asset().texture.load(itemName, textureParameters);
+                    m_dummyTextures.emplace_back(itemName);
+                }
             }
         }
+    }
+    catch(const std::exception& e)
+    {
+        logLoadError("Loading <" + Package::identifier + "> without '" + JsonAttributes::assets + "' attribute");
+        return false;
     }
 
     return true;

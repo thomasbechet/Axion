@@ -12,6 +12,7 @@ namespace ax
         void terminate() noexcept override {}
 
         void log(const std::string& message, Severity severity) noexcept override {}
-        void displayDate(bool toggle) noexcept override {};
+        void displayDate(bool toggle) noexcept override {}
+        void flush() noexcept override {}
     };
 }

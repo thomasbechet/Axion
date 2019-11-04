@@ -18,6 +18,7 @@ namespace ax
         void terminate() noexcept override;
 
         void log(const std::string& message, Severity severity = Severity::None) noexcept override;
+        void flush() noexcept override;
 
     protected:
         virtual void onLog(const std::string& message, Severity severity) noexcept = 0;

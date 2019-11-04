@@ -12,6 +12,7 @@ namespace ax
         static inline const std::string source = "source";
         static inline const std::string type = "type";
         static inline const std::string name = "name";
+        static inline const std::string assets = "assets";
         static inline const std::string vertex = "vertex";
         static inline const std::string fragment = "fragment";
     };
