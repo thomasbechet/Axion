@@ -25,14 +25,35 @@ namespace ax
         void dispose() noexcept;
         void log() const noexcept;
 
-        AssetManager<Texture> texture;
-        AssetManager<Mesh> mesh;
-        AssetManager<Shader> shader;
-        AssetManager<Material> material;
-        AssetManager<Model> model;
-        AssetManager<Package> package;
-        AssetManager<Scene> scene;
+        template<typename T>
+        AssetReference<T> get(const std::string& name) const noexcept;
+        template<typename T>
+        bool load(const std::string& name, const typename T::Parameters& parameters) noexcept;
+        template<typename T>
+        bool loadAsync(const std::string& name, const typename T::Parameters& parameters) noexcept;
+        template<typename T>
+        bool unload(const std::string& name) noexcept;
+        template<typename T>
+        bool exists(const std::string& name) noexcept;
+        template<typename T>
+        bool wait(const std::string& name) noexcept;
+        template<typename T>
+        void dispose() noexcept;
+        template<typename T>
+        void log() const noexcept;
+
+        bool load(const std::string& type, const std::string& name, const Json& json = {}) noexcept;
+        bool loadAsync(const std::string& type, const std::string& name, const Json& json = {}) noexcept;
+        bool unload(const std::string& type, const std::string& name) noexcept;
+        bool exists(const std::string& type, const std::string& name) const noexcept;
+        bool wait(const std::string& type, const std::string& name) noexcept;
+        void dispose(const std::string& type) noexcept;
+        void log(const std::string& type) const noexcept;
 
         AssetLoader loader;
+
+    private:
+
+
     };
 }
