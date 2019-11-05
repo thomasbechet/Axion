@@ -82,17 +82,17 @@ bool Package::onLoad() noexcept
 }
 bool Package::onValidate() noexcept
 {
-    for(auto& it : m_dummyMaterials) m_materials.emplace_back(Engine::asset().material(it));
+    for(auto& it : m_dummyMaterials) m_materials.emplace_back(Engine::asset().get<Material>(it));
     m_dummyMaterials.clear();
-    for(auto& it : m_dummyMeshes) m_meshes.emplace_back(Engine::asset().mesh(it));
+    for(auto& it : m_dummyMeshes) m_meshes.emplace_back(Engine::asset().get<Mesh>(it));
     m_dummyMeshes.clear();
-    for(auto& it : m_dummyModels) m_models.emplace_back(Engine::asset().model(it));
+    for(auto& it : m_dummyModels) m_models.emplace_back(Engine::asset().get<Model>(it));
     m_dummyMaterials.clear();
-    for(auto& it : m_dummyScenes) m_scenes.emplace_back(Engine::asset().scene(it));
+    for(auto& it : m_dummyScenes) m_scenes.emplace_back(Engine::asset().get<Scene>(it));
     m_dummyScenes.clear();
-    for(auto& it : m_dummyShaders) m_shaders.emplace_back(Engine::asset().shader(it));
+    for(auto& it : m_dummyShaders) m_shaders.emplace_back(Engine::asset().get<Shader>(it));
     m_dummyShaders.clear();
-    for(auto& it : m_dummyTextures) m_textures.emplace_back(Engine::asset().texture(it));
+    for(auto& it : m_dummyTextures) m_textures.emplace_back(Engine::asset().get<Texture>(it));
     m_dummyTextures.clear();
 
     return true;
@@ -103,35 +103,35 @@ bool Package::onUnload() noexcept
     {
         std::string materialName = it->get()->getName();
         it->reset();
-        Engine::asset().material.unload(materialName);
+        Engine::asset().unload<Material>(materialName);
     }
     m_materials.clear();
     for(auto it = m_models.begin(); it != m_models.end(); it++)
     {
         std::string modelName = it->get()->getName();
         it->reset();
-        Engine::asset().model.unload(modelName);
+        Engine::asset().unload<Model>(modelName);
     }
     m_models.clear();
     for(auto it = m_textures.begin(); it != m_textures.end(); it++)
     {
         std::string textureName = it->get()->getName();
         it->reset();
-        Engine::asset().texture.unload(textureName);
+        Engine::asset().unload<Texture>(textureName);
     }
     m_textures.clear();
     for(auto it = m_meshes.begin(); it != m_meshes.end(); it++)
     {
         std::string meshName = it->get()->getName();
         it->reset();
-        Engine::asset().mesh.unload(meshName);
+        Engine::asset().unload<Mesh>(meshName);
     }
     m_meshes.clear();
     for(auto it = m_shaders.begin(); it != m_shaders.end(); it++)
     {
         std::string shaderName = it->get()->getName();
         it->reset();
-        Engine::asset().shader.unload(shaderName);
+        Engine::asset().unload<Shader>(shaderName);
     }
     m_shaders.clear();
 
@@ -184,9 +184,9 @@ bool Package::loadFromJson(Json& json) noexcept
                     Material::Parameters materialParameters;
                     materialParameters.json = item;
                     if(m_parameters.asyncLoading)
-                        Engine::asset().material.loadAsync(itemName, materialParameters);
+                        Engine::asset().loadAsync<Material>(itemName, materialParameters);
                     else
-                        Engine::asset().material.load(itemName, materialParameters);
+                        Engine::asset().load<Material>(itemName, materialParameters);
                     m_dummyMaterials.emplace_back(itemName);
                 }
                 else if(itemType == Mesh::identifier)
@@ -194,9 +194,9 @@ bool Package::loadFromJson(Json& json) noexcept
                     Mesh::Parameters meshParameters;
                     meshParameters.json = item;
                     if(m_parameters.asyncLoading)
-                        Engine::asset().mesh.loadAsync(itemName, meshParameters);
+                        Engine::asset().loadAsync<Mesh>(itemName, meshParameters);
                     else
-                        Engine::asset().mesh.load(itemName, meshParameters);
+                        Engine::asset().load<Mesh>(itemName, meshParameters);
                     m_dummyMeshes.emplace_back(itemName);
                 }
                 else if(itemType == Model::identifier)
@@ -205,9 +205,9 @@ bool Package::loadFromJson(Json& json) noexcept
                     modelParameters.json = item;
                     modelParameters.asyncLoading = m_parameters.asyncLoading;
                     if(m_parameters.asyncLoading)
-                        Engine::asset().model.loadAsync(itemName, modelParameters);
+                        Engine::asset().loadAsync<Model>(itemName, modelParameters);
                     else
-                        Engine::asset().model.load(itemName, modelParameters);
+                        Engine::asset().load<Model>(itemName, modelParameters);
                     m_dummyModels.emplace_back(itemName);
                 }
                 else if(itemType == Package::identifier)
@@ -219,9 +219,9 @@ bool Package::loadFromJson(Json& json) noexcept
                     Scene::Parameters sceneParameters;
                     sceneParameters.json = item;
                     if(m_parameters.asyncLoading)
-                        Engine::asset().scene.loadAsync(itemName, sceneParameters);
+                        Engine::asset().loadAsync<Scene>(itemName, sceneParameters);
                     else
-                        Engine::asset().scene.load(itemName, sceneParameters);
+                        Engine::asset().load<Scene>(itemName, sceneParameters);
                     m_dummyScenes.emplace_back(itemName);
                 }
                 else if(itemType == Shader::identifier)
@@ -229,9 +229,9 @@ bool Package::loadFromJson(Json& json) noexcept
                     Shader::Parameters shaderParameters;
                     shaderParameters.json = item;
                     if(m_parameters.asyncLoading)
-                        Engine::asset().shader.loadAsync(itemName, shaderParameters);
+                        Engine::asset().loadAsync<Shader>(itemName, shaderParameters);
                     else
-                        Engine::asset().shader.load(itemName, shaderParameters);
+                        Engine::asset().load<Shader>(itemName, shaderParameters);
                     m_dummyShaders.emplace_back(itemName);
                 }
                 else if(itemType == Texture::identifier)
@@ -239,9 +239,9 @@ bool Package::loadFromJson(Json& json) noexcept
                     Texture::Parameters textureParameters;
                     textureParameters.json = item;
                     if(m_parameters.asyncLoading)
-                        Engine::asset().texture.loadAsync(itemName, textureParameters);
+                        Engine::asset().loadAsync<Texture>(itemName, textureParameters);
                     else
-                        Engine::asset().texture.load(itemName, textureParameters);
+                        Engine::asset().load<Texture>(itemName, textureParameters);
                     m_dummyTextures.emplace_back(itemName);
                 }
             }

@@ -26,7 +26,9 @@ ADD_LIBRARY(
     Asset/Asset/Shader.cpp
     Asset/Asset/Texture.cpp
     Asset/Asset/Scene.cpp
+    Builder/AssetFactories.cpp
     Builder/ComponentFactories.cpp
+    Builder/SystemFactories.cpp
     Context/ContextModule.cpp
     Context/Engine.cpp
     Prefab/System/BasicWindowSystem.cpp

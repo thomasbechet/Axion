@@ -133,7 +133,7 @@ void Engine::initialize() noexcept
 
     //Create default material
     Material::Parameters defaultMaterial;
-    Engine::asset().material.load("default_material", defaultMaterial);
+    Engine::asset().load<Material>(Material::Default, defaultMaterial);
 }
 void Engine::terminate() noexcept
 {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/Builder/SystemFactory.hpp>
+#include <Core/Scene/SceneModule.hpp>
 #include <Core/Scene/System/SystemManager.ipp>
 
 namespace ax

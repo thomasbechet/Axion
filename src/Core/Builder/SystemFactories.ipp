@@ -17,6 +17,6 @@ namespace ax
     template<typename S>
     ISystemFactory& SystemFactories::get() noexcept
     {
-        return *m_factories[S::identifier].get();
+        return *m_factories.at(S::identifier).get();
     }
 }

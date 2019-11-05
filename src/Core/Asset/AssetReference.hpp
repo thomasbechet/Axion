@@ -5,8 +5,14 @@
 
 namespace ax
 {
+    class AXION_CORE_API IAssetReference
+    {
+    public:
+        virtual ~IAssetReference() = default;
+    };
+
     template<typename T>
-    class AXION_CORE_API AssetReference
+    class AXION_CORE_API AssetReference : public IAssetReference
     {
     public:
         friend class AssetHolder<T>;

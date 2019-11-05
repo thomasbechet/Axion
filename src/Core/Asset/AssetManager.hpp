@@ -12,14 +12,22 @@
 
 namespace ax
 {
+    class AXION_CORE_API IAssetManager
+    {
+    public:
+        virtual ~IAssetManager() = default;
+        virtual void dispose() const noexcept = 0;
+        virtual void log() const noexcept = 0;
+    };
+
     template<typename T>
-    class AXION_CORE_API AssetManager
+    class AXION_CORE_API AssetManager : public IAssetManager
     {
     public:
         AssetManager(AssetLoader& loader) : m_loader(loader) {}
 
         //MAIN THREAD ONLY
-        AssetReference<T> operator()(std::string name) const noexcept
+        AssetReference<T> get(const std::string& name) const noexcept
         {
             std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -58,7 +66,7 @@ namespace ax
             return m_assets.at(name)->reference(); 
         }
         //ANY THREAD (validate = ONLY MAIN THREAD)
-        bool load(std::string name, const typename T::Parameters& parameters, bool validate = false) noexcept
+        bool load(const std::string& name, const typename T::Parameters& parameters, bool validate = false) noexcept
         {
             std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -85,7 +93,7 @@ namespace ax
             return false;
         }
         //ANY THREAD
-        bool loadAsync(std::string name, const typename T::Parameters& parameters) noexcept
+        bool loadAsync(const std::string& name, const typename T::Parameters& parameters) noexcept
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -99,13 +107,13 @@ namespace ax
             return false;
         }
         //ANY THREAD
-        bool exists(std::string name) const noexcept
+        bool exists(const std::string& name) const noexcept
         {
             std::lock_guard<std::mutex> lock(m_mutex);
             return existsNotSafe(name); 
         }
         //MAIN THREAD ONLY
-        bool wait(std::string name) const noexcept
+        bool wait(const std::string& name) const noexcept
         {
             std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -137,7 +145,7 @@ namespace ax
             else return false;            
         }
         //MAIN THREAD ONLY
-        bool unload(std::string name) noexcept
+        bool unload(const std::string& name) noexcept
         {
             std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -166,7 +174,7 @@ namespace ax
         }
 
         //MAIN THREAD ONLY
-        void dispose() noexcept
+        void dispose() noexcept override
         {
             std::unique_lock<std::mutex> lock(m_mutex);
 
@@ -180,7 +188,7 @@ namespace ax
             for(auto& it : keys) unload(it);
         }
         //MAIN THREAD ONLY
-        void log() const noexcept
+        void log() const noexcept override
         {
             std::lock_guard<std::mutex> lock(m_mutex);
 

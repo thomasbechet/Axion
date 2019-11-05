@@ -4,6 +4,7 @@
 #include <Core/Context/Module.hpp>
 #include <Core/Builder/ComponentFactories.ipp>
 #include <Core/Builder/SystemFactories.ipp>
+#include <Core/Builder/AssetFactories.hpp>
 
 #include <unordered_map>
 
@@ -14,5 +15,6 @@ namespace ax
     public:
         ComponentFactories component;
         SystemFactories system;
+        AssetFactories asset;
     };
 }

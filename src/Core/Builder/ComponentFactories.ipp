@@ -17,6 +17,6 @@ namespace ax
     template<typename C>
     IComponentFactory& ComponentFactories::get()
     {
-        return *m_factories[C::identifier].get();
+        return *m_factories.at(C::identifier).get();
     }
 }

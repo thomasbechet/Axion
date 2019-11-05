@@ -3,43 +3,47 @@
 #include <Core/Export.hpp>
 #include <Core/Context/Module.hpp>
 #include <Core/Utility/Path.hpp>
-#include <Core/Math/Geometry/Vertex.hpp>
+#include <Core/Utility/Json.hpp>
 #include <Core/Asset/AssetLoader.hpp>
 #include <Core/Asset/AssetManager.hpp>
-#include <Core/Asset/Asset/Texture.hpp>
-#include <Core/Asset/Asset/Mesh.hpp>
-#include <Core/Asset/Asset/Material.hpp>
-#include <Core/Asset/Asset/Model.hpp>
-#include <Core/Asset/Asset/Package.hpp>
-#include <Core/Asset/Asset/Shader.hpp>
-#include <Core/Asset/Asset/Scene.hpp>
+
+#include <mutex>
 
 namespace ax
 {
     class AXION_CORE_API AssetModule : public Module
     {
     public:
-        AssetModule();
         ~AssetModule();
 
+    private:
+        template<typename A>
+        size_t generateManagerLocation() noexcept;
+        template<typename A>
+        AssetManager<A>& getManager() noexcept;
+
+        std::vector<std::unique_ptr<IAssetManager>> m_managers;
+        std::mutex m_locationMutex;
+
+    public:
         void dispose() noexcept;
         void log() const noexcept;
 
-        template<typename T>
-        AssetReference<T> get(const std::string& name) const noexcept;
-        template<typename T>
-        bool load(const std::string& name, const typename T::Parameters& parameters) noexcept;
-        template<typename T>
-        bool loadAsync(const std::string& name, const typename T::Parameters& parameters) noexcept;
-        template<typename T>
+        template<typename A>
+        AssetReference<A> get(const std::string& name) const noexcept;
+        template<typename A>
+        bool load(const std::string& name, const typename A::Parameters& parameters) noexcept;
+        template<typename A>
+        bool loadAsync(const std::string& name, const typename A::Parameters& parameters) noexcept;
+        template<typename A>
         bool unload(const std::string& name) noexcept;
-        template<typename T>
+        template<typename A>
         bool exists(const std::string& name) noexcept;
-        template<typename T>
+        template<typename A>
         bool wait(const std::string& name) noexcept;
-        template<typename T>
+        template<typename A>
         void dispose() noexcept;
-        template<typename T>
+        template<typename A>
         void log() const noexcept;
 
         bool load(const std::string& type, const std::string& name, const Json& json = {}) noexcept;
@@ -51,9 +55,5 @@ namespace ax
         void log(const std::string& type) const noexcept;
 
         AssetLoader loader;
-
-    private:
-
-
     };
 }

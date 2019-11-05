@@ -64,19 +64,19 @@ bool Material::onLoad() noexcept
 bool Material::onValidate() noexcept
 {
     if(!m_parameters.diffuseTexture.empty())
-        m_diffuseTexture = Engine::asset().texture(m_parameters.diffuseTexture);
+        m_diffuseTexture = Engine::asset().get<Texture>(m_parameters.diffuseTexture);
     m_diffuseColor = m_parameters.diffuseColor;
 
     if(!m_parameters.normalTexture.empty())
-        m_normalTexture = Engine::asset().texture(m_parameters.normalTexture);
+        m_normalTexture = Engine::asset().get<Texture>(m_parameters.normalTexture);
     m_isBumpTexture = m_parameters.isBumpTexture;
 
     if(!m_parameters.specularTexture.empty())
-        m_specularTexture = Engine::asset().texture(m_parameters.specularTexture);
+        m_specularTexture = Engine::asset().get<Texture>(m_parameters.specularTexture);
     m_specularUniform = m_parameters.specularUniform;
 
     if(!m_parameters.shader.empty())
-        m_shader = Engine::asset().shader(m_parameters.shader);
+        m_shader = Engine::asset().get<Shader>(m_parameters.shader);
 
     try
     {
@@ -103,21 +103,21 @@ bool Material::onUnload() noexcept
             {
                 std::string diffuseTexName = m_diffuseTexture->getName();
                 m_diffuseTexture.reset();
-                Engine::asset().texture.unload(diffuseTexName);
+                Engine::asset().unload<Texture>(diffuseTexName);
             }
 
             if(m_normalTexture)
             {
                 std::string normalTexName = m_normalTexture->getName();
                 m_normalTexture.reset();
-                Engine::asset().texture.unload(normalTexName);
+                Engine::asset().unload<Texture>(normalTexName);
             }
 
             if(m_specularTexture)
             {
                 std::string specularTexName = m_specularTexture->getName();
                 m_specularTexture.reset();
-                Engine::asset().texture.unload(specularTexName);
+                Engine::asset().unload<Texture>(specularTexName);
             }
         }
 
@@ -127,7 +127,7 @@ bool Material::onUnload() noexcept
             {
                 std::string shaderName = m_shader->getName();
                 m_shader.reset();
-                Engine::asset().shader.unload(shaderName);
+                Engine::asset().unload<Shader>(shaderName);
             }
         }
 
