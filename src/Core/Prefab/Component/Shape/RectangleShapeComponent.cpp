@@ -1,6 +1,6 @@
 #include <Core/Prefab/Component/Shape/RectangleShapeComponent.hpp>
 
-#include <Core/Asset/AssetModule.hpp>
+#include <Core/Asset/AssetModule.ipp>
 #include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
@@ -39,7 +39,7 @@ RectangleShapeComponent::RectangleShapeComponent(const Entity& entity,
     m_staticmesh = Engine::renderer().createStaticmesh();
     m_staticmesh->setTransform(&transform);
     m_staticmesh->setMesh(m_mesh);
-    m_material = Engine::asset().material(Material::Default);
+    m_material = Engine::asset().get<Material>(Material::Default);
     m_staticmesh->setMaterial(m_material->getHandle());
 }
 RectangleShapeComponent::~RectangleShapeComponent()
@@ -55,7 +55,7 @@ void RectangleShapeComponent::setMaterial(std::nullptr_t ptr) noexcept
 }
 void RectangleShapeComponent::setMaterial(const std::string& name) noexcept
 {
-    setMaterial(Engine::asset().material(name));
+    setMaterial(Engine::asset().get<Material>(name));
 }
 void RectangleShapeComponent::setMaterial(AssetReference<Material> material) noexcept
 {

@@ -34,6 +34,7 @@
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/AssetModule.hpp>
 #include <Core/Asset/AssetHolder.hpp>
+#include <Core/Asset/Asset/Package.hpp>
 #include <RuntimeTest/CustomSystem.hpp>
 #include <Core/Math/Transform2D.hpp>
 #include <Core/Utility/Macro.hpp>
@@ -101,14 +102,14 @@ public:
 
         ax::Texture::Parameters textureParameters;
         textureParameters.source = "$ENGINE_DIR/textures/wall_normal2.bmp";
-        ax::Engine::asset().texture.load("mytexture", textureParameters);       
+        ax::Engine::asset().load<ax::Texture>("mytexture", textureParameters);       
 
         ax::Engine::asset().loader.resetLoadState();
 
         ax::Package::Parameters packageParameters;
         packageParameters.source = "../packages/package.json";
         packageParameters.asyncLoading = true;
-        ax::Engine::asset().package.loadAsync("mypackage", packageParameters);
+        ax::Engine::asset().loadAsync<ax::Package>("mypackage", packageParameters);
 
         ax::AssetLoader::LoadState loadState;
         std::string lastName;
@@ -173,7 +174,7 @@ public:
         //Plane
         ax::Material::Parameters wallMaterialParams;
         wallMaterialParams.normalTexture = "wall_normal2";
-        ax::Engine::asset().material.load("wall_material", wallMaterialParams);
+        ax::Engine::asset().load<ax::Material>("wall_material", wallMaterialParams);
 
         ax::Entity& plane = ax::Engine::scene().entity.create();
         plane.addComponent<ax::TransformComponent>();

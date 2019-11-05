@@ -1,7 +1,7 @@
 #include <Core/Asset/Asset/Material.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Asset/AssetModule.hpp>
+#include <Core/Asset/AssetModule.ipp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 

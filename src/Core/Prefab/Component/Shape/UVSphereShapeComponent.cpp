@@ -1,6 +1,6 @@
 #include <Core/Prefab/Component/Shape/UVSphereShapeComponent.hpp>
 
-#include <Core/Asset/AssetModule.hpp>
+#include <Core/Asset/AssetModule.ipp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Math/Geometry/UVSphere.hpp>
 
@@ -30,7 +30,7 @@ UVSphereShapeComponent::UVSphereShapeComponent(const Entity& entity,
     m_staticmesh = Engine::renderer().createStaticmesh();
     m_staticmesh->setTransform(&transform);
     m_staticmesh->setMesh(m_mesh);
-    m_material = Engine::asset().material(Material::Default);
+    m_material = Engine::asset().get<Material>(Material::Default);
     m_staticmesh->setMaterial(m_material->getHandle());
 }
 UVSphereShapeComponent::~UVSphereShapeComponent()
@@ -46,7 +46,7 @@ void UVSphereShapeComponent::setMaterial(std::nullptr_t ptr) noexcept
 }
 void UVSphereShapeComponent::setMaterial(const std::string& name) noexcept
 {
-    setMaterial(Engine::asset().material(name));
+    setMaterial(Engine::asset().get<Material>(name));
 }
 void UVSphereShapeComponent::setMaterial(AssetReference<Material> material) noexcept
 {

@@ -1,7 +1,7 @@
 #include <Core/Asset/Asset/Package.hpp>
 
 #include <Core/Context/Engine.hpp>
-#include <Core/Asset/AssetModule.hpp>
+#include <Core/Asset/AssetModule.ipp>
 #include <Core/Asset/JsonAttributes.hpp>
 #include <Core/Utility/Json.hpp>
 

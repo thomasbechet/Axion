@@ -48,8 +48,8 @@ public:
 
         ax::Material::Parameters lightMaterialParameters;
         lightMaterialParameters.shader = "light_emission";
-        ax::Engine::asset().material.load("light_emission_material", lightMaterialParameters);
-        ax::AssetReference<ax::Material> m = ax::Engine::asset().material("light_emission_material");
+        ax::Engine::asset().load<ax::Material>("light_emission_material", lightMaterialParameters);
+        ax::AssetReference<ax::Material> m = ax::Engine::asset().get<ax::Material>("light_emission_material");
 
         m_pointlights.reserve(MAX_X * MAX_Y);
         for(int x = 0; x < MAX_X; x++)

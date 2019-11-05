@@ -1,6 +1,6 @@
 #include <Core/Prefab/Component/Shape/QuadShapeComponent.hpp>
 
-#include <Core/Asset/AssetModule.hpp>
+#include <Core/Asset/AssetModule.ipp>
 #include <Core/Renderer/RendererModule.hpp>
 
 using namespace ax;
@@ -27,7 +27,7 @@ QuadShapeComponent::QuadShapeComponent(const Entity& entity, float x, float y, f
     m_staticmesh = Engine::renderer().createStaticmesh();
     m_staticmesh->setTransform(&transform);
     m_staticmesh->setMesh(m_mesh);
-    m_material = Engine::asset().material(Material::Default);
+    m_material = Engine::asset().get<Material>(Material::Default);
     m_staticmesh->setMaterial(m_material->getHandle());
 }
 QuadShapeComponent::~QuadShapeComponent()
@@ -43,7 +43,7 @@ void QuadShapeComponent::setMaterial(std::nullptr_t ptr) noexcept
 }
 void QuadShapeComponent::setMaterial(const std::string& name) noexcept
 {
-    setMaterial(Engine::asset().material(name));
+    setMaterial(Engine::asset().get<Material>(name));
 }
 void QuadShapeComponent::setMaterial(AssetReference<Material> material) noexcept
 {

@@ -10,13 +10,15 @@
 #include <sstream>
 #include <iomanip>
 
+#include <iostream>
+
 namespace ax
 {
     class AXION_CORE_API IAssetManager
     {
     public:
         virtual ~IAssetManager() = default;
-        virtual void dispose() const noexcept = 0;
+        virtual void dispose() noexcept = 0;
         virtual void log() const noexcept = 0;
     };
 

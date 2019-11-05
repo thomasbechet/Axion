@@ -18,7 +18,7 @@ namespace ax
 
     private:
         template<typename A>
-        size_t generateManagerLocation() noexcept;
+        size_t generateManager() noexcept;
         template<typename A>
         AssetManager<A>& getManager() noexcept;
 
@@ -30,9 +30,9 @@ namespace ax
         void log() const noexcept;
 
         template<typename A>
-        AssetReference<A> get(const std::string& name) const noexcept;
+        AssetReference<A> get(const std::string& name) noexcept;
         template<typename A>
-        bool load(const std::string& name, const typename A::Parameters& parameters) noexcept;
+        bool load(const std::string& name, const typename A::Parameters& parameters, bool validate = false) noexcept;
         template<typename A>
         bool loadAsync(const std::string& name, const typename A::Parameters& parameters) noexcept;
         template<typename A>
