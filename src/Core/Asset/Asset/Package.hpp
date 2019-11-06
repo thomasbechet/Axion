@@ -31,13 +31,6 @@ namespace ax
         
         Package(const std::string& name, const Parameters& parameters);
 
-        const std::vector<AssetReference<Material>>& getMaterials() const noexcept;
-        const std::vector<AssetReference<Mesh>>& getMeshes() const noexcept;
-        const std::vector<AssetReference<Model>>& getModels() const noexcept;
-        const std::vector<AssetReference<Scene>>& getScenes() const noexcept;
-        const std::vector<AssetReference<Shader>>& getShaders() const noexcept;
-        const std::vector<AssetReference<Texture>>& getTextures() const noexcept;
-
     private:
         bool onLoad() noexcept override;
         bool onValidate() noexcept override;

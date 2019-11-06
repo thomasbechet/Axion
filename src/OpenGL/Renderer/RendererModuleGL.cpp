@@ -58,8 +58,7 @@ void RendererModuleGL::initialize() noexcept
     //Load shaders
     Package::Parameters packageParameters;
     packageParameters.source = "$ENGINE_DIR/packages/glsl_shaders_package.json";
-    Engine::asset().load<Package>("glsl_shaders_package", packageParameters);
-    Engine::asset().log();
+    Engine::asset().load<Package>("glsl_shaders_package", packageParameters, true);
     m_content.debugLightCullingShader = Engine::asset().get<Shader>("glsl_debug_light_culling");
     m_content.geometryShader = Engine::asset().get<Shader>("glsl_geometry");
     m_content.genericShader = Engine::asset().get<Shader>("glsl_generic");

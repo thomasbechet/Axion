@@ -28,7 +28,8 @@ namespace ax
 
         std::thread m_thread;
         std::mutex m_mutex;
-        std::condition_variable m_conditionVariable;
+        std::condition_variable m_newMessageCD;
+        std::condition_variable m_flushCD;
         std::atomic<bool> m_running {true};
         std::queue<std::pair<std::string, Severity>> m_queue;
     };

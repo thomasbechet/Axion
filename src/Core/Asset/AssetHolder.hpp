@@ -22,9 +22,7 @@ namespace ax
         ~AssetHolder()
         {
             if(m_referenceCount > 0)
-            {
                 Engine::interrupt("Dangling reference detected with '" + m_asset.getName() + "' (" + std::to_string(m_referenceCount) + " references)");
-            }
         }
 
         AssetReference<T> reference() noexcept

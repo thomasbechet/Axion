@@ -16,31 +16,6 @@ Package::Package(const std::string& name, const Parameters& parameters) :
 
 }
 
-const std::vector<AssetReference<Material>>& Package::getMaterials() const noexcept
-{
-    return m_materials;
-}
-const std::vector<AssetReference<Mesh>>& Package::getMeshes() const noexcept
-{
-    return m_meshes;
-}
-const std::vector<AssetReference<Model>>& Package::getModels() const noexcept
-{
-    return m_models;
-}
-const std::vector<AssetReference<Scene>>& Package::getScenes() const noexcept
-{
-    return m_scenes;
-}
-const std::vector<AssetReference<Shader>>& Package::getShaders() const noexcept
-{
-    return m_shaders;
-}
-const std::vector<AssetReference<Texture>>& Package::getTextures() const noexcept
-{
-    return m_textures;
-}
-
 bool Package::onLoad() noexcept
 {
     if(!m_parameters.source.empty())

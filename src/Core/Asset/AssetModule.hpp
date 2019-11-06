@@ -8,6 +8,8 @@
 #include <Core/Asset/AssetManager.hpp>
 
 #include <mutex>
+#include <typeinfo>
+#include <typeindex>
 
 namespace ax
 {

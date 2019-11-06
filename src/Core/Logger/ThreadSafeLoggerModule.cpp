@@ -9,7 +9,7 @@ void ThreadSafeLoggerModule::initialize() noexcept
 void ThreadSafeLoggerModule::terminate() noexcept
 {
     m_running = false;
-    m_conditionVariable.notify_one();
+    m_newMessageCD.notify_one();
     m_thread.join();
 }
 
@@ -17,30 +17,30 @@ void ThreadSafeLoggerModule::log(const std::string& message, Severity severity) 
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     m_queue.push(std::make_pair(message, severity));
-    m_conditionVariable.notify_one();
+    m_newMessageCD.notify_one();
 }
 void ThreadSafeLoggerModule::flush() noexcept
 {
-    std::lock_guard<std::mutex> lock(m_mutex);
-    while(!m_queue.empty())
-    {
-        auto pair = m_queue.front();
-        m_queue.pop();
-        onLog(pair.first, pair.second);
-    }
+    std::unique_lock<std::mutex> lock(m_mutex);
+    while(!m_queue.empty()) m_flushCD.wait(lock);
 }
 
 void ThreadSafeLoggerModule::routine() noexcept
 {
+    bool empty = false;
     while(true)
     {
         std::unique_lock<std::mutex> lock(m_mutex);
 
-        while(m_queue.empty() && m_running) m_conditionVariable.wait(lock);
+        if(empty) m_flushCD.notify_one();
+
+        while(m_queue.empty() && m_running) m_newMessageCD.wait(lock);
         if(!m_running) break;
 
         auto pair = m_queue.front();
         m_queue.pop();
+
+        empty = m_queue.empty();
 
         lock.unlock();
 
