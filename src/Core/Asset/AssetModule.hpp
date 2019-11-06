@@ -18,11 +18,10 @@ namespace ax
 
     private:
         template<typename A>
-        size_t generateManager() noexcept;
-        template<typename A>
         AssetManager<A>& getManager() noexcept;
 
         std::vector<std::unique_ptr<IAssetManager>> m_managers;
+        std::unordered_map<std::type_index, size_t> m_indexes;
         std::mutex m_locationMutex;
 
     public:

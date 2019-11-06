@@ -7,16 +7,28 @@ namespace ax
     template<typename A>
     size_t AssetModule::generateManager() noexcept
     {
+        std::cout << "previous size: " << m_managers.size() << " generate " << A::identifier << " thread: " << std::this_thread::get_id() << std::endl;
         m_managers.emplace_back(std::make_unique<AssetManager<A>>(loader));
-        std::cout << "generate " << A::identifier << std::endl;
         return m_managers.size() - 1;
     }
     template<typename A>
     AssetManager<A>& AssetModule::getManager() noexcept
     {
         std::lock_guard<std::mutex> lock(m_locationMutex);
+
+        std::type_index index = std::type_index(typeid(A));
+
+        if(m_indexes.find(index) != m_indexes.end())
+            return m_indexes.at(index);
+
+        m_managers.emplace_back(std::make_unique<AssetManager<A>>());
+        m_indexes[index] = m_componentLists.size() - 1;
+
+        return m_componentLists.size() - 1;
+
+
         static size_t location = generateManager<A>();
-        std::cout << "location: " << location << " type: " << A::identifier << std::endl;
+        std::cout << "location: " << location << " type: " << A::identifier << " thread: " << std::this_thread::get_id() << std::endl;
         return static_cast<AssetManager<A>&>(*m_managers.at(location).get());
     }
 

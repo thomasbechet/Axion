@@ -147,8 +147,8 @@ public:
             strans.attachTo(camera0);
             sniper.add<ax::ModelComponent>().setModel("model_sniper");
         #endif
-        
 
+        
         //#define USE_CAMERA
         #if defined USE_CAMERA
             ax::Entity& camera1 = ax::Engine::scene().entity.create();
@@ -204,4 +204,16 @@ public:
     }
 };
 
-ENGINE_INIT(MyGameMode)
+//ENGINE_INIT(MyGameMode)
+
+std::vector<int> infos;
+
+int main(int argc, char* argv[])
+{
+    ax::Engine::initialize();
+    ax::Engine::scene().gamemode.set<MyGameMode>();
+    ax::Engine::context().run();
+    ax::Engine::terminate();
+    std::cout << "end reached" << std::endl;
+    return 0;
+}
