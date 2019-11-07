@@ -206,14 +206,22 @@ public:
 
 //ENGINE_INIT(MyGameMode)
 
-std::vector<int> infos;
+#include <Core/Utility/Reference.hpp>
+#include <Core/Utility/ReferenceTracker.hpp>
 
 int main(int argc, char* argv[])
 {
-    ax::Engine::initialize();
-    ax::Engine::scene().gamemode.set<MyGameMode>();
-    ax::Engine::context().run();
-    ax::Engine::terminate();
+    ax::BasicReferenceTracker tracker;
+    std::cout << tracker.count() << std::endl;
+    ax::BasicReference ref = tracker;
+    std::cout << tracker.count() << std::endl;
+    ref.reset();
+    std::cout << tracker.count() << std::endl;
+
+    //ax::Engine::initialize();
+    //ax::Engine::scene().gamemode.set<MyGameMode>();
+    //ax::Engine::context().run();
+    //ax::Engine::terminate();
     std::cout << "end reached" << std::endl;
     return 0;
 }

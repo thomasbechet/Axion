@@ -53,6 +53,8 @@ ADD_LIBRARY(
     Utility/ConfigParser.cpp
     Utility/LibraryLoader.cpp
     Utility/Path.cpp
+    Utility/Reference.cpp
+    Utility/ReferenceTracker.cpp
     Input/InputModule.cpp
     Input/Button.cpp
     Input/Axis.cpp
