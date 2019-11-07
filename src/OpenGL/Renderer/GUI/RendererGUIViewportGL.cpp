@@ -4,6 +4,7 @@
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
 #include <OpenGL/Renderer/RenderPass/ForwardPlusPass.hpp>
 #include <OpenGL/Renderer/RenderPass/WireframePass.hpp>
+#include <Core/Context/Engine.hpp>
 #include <Core/Window/WindowModule.hpp>
 
 using namespace ax;

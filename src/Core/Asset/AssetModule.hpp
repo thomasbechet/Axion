@@ -31,7 +31,7 @@ namespace ax
         void log() const noexcept;
 
         template<typename A>
-        AssetReference<A> get(const std::string& name) noexcept;
+        Reference<A> get(const std::string& name) noexcept;
         template<typename A>
         bool load(const std::string& name, const typename A::Parameters& parameters, bool validate = false) noexcept;
         template<typename A>

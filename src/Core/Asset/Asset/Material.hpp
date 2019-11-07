@@ -2,11 +2,10 @@
 
 #include <Core/Export.hpp>
 #include <Core/Utility/Color.hpp>
+#include <Core/Utility/Reference.ipp>
 #include <Core/Asset/Asset/Texture.hpp>
 #include <Core/Asset/Asset/Shader.hpp>
 #include <Core/Asset/Asset.hpp>
-#include <Core/Asset/AssetReference.hpp>
-#include <Core/Asset/AssetHolder.hpp>
 #include <Core/Renderer/Asset/RendererMaterial.hpp>
 
 namespace ax
@@ -41,17 +40,17 @@ namespace ax
 
         Material(const std::string& name, const Parameters& parameters);
 
-        AssetReference<Texture> getDiffuseTexture() const noexcept;
+        Reference<Texture> getDiffuseTexture() const noexcept;
         Color3 getDiffuseColor() const noexcept;
         void setDiffuseColor(Color3 color) noexcept;
 
-        AssetReference<Texture> getNormalTexture() const noexcept;
+        Reference<Texture> getNormalTexture() const noexcept;
 
-        AssetReference<Texture> getSpecularTexture() const noexcept;
+        Reference<Texture> getSpecularTexture() const noexcept;
         float getSpecularUniform() const noexcept;
         void setSpecularUniform(float specular) noexcept;
 
-        AssetReference<Shader> getShader() const noexcept;
+        Reference<Shader> getShader() const noexcept;
 
         RendererMaterialHandle getHandle() const noexcept;
 
@@ -66,16 +65,16 @@ namespace ax
     private:
         Parameters m_parameters;
 
-        AssetReference<Texture> m_diffuseTexture;
+        Reference<Texture> m_diffuseTexture;
         Color3 m_diffuseColor = Color3(1.0f, 1.0f, 1.0f);
         
-        AssetReference<Texture> m_normalTexture;
+        Reference<Texture> m_normalTexture;
         bool m_isBumpTexture = false;
 
-        AssetReference<Texture> m_specularTexture;
+        Reference<Texture> m_specularTexture;
         float m_specularUniform = 1.0f;
 
-        AssetReference<Shader> m_shader;
+        Reference<Shader> m_shader;
 
         RendererMaterialHandle m_handle;
     };

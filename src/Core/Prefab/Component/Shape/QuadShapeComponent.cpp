@@ -45,7 +45,7 @@ void QuadShapeComponent::setMaterial(const std::string& name) noexcept
 {
     setMaterial(Engine::asset().get<Material>(name));
 }
-void QuadShapeComponent::setMaterial(AssetReference<Material> material) noexcept
+void QuadShapeComponent::setMaterial(Reference<Material> material) noexcept
 {
     if(material)
     {

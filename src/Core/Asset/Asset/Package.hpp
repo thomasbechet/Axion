@@ -1,13 +1,13 @@
 #pragma once
 
 #include <Core/Export.hpp>
+#include <Core/Utility/Reference.hpp>
 #include <Core/Asset/Asset/Material.hpp>
 #include <Core/Asset/Asset/Mesh.hpp>
 #include <Core/Asset/Asset/Model.hpp>
 #include <Core/Asset/Asset/Scene.hpp>
 #include <Core/Asset/Asset/Shader.hpp>
 #include <Core/Asset/Asset/Texture.hpp>
-#include <Core/Asset/AssetReference.hpp>
 #include <Core/Asset/Asset.hpp>
 
 #include <string>
@@ -42,12 +42,12 @@ namespace ax
     private:
         Parameters m_parameters;
 
-        std::vector<AssetReference<Material>> m_materials;
-        std::vector<AssetReference<Mesh>> m_meshes;
-        std::vector<AssetReference<Model>> m_models;
-        std::vector<AssetReference<Scene>> m_scenes;
-        std::vector<AssetReference<Shader>> m_shaders;
-        std::vector<AssetReference<Texture>> m_textures;
+        std::vector<Reference<Material>> m_materials;
+        std::vector<Reference<Mesh>> m_meshes;
+        std::vector<Reference<Model>> m_models;
+        std::vector<Reference<Scene>> m_scenes;
+        std::vector<Reference<Shader>> m_shaders;
+        std::vector<Reference<Texture>> m_textures;
 
         std::vector<std::string> m_dummyMaterials;
         std::vector<std::string> m_dummyMeshes;

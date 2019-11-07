@@ -30,8 +30,8 @@ namespace ax
         
         Model(const std::string& name, const Parameters& parameters);
 
-        const std::vector<AssetReference<Mesh>>& getMeshes() const noexcept;
-        const std::vector<AssetReference<Material>>& getMaterials() const noexcept;
+        const std::vector<Reference<Mesh>>& getMeshes() const noexcept;
+        const std::vector<Reference<Material>>& getMaterials() const noexcept;
 
     private:
         bool onLoad() noexcept override;
@@ -44,8 +44,8 @@ namespace ax
     private:
         Parameters m_parameters;
 
-        std::vector<AssetReference<Mesh>> m_meshes;
-        std::vector<AssetReference<Material>> m_materials;
+        std::vector<Reference<Mesh>> m_meshes;
+        std::vector<Reference<Material>> m_materials;
 
         std::vector<std::pair<std::string, std::string>> m_dummyModels;
     };

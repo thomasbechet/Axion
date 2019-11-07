@@ -54,7 +54,6 @@ ADD_LIBRARY(
     Utility/LibraryLoader.cpp
     Utility/Path.cpp
     Utility/Reference.cpp
-    Utility/ReferenceTracker.cpp
     Input/InputModule.cpp
     Input/Button.cpp
     Input/Axis.cpp

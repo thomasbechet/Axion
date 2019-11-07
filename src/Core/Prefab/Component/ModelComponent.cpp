@@ -25,8 +25,8 @@ void ModelComponent::setModel(std::nullptr_t) noexcept
     for(auto& reference : m_elements)
     {
         Engine::renderer().destroyStaticmesh(std::get<RendererStaticmeshHandle>(reference));
-        std::get<AssetReference<Mesh>>(reference).reset();
-        std::get<AssetReference<Material>>(reference).reset();
+        std::get<Reference<Mesh>>(reference).reset();
+        std::get<Reference<Material>>(reference).reset();
     }
 
     m_elements.clear();
@@ -35,12 +35,12 @@ void ModelComponent::setModel(const std::string& name) noexcept
 {
     setModel(Engine::asset().get<Model>(name));
 }
-void ModelComponent::setModel(AssetReference<Model> model) noexcept
+void ModelComponent::setModel(Reference<Model> model) noexcept
 {
     setModel(nullptr);
 
-    const std::vector<AssetReference<Mesh>>& meshes = model->getMeshes();
-    const std::vector<AssetReference<Material>>& materials = model->getMaterials();
+    const std::vector<Reference<Mesh>>& meshes = model->getMeshes();
+    const std::vector<Reference<Material>>& materials = model->getMaterials();
 
     m_elements.reserve(meshes.size());
 
@@ -51,32 +51,32 @@ void ModelComponent::setModel(AssetReference<Model> model) noexcept
         staticmesh->setMesh(meshes[it]->getHandle());
         staticmesh->setMaterial(materials[it]->getHandle());
 
-        m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>(
+        m_elements.emplace_back(std::tuple<Reference<Mesh>, Reference<Material>, RendererStaticmeshHandle>(
             meshes[it], materials[it], staticmesh
         ));
     }
 }
-void ModelComponent::setModel(AssetReference<Mesh> mesh) noexcept
+void ModelComponent::setModel(Reference<Mesh> mesh) noexcept
 {   
     setModel(nullptr);
 
-    AssetReference<Material> material = Engine::asset().get<Material>(Material::Default);
+    Reference<Material> material = Engine::asset().get<Material>(Material::Default);
 
     RendererStaticmeshHandle staticmesh = Engine::renderer().createStaticmesh();
     staticmesh->setTransform(&transform);
     staticmesh->setMesh(mesh->getHandle());
     staticmesh->setMaterial(material->getHandle());
 
-    m_elements.emplace_back(std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>(
+    m_elements.emplace_back(std::tuple<Reference<Mesh>, Reference<Material>, RendererStaticmeshHandle>(
         mesh, material, staticmesh
     ));
 }
 
 void ModelComponent::setMaterial(std::nullptr_t ptr, Id component) noexcept
 {
-    std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>& reference = m_elements.at(component);
+    std::tuple<Reference<Mesh>, Reference<Material>, RendererStaticmeshHandle>& reference = m_elements.at(component);
 
-    std::get<AssetReference<Material>>(reference).reset();
+    std::get<Reference<Material>>(reference).reset();
 
     std::get<RendererStaticmeshHandle>(reference)->setMaterial(nullptr);
 }
@@ -84,16 +84,16 @@ void ModelComponent::setMaterial(const std::string& name, Id component) noexcept
 {
     setMaterial(Engine::asset().get<Material>(name), component);
 }
-void ModelComponent::setMaterial(AssetReference<Material> material, Id component) noexcept
+void ModelComponent::setMaterial(Reference<Material> material, Id component) noexcept
 {
     if(material)
     {
-        std::tuple<AssetReference<Mesh>, AssetReference<Material>, RendererStaticmeshHandle>& reference = m_elements.at(component);
+        std::tuple<Reference<Mesh>, Reference<Material>, RendererStaticmeshHandle>& reference = m_elements.at(component);
 
-        std::get<AssetReference<Material>>(reference).reset();
-        std::get<AssetReference<Material>>(reference) = material;
+        std::get<Reference<Material>>(reference).reset();
+        std::get<Reference<Material>>(reference) = material;
 
-        std::get<RendererStaticmeshHandle>(reference)->setMaterial(std::get<AssetReference<Material>>(reference)->getHandle());
+        std::get<RendererStaticmeshHandle>(reference)->setMaterial(std::get<Reference<Material>>(reference)->getHandle());
     }
     else
     {

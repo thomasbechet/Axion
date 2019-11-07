@@ -14,7 +14,7 @@ Material::Material(const std::string& name, const Parameters& parameters) :
 
 }
 
-AssetReference<Texture> Material::getDiffuseTexture() const noexcept
+Reference<Texture> Material::getDiffuseTexture() const noexcept
 {
     return m_diffuseTexture;
 }
@@ -28,12 +28,12 @@ void Material::setDiffuseColor(Color3 color) noexcept
     update();
 }
 
-AssetReference<Texture> Material::getNormalTexture() const noexcept
+Reference<Texture> Material::getNormalTexture() const noexcept
 {
     return m_normalTexture;
 }
 
-AssetReference<Texture> Material::getSpecularTexture() const noexcept
+Reference<Texture> Material::getSpecularTexture() const noexcept
 {
     return m_specularTexture;
 }
@@ -47,7 +47,7 @@ void Material::setSpecularUniform(float specular) noexcept
     update();
 }
 
-AssetReference<Shader> Material::getShader() const noexcept
+Reference<Shader> Material::getShader() const noexcept
 {
     return m_shader;
 }

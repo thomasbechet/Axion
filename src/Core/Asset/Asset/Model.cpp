@@ -16,11 +16,11 @@ Model::Model(const std::string& name, const Parameters& parameters) :
 
 }
 
-const std::vector<AssetReference<Mesh>>& Model::getMeshes() const noexcept
+const std::vector<Reference<Mesh>>& Model::getMeshes() const noexcept
 {
     return m_meshes;
 }
-const std::vector<AssetReference<Material>>& Model::getMaterials() const noexcept
+const std::vector<Reference<Material>>& Model::getMaterials() const noexcept
 {
     return m_materials;
 }

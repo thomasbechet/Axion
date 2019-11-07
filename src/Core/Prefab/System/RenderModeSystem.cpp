@@ -1,5 +1,6 @@
 #include <Core/Prefab/System/RenderModeSystem.hpp>
 
+#include <Core/Context/Engine.hpp>
 #include <Core/Input/InputModule.hpp>
 #include <Core/Renderer/RendererModule.hpp>
 

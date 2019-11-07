@@ -6,7 +6,7 @@ void SceneModule::open(const std::string& scene) noexcept
 {
 
 }
-void SceneModule::open(AssetReference<Scene> scene) noexcept
+void SceneModule::open(Reference<Scene> scene) noexcept
 {
     
 }

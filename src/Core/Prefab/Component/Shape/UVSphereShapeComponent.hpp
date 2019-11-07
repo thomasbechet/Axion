@@ -2,10 +2,10 @@
 
 #include <Core/Export.hpp>
 #include <Core/Utility/Types.hpp>
+#include <Core/Utility/Reference.hpp>
 #include <Core/Math/Geometry/UVSphere.hpp>
 #include <Core/Scene/Entity/Entity.hpp>
 #include <Core/Prefab/Component/TransformComponent.hpp>
-#include <Core/Asset/AssetReference.hpp>
 #include <Core/Asset/Asset/Material.hpp>
 #include <Core/Renderer/Scene/RendererStaticmesh.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>
@@ -30,7 +30,7 @@ namespace ax
 
         void setMaterial(std::nullptr_t) noexcept;
         void setMaterial(const std::string& name) noexcept;
-        void setMaterial(AssetReference<Material> material) noexcept;
+        void setMaterial(Reference<Material> material) noexcept;
 
         void setSmooth(bool smooth) noexcept;
         void setCoordinateFactor(float factor) noexcept;
@@ -45,6 +45,6 @@ namespace ax
 
         RendererStaticmeshHandle m_staticmesh;
         RendererMeshHandle m_mesh;
-        AssetReference<Material> m_material;
+        Reference<Material> m_material;
     };
 }

@@ -57,7 +57,7 @@ void RectangleShapeComponent::setMaterial(const std::string& name) noexcept
 {
     setMaterial(Engine::asset().get<Material>(name));
 }
-void RectangleShapeComponent::setMaterial(AssetReference<Material> material) noexcept
+void RectangleShapeComponent::setMaterial(Reference<Material> material) noexcept
 {
     if(material)
     {

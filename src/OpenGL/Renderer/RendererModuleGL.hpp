@@ -38,13 +38,13 @@ namespace ax
         GLuint quadVBO;
         GLuint quadVAO;
 
-        AssetReference<Shader> debugLightCullingShader;
-        AssetReference<Shader> geometryShader;
-        AssetReference<Shader> genericShader;
-        AssetReference<Shader> postProcessShader;
-        AssetReference<Shader> quadTextureShader;
-        AssetReference<Shader> wireframeShader;
-        AssetReference<Shader> guiRectangleShader;
+        Reference<Shader> debugLightCullingShader;
+        Reference<Shader> geometryShader;
+        Reference<Shader> genericShader;
+        Reference<Shader> postProcessShader;
+        Reference<Shader> quadTextureShader;
+        Reference<Shader> wireframeShader;
+        Reference<Shader> guiRectangleShader;
         ShaderGLSL lightCullingComputeShader;
 
         std::unique_ptr<MaterialUBO> materialUBO;

@@ -2,15 +2,14 @@
 
 #include <Core/Export.hpp>
 #include <Core/Asset/AssetLoader.hpp>
-#include <Core/Asset/AssetReference.hpp>
 #include <Core/Logger/LoggerModule.hpp>
+#include <Core/Utility/Reference.ipp>
+#include <Core/Context/Engine.hpp>
 
 #include <mutex>
 #include <unordered_map>
 #include <sstream>
 #include <iomanip>
-
-#include <iostream>
 
 namespace ax
 {
@@ -29,16 +28,14 @@ namespace ax
         AssetManager(AssetLoader& loader) : m_loader(loader) {}
 
         //MAIN THREAD ONLY
-        AssetReference<T> get(const std::string& name) const noexcept
+        Reference<T> get(const std::string& name) const noexcept
         {
             std::unique_lock<std::mutex> lock(m_mutex);
 
             if(!existsNotSafe(name))
-            {
                 Engine::interrupt("Failed to access <" + T::identifier + "> '" + name + "' because it doesn't exists");
-            }
 
-            Asset& asset = *m_assets.at(name)->get();
+            Asset& asset = *m_assets.at(name).get();
             Asset::State state = asset.getState();
 
             while(state == Asset::State::Pending)
@@ -65,7 +62,7 @@ namespace ax
                 }
             }
 
-            return m_assets.at(name)->reference(); 
+            return m_trackers.at(name)->reference();
         }
         //ANY THREAD (validate = ONLY MAIN THREAD)
         bool load(const std::string& name, const typename T::Parameters& parameters, bool validate = false) noexcept
@@ -74,8 +71,10 @@ namespace ax
 
             if(!existsNotSafe(name))
             {
-                m_assets.emplace(name, std::make_unique<AssetHolder<T>>(name, parameters));
-                Asset& asset = *m_assets.at(name)->get();
+                m_assets.emplace(name, std::make_unique<T>(name, parameters));
+                m_trackers.emplace(name, std::make_unique<ReferenceTracker<T>>(*m_assets.at(name).get()));
+
+                Asset& asset = *m_assets.at(name).get();
 
                 lock.unlock();
 
@@ -101,8 +100,10 @@ namespace ax
 
             if(!existsNotSafe(name))
             {
-                m_assets.emplace(name, std::make_unique<AssetHolder<T>>(name, parameters));
-                m_loader.add(*m_assets.at(name)->get());
+                m_assets.emplace(name, std::make_unique<T>(name, parameters));
+                m_trackers.emplace(name, std::make_unique<ReferenceTracker<T>>(*m_assets.at(name).get()));
+
+                m_loader.add(*m_assets.at(name).get());
                 return true;
             }
 
@@ -121,7 +122,7 @@ namespace ax
 
             if(existsNotSafe(name))
             {
-                Asset& asset = *m_assets.at(name)->get();
+                Asset& asset = *m_assets.at(name).get();
 
                 while(true)
                 {
@@ -153,16 +154,17 @@ namespace ax
 
             if(existsNotSafe(name))
             {
-                Asset& asset = *m_assets.at(name)->get();
+                Asset& asset = *m_assets.at(name).get();
                 if(asset.isValidated())
                 {
-                    if(m_assets.at(name)->referenceCount() == 0)
+                    if(m_trackers.at(name)->count() == 0)
                     {
                         lock.unlock();
                         if(asset.unload())
                         {
                             lock.lock();
                             m_assets.erase(name);
+                            m_trackers.erase(name);
                             return true;
                         }
                     }
@@ -206,7 +208,7 @@ namespace ax
     
             for(auto& it : m_assets)
             {
-                Asset::State state = it.second->get()->getState();
+                Asset::State state = it.second->getState();
                 std::string stateString;
                 switch(state)
                 {
@@ -222,7 +224,8 @@ namespace ax
                     stateString = "[None]"; break;
                 }
 
-                stateString += ("[" + std::to_string(it.second.get()->referenceCount()) + "]");
+                unsigned referenceCount = m_trackers.at(it.first)->count();
+                stateString += ("[" + std::to_string(referenceCount) + "]");
 
                 std::stringstream ssLine;
                 ssLine << std::left << std::setw(length - stateString.length() - 1) << ("- '" + it.first + "'") << std::left << stateString;
@@ -237,7 +240,8 @@ namespace ax
         }
 
     private:
-        std::unordered_map<std::string, std::unique_ptr<AssetHolder<T>>> m_assets;
+        std::unordered_map<std::string, std::unique_ptr<T>> m_assets;
+        std::unordered_map<std::string, std::unique_ptr<ReferenceTracker<T>>> m_trackers;
         mutable std::mutex m_mutex;
         AssetLoader& m_loader;
     };

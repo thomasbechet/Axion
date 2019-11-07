@@ -7,7 +7,7 @@
 #include <Core/Scene/Component/ComponentManager.hpp>
 #include <Core/Scene/System/SystemManager.hpp>
 #include <Core/Asset/Asset/Scene.hpp>
-#include <Core/Asset/AssetReference.hpp>
+#include <Core/Utility/Reference.ipp>
 
 #include <memory>
 
@@ -24,6 +24,6 @@ namespace ax
 
     public:
         void open(const std::string& scene) noexcept;
-        void open(AssetReference<Scene> scene) noexcept;
+        void open(Reference<Scene> scene) noexcept;
     };
 }

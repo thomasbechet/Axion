@@ -48,7 +48,7 @@ void UVSphereShapeComponent::setMaterial(const std::string& name) noexcept
 {
     setMaterial(Engine::asset().get<Material>(name));
 }
-void UVSphereShapeComponent::setMaterial(AssetReference<Material> material) noexcept
+void UVSphereShapeComponent::setMaterial(Reference<Material> material) noexcept
 {
     if(material)
     {

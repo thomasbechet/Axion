@@ -20,7 +20,7 @@ namespace ax
     }
 
     template<typename A>
-    AssetReference<A> AssetModule::get(const std::string& name) noexcept
+    Reference<A> AssetModule::get(const std::string& name) noexcept
     {
         static AssetManager<A>& manager = getManager<A>();
         return manager.get(name);

@@ -40,6 +40,7 @@
 #include <Core/Utility/Macro.hpp>
 #include <Core/Builder/BuilderModule.hpp>
 #include <Core/Utility/ChunkContainer.ipp>
+#include <Core/Utility/Reference.ipp>
 
 struct Staticsponza : public ax::Component
 {
@@ -206,22 +207,12 @@ public:
 
 //ENGINE_INIT(MyGameMode)
 
-#include <Core/Utility/Reference.hpp>
-#include <Core/Utility/ReferenceTracker.hpp>
-
 int main(int argc, char* argv[])
 {
-    ax::BasicReferenceTracker tracker;
-    std::cout << tracker.count() << std::endl;
-    ax::BasicReference ref = tracker;
-    std::cout << tracker.count() << std::endl;
-    ref.reset();
-    std::cout << tracker.count() << std::endl;
-
-    //ax::Engine::initialize();
-    //ax::Engine::scene().gamemode.set<MyGameMode>();
-    //ax::Engine::context().run();
-    //ax::Engine::terminate();
+    ax::Engine::initialize();
+    ax::Engine::scene().gamemode.set<MyGameMode>();
+    ax::Engine::context().run();
+    ax::Engine::terminate();
     std::cout << "end reached" << std::endl;
     return 0;
 }
