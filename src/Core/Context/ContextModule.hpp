@@ -12,6 +12,11 @@ namespace ax
     class AXION_CORE_API ContextModule : public Module
     {
     public:
+        ContextModule(Path configurationFile);
+
+        void initialize() noexcept;
+        void terminate() noexcept;
+
         bool isRunning() const noexcept;
         void run() noexcept;
         void requestStop() noexcept;

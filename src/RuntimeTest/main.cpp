@@ -19,22 +19,22 @@
 #include <Core/Scene/System/SystemManager.ipp>
 #include <Core/Input/InputModule.hpp>
 #include <Core/Window/WindowModule.hpp>
-#include <Core/Prefab/System/BasicWindowSystem.hpp>
-#include <Core/Prefab/System/BasicSpectatorSystem.hpp>
-#include <Core/Prefab/System/RenderModeSystem.hpp>
-#include <Core/Prefab/Component/CameraComponent.hpp>
-#include <Core/Prefab/Component/TransformComponent.hpp>
-#include <Core/Prefab/Component/ModelComponent.hpp>
-#include <Core/Prefab/Component/PointLightComponent.hpp>
-#include <Core/Prefab/Component/DirectionalLightComponent.hpp>
-#include <Core/Prefab/Component/Shape/UVSphereShapeComponent.hpp>
-#include <Core/Prefab/Component/Shape/RectangleShapeComponent.hpp>
-#include <Core/Prefab/Component/Shape/QuadShapeComponent.hpp>
+#include <Core/Content/System/BasicWindowSystem.hpp>
+#include <Core/Content/System/BasicSpectatorSystem.hpp>
+#include <Core/Content/System/RenderModeSystem.hpp>
+#include <Core/Content/Component/CameraComponent.hpp>
+#include <Core/Content/Component/TransformComponent.hpp>
+#include <Core/Content/Component/ModelComponent.hpp>
+#include <Core/Content/Component/PointLightComponent.hpp>
+#include <Core/Content/Component/DirectionalLightComponent.hpp>
+#include <Core/Content/Component/Shape/UVSphereShapeComponent.hpp>
+#include <Core/Content/Component/Shape/RectangleShapeComponent.hpp>
+#include <Core/Content/Component/Shape/QuadShapeComponent.hpp>
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/AssetModule.hpp>
 #include <Core/Asset/AssetHolder.hpp>
-#include <Core/Asset/Asset/Package.hpp>
+#include <Core/Content/Asset/Package.hpp>
 #include <RuntimeTest/CustomSystem.hpp>
 #include <Core/Math/Transform2D.hpp>
 #include <Core/Utility/Macro.hpp>
@@ -98,8 +98,22 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
+        //ax::Quaternionf quat(90.0, 90.0, 0.0);
+        ax::Quaternionf quat("[90.0, 90.0, 0.0]"_json);
+        std::cout << quat.json() << std::endl;
+
+        std::cin.get();
+
         ax::Engine::scene().system.add<ax::BasicWindowSystem>();
         ax::Engine::scene().system.add<ax::RenderModeSystem>();
+
+        ax::Engine::asset().load({
+            {"name", "test_texture"},
+            {"type", "texture"},
+            {"source","$ENGINE_DIR/textures/wall_normal2.bmp"}
+        }, true);
+
+        //ax::Reference<ax::Texture> ref = ax::Engine::asset().get<ax::Texture>("test_texture");
 
         ax::Texture::Parameters textureParameters;
         textureParameters.source = "$ENGINE_DIR/textures/wall_normal2.bmp";
@@ -109,7 +123,6 @@ public:
 
         ax::Package::Parameters packageParameters;
         packageParameters.source = "../packages/package.json";
-        packageParameters.asyncLoading = true;
         ax::Engine::asset().loadAsync<ax::Package>("mypackage", packageParameters);
 
         ax::AssetLoader::LoadState loadState;

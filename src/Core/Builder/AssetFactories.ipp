@@ -7,7 +7,7 @@ namespace ax
     template<typename A>
     void AssetFactories::record() noexcept
     {
-        m_factories[C::identifier] = std::make_unique<AssetFactory<C>>();
+        m_factories[A::identifier] = std::make_unique<AssetFactory<A>>();
     }
     template<typename A>
     void AssetFactories::unrecord() noexcept
@@ -15,8 +15,15 @@ namespace ax
         m_factories.erase(A::identifier);
     }
     template<typename A>
-    IAssetFactory& AssetFactories::get() noexcept
+    IAssetFactory& AssetFactories::get()
     {
-        return *m_factories.at(A::identifier).get();
+        try
+        {
+            return *m_factories.at(A::identifier).get();
+        }
+        catch(const std::out_of_range& e)
+        {
+            throw std::out_of_range(A::identifier);
+        }
     }
 }

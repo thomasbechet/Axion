@@ -16,10 +16,6 @@
 
 using namespace ax;
 
-const std::string Engine::EngineDirectory = "..";
-const std::string Engine::GameDataDirectory = "../../GameData";
-const std::string Engine::GameDirectory = "../..";
-
 AssetModule* Engine::m_asset = nullptr;
 BuilderModule* Engine::m_builder = nullptr;
 ContextModule* Engine::m_context = nullptr;
@@ -37,8 +33,7 @@ void Engine::initialize() noexcept
     m_builder = new BuilderModule();
 
     //Context
-    m_context = new ContextModule();
-    m_context->config.parse("../Engine.ini");
+    m_context = new ContextModule("../Engine.ini");
 
     //Logger
     std::string typeLogger = Engine::context().config.getString("Logger", "type", "none");
@@ -98,11 +93,10 @@ void Engine::initialize() noexcept
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    //Configure Logger
+    //Initializes engine
     Engine::logger().initialize();
     Engine::logger().displayDate(Engine::context().config.getBoolean("Logger", "show_time", true));
-
-    //Initializes engine
+    Engine::context().initialize();
     Engine::window().initialize();
     Engine::input().initialize();
     Engine::renderer().initialize();
@@ -143,8 +137,7 @@ void Engine::terminate() noexcept
     Engine::renderer().terminate();
     Engine::input().terminate();
     Engine::window().terminate();
-
-    //Shutdown logger
+    Engine::context().terminate();
     Engine::logger().terminate();
 
     delete m_scene;

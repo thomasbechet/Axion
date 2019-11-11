@@ -12,8 +12,8 @@ namespace ax
     {
     public:
         BasicReference() = default;
-        explicit BasicReference(BasicReferenceTracker& tracker);
-        explicit BasicReference(const BasicReference& reference);
+        BasicReference(BasicReferenceTracker& tracker);
+        BasicReference(const BasicReference& reference);
         virtual ~BasicReference();
 
         BasicReference& operator=(const BasicReference& other);
@@ -31,7 +31,7 @@ namespace ax
     {
     public:
         Reference() = default;
-        explicit Reference(ReferenceTracker<T>& tracker);
+        Reference(ReferenceTracker<T>& tracker);
         Reference(const Reference<T>& reference);
         ~Reference();
 

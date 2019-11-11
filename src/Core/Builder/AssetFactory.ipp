@@ -4,18 +4,46 @@
 
 #include <Core/Context/Engine.hpp>
 #include <Core/Asset/AssetModule.ipp>
+#include <Core/Asset/JsonAttributes.hpp>
 
 namespace ax
 {
     template<typename A>
-    bool AssetFactory<A>::load(const std::string& name, const Json& json) noexcept
+    BasicReference AssetFactory<A>::get(const std::string& name) noexcept
     {
-        return Engine::asset().load<A>(name, json);
+        return Engine::asset().get<A>(name);
     }
     template<typename A>
-    bool AssetFactory<A>::loadAsync(const std::string& name, const Json& json) noexcept
+    bool AssetFactory<A>::load(const Json& json, bool validate) noexcept
     {
-        return Engine::asset().loadAsync<A>(name, json);
+        try
+        {
+            std::string name = json.find(JsonAttributes::name)->get<std::string>();
+            typename A::Parameters parameters;
+            parameters.json = json;
+            return Engine::asset().load<A>(name, parameters, validate);
+        }
+        catch(const std::exception& e)
+        {
+            Engine::logger().log("Failed to load asset <" + A::identifier + "> because json doesn't have '" + JsonAttributes::name + "' attribute", Severity::Warning);
+            return false;
+        }
+    }
+    template<typename A>
+    bool AssetFactory<A>::loadAsync(const Json& json) noexcept
+    {
+        try
+        {
+            std::string name = json.find(JsonAttributes::name)->get<std::string>();
+            typename A::Parameters parameters;
+            parameters.json = json;
+            return Engine::asset().loadAsync<A>(name, parameters);
+        }
+        catch(const std::exception& e)
+        {
+            Engine::logger().log("Failed to load async asset <" + A::identifier + "> because json doesn't have '" + JsonAttributes::name + "' attribute", Severity::Warning);
+            return false;
+        }
     }
     template<typename A>
     bool AssetFactory<A>::unload(const std::string& name) noexcept

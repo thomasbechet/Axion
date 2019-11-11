@@ -21,9 +21,6 @@ namespace ax
     class AXION_CORE_API Engine
     {
     public:
-        friend class EngineContext;
-
-    public:
         static void initialize() noexcept;
         static void terminate() noexcept;
         [[noreturn]] static void interrupt(std::string message = "") noexcept;
@@ -37,9 +34,9 @@ namespace ax
         static SceneModule& scene() noexcept;
         static WindowModule& window() noexcept;
 
-        static const std::string EngineDirectory; //   Game/Engine/
-        static const std::string GameDataDirectory; // Game/GameData/
-        static const std::string GameDirectory;   //   Game/
+        static inline const std::string EngineDirectory = "..";                // => Game/Engine/
+        static inline const std::string GameDataDirectory = "../../GameData/"; // => Game/GameData/
+        static inline const std::string GameDirectory = "../..";               // => Game/
 
     private:       
         static AssetModule* m_asset;

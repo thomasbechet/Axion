@@ -2,6 +2,7 @@
 
 #include <Core/Export.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/Reference.ipp>
 
 #include <string>
 
@@ -11,8 +12,9 @@ namespace ax
     {
     public:
         virtual ~IAssetFactory() = default;
-        virtual bool load(const std::string& name, const Json& json = {}) noexcept = 0;
-        virtual bool loadAsync(const std::string& name, const Json& json = {}) noexcept = 0;
+        virtual BasicReference get(const std::string& name) noexcept = 0;
+        virtual bool load(const Json& json = {}, bool validate = false) noexcept = 0;
+        virtual bool loadAsync(const Json& json = {}) noexcept = 0;
         virtual bool unload(const std::string& name) noexcept = 0;
         virtual bool exists(const std::string& name) noexcept = 0;
         virtual bool wait(const std::string& name) noexcept = 0;
@@ -24,8 +26,9 @@ namespace ax
     class AXION_CORE_API AssetFactory : public IAssetFactory
     {
     public:
-        bool load(const std::string& name, const Json& json = {}) noexcept override;
-        bool loadAsync(const std::string& name, const Json& json = {}) noexcept override;
+        BasicReference get(const std::string& name) noexcept override;
+        bool load(const Json& json = {}, bool validate = false) noexcept override;
+        bool loadAsync(const Json& json = {}) noexcept override;
         bool unload(const std::string& name) noexcept override;
         bool exists(const std::string& name) noexcept override;
         bool wait(const std::string& name) noexcept override;

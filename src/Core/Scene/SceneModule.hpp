@@ -6,7 +6,7 @@
 #include <Core/Scene/Entity/EntityManager.hpp>
 #include <Core/Scene/Component/ComponentManager.hpp>
 #include <Core/Scene/System/SystemManager.hpp>
-#include <Core/Asset/Asset/Scene.hpp>
+#include <Core/Content/Asset/Scene.hpp>
 #include <Core/Utility/Reference.ipp>
 
 #include <memory>
@@ -25,5 +25,7 @@ namespace ax
     public:
         void open(const std::string& scene) noexcept;
         void open(Reference<Scene> scene) noexcept;
+
+        Reference<Scene> m_activeScene;
     };
 }

@@ -62,7 +62,7 @@ namespace ax
         return manager.dispose();
     }
     template<typename A>
-    void AssetModule::log() const noexcept
+    void AssetModule::log() noexcept
     {
         static AssetManager<A>& manager = getManager<A>();
         return manager.log();

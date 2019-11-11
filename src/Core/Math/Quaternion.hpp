@@ -30,6 +30,42 @@ namespace ax
 			y = axis.y * std::sin(angle / (T)2);
 			z = axis.z * std::sin(angle / (T)2);
 		}
+		Quaternion(T _rx, T _ry = 0, T _rz = 0)
+		{
+			*this = Quaternion(_rz, Vector3<T>(0, 0, 1)) * 
+					Quaternion(_ry, Vector3<T>(0, 1, 0)) * 
+					Quaternion(_rx, Vector3<T>(1, 0, 0));
+		}
+		Quaternion(const Json& json)
+		{
+			try
+			{
+				std::vector<float> values = json.get<std::vector<float>>();
+				if(values.size() <= 3) //Human rotation (degree angles)
+				{
+					std::cout << values.size() << " " << values.at(0) << " " << values.at(1) << " " << values.at(2) << std::endl;
+					if(values.size() == 1)
+						Quaternion(radians(values.at(0)));
+					else if(values.size() == 2)
+						Quaternion(radians(values.at(0)), radians(values.at(1)));
+					else if(values.size() == 3)
+						Quaternion(radians(values.at(0)), radians(values.at(1)), radians(values.at(2)));
+				}
+				else
+				{
+					x = values.at(0);
+					y = values.at(1);
+					z = values.at(2);
+					w = values.at(3);
+				}
+			}
+			catch(...) {}
+		}
+
+		Json json() const noexcept
+		{
+			return {x, y, z, w};
+		}
 		
 		///////////////////////
 		//OPERATORS

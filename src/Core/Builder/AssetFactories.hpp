@@ -16,8 +16,8 @@ namespace ax
         template<typename A>
         void unrecord() noexcept;
         template<typename A>
-        IAssetFactory& get() noexcept;
-        IAssetFactory& get(const std::string& identifier) noexcept;
+        IAssetFactory& get();
+        IAssetFactory& get(const std::string& identifier);
 
     private:
         std::unordered_map<std::string, std::unique_ptr<IAssetFactory>> m_factories;

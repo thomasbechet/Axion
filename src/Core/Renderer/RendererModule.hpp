@@ -3,9 +3,9 @@
 #include <Core/Export.hpp>
 #include <Core/Context/Module.hpp>
 #include <Core/Utility/Types.hpp>
-#include <Core/Asset/Asset/Mesh.hpp>
-#include <Core/Asset/Asset/Material.hpp>
-#include <Core/Asset/Asset/Texture.hpp>
+#include <Core/Content/Asset/Mesh.hpp>
+#include <Core/Content/Asset/Material.hpp>
+#include <Core/Content/Asset/Texture.hpp>
 #include <Core/Renderer/RenderMode.hpp>
 #include <Core/Renderer/Asset/RendererMaterial.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>

@@ -3,9 +3,17 @@
 	
 	"insertion":"override",
 	"gamemode":"mygamemode",
-	"packages":[
-		{"name":"mypackage", "source":"$ENGINE_DIR/packages/package_test.json"},
-		{"name":"glsl_package", "source":"$ENGINE_DIR/packages/glsl_package.json"}
+	"assets":[
+		{
+			"name":"mypackage", 
+			"type":"package", 
+			"source":"$ENGINE_DIR/packages/package_test.json"
+		},
+		{
+			"name":"glsl_package", 
+			"type":"package", 
+			"source":"$ENGINE_DIR/packages/glsl_package.json"
+		}
 	],
 	"systems":["monsystem0", "monsystem2"],
 	"entities":[
@@ -18,19 +26,21 @@
 					"scale":[1, 1, 1],
 					"childs":[
 						{
-							"components":[
+							"tag":"child_tag",
+							"components":{
 								"transform":{}
-							]
-						}
+							}
+						},
+						{"gameobject":"tree"}
 					]
 				},
 				"model":{
 					"model":"mon_model"
 				},
 				"basic_spectator":{
-					"normal_speed":10.0f,
-					"slow_speed":20.0f,
-					"fast_speed":500.0f,
+					"normal_speed":10.0,
+					"slow_speed":20.0,
+					"fast_speed":500.0,
 					"free_mode":false
 				}
 			}

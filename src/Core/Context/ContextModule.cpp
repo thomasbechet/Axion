@@ -11,27 +11,35 @@
 #include <Core/Input/InputModule.hpp>
 #include <Core/Builder/BuilderModule.hpp>
 
-#include <Core/Prefab/Component/Shape/QuadShapeComponent.hpp>
-#include <Core/Prefab/Component/Shape/RectangleShapeComponent.hpp>
-#include <Core/Prefab/Component/Shape/UVSphereShapeComponent.hpp>
-#include <Core/Prefab/Component/BasicSpectatorComponent.hpp>
-#include <Core/Prefab/Component/CameraComponent.hpp>
-#include <Core/Prefab/Component/CustomShapeComponent.hpp>
-#include <Core/Prefab/Component/DirectionalLightComponent.hpp>
-#include <Core/Prefab/Component/ModelComponent.hpp>
-#include <Core/Prefab/Component/PointLightComponent.hpp>
-#include <Core/Prefab/Component/TransformComponent.hpp>
-#include <Core/Prefab/System/BasicSpectatorSystem.hpp>
-#include <Core/Prefab/System/BasicWindowSystem.hpp>
-#include <Core/Prefab/System/RenderModeSystem.hpp>
+#include <Core/Content/Component/Shape/QuadShapeComponent.hpp>
+#include <Core/Content/Component/Shape/RectangleShapeComponent.hpp>
+#include <Core/Content/Component/Shape/UVSphereShapeComponent.hpp>
+#include <Core/Content/Component/BasicSpectatorComponent.hpp>
+#include <Core/Content/Component/CameraComponent.hpp>
+#include <Core/Content/Component/CustomShapeComponent.hpp>
+#include <Core/Content/Component/DirectionalLightComponent.hpp>
+#include <Core/Content/Component/ModelComponent.hpp>
+#include <Core/Content/Component/PointLightComponent.hpp>
+#include <Core/Content/Component/TransformComponent.hpp>
+#include <Core/Content/System/BasicSpectatorSystem.hpp>
+#include <Core/Content/System/BasicWindowSystem.hpp>
+#include <Core/Content/System/RenderModeSystem.hpp>
+#include <Core/Content/Asset/Material.hpp>
+#include <Core/Content/Asset/Mesh.hpp>
+#include <Core/Content/Asset/Model.hpp>
+#include <Core/Content/Asset/Package.hpp>
+#include <Core/Content/Asset/Scene.hpp>
+#include <Core/Content/Asset/Shader.hpp>
+#include <Core/Content/Asset/Texture.hpp>
 
 using namespace ax;
 
-bool ContextModule::isRunning() const noexcept
+ContextModule::ContextModule(Path configurationFile)
 {
-    return m_running;
+    config.parse(configurationFile);
 }
-void ContextModule::preRun() noexcept
+
+void ContextModule::initialize() noexcept
 {
     //Record components
     Engine::builder().component.record<QuadShapeComponent>();
@@ -49,12 +57,28 @@ void ContextModule::preRun() noexcept
     Engine::builder().system.record<BasicSpectatorSystem>();
     Engine::builder().system.record<BasicWindowSystem>();
     Engine::builder().system.record<RenderModeSystem>();
+
+    //Record assets
+    ax::Engine::builder().asset.record<Material>();
+    ax::Engine::builder().asset.record<Mesh>();
+    ax::Engine::builder().asset.record<Model>();
+    ax::Engine::builder().asset.record<Package>();
+    ax::Engine::builder().asset.record<Scene>();
+    ax::Engine::builder().asset.record<Shader>();
+    ax::Engine::builder().asset.record<Texture>();
+}
+void ContextModule::terminate() noexcept
+{
+
+}
+
+bool ContextModule::isRunning() const noexcept
+{
+    return m_running;
 }
 void ContextModule::run() noexcept
 {
     if(isRunning()) return;
-
-    preRun();
 
     m_running = true;
 

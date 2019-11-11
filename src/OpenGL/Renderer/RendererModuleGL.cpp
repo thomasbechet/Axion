@@ -5,7 +5,7 @@
 #include <Core/Window/WindowModule.hpp>
 #include <Core/Logger/LoggerModule.hpp>
 #include <Core/Asset/AssetModule.ipp>
-#include <Core/Asset/Asset/Package.hpp>
+#include <Core/Content/Asset/Package.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
 #include <GL/glew.h>

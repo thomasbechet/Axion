@@ -8,6 +8,17 @@
 			"source":"$ENGINE_DIR/textures/wall_normal2.bmp"
 		},
 		{
+			"type":"package",
+			"name":"lol_trop_drole",
+			"assets":[
+				{
+					"type":"texture",
+					"name":"mais_mdr_quoi",
+					"source":"$ENGINE_DIR/textures/earthmap.jpg"
+				}
+			]
+		},
+		{
 			"type":"texture",
 			"name":"texture_earth",
 			"source":"$ENGINE_DIR/textures/earthmap.jpg"

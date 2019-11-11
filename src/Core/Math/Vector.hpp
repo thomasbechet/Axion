@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/Export.hpp>
+#include <Core/Utility/Json.hpp>
 
 #include <iostream>
 #include <cmath>
@@ -26,6 +27,24 @@ namespace ax
 		{
 			this->x = x;
 			this->y = y;
+		}
+		Vector2<T>(const Json& json)
+		{
+			try
+			{
+				std::vector<T> values = json.get<std::vector<T>>();
+				if(values.size() >= 2)
+				{
+					x = values.at(0);
+					y = values.at(1);
+				}
+			}
+			catch(...) {}
+		}
+
+		Json json() const noexcept
+		{
+			return {x, y};
 		}
 		
 		//////////////////////////
@@ -122,6 +141,25 @@ namespace ax
 			this->x = vec.x;
 			this->y = vec.y;
 			this->z = vec.z;
+		}
+		Vector3<T>(const Json& json)
+		{
+			try
+			{
+				std::vector<T> values = json.get<std::vector<T>>();
+				if(values.size() >= 3)
+				{
+					x = values.at(0);
+					y = values.at(1);
+					z = values.at(2);
+				}
+			}
+			catch(...) {}
+		}
+
+		Json json() const noexcept
+		{
+			return {x, y, z};
 		}
 		
 		////////////////////
@@ -248,6 +286,13 @@ namespace ax
 			this->z = z;
 			this->w = w;
 		}
+		Vector4<T>(const Vector2<T> vec, T z, T w)
+		{
+			this->x = vec.x;
+			this->y = vec.y;
+			this->z = z;
+			this->w = w;
+		}
 		Vector4<T>(const Vector3<T> vec, T w)
 		{
 			this->x = vec.x;
@@ -255,12 +300,25 @@ namespace ax
 			this->z = vec.z;
 			this->w = w;
 		}
-		Vector4<T>(const Vector2<T> vec, T z, T w)
+		Vector4<T>(const Json& json)
 		{
-			this->x = vec.x;
-			this->y = vec.y;
-			this->z = z;
-			this->w = w;
+			try
+			{
+				std::vector<T> values = json.get<std::vector<T>>();
+				if(values.size() >= 4)
+				{
+					x = values.at(0);
+					y = values.at(1);
+					z = values.at(2);
+					w = values.at(3);
+				}
+			}
+			catch(...) {}
+		}
+
+		Json json() const noexcept
+		{
+			return {x, y, z, w};
 		}
 		
 		///////////////////////

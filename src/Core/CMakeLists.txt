@@ -19,31 +19,31 @@ ADD_LIBRARY(
     Asset/AssetModule.cpp
     Asset/AssetLoader.cpp
     Asset/Asset.cpp
-    Asset/Asset/Material.cpp
-    Asset/Asset/Mesh.cpp
-    Asset/Asset/Model.cpp
-    Asset/Asset/Package.cpp
-    Asset/Asset/Shader.cpp
-    Asset/Asset/Texture.cpp
-    Asset/Asset/Scene.cpp
     Builder/AssetFactories.cpp
     Builder/ComponentFactories.cpp
     Builder/SystemFactories.cpp
     Context/ContextModule.cpp
     Context/Engine.cpp
-    Prefab/System/BasicWindowSystem.cpp
-    Prefab/System/BasicSpectatorSystem.cpp
-    Prefab/System/RenderModeSystem.cpp
-    Prefab/Component/TransformComponent.cpp
-    Prefab/Component/CameraComponent.cpp
-    Prefab/Component/BasicSpectatorComponent.cpp
-    Prefab/Component/ModelComponent.cpp
-    Prefab/Component/PointLightComponent.cpp
-    Prefab/Component/DirectionalLightComponent.cpp
-    Prefab/Component/CustomShapeComponent.cpp
-    Prefab/Component/Shape/UVSphereShapeComponent.cpp
-    Prefab/Component/Shape/RectangleShapeComponent.cpp
-    Prefab/Component/Shape/QuadShapeComponent.cpp
+    Content/System/BasicWindowSystem.cpp
+    Content/System/BasicSpectatorSystem.cpp
+    Content/System/RenderModeSystem.cpp
+    Content/Component/TransformComponent.cpp
+    Content/Component/CameraComponent.cpp
+    Content/Component/BasicSpectatorComponent.cpp
+    Content/Component/ModelComponent.cpp
+    Content/Component/PointLightComponent.cpp
+    Content/Component/DirectionalLightComponent.cpp
+    Content/Component/CustomShapeComponent.cpp
+    Content/Component/Shape/UVSphereShapeComponent.cpp
+    Content/Component/Shape/RectangleShapeComponent.cpp
+    Content/Component/Shape/QuadShapeComponent.cpp
+    Content/Asset/Material.cpp
+    Content/Asset/Mesh.cpp
+    Content/Asset/Model.cpp
+    Content/Asset/Package.cpp
+    Content/Asset/Shader.cpp
+    Content/Asset/Texture.cpp
+    Content/Asset/Scene.cpp
     Renderer/Renderer.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp

@@ -4,9 +4,7 @@
 #include <Core/Context/Module.hpp>
 #include <Core/Builder/ComponentFactories.ipp>
 #include <Core/Builder/SystemFactories.ipp>
-#include <Core/Builder/AssetFactories.hpp>
-
-#include <unordered_map>
+#include <Core/Builder/AssetFactories.ipp>
 
 namespace ax
 {

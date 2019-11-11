@@ -5,7 +5,7 @@
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Json.hpp>
 #include <Core/Asset/AssetLoader.hpp>
-#include <Core/Asset/AssetManager.hpp>
+#include <Core/Asset/AssetManager.ipp>
 
 #include <mutex>
 #include <typeinfo>
@@ -45,10 +45,11 @@ namespace ax
         template<typename A>
         void dispose() noexcept;
         template<typename A>
-        void log() const noexcept;
+        void log() noexcept;
 
-        bool load(const std::string& type, const std::string& name, const Json& json = {}) noexcept;
-        bool loadAsync(const std::string& type, const std::string& name, const Json& json = {}) noexcept;
+        BasicReference get(const std::string& type, const std::string& name) noexcept;
+        bool load(const Json& json = {}, bool validate = false) noexcept;
+        bool loadAsync(const Json& json = {}) noexcept;
         bool unload(const std::string& type, const std::string& name) noexcept;
         bool exists(const std::string& type, const std::string& name) const noexcept;
         bool wait(const std::string& type, const std::string& name) noexcept;

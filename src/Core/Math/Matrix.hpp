@@ -64,6 +64,44 @@ namespace ax
 			m[2][3] = vec4.z;
 			m[3][3] = vec4.w;
 		}
+		Matrix4<T>(const Json& json)
+		{
+			try
+			{
+				std::vector<T> values = json.get<std::vector<T>>();
+				if(values.size() >= 16)
+				{
+					m[0][0] = values.at(0);
+					m[1][0] = values.at(1);
+					m[2][0] = values.at(2);
+					m[3][0] = values.at(3);
+					
+					m[0][1] = values.at(4);
+					m[1][1] = values.at(5);
+					m[2][1] = values.at(6);
+					m[3][1] = values.at(7);
+					
+					m[0][2] = values.at(8);
+					m[1][2] = values.at(9);
+					m[2][2] = values.at(10);
+					m[3][2] = values.at(11);
+					
+					m[0][3] = values.at(12);
+					m[1][3] = values.at(13);
+					m[2][3] = values.at(14);
+					m[3][3] = values.at(15);
+				}
+			}
+			catch(...) {}
+		}
+
+		Json json() const noexcept
+		{
+			return {m[0][0], m[1][0], m[2][0], m[3][0],
+					m[0][1], m[1][1], m[2][1], m[3][1],
+					m[0][2], m[1][2], m[2][2], m[3][2],
+					m[0][3], m[1][3], m[2][3], m[3][3]};
+		}
 		
 		//////////////////////////
 		//OPERATORS
