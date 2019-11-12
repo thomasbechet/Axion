@@ -23,16 +23,7 @@
 				"transform":{
 					"translation":[0, 1, 342],
 					"rotation":[0, 4, 2],
-					"scale":[1, 1, 1],
-					"childs":[
-						{
-							"tag":"child_tag",
-							"components":{
-								"transform":{}
-							}
-						},
-						{"gameobject":"tree"}
-					]
+					"scale":[1, 1, 1]
 				},
 				"model":{
 					"model":"mon_model"
@@ -43,13 +34,35 @@
 					"fast_speed":500.0,
 					"free_mode":false
 				}
-			}
+			},
+			"childs":[
+				{
+					"tag":"child_tag",
+					"components":{
+						"transform":{}
+					}
+				},
+				{"gameobject":"tree"}
+			]
 		},
 		{
 			"tag":"child_entite",
 			"components":{
 				"transform":{
 					"attachTo":"mon_entite"
+				}
+			}
+		},
+		{
+			"tag":"mon_tag",
+			"components":{
+				"transform":{
+					"translation":[1, 2, 3],
+					"rotation":[180.0, 0, 0],
+					"scale":[10.0, 10.0, 3]
+				},
+				"model":{
+					"model":"mon_model"
 				}
 			}
 		}

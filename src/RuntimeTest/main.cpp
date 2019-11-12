@@ -98,12 +98,6 @@ class MyGameMode : public ax::GameMode
 public:
     void onStart() override
     {
-        //ax::Quaternionf quat(90.0, 90.0, 0.0);
-        ax::Quaternionf quat("[90.0, 90.0, 0.0]"_json);
-        std::cout << quat.json() << std::endl;
-
-        std::cin.get();
-
         ax::Engine::scene().system.add<ax::BasicWindowSystem>();
         ax::Engine::scene().system.add<ax::RenderModeSystem>();
 

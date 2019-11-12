@@ -6,19 +6,19 @@ TransformComponent::TransformComponent(const Entity& entity, const Json& json)
 {
     try
     {
-        std::vector<float> translation = json["translation"].get<std::vector<float>>();
-        setTranslation(translation.at(0), translation.at(1), translation.at(2));
+        auto jTranslation = json.find("translation");
+        if(jTranslation != json.end())
+            setTranslation(Vector3f(*jTranslation));
 
-        std::vector<float> rotation = json["rotation"].get<std::vector<float>>();
-        //TODO
+        auto jRotation = json.find("rotation");
+        if(jRotation != json.end())
+            setRotation(Quaternionf(*jRotation));
 
-        std::vector<float> scale = json["scale"].get<std::vector<float>>();
-        setScale(scale.at(0), scale.at(1), scale.at(2));
+        auto jScale = json.find("scale");
+        if(jScale != json.end())
+            setScale(Vector3f(*jScale));
     }
-    catch(const std::exception& e)
-    {
-        //Do nothing
-    }
+    catch(...) {}
 }
 TransformComponent::TransformComponent(const Entity& entity, Vector3f position, Quaternionf rotation, Vector3f scale) 
     : Transform(position, rotation, scale)

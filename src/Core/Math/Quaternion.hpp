@@ -30,26 +30,34 @@ namespace ax
 			y = axis.y * std::sin(angle / (T)2);
 			z = axis.z * std::sin(angle / (T)2);
 		}
-		Quaternion(T _rx, T _ry = 0, T _rz = 0)
+		Quaternion(T rx, T ry = 0, T rz = 0)
 		{
-			*this = Quaternion(_rz, Vector3<T>(0, 0, 1)) * 
-					Quaternion(_ry, Vector3<T>(0, 1, 0)) * 
-					Quaternion(_rx, Vector3<T>(1, 0, 0));
+			T c1 = std::cos(ry / (T)2);
+            T s1 = std::sin(ry / (T)2);
+            T c2 = std::cos(rz / (T)2);
+            T s2 = std::sin(rz / (T)2);
+            T c3 = std::cos(rx / (T)2);
+            T s3 = std::sin(rx / (T)2);
+            T c1c2 = c1 * c2;
+            T s1s2 = s1 * s2;
+            w = c1c2 * c3 - s1s2 * s3;
+            x = c1c2 * s3 + s1s2 * c3;
+            y = s1 * c2 * c3 + c1 * s2 * s3;
+            z = c1 * s2 * c3 - s1 * c2 * s3;
 		}
 		Quaternion(const Json& json)
 		{
 			try
 			{
-				std::vector<float> values = json.get<std::vector<float>>();
+				std::vector<T> values = json.get<std::vector<T>>();
 				if(values.size() <= 3) //Human rotation (degree angles)
 				{
-					std::cout << values.size() << " " << values.at(0) << " " << values.at(1) << " " << values.at(2) << std::endl;
 					if(values.size() == 1)
-						Quaternion(radians(values.at(0)));
+						*this = Quaternion(radians(values.at(0)));
 					else if(values.size() == 2)
-						Quaternion(radians(values.at(0)), radians(values.at(1)));
+						*this = Quaternion(radians(values.at(0)), radians(values.at(1)));
 					else if(values.size() == 3)
-						Quaternion(radians(values.at(0)), radians(values.at(1)), radians(values.at(2)));
+						*this = Quaternion(radians(values.at(0)), radians(values.at(1)), radians(values.at(2)));
 				}
 				else
 				{
