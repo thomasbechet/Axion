@@ -32,8 +32,8 @@ namespace ax
 
         InsertionMethod getInsertionMethod() const noexcept;
         std::string getGameMode() const noexcept;
-        std::vector<std::string> getSystems() const noexcept;
-        const std::vector<const std::reference_wrapper<Json>&>& getEntities() const noexcept;
+        const std::vector<std::string>& getSystems() const noexcept;
+        const std::vector<Json>& getEntities() const noexcept;
 
     private:
         bool onLoad() noexcept override;
@@ -41,8 +41,13 @@ namespace ax
         bool onUnload() noexcept override;
 
     private:
+        bool loadFromJson(const Json& json) noexcept;
+
         Parameters m_parameters;
 
         InsertionMethod m_insertionMethod;
+        std::string m_gameMode;
+        std::vector<std::string> m_systems;
+        std::vector<Json> m_entities;
     };
 }

@@ -8,7 +8,12 @@ using namespace ax;
 ModelComponent::ModelComponent(const Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
-
+    try
+    {
+        if(json.is_string())
+            setModel(json.get<std::string>());
+    }
+    catch(...) {}
 }
 ModelComponent::ModelComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())

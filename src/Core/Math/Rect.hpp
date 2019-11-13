@@ -14,13 +14,16 @@ namespace ax
         {
             try
 			{
-				std::vector<T> values = json.get<std::vector<T>>();
-                if(values.size() >= 4)
+                if(json.is_array())
                 {
-                    width = values.at(0);
-                    height = values.at(1);
-                    bottom = values.at(2);
-                    left = values.at(3);
+                    std::vector<T> values = json.get<std::vector<T>>();
+                    if(values.size() == 4)
+                    {
+                        width = values.at(0);
+                        height = values.at(1);
+                        bottom = values.at(2);
+                        left = values.at(3);
+                    }
                 }
 			}
 			catch(...) {}

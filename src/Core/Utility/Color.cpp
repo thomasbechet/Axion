@@ -40,7 +40,22 @@ Color4::Color4(const Vector4f& vec)
 }
 Color4::Color4(const Json& json)
 {
-    
+    try
+    {
+        if(json.is_array())
+        {
+            std::vector<float> values = json.get<std::vector<float>>();
+            if(values.size() <= 3)
+            {
+                r = values.at(0) / 255.0f;
+                g = values.at(1) / 255.0f;
+                b = values.at(2) / 255.0f;
+            }
+            if(values.size() >= 4)
+                a = values.at(3) / 255.0f;
+        }   
+    }
+    catch(...) {}
 }
 
 Color4 Color4::operator*(const Color4& color)

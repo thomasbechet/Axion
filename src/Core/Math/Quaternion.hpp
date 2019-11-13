@@ -49,22 +49,24 @@ namespace ax
 		{
 			try
 			{
-				std::vector<T> values = json.get<std::vector<T>>();
-				if(values.size() <= 3) //Human rotation (degree angles)
+				if(json.is_array())
 				{
-					if(values.size() == 1)
-						*this = Quaternion(radians(values.at(0)));
-					else if(values.size() == 2)
-						*this = Quaternion(radians(values.at(0)), radians(values.at(1)));
-					else if(values.size() == 3)
-						*this = Quaternion(radians(values.at(0)), radians(values.at(1)), radians(values.at(2)));
-				}
-				else
-				{
-					x = values.at(0);
-					y = values.at(1);
-					z = values.at(2);
-					w = values.at(3);
+					std::vector<T> values = json.get<std::vector<T>>();
+					if(values.size() == 3) //Human rotation (degree angles)
+					{
+						T a = radians(values.at(0));
+						T b = radians(values.at(1));
+						T c = radians(values.at(2));
+
+						*this = Quaternion<T>(a, b, c);
+					}
+					else if(values.size() == 4)
+					{
+						x = values.at(0);
+						y = values.at(1);
+						z = values.at(2);
+						w = values.at(3);
+					}
 				}
 			}
 			catch(...) {}

@@ -7,7 +7,26 @@ using namespace ax;
 CameraComponent::CameraComponent(const Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
+    m_handle = Engine::renderer().createCamera();
+    m_handle->setTransform(&transform);
 
+    try
+    {
+        auto jFov = json.find("fov");
+        if(jFov != json.end() && json.is_number_float())
+            m_parameters.fov = jFov->get<float>();
+
+        auto jNear = json.find("near");
+        if(jNear != json.end() && json.is_number_float())
+            m_parameters.near = jNear->get<float>();
+
+        auto jFar = json.find("far");
+        if(jFar != json.end() && json.is_number_float())
+            m_parameters.far = jFar->get<float>();
+    }
+    catch(...) {}
+
+    updateRendererParameters();
 }
 CameraComponent::CameraComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())

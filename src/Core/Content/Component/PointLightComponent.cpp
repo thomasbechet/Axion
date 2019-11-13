@@ -7,7 +7,26 @@ using namespace ax;
 PointLightComponent::PointLightComponent(const Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
-    
+    m_handle = Engine::renderer().createPointLight();
+    m_handle->setTransform(&transform);
+
+    try
+    {
+        auto jColor = json.find("color");
+        if(jColor != json.end() && jColor->is_array())
+            m_parameters.color = Vector3f(*jColor);
+
+        auto jRadius = json.find("radius");
+        if(jRadius != json.end() && jRadius->is_number())
+            m_parameters.radius = jRadius->get<float>();
+
+        auto jIntensity = json.find("intensity");
+        if(jIntensity != json.end() && jIntensity->is_number())
+            m_parameters.intensity = jIntensity->get<float>();
+
+        m_handle->setParameters(m_parameters);
+    }
+    catch(...) {}
 }
 PointLightComponent::PointLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())

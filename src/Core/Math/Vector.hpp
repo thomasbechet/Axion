@@ -32,11 +32,14 @@ namespace ax
 		{
 			try
 			{
-				std::vector<T> values = json.get<std::vector<T>>();
-				if(values.size() >= 2)
+				if(json.is_array())
 				{
-					x = values.at(0);
-					y = values.at(1);
+					std::vector<T> values = json.get<std::vector<T>>();
+					if(values.size() == 2)
+					{
+						x = values.at(0);
+						y = values.at(1);
+					}
 				}
 			}
 			catch(...) {}
@@ -146,12 +149,15 @@ namespace ax
 		{
 			try
 			{
-				std::vector<T> values = json.get<std::vector<T>>();
-				if(values.size() >= 3)
+				if(json.is_array())
 				{
-					x = values.at(0);
-					y = values.at(1);
-					z = values.at(2);
+					std::vector<T> values = json.get<std::vector<T>>();
+					if(values.size() == 3)
+					{
+						x = values.at(0);
+						y = values.at(1);
+						z = values.at(2);
+					}
 				}
 			}
 			catch(...) {}
@@ -304,13 +310,16 @@ namespace ax
 		{
 			try
 			{
-				std::vector<T> values = json.get<std::vector<T>>();
-				if(values.size() >= 4)
+				if(json.is_array())
 				{
-					x = values.at(0);
-					y = values.at(1);
-					z = values.at(2);
-					w = values.at(3);
+					std::vector<T> values = json.get<std::vector<T>>();
+					if(values.size() == 4)
+					{
+						x = values.at(0);
+						y = values.at(1);
+						z = values.at(2);
+						w = values.at(3);
+					}
 				}
 			}
 			catch(...) {}

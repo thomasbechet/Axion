@@ -7,7 +7,22 @@ using namespace ax;
 DirectionalLightComponent::DirectionalLightComponent(const Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
+    m_handle = Engine::renderer().createDirectionalLight();
+    m_handle->setTransform(&transform);
 
+    try
+    {
+        auto jColor = json.find("color");
+        if(jColor != json.end() && jColor->is_array())
+            m_parameters.color = Color3(*jColor);
+
+        auto jIntensity = json.find("intensity");
+        if(jIntensity != json.end() && jIntensity->is_number_float())
+            m_parameters.intensity = jIntensity->get<float>();
+    }
+    catch(...) {}
+
+    m_handle->setParameters(m_parameters);
 }
 DirectionalLightComponent::DirectionalLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
