@@ -50,6 +50,7 @@ ADD_LIBRARY(
     Utility/Timer.cpp
     Utility/TimeRecorder.cpp
     Utility/Memory.cpp
+    Utility/Color.cpp
     Utility/ConfigParser.cpp
     Utility/LibraryLoader.cpp
     Utility/Path.cpp

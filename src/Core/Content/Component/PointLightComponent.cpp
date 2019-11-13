@@ -7,7 +7,7 @@ using namespace ax;
 PointLightComponent::PointLightComponent(const Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
-
+    
 }
 PointLightComponent::PointLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
