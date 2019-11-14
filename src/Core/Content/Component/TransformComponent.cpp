@@ -7,15 +7,15 @@ TransformComponent::TransformComponent(const Entity& entity, const Json& json)
     try
     {
         auto jTranslation = json.find("translation");
-        if(jTranslation != json.end())
+        if(jTranslation != json.end() && jTranslation->is_array())
             setTranslation(Vector3f(*jTranslation));
 
         auto jRotation = json.find("rotation");
-        if(jRotation != json.end())
+        if(jRotation != json.end() && jRotation->is_array())
             setRotation(Quaternionf(*jRotation));
 
         auto jScale = json.find("scale");
-        if(jScale != json.end())
+        if(jScale != json.end() && jScale->is_array())
             setScale(Vector3f(*jScale));
     }
     catch(...) {}

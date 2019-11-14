@@ -17,7 +17,7 @@ DirectionalLightComponent::DirectionalLightComponent(const Entity& entity, const
             m_parameters.color = Color3(*jColor);
 
         auto jIntensity = json.find("intensity");
-        if(jIntensity != json.end() && jIntensity->is_number_float())
+        if(jIntensity != json.end() && jIntensity->is_number())
             m_parameters.intensity = jIntensity->get<float>();
     }
     catch(...) {}

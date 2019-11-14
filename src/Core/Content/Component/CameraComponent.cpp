@@ -13,15 +13,15 @@ CameraComponent::CameraComponent(const Entity& entity, const Json& json) :
     try
     {
         auto jFov = json.find("fov");
-        if(jFov != json.end() && json.is_number_float())
+        if(jFov != json.end() && json.is_number())
             m_parameters.fov = jFov->get<float>();
 
         auto jNear = json.find("near");
-        if(jNear != json.end() && json.is_number_float())
+        if(jNear != json.end() && json.is_number())
             m_parameters.near = jNear->get<float>();
 
         auto jFar = json.find("far");
-        if(jFar != json.end() && json.is_number_float())
+        if(jFar != json.end() && json.is_number())
             m_parameters.far = jFar->get<float>();
     }
     catch(...) {}

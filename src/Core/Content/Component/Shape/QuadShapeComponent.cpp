@@ -8,7 +8,7 @@ using namespace ax;
 QuadShapeComponent::QuadShapeComponent(const Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
-
+    
 }
 QuadShapeComponent::QuadShapeComponent(const Entity& entity, float x, float y, float factor) :
     Quad(x, y),

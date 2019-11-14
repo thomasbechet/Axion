@@ -13,6 +13,9 @@
 			"name":"glsl_package", 
 			"type":"package", 
 			"source":"$ENGINE_DIR/packages/glsl_package.json"
+		},
+		{
+			
 		}
 	],
 	"systems":["monsystem0", "monsystem2"],
@@ -55,6 +58,7 @@
 		},
 		{
 			"tag":"mon_tag",
+			"template":"tree",
 			"components":{
 				"transform":{
 					"translation":[1, 2, 3],
@@ -63,6 +67,21 @@
 				},
 				"model":{
 					"model":"mon_model"
+				},
+				"circle_shape":{
+					"material":"my_material",
+					"smooth":true,
+					"radius":10.0,
+					"slice":5,
+					"stack":5,
+					"factor":1.0
+				},
+				"rectangle_shape":{
+					"minX":-1.0, "maxX":1.0,
+					"minY":-1.0, "maxY":1.0,
+					"minZ":-1.0, "maxZ":1.0,
+					"factor":1.0,
+					"smooth":false
 				}
 			}
 		}
