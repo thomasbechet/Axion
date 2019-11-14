@@ -15,18 +15,53 @@
 			"source":"$ENGINE_DIR/packages/glsl_package.json"
 		},
 		{
-			
+			"name":"tree_template",
+			"type":"template",
+			"components":{
+				"model":{
+					"asset":"test",
+					"material":"ma_material"
+				},
+				"point_light":{
+					"color":[255, 255, 255],
+					"intensity":10.0
+				},
+				"transform":{
+					"childs":{
+						"child0":{
+							"components":{
+								"transform":{"translation":[3, 0, 0]},
+								"model":{}
+							}
+						},
+						"child1":{
+							
+						}
+					}
+				}
+			}
 		}
 	],
 	"systems":["monsystem0", "monsystem2"],
 	"entities":[
+		{
+			"template":"tree",
+			"components":{"transform":{"translation":[0.0, 0.0, 4.0]}}
+		},
 		{
 			"tag":"mon_entite",
 			"components":{
 				"transform":{
 					"translation":[0, 1, 342],
 					"rotation":[0, 4, 2],
-					"scale":[1, 1, 1]
+					"scale":[1, 1, 1],
+					"childs":{
+						"child1":{
+							"tag":"child_tag",
+							"components":{"transform":{"translation":[0.0, 12.0, 3.0]}}
+						},
+						"child2":{"template":"tree"}
+					}
 				},
 				"model":{
 					"model":"mon_model"
@@ -37,16 +72,7 @@
 					"fast_speed":500.0,
 					"free_mode":false
 				}
-			},
-			"childs":[
-				{
-					"tag":"child_tag",
-					"components":{
-						"transform":{}
-					}
-				},
-				{"gameobject":"tree"}
-			]
+			}
 		},
 		{
 			"tag":"child_entite",

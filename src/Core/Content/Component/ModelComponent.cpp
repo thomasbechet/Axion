@@ -2,18 +2,16 @@
 
 #include <Core/Asset/AssetModule.ipp>
 #include <Core/Renderer/RendererModule.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 using namespace ax;
 
 ModelComponent::ModelComponent(const Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
-    try
-    {
-        if(json.is_string())
-            setModel(json.get<std::string>());
-    }
-    catch(...) {}
+    std::string model = JsonUtility::readString(json, "model");
+    if(!model.empty())
+        setModel(model);
 }
 ModelComponent::ModelComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())

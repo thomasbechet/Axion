@@ -1,6 +1,7 @@
 #include <Core/Content/Component/PointLightComponent.hpp>
 
 #include <Core/Renderer/RendererModule.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 using namespace ax;
 
@@ -10,23 +11,11 @@ PointLightComponent::PointLightComponent(const Entity& entity, const Json& json)
     m_handle = Engine::renderer().createPointLight();
     m_handle->setTransform(&transform);
 
-    try
-    {
-        auto jColor = json.find("color");
-        if(jColor != json.end() && jColor->is_array())
-            m_parameters.color = Vector3f(*jColor);
+    m_parameters.color = JsonUtility::readColor3(json, "color");
+    m_parameters.radius = JsonUtility::readFloat(json, "radius", m_parameters.radius);
+    m_parameters.intensity = JsonUtility::readFloat(json, "intensity", m_parameters.intensity);
 
-        auto jRadius = json.find("radius");
-        if(jRadius != json.end() && jRadius->is_number())
-            m_parameters.radius = jRadius->get<float>();
-
-        auto jIntensity = json.find("intensity");
-        if(jIntensity != json.end() && jIntensity->is_number())
-            m_parameters.intensity = jIntensity->get<float>();
-
-        m_handle->setParameters(m_parameters);
-    }
-    catch(...) {}
+    m_handle->setParameters(m_parameters);
 }
 PointLightComponent::PointLightComponent(const Entity& entity) :
     transform(entity.getComponent<TransformComponent>())

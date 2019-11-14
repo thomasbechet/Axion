@@ -39,8 +39,6 @@ namespace ax
         TransformComponent& transform;
 
     private:
-        float parseNumber(const Json& json, const std::string& name) noexcept;
-
         float m_coordinateFactor = 1.0f;
 
         RendererStaticmeshHandle m_staticmesh;

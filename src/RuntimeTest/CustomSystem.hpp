@@ -83,7 +83,7 @@ public:
         cube.addComponent<ax::UVSphereShapeComponent>(1.0f, 100, 100, true, 8.0f);
 
         ax::Entity& directionalLight = ax::Engine::scene().entity.create();
-        directionalLight.addComponent<ax::TransformComponent>().rotate(ax::radians(45.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
+        directionalLight.addComponent<ax::TransformComponent>().rotate(ax::Math::radians(45.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
         //directionalLight.add<ax::DirectionalLightComponent>();
 
         ax::Entity& monkey = ax::Engine::scene().entity.create();

@@ -4,12 +4,11 @@
 #include <Core/Utility/Path.hpp>
 #include <Core/Utility/Json.hpp>
 #include <Core/Utility/Macro.hpp>
-#include <Core/Renderer/Asset/RendererShader.hpp>
 #include <Core/Asset/Asset.hpp>
 
 namespace ax
 {
-    class AXION_CORE_API Shader : public Asset
+    class AXION_CORE_API Template : public Asset
     {
     public:
         struct Parameters
@@ -19,14 +18,9 @@ namespace ax
         };
 
     public:
-        ASSET_IDENTIFIER("shader")
+        ASSET_IDENTIFIER("template")
         
-        Shader(const std::string& name, const Parameters& parameters);
-
-        std::string getVertexCode() const noexcept;
-        std::string getFragmentCode() const noexcept;
-
-        RendererShaderHandle getHandle() const noexcept;
+        Template(const std::string& name, const Parameters& parameters);
 
     private:
         bool onLoad() noexcept override;
@@ -35,10 +29,5 @@ namespace ax
 
     private:
         Parameters m_parameters;
-
-        std::string m_vertex;
-        std::string m_fragment;
-
-        RendererShaderHandle m_handle;
     };
 }

@@ -32,10 +32,10 @@ std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, b
         float advanceV1 = ((float)(v) / (float)VN);
         float advanceV2 = ((float)(v + 1) / (float)VN);
 
-        float theta1 = advanceV1 * PI;
+        float theta1 = advanceV1 * Math::PI;
         float cosTheta1 = std::cos(theta1);
         float sinTheta1 = std::sin(theta1);
-        float theta2 = advanceV2 * PI;
+        float theta2 = advanceV2 * Math::PI;
         float cosTheta2 = std::cos(theta2);
         float sinTheta2 = std::sin(theta2);
 
@@ -44,10 +44,10 @@ std::vector<Vertex> UVSphere::vertices(float radius, unsigned UN, unsigned VN, b
             float advanceU1 = ((float)(u) / (float)UN);
             float advanceU2 = ((float)(u + 1) / (float)UN);
 
-            float phi1 = advanceU1 * 2.0f * PI;
+            float phi1 = advanceU1 * 2.0f * Math::PI;
             float cosPhi1 = std::cos(phi1);
             float sinPhi1 = std::sin(phi1);
-            float phi2 = advanceU2 * 2.0f * PI;
+            float phi2 = advanceU2 * 2.0f * Math::PI;
             float cosPhi2 = std::cos(phi2);
             float sinPhi2 = std::sin(phi2);
 

@@ -1,6 +1,7 @@
 #include <Core/Content/Component/CameraComponent.hpp>
 
 #include <Core/Renderer/RendererModule.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 using namespace ax;
 
@@ -10,21 +11,9 @@ CameraComponent::CameraComponent(const Entity& entity, const Json& json) :
     m_handle = Engine::renderer().createCamera();
     m_handle->setTransform(&transform);
 
-    try
-    {
-        auto jFov = json.find("fov");
-        if(jFov != json.end() && json.is_number())
-            m_parameters.fov = jFov->get<float>();
-
-        auto jNear = json.find("near");
-        if(jNear != json.end() && json.is_number())
-            m_parameters.near = jNear->get<float>();
-
-        auto jFar = json.find("far");
-        if(jFar != json.end() && json.is_number())
-            m_parameters.far = jFar->get<float>();
-    }
-    catch(...) {}
+    m_parameters.fov = JsonUtility::readFloat(json, "fov", m_parameters.fov);
+    m_parameters.near = JsonUtility::readFloat(json, "near", m_parameters.near);
+    m_parameters.far = JsonUtility::readFloat(json, "far", m_parameters.far);
 
     updateRendererParameters();
 }

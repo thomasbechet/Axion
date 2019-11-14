@@ -10,8 +10,15 @@ namespace ax
     {
     public:
         Rect() = default;
-        Rect(const Json& json)
+
+        Json json() const noexcept
         {
+            return {width, height, bottom, left};
+        }
+        static Rect<T> parse(const Json& json) noexcept
+        {
+            Rect<T> rect;
+
             try
 			{
                 if(json.is_array())
@@ -19,19 +26,16 @@ namespace ax
                     std::vector<T> values = json.get<std::vector<T>>();
                     if(values.size() == 4)
                     {
-                        width = values.at(0);
-                        height = values.at(1);
-                        bottom = values.at(2);
-                        left = values.at(3);
+                        rect.width = values.at(0);
+                        rect.height = values.at(1);
+                        rect.bottom = values.at(2);
+                        rect.left = values.at(3);
                     }
                 }
 			}
 			catch(...) {}
-        }
 
-        Json json() const noexcept
-        {
-            return {width, height, bottom, left};
+            return rect;
         }
 
         T width = (T)0;

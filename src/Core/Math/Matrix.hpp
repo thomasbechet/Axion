@@ -231,7 +231,7 @@ namespace ax
 		}
 		static Matrix4<T> perspective(T fov = 90, T aspect = 1, T near = 0.01, T far = 100) noexcept
 		{
-			T yS = (T)1 / tan(radians(fov) / (T)2);
+			T yS = (T)1 / tan(Math::radians(fov) / (T)2);
 			T xS = yS / aspect;
 			T nmf = near - far;
 
@@ -260,7 +260,7 @@ namespace ax
 						0.0f, 0.0f,  0.0f, -1.0f,
 						0.0f, 0.0f, near,  0.0f);*/
 
-			float f = 1.0f / tan(radians(fov) / 2.0f);
+			float f = 1.0f / tan(Math::radians(fov) / 2.0f);
 			return Matrix4<T>(
 				f / aspect, 0.0f, 0.0f, 0.0f,
 				0.0f, f, 0.0f, 0.0f,

@@ -105,13 +105,13 @@ void BasicSpectatorSystem::onUpdate()
         if(component->freeMode)
         {
             if(look.x != 0.0f) 
-                component->transform.rotate(-radians(look.x) * component->rotationSensibility, Vector3f::up);
+                component->transform.rotate(-Math::radians(look.x) * component->rotationSensibility, Vector3f::up);
             if(look.y != 0.0f) 
-                component->transform.rotate(radians(look.y) * component->rotationSensibility, Vector3f::right);
+                component->transform.rotate(Math::radians(look.y) * component->rotationSensibility, Vector3f::right);
             if(m_rotateLeft->isPressed())
-                component->transform.rotate(radians(component->rollSpeed) * delta, Vector3f::forward);
+                component->transform.rotate(Math::radians(component->rollSpeed) * delta, Vector3f::forward);
             if(m_rotateRight->isPressed())
-                component->transform.rotate(-radians(component->rollSpeed) * delta, Vector3f::forward);
+                component->transform.rotate(-Math::radians(component->rollSpeed) * delta, Vector3f::forward);
         }
         else
         {
@@ -123,8 +123,8 @@ void BasicSpectatorSystem::onUpdate()
             if(component->pitch < -90.0f) component->pitch = -90.0f;
             if(component->pitch > 90.0f) component->pitch = 90.0f;
 
-            component->transform.setRotation(-radians(component->yaw), Vector3f::up);
-            component->transform.rotate(radians(component->pitch), Vector3f::right);
+            component->transform.setRotation(-Math::radians(component->yaw), Vector3f::up);
+            component->transform.rotate(Math::radians(component->pitch), Vector3f::right);
         }
     }
 }

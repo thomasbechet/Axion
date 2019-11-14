@@ -45,8 +45,15 @@ namespace ax
             y = s1 * c2 * c3 + c1 * s2 * s3;
             z = c1 * s2 * c3 - s1 * c2 * s3;
 		}
-		Quaternion(const Json& json)
+
+		Json json() const noexcept
 		{
+			return {x, y, z, w};
+		}
+		static Quaternion<T> parse(const Json& json) noexcept
+		{
+			Quaternion<T> quaternion;
+
 			try
 			{
 				if(json.is_array())
@@ -54,27 +61,24 @@ namespace ax
 					std::vector<T> values = json.get<std::vector<T>>();
 					if(values.size() == 3) //Human rotation (degree angles)
 					{
-						T a = radians(values.at(0));
-						T b = radians(values.at(1));
-						T c = radians(values.at(2));
+						T a = Math::radians(values.at(0));
+						T b = Math::radians(values.at(1));
+						T c = Math::radians(values.at(2));
 
-						*this = Quaternion<T>(a, b, c);
+						quaternion = Quaternion<T>(a, b, c);
 					}
 					else if(values.size() == 4)
 					{
-						x = values.at(0);
-						y = values.at(1);
-						z = values.at(2);
-						w = values.at(3);
+						quaternion.x = values.at(0);
+						quaternion.y = values.at(1);
+						quaternion.z = values.at(2);
+						quaternion.w = values.at(3);
 					}
 				}
 			}
 			catch(...) {}
-		}
 
-		Json json() const noexcept
-		{
-			return {x, y, z, w};
+			return quaternion;
 		}
 		
 		///////////////////////

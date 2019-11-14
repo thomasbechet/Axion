@@ -1,6 +1,7 @@
 #include <Core/Content/Component/DirectionalLightComponent.hpp>
 
 #include <Core/Renderer/RendererModule.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 using namespace ax;
 
@@ -10,17 +11,8 @@ DirectionalLightComponent::DirectionalLightComponent(const Entity& entity, const
     m_handle = Engine::renderer().createDirectionalLight();
     m_handle->setTransform(&transform);
 
-    try
-    {
-        auto jColor = json.find("color");
-        if(jColor != json.end() && jColor->is_array())
-            m_parameters.color = Color3(*jColor);
-
-        auto jIntensity = json.find("intensity");
-        if(jIntensity != json.end() && jIntensity->is_number())
-            m_parameters.intensity = jIntensity->get<float>();
-    }
-    catch(...) {}
+    m_parameters.color = JsonUtility::readColor3(json, "color");
+    m_parameters.intensity = JsonUtility::readFloat(json, "intensity", m_parameters.intensity);
 
     m_handle->setParameters(m_parameters);
 }

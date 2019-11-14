@@ -28,8 +28,15 @@ namespace ax
 			this->x = x;
 			this->y = y;
 		}
-		Vector2<T>(const Json& json)
+
+		Json json() const noexcept
 		{
+			return {x, y};
+		}
+		static Vector2<T> parse(const Json& json) noexcept
+		{
+			Vector2<T> vector;
+			
 			try
 			{
 				if(json.is_array())
@@ -37,17 +44,14 @@ namespace ax
 					std::vector<T> values = json.get<std::vector<T>>();
 					if(values.size() == 2)
 					{
-						x = values.at(0);
-						y = values.at(1);
+						vector.x = values.at(0);
+						vector.y = values.at(1);
 					}
 				}
 			}
 			catch(...) {}
-		}
 
-		Json json() const noexcept
-		{
-			return {x, y};
+			return vector;
 		}
 		
 		//////////////////////////
@@ -145,8 +149,15 @@ namespace ax
 			this->y = vec.y;
 			this->z = vec.z;
 		}
-		Vector3<T>(const Json& json)
+
+		Json json() const noexcept
 		{
+			return {x, y, z};
+		}
+		static Vector3<T> parse(const Json& json) noexcept
+		{
+			Vector3<T> vector;
+			
 			try
 			{
 				if(json.is_array())
@@ -154,18 +165,15 @@ namespace ax
 					std::vector<T> values = json.get<std::vector<T>>();
 					if(values.size() == 3)
 					{
-						x = values.at(0);
-						y = values.at(1);
-						z = values.at(2);
+						vector.x = values.at(0);
+						vector.y = values.at(1);
+						vector.z = values.at(2);
 					}
 				}
 			}
 			catch(...) {}
-		}
 
-		Json json() const noexcept
-		{
-			return {x, y, z};
+			return vector;
 		}
 		
 		////////////////////
@@ -306,8 +314,15 @@ namespace ax
 			this->z = vec.z;
 			this->w = w;
 		}
-		Vector4<T>(const Json& json)
+
+		Json json() const noexcept
 		{
+			return {x, y, z, w};
+		}
+		static Vector4<T> parse(const Json& json) noexcept
+		{
+			Vector4<T> vector;
+			
 			try
 			{
 				if(json.is_array())
@@ -315,19 +330,16 @@ namespace ax
 					std::vector<T> values = json.get<std::vector<T>>();
 					if(values.size() == 4)
 					{
-						x = values.at(0);
-						y = values.at(1);
-						z = values.at(2);
-						w = values.at(3);
+						vector.x = values.at(0);
+						vector.y = values.at(1);
+						vector.z = values.at(2);
+						vector.w = values.at(3);
 					}
 				}
 			}
 			catch(...) {}
-		}
 
-		Json json() const noexcept
-		{
-			return {x, y, z, w};
+			return vector;
 		}
 		
 		///////////////////////

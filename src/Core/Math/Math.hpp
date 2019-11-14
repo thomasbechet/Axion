@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ax
+namespace ax::Math
 {	
 	//////////////////////
 	//STATIC CONSTANTS

@@ -14,7 +14,9 @@ namespace ax
         Color3(int _r, int _g, int _b);
         Color3(float _r, float _g, float _b);
         Color3(const Vector3f& vec);
-        Color3(const Json& json);
+
+        Json json() const noexcept;
+        static Color3 parse(const Json& json) noexcept;
 
         Color3 operator*(const Color3& color);
         Color3 operator*(float k);
@@ -39,7 +41,9 @@ namespace ax
         Color4(int _r, int _g, int _b, int _a = 255);
         Color4(float _r, float _g, float _b, float _a = 1.0f);
         Color4(const Vector4f& vec);
-        Color4(const Json& json);
+
+        Json json() const noexcept;
+        static Color4 parse(const Json& json) noexcept;
 
         Color4 operator*(const Color4& color);
         Color4 operator*(float k);
