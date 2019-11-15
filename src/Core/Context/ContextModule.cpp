@@ -31,6 +31,7 @@
 #include <Core/Content/Asset/Scene.hpp>
 #include <Core/Content/Asset/Shader.hpp>
 #include <Core/Content/Asset/Texture.hpp>
+#include <Core/Content/Asset/Template.hpp>
 
 using namespace ax;
 
@@ -66,10 +67,11 @@ void ContextModule::initialize() noexcept
     ax::Engine::builder().asset.record<Scene>();
     ax::Engine::builder().asset.record<Shader>();
     ax::Engine::builder().asset.record<Texture>();
+    ax::Engine::builder().asset.record<Template>();
 }
 void ContextModule::terminate() noexcept
 {
-
+    
 }
 
 bool ContextModule::isRunning() const noexcept

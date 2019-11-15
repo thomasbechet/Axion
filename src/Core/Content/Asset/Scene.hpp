@@ -49,5 +49,6 @@ namespace ax
         std::string m_gameMode;
         std::vector<std::string> m_systems;
         std::vector<Json> m_entities;
+        std::vector<Json> m_assets;
     };
 }

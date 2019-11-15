@@ -8,6 +8,24 @@
 			"source":"$ENGINE_DIR/textures/wall_normal2.bmp"
 		},
 		{
+			"type":"scene",
+			"name":"prototype_scene",
+			
+			"insertion":"override",
+			"gamemode":"MyGameMode",
+			"assets":[
+				{
+					"type":"texture",
+					"name":"texture_test",
+					"source":"$ENGINE_DIR/textures/wall_normal2.bmp"
+				}
+			],
+			"systems":["mysystem", "mysystem2"],
+			"entities":[
+				
+			]
+		},
+		{
 			"type":"package",
 			"name":"lol_trop_drole",
 			"assets":[
@@ -17,6 +35,13 @@
 					"source":"$ENGINE_DIR/textures/earthmap.jpg"
 				}
 			]
+		},
+		{
+			"type":"template",
+			"name":"my_template",
+			"template":{
+				"test":10.0
+			}
 		},
 		{
 			"type":"texture",

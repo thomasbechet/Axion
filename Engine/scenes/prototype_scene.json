@@ -17,25 +17,27 @@
 		{
 			"name":"tree_template",
 			"type":"template",
-			"components":{
-				"model":{
-					"asset":"test",
-					"material":"ma_material"
-				},
-				"point_light":{
-					"color":[255, 255, 255],
-					"intensity":10.0
-				},
-				"transform":{
-					"childs":{
-						"child0":{
-							"components":{
-								"transform":{"translation":[3, 0, 0]},
-								"model":{}
+			"template":{
+				"components":{
+					"model":{
+						"asset":"test",
+						"material":"ma_material"
+					},
+					"point_light":{
+						"color":[255, 255, 255],
+						"intensity":10.0
+					},
+					"transform":{
+						"childs":{
+							"child0":{
+								"components":{
+									"transform":{"translation":[3, 0, 0]},
+									"model":{}
+								}
+							},
+							"child1":{
+								
 							}
-						},
-						"child1":{
-							
 						}
 					}
 				}

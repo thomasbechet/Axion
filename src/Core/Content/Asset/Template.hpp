@@ -22,12 +22,17 @@ namespace ax
         
         Template(const std::string& name, const Parameters& parameters);
 
+        Json merge(const Json& json) const noexcept;
+
     private:
         bool onLoad() noexcept override;
         bool onValidate() noexcept override;
         bool onUnload() noexcept override;
 
     private:
+        bool loadFromJson(const Json& json) noexcept;
+
         Parameters m_parameters;
+        Json m_template;
     };
 }

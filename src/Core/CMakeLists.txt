@@ -44,6 +44,7 @@ ADD_LIBRARY(
     Content/Asset/Shader.cpp
     Content/Asset/Texture.cpp
     Content/Asset/Scene.cpp
+    Content/Asset/Template.cpp
     Renderer/Renderer.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
