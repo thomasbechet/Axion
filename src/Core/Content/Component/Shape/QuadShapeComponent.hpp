@@ -12,14 +12,14 @@
 
 namespace ax
 {
-    struct AXION_CORE_API QuadShapeComponent : public Quad, public Component
+    class AXION_CORE_API QuadShapeComponent : public Quad, public Component
     {
     public:
         COMPONENT_IDENTIFIER("quad_shape")
-        COMPONENT_REQUIREMENT(TransformComponent)
+        COMPONENT_REQUIREMENTS(TransformComponent)
         
-        QuadShapeComponent(const Entity& entity, const Json& json);
-        QuadShapeComponent(const Entity& entity, float x = 1.0f, float y = 1.0f, float factor = 1.0f);
+        QuadShapeComponent(Entity& entity, const Json& json);
+        QuadShapeComponent(Entity& entity, float x = 1.0f, float y = 1.0f, float factor = 1.0f);
         ~QuadShapeComponent();
 
         void setMaterial(std::nullptr_t) noexcept;

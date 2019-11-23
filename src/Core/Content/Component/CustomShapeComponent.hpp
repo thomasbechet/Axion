@@ -8,14 +8,14 @@
 
 namespace ax
 {
-    struct AXION_CORE_API CustomShapeComponent : public Component
+    class AXION_CORE_API CustomShapeComponent : public Component
     {
     public:
         COMPONENT_IDENTIFIER("custom_shape")
-        COMPONENT_REQUIREMENT(TransformComponent)
+        COMPONENT_REQUIREMENTS(TransformComponent)
         
-        CustomShapeComponent(const Entity& entity, const Json& json);
-        CustomShapeComponent(const Entity& entity);
+        CustomShapeComponent(Entity& entity, const Json& json);
+        CustomShapeComponent(Entity& entity);
         ~CustomShapeComponent();
 
         void setVertices(const std::vector<Vertex>& points) noexcept;

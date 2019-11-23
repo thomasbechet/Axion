@@ -42,6 +42,9 @@ ContextModule::ContextModule(Path configurationFile)
 
 void ContextModule::initialize() noexcept
 {
+    //Record gamemodes
+    
+
     //Record components
     Engine::builder().component.record<QuadShapeComponent>();
     Engine::builder().component.record<RectangleShapeComponent>();
@@ -118,9 +121,8 @@ void ContextModule::run() noexcept
     {
         restart = false;
 
-        //Apply gamemode modification
-        if(Engine::scene().gamemode.hasNext())
-            Engine::scene().gamemode.next();
+        //Apply scene modification
+        Engine::scene().next();
 
         //Engine loop
         Engine::scene().gamemode.get().onStart();
@@ -128,7 +130,7 @@ void ContextModule::run() noexcept
 
         Time accumulator, delta;
         m_timer.restart();
-        while(Engine::context().isRunning() && !Engine::scene().gamemode.hasNext())
+        while(Engine::context().isRunning() && !Engine::scene().hasNext())
         {
             delta = m_timer.getElapsedTime();
             updateRecorder.record(delta);
@@ -176,7 +178,7 @@ void ContextModule::run() noexcept
         Engine::scene().system.stop();
         Engine::scene().gamemode.get().onStop();
     
-        if(Engine::scene().gamemode.hasNext()) restart = true;
+        if(Engine::scene().hasNext()) restart = true;
     }
 
     //Cleaning the scene

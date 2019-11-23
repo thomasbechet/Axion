@@ -24,6 +24,58 @@ RendererMeshHandle Mesh::getHandle() const noexcept
 
 bool Mesh::onLoad() noexcept
 {
+    if(!m_parameters.source.empty())
+    {
+        if(!loadFromSource(m_parameters.source)) return false;
+    }
+    else if(!m_parameters.json.is_null())
+    {
+        if(!loadFromJson(m_parameters.json)) return false;
+    }
+    
+    processGeometry();
+
+    return true;
+}
+bool Mesh::onValidate() noexcept
+{
+    try
+    {
+        m_handle = Engine::renderer().createMesh(m_parameters.vertices);
+    }
+    catch(const RendererException& exception)
+    {
+        logValidateError(exception.what());
+        return false;
+    }
+
+    return true;
+}
+bool Mesh::onUnload() noexcept
+{
+    try
+    {
+        Engine::renderer().destroyMesh(m_handle);
+    }
+    catch(const RendererException& exception)
+    {
+        logUnloadError(exception.what());
+        return false;
+    }
+
+    return true;
+}
+
+bool Mesh::loadFromSource(const Path& path) noexcept
+{
+    return true;
+}
+bool Mesh::loadFromJson(const Json& json) noexcept
+{
+    return true;
+}
+void Mesh::processGeometry() noexcept
+{
     if(m_parameters.computeNormal)
     {
         //Compute normal
@@ -72,34 +124,4 @@ bool Mesh::onLoad() noexcept
             m_parameters.vertices[i + 2].tangent = tangent;
         }
     }
-
-    return true;
-}
-bool Mesh::onValidate() noexcept
-{
-    try
-    {
-        m_handle = Engine::renderer().createMesh(m_parameters.vertices);
-    }
-    catch(const RendererException& exception)
-    {
-        logValidateError(exception.what());
-        return false;
-    }
-
-    return true;
-}
-bool Mesh::onUnload() noexcept
-{
-    try
-    {
-        Engine::renderer().destroyMesh(m_handle);
-    }
-    catch(const RendererException& exception)
-    {
-        logUnloadError(exception.what());
-        return false;
-    }
-
-    return true;
 }

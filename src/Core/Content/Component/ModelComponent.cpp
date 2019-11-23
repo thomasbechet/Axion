@@ -6,14 +6,14 @@
 
 using namespace ax;
 
-ModelComponent::ModelComponent(const Entity& entity, const Json& json) :
+ModelComponent::ModelComponent(Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
     std::string model = JsonUtility::readString(json, "model");
     if(!model.empty())
         setModel(model);
 }
-ModelComponent::ModelComponent(const Entity& entity) :
+ModelComponent::ModelComponent(Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
 

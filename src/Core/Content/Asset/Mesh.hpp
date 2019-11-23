@@ -40,6 +40,11 @@ namespace ax
         bool onUnload() noexcept override;
 
     private:
+        bool loadFromSource(const Path& path) noexcept;
+        bool loadFromJson(const Json& json) noexcept;
+        void processGeometry() noexcept;
+
+    private:
         Parameters m_parameters;
         RendererMeshHandle m_handle;
     };

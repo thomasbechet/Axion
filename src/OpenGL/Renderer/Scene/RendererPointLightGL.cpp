@@ -24,7 +24,7 @@ void RendererModuleGL::destroyPointLight(RendererPointLightHandle& pointLightPoi
     pointLightPointer = nullptr;
 }
 
-void RendererPointLightGL::setTransform(Transform* transformPointer) 
+void RendererPointLightGL::setTransform(TransformComponent* transformPointer) 
 {
     transform = transformPointer;
 }

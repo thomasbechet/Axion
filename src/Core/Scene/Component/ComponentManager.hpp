@@ -25,7 +25,7 @@ namespace ax
         size_t componentSection() noexcept;
 
         template<typename C, typename... Args>
-        ComponentHandle create(const Entity& entity, Args&&... args) noexcept;
+        ComponentHandle create(Entity& entity, Args&&... args) noexcept;
 
         void destroy(ComponentHandle handle) noexcept;
 

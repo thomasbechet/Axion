@@ -3,6 +3,7 @@
 	
 	"insertion":"override",
 	"gamemode":"mygamemode",
+	"systems":["monsystem0", "monsystem2"],
 	"assets":[
 		{
 			"name":"mypackage", 
@@ -15,103 +16,35 @@
 			"source":"$ENGINE_DIR/packages/glsl_package.json"
 		},
 		{
-			"name":"tree_template",
+			"name":"player_template",
 			"type":"template",
 			"template":{
-				"components":{
-					"model":{
-						"asset":"test",
-						"material":"ma_material"
-					},
-					"point_light":{
-						"color":[255, 255, 255],
-						"intensity":10.0
-					},
-					"transform":{
-						"childs":{
-							"child0":{
-								"components":{
-									"transform":{"translation":[3, 0, 0]},
-									"model":{}
-								}
-							},
-							"child1":{
-								
-							}
-						}
-					}
-				}
+				"transform":{},
+				"camera":{},
+				"basic_spectator":{}
 			}
 		}
 	],
-	"systems":["monsystem0", "monsystem2"],
-	"entities":[
-		{
-			"template":"tree",
-			"components":{"transform":{"translation":[0.0, 0.0, 4.0]}}
-		},
-		{
-			"tag":"mon_entite",
-			"components":{
-				"transform":{
-					"translation":[0, 1, 342],
-					"rotation":[0, 4, 2],
-					"scale":[1, 1, 1],
-					"childs":{
-						"child1":{
-							"tag":"child_tag",
-							"components":{"transform":{"translation":[0.0, 12.0, 3.0]}}
-						},
-						"child2":{"template":"tree"}
-					}
+	"entities":{
+		"scene_root":{
+			"tagged":true,
+			"entity_group":{
+				"player":{
+					"tagged":true,
+					"template":"player_template",
+					"transform":{"translation":[10,0,0]}
 				},
-				"model":{
-					"model":"mon_model"
-				},
-				"basic_spectator":{
-					"normal_speed":10.0,
-					"slow_speed":20.0,
-					"fast_speed":500.0,
-					"free_mode":false
+				"child0":{
+					
 				}
 			}
 		},
-		{
-			"tag":"child_entite",
-			"components":{
-				"transform":{
-					"attachTo":"mon_entite"
-				}
-			}
-		},
-		{
-			"tag":"mon_tag",
-			"template":"tree",
-			"components":{
-				"transform":{
-					"translation":[1, 2, 3],
-					"rotation":[180.0, 0, 0],
-					"scale":[10.0, 10.0, 3]
-				},
-				"model":{
-					"model":"mon_model"
-				},
-				"circle_shape":{
-					"material":"my_material",
-					"smooth":true,
-					"radius":10.0,
-					"slice":5,
-					"stack":5,
-					"factor":1.0
-				},
-				"rectangle_shape":{
-					"minX":-1.0, "maxX":1.0,
-					"minY":-1.0, "maxY":1.0,
-					"minZ":-1.0, "maxZ":1.0,
-					"factor":1.0,
-					"smooth":false
+		"test":{
+			"transform":{
+				"childs":{
+					
 				}
 			}
 		}
-	]
+	}
 }

@@ -7,6 +7,10 @@ GameModeManager::GameModeManager()
     m_gameMode = std::make_unique<GameMode>();
 }
 
+void GameModeManager::set(const std::string& identifier) noexcept
+{
+    
+}
 GameMode& GameModeManager::get() const noexcept
 {
     return *m_gameMode.get();

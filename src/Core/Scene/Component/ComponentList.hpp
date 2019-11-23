@@ -34,7 +34,7 @@ namespace ax
 
     public:
         template<typename... Args>
-        Id create(const Entity& entity, Args&&... args) noexcept;
+        Id create(Entity& entity, Args&&... args) noexcept;
 
         void destroy(Id id) noexcept override;
 

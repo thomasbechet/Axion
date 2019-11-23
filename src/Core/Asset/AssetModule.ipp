@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Core/Asset/AssetModule.hpp>
 
 namespace ax

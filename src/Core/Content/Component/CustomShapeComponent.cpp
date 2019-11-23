@@ -2,12 +2,12 @@
 
 using namespace ax;
 
-CustomShapeComponent::CustomShapeComponent(const Entity& entity, const Json& json) :
+CustomShapeComponent::CustomShapeComponent(Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
 
 }
-CustomShapeComponent::CustomShapeComponent(const Entity& entity) :
+CustomShapeComponent::CustomShapeComponent(Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
 

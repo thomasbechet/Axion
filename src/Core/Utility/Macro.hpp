@@ -1,13 +1,13 @@
 #pragma once
 
-#include <array>
+#include <vector>
 
 namespace ax
 {
     template<typename... Args>
-    constexpr auto requirement() noexcept
+    constexpr auto requirementsBuilder() noexcept
     {
-        return std::array<std::string, sizeof...(Args)>{Args::identifier...};
+        return std::vector<std::string>{Args::identifier...};
     } 
 }
 
@@ -25,12 +25,15 @@ namespace ax
 #define COMPONENT_IDENTIFIER(IDENTIFIER) \
     static inline const std::string identifier = IDENTIFIER; \
 
-#define COMPONENT_REQUIREMENT(...) \
-    static inline const auto requirement = ax::requirement<__VA_ARGS__>(); \
+#define COMPONENT_REQUIREMENTS(...) \
+    static inline const auto requirements = ax::requirementsBuilder<__VA_ARGS__>(); \
 
 #define ASSET_IDENTIFIER(IDENTIFIER) \
     static inline const std::string identifier = IDENTIFIER; \
 
 #define SYSTEM_IDENTIFIER(IDENTIFIER) \
+    static inline const std::string identifier = IDENTIFIER; \
+
+#define GAMEMODE_IDENTIFIER(IDENTIFIER) \
     static inline const std::string identifier = IDENTIFIER; \
 

@@ -5,6 +5,7 @@
 #include <Core/Renderer/RendererException.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 #include <fstream>
 #include <streambuf>
@@ -37,15 +38,7 @@ bool Shader::onLoad() noexcept
     Json json;
     if(!m_parameters.source.empty())
     {
-        std::ifstream jsonFile(m_parameters.source.str());
-        if(!jsonFile.is_open())
-        {
-            logLoadError("Failed to open file '" + m_parameters.source.str() + "'");
-            return false;
-        }
-        std::string str((std::istreambuf_iterator<char>(jsonFile)),
-                         std::istreambuf_iterator<char>());
-        json = Json::parse(str);
+        if(!JsonUtility::parseFile(m_parameters.source, json)) return false;
     }
     else
     {

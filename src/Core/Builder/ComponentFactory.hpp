@@ -12,6 +12,7 @@ namespace ax
         virtual ~IComponentFactory() = default;
         virtual void add(Entity& entity, const Json& json) noexcept = 0;
         virtual void remove(Entity& entity) noexcept = 0;
+        virtual const std::vector<std::string>& requirements() const noexcept = 0;
     };
 
     template<typename C>
@@ -20,5 +21,6 @@ namespace ax
     public:
         void add(Entity& entity, const Json& json) noexcept override;
         void remove(Entity& entity) noexcept override;
+        const std::vector<std::string>& requirements() const noexcept;
     };
 }

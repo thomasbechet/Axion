@@ -5,7 +5,7 @@
 
 using namespace ax;
 
-PointLightComponent::PointLightComponent(const Entity& entity, const Json& json) :
+PointLightComponent::PointLightComponent(Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createPointLight();
@@ -17,7 +17,7 @@ PointLightComponent::PointLightComponent(const Entity& entity, const Json& json)
 
     m_handle->setParameters(m_parameters);
 }
-PointLightComponent::PointLightComponent(const Entity& entity) :
+PointLightComponent::PointLightComponent(Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createPointLight();

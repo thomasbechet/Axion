@@ -14,16 +14,16 @@ namespace ax
 
     template<typename T, size_t ChunkSize>
     template<typename... Args>
-    Id ChunkContainer<T, ChunkSize>::add(Args... args) noexcept
+    Id ChunkContainer<T, ChunkSize>::add(Args&... args) noexcept
     {
         if(!m_free.empty()) //Free spaces
         {
             Id back = m_free.back();
             m_free.pop_back();
             m_chunks.at(back / ChunkSize)->at(back % ChunkSize).first = true;
-            new (&m_chunks.at(back / ChunkSize)->at(back % ChunkSize).second) T(args...);
-
             m_size++;
+
+            new (&m_chunks.at(back / ChunkSize)->at(back % ChunkSize).second) T(args...);
 
             return back;
         }
@@ -37,9 +37,9 @@ namespace ax
             size_t id = m_length - 1;
 
             m_chunks.at(id / ChunkSize)->at(id % ChunkSize).first = true;
-            new (&m_chunks.at(id / ChunkSize)->at(id % ChunkSize).second) T(args...);
-
             m_size++;
+
+            new (&m_chunks.at(id / ChunkSize)->at(id % ChunkSize).second) T(args...);
 
             return id;
         }

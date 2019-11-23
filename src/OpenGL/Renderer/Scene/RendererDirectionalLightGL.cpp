@@ -24,7 +24,7 @@ void RendererModuleGL::destroyDirectionalLight(RendererDirectionalLightHandle& d
     directionallightPointer = nullptr;
 }
 
-void RendererDirectionalLightGL::setTransform(Transform* transformPointer)
+void RendererDirectionalLightGL::setTransform(TransformComponent* transformPointer)
 {   
     transform = transformPointer;
 }

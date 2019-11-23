@@ -7,18 +7,16 @@
 #include <Core/Renderer/Scene/RendererCamera.hpp>
 #include <Core/Renderer/GUI/RendererGUIViewport.hpp>
 
-#include <string>
-
 namespace ax
 {
-    struct AXION_CORE_API CameraComponent : public Component
+    class AXION_CORE_API CameraComponent : public Component
     {
     public:
         COMPONENT_IDENTIFIER("camera")
-        COMPONENT_REQUIREMENT(TransformComponent) 
+        COMPONENT_REQUIREMENTS(TransformComponent) 
           
-        CameraComponent(const Entity& entity, const Json& json);
-        CameraComponent(const Entity& entity);
+        CameraComponent(Entity& entity, const Json& json);
+        CameraComponent(Entity& entity);
         ~CameraComponent();
 
         void bindDefaultViewport() noexcept;

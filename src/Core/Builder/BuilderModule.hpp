@@ -2,17 +2,20 @@
 
 #include <Core/Export.hpp>
 #include <Core/Context/Module.hpp>
-#include <Core/Builder/ComponentFactories.ipp>
-#include <Core/Builder/SystemFactories.ipp>
-#include <Core/Builder/AssetFactories.ipp>
+#include <Core/Builder/FactoryRecorder.hpp>
+#include <Core/Builder/ComponentFactory.ipp>
+#include <Core/Builder/SystemFactory.ipp>
+#include <Core/Builder/AssetFactory.ipp>
+#include <Core/Builder/GameModeFactory.ipp>
 
 namespace ax
 {
     class AXION_CORE_API BuilderModule : public Module
     {
-    public:
-        ComponentFactories component;
-        SystemFactories system;
-        AssetFactories asset;
+    public:    
+        FactoryRecorder<ComponentFactory, IComponentFactory> component;
+        FactoryRecorder<SystemFactory, ISystemFactory> system;
+        FactoryRecorder<AssetFactory, IAssetFactory> asset;
+        FactoryRecorder<GameModeFactory, IGameModeFactory> gamemode;
     };
 }

@@ -4,13 +4,13 @@
 #include <Core/Math/Vector.hpp>
 #include <Core/Math/Quaternion.hpp>
 #include <Core/Math/Matrix.hpp>
-
-#include <string>
+#include <Core/Utility/NonCopyable.hpp>
 
 namespace ax
 {
-    struct AXION_CORE_API Transform2D
+    class AXION_CORE_API Transform2D : public NonCopyable
     {
+    public:
         Transform2D(
             Vector2f translation = Vector2f(0.0f, 0.0f), 
             float rotation = 0.0f, 

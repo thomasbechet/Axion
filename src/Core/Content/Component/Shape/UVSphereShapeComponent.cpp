@@ -3,15 +3,24 @@
 #include <Core/Asset/AssetModule.ipp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Math/Geometry/UVSphere.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 using namespace ax;
 
-UVSphereShapeComponent::UVSphereShapeComponent(const Entity& entity, const Json& json) :
-    transform(entity.getComponent<TransformComponent>())
+UVSphereShapeComponent::UVSphereShapeComponent(Entity& entity, const Json& json) :
+    UVSphereShapeComponent(
+        entity,
+        JsonUtility::readFloat(json, "radius", 1.0f),
+        JsonUtility::readUnsigned(json, "slice", 30),
+        JsonUtility::readUnsigned(json, "stack", 30),
+        JsonUtility::readBoolean(json, "smooth", true),
+        JsonUtility::readFloat(json, "factor", 1.0f)
+    )
 {
-
+    
 }
-UVSphereShapeComponent::UVSphereShapeComponent(const Entity& entity,
+UVSphereShapeComponent::UVSphereShapeComponent(
+        Entity& entity,
         float radius,
         unsigned slice,
         unsigned stack,

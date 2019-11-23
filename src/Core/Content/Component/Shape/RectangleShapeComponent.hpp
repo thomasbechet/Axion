@@ -12,14 +12,14 @@
 
 namespace ax
 {
-    struct AXION_CORE_API RectangleShapeComponent : public Rectangle, public Component
+    class AXION_CORE_API RectangleShapeComponent : public Rectangle, public Component
     {
     public:
         COMPONENT_IDENTIFIER("rectangle_shape")
-        COMPONENT_REQUIREMENT(TransformComponent)
+        COMPONENT_REQUIREMENTS(TransformComponent)
         
-        RectangleShapeComponent(const Entity& entity, const Json& json);
-        RectangleShapeComponent(const Entity& entity,
+        RectangleShapeComponent(Entity& entity, const Json& json);
+        RectangleShapeComponent(Entity& entity,
             float xMin = -0.5f, float xMax = 0.5f,
             float yMin = -0.5f, float yMax = 0.5f,
             float zMin = -0.5f, float zMax = 0.5f,

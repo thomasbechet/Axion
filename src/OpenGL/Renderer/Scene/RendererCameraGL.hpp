@@ -6,15 +6,13 @@
 
 namespace ax
 {
-    class Transform;
-
     class AXION_GL_API RendererCameraGL : public RendererCamera
     {
     public:
-        void setTransform(Transform* transform) override;
+        void setTransform(TransformComponent* transform) override;
         void setParameters(const RendererCameraParameters& parameters) override;
 
-        Transform* transform = nullptr;
+        TransformComponent* transform = nullptr;
 
         float fov = 90.0f;
         float near = 0.01f;

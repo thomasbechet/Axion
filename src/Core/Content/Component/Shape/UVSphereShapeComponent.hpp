@@ -12,14 +12,14 @@
 
 namespace ax
 {
-    struct AXION_CORE_API UVSphereShapeComponent : public UVSphere, public Component
+    class AXION_CORE_API UVSphereShapeComponent : public UVSphere, public Component
     {
     public:
         COMPONENT_IDENTIFIER("uv_sphere_shape")
-        COMPONENT_REQUIREMENT(TransformComponent)
+        COMPONENT_REQUIREMENTS(TransformComponent)
 
-        UVSphereShapeComponent(const Entity& entity, const Json& json);
-        UVSphereShapeComponent(const Entity& entity,
+        UVSphereShapeComponent(Entity& entity, const Json& json);
+        UVSphereShapeComponent(Entity& entity,
             float radius = 1.0f,
             unsigned slice = 30,
             unsigned stack = 30,

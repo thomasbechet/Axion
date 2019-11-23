@@ -4,6 +4,7 @@
 #include <Core/Asset/AssetModule.ipp>
 #include <Core/Asset/JsonAttributes.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 #include <fstream>
 
@@ -20,31 +21,7 @@ bool Package::onLoad() noexcept
 {
     if(!m_parameters.source.empty())
     {
-        if(m_parameters.source.extension() != ".json")
-        {
-            logLoadError("Loading <" + Package::identifier + "> from file '" + m_parameters.source + "'");
-            return false;
-        }
-
-        std::ifstream jsonFile(m_parameters.source.str());
-        if(!jsonFile.is_open())
-        {
-            logLoadError("Failed to open file '" + m_parameters.source.str() + "'");
-            return false;
-        }
-        std::string jsonBuffer{std::istreambuf_iterator<char>(jsonFile), std::istreambuf_iterator<char>()};
-
-        //Parse json
-        try 
-        {
-            Json json = Json::parse(jsonBuffer);
-            return loadFromJson(json);
-        }
-        catch(const Json::parse_error& error)
-        {
-            logLoadError(error.what());
-            return false;
-        }
+        return loadFromSource(m_parameters.source);
     }
     else if(!m_parameters.json.is_null())
     {
@@ -77,8 +54,24 @@ bool Package::onUnload() noexcept
     return true;
 }
 
-bool Package::loadFromJson(Json& json) noexcept
+bool Package::loadFromSource(const Path& path) noexcept
 {
+    if(path.extension() != ".json")
+    {
+        logLoadError("Loading <" + Package::identifier + "> from file '" + path + "'");
+        return false;
+    }
+
+    if(JsonUtility::parseFile(path, m_parameters.json))
+        return loadFromJson(m_parameters.json);
+    else
+        return false;
+}
+bool Package::loadFromJson(const Json& json) noexcept
+{
+    Path source = JsonUtility::readString(json, "source");
+    if(!source.empty()) return loadFromSource(source);
+
     try
     {
         auto jAssets = json[JsonAttributes::assets];

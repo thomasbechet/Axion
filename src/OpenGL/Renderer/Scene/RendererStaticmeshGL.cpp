@@ -23,7 +23,7 @@ void RendererModuleGL::destroyStaticmesh(RendererStaticmeshHandle& staticmeshPoi
     staticmeshPointer = nullptr;
 }
 
-void RendererStaticmeshGL::setTransform(Transform* transformPointer)
+void RendererStaticmeshGL::setTransform(TransformComponent* transformPointer)
 {
     transform = transformPointer;
 }

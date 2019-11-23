@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/Math/Transform.hpp>
+#include <Core/Content/Component/TransformComponent.hpp>
 #include <Core/Utility/Color.hpp>
 
 namespace ax
@@ -15,14 +15,14 @@ namespace ax
     class AXION_CORE_API RendererDirectionalLight
     {
     public:
-        virtual void setTransform(Transform* transform) = 0;
+        virtual void setTransform(TransformComponent* transform) = 0;
         virtual void setParameters(const RendererDirectionalLightParameters& parameters) = 0;
     };
 
     class AXION_CORE_API NullRendererDirectionalLight : public RendererDirectionalLight
     {
     public:
-        void setTransform(Transform* transform) override {}
+        void setTransform(TransformComponent* transform) override {}
         void setParameters(const RendererDirectionalLightParameters& parameters) override {}
     };
 

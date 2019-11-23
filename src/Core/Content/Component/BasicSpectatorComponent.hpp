@@ -8,14 +8,14 @@
 
 namespace ax
 {
-    struct AXION_CORE_API BasicSpectatorComponent : public Component
+    class AXION_CORE_API BasicSpectatorComponent : public Component
     {
     public:
         COMPONENT_IDENTIFIER("basic_spectator")
-        COMPONENT_REQUIREMENT(TransformComponent, CameraComponent)
+        COMPONENT_REQUIREMENTS(TransformComponent, CameraComponent)
         
-        BasicSpectatorComponent(const Entity& entity, const Json& json);
-        BasicSpectatorComponent(const Entity& entity);
+        BasicSpectatorComponent(Entity& entity, const Json& json);
+        BasicSpectatorComponent(Entity& entity);
 
         TransformComponent& transform;
         CameraComponent& camera;

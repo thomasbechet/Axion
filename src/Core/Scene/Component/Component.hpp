@@ -2,6 +2,7 @@
 
 #include <Core/Export.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/NonCopyable.hpp>
 
 namespace ax
 {
@@ -11,7 +12,7 @@ namespace ax
         unsigned offset : 24;
     };
 
-    struct AXION_CORE_API Component
+    class AXION_CORE_API Component : public NonCopyable
     {
     public:
         virtual Json json() const noexcept;

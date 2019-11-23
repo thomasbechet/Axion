@@ -5,6 +5,7 @@
 #include <Core/Renderer/RendererException.hpp>
 #include <Core/Asset/JsonAttributes.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -33,27 +34,16 @@ RendererTextureHandle Texture::getHandle() const noexcept
 
 bool Texture::onLoad() noexcept
 {
-    if(!m_parameters.json.is_null() && !extractSourceFromJson()) return false;
-
-    int width, height, bpp;
-    m_data = stbi_load(m_parameters.source.c_str(), &width, &height, &bpp, 0);
-    if(!m_data)
+    if(!m_parameters.source.empty())
     {
-        logLoadError("Failed to load texture '" + m_parameters.source.str() + "'");
-        return false;
+        return loadFromSource(m_parameters.source);
+    }
+    else if(!m_parameters.json.is_null())
+    {
+        return loadFromJson(m_parameters.json);
     }
 
-    m_size.x = width;
-    m_size.y = height;
-
-    if(bpp == 3)
-        m_format = Format::RGB;
-    else if(bpp == 4)
-        m_format = Format::RGBA;
-    else if(bpp == 1)
-        m_format = Format::R;
-
-    return true;
+    return false;
 }
 bool Texture::onValidate() noexcept
 {
@@ -92,18 +82,40 @@ bool Texture::onUnload() noexcept
     return true;
 }
 
-bool Texture::extractSourceFromJson() noexcept
+bool Texture::loadFromSource(const Path& path) noexcept
 {
+    int width, height, bpp;
+    m_data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
+    if(!m_data)
+    {
+        logLoadError("Failed to load texture '" + path.str() + "'");
+        return false;
+    }
+
+    m_size.x = width;
+    m_size.y = height;
+
+    if(bpp == 3)
+        m_format = Format::RGB;
+    else if(bpp == 4)
+        m_format = Format::RGBA;
+    else if(bpp == 1)
+        m_format = Format::R;
+
+    return true;
+}
+bool Texture::loadFromJson(const Json& json) noexcept
+{
+    Path path = JsonUtility::readString(json, "source");
+    if(!path.empty()) return loadFromSource(path);
+
     try
     {
-        m_parameters.source = m_parameters.json[JsonAttributes::source].get<std::string>();
-        return true;
+        return loadFromSource(json[JsonAttributes::source].get<std::string>());
     }
     catch(const std::exception& e)
     {
         logLoadError("Loading <" + Texture::identifier + "> without '" + JsonAttributes::source + "' attribute");
         return false;
     }
-
-    return false;
 }

@@ -1,7 +1,13 @@
 {
 	"type":"template",
 	"components":{
-		"transform":{},
+		"transform":{
+			"childs":[
+				{
+					
+				}
+			]
+		},
 		"model":{
 			
 		}

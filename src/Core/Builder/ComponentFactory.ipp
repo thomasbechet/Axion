@@ -14,4 +14,9 @@ namespace ax
     {
         entity.removeComponent<C>();
     }
+    template<typename C>
+    const std::vector<std::string>& ComponentFactory<C>::requirements() const noexcept
+    {
+        return C::requirements;
+    }
 }

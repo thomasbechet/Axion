@@ -6,7 +6,7 @@
 
 using namespace ax;
 
-RectangleShapeComponent::RectangleShapeComponent(const Entity& entity, const Json& json) :
+RectangleShapeComponent::RectangleShapeComponent(Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
     setMinX(JsonUtility::readFloat(json, "minx", getMinX()));
@@ -16,7 +16,7 @@ RectangleShapeComponent::RectangleShapeComponent(const Entity& entity, const Jso
     setMinZ(JsonUtility::readFloat(json, "minz", getMinZ()));
     setMaxZ(JsonUtility::readFloat(json, "maxz", getMaxZ()));
 }
-RectangleShapeComponent::RectangleShapeComponent(const Entity& entity,
+RectangleShapeComponent::RectangleShapeComponent(Entity& entity,
         float xMin, float xMax,
         float yMin, float yMax,
         float zMin, float zMax,

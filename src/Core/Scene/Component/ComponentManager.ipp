@@ -30,7 +30,7 @@ namespace ax
     }
 
     template<typename C, typename... Args>
-    ComponentHandle ComponentManager::create(const Entity& entity, Args&&... args) noexcept
+    ComponentHandle ComponentManager::create(Entity& entity, Args&&... args) noexcept
     {
         ComponentHandle handle;
         unsigned section = componentSection<C>();

@@ -38,6 +38,11 @@ void Entity::removeAllComponents() noexcept
     m_handles.clear();
 }
 
+bool Entity::hasComponent(const std::string& identifier) const noexcept
+{
+    return (m_handles.find(identifier) != m_handles.end());
+}
+
 std::vector<std::reference_wrapper<Component>> Entity::getComponents() const noexcept
 {
     std::vector<std::reference_wrapper<Component>> components;

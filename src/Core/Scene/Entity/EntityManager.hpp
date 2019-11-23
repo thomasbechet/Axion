@@ -17,6 +17,7 @@ namespace ax
     public:
         Entity& create() noexcept;
         Entity& create(const std::string& name) noexcept;
+        Entity& create(const std::string& key, const Json& json) noexcept;
 
         void destroy(Entity& entity) noexcept;
         void destroy(const std::string& name) noexcept;
@@ -25,8 +26,9 @@ namespace ax
         Entity& get(const std::string& name) noexcept;
 
     private:
-        ChunkContainer<Entity, 64> m_chunks;
+        void addRecursive(Entity& entity, Json& body, const std::string& key, const Json& item);
 
+        ChunkContainer<Entity, 64> m_chunks;
         std::unordered_map<std::string, std::reference_wrapper<Entity>> m_tagTable;
     };
 }

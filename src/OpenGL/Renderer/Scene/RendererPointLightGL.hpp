@@ -9,16 +9,15 @@
 
 namespace ax
 {
-    class Transform;
     class RenderContent;
 
     class AXION_GL_API RendererPointLightGL : public RendererPointLight
     {
     public:
-        void setTransform(Transform* transform) override;
+        void setTransform(TransformComponent* transform) override;
         void setParameters(const RendererPointLightParameters& parameters) override;
 
-        Transform* transform = nullptr;
+        TransformComponent* transform = nullptr;
 
         Color3 color;
         float radius;

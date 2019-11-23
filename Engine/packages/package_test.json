@@ -1,9 +1,11 @@
 {
     "type":"package",
 
-    "model_bunny":
-    {
-        "type":"model",
-        "source":"$ENGINE_DIR/models/bunny/bunny.obj"
-    }
+    "assets":[
+		{
+			"type":"texture",
+			"name":"puuuuuuuuuuute",
+			"source":"$ENGINE_DIR/textures/wall_normal2.bmp"
+		}
+	]
 }

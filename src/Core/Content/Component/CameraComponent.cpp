@@ -5,7 +5,7 @@
 
 using namespace ax;
 
-CameraComponent::CameraComponent(const Entity& entity, const Json& json) :
+CameraComponent::CameraComponent(Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createCamera();
@@ -17,7 +17,7 @@ CameraComponent::CameraComponent(const Entity& entity, const Json& json) :
 
     updateRendererParameters();
 }
-CameraComponent::CameraComponent(const Entity& entity) :
+CameraComponent::CameraComponent(Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createCamera();

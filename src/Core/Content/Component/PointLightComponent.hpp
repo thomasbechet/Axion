@@ -9,14 +9,14 @@
 
 namespace ax
 {
-    struct AXION_CORE_API PointLightComponent : public Component
+    class AXION_CORE_API PointLightComponent : public Component
     {
     public:
         COMPONENT_IDENTIFIER("point_light")
-        COMPONENT_REQUIREMENT(TransformComponent)
+        COMPONENT_REQUIREMENTS(TransformComponent)
         
-        PointLightComponent(const Entity& entity, const Json& json);
-        PointLightComponent(const Entity& entity);
+        PointLightComponent(Entity& entity, const Json& json);
+        PointLightComponent(Entity& entity);
         ~PointLightComponent();
 
         void setRadius(float radius) noexcept;

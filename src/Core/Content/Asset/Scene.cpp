@@ -1,6 +1,7 @@
 #include <Core/Content/Asset/Scene.hpp>
 
 #include <Core/Utility/JsonUtility.hpp>
+#include <Core/Asset/AssetModule.ipp>
 
 #include <fstream>
 
@@ -25,7 +26,7 @@ const std::vector<std::string>& Scene::getSystems() const noexcept
 {
     return m_systems;
 }
-const std::vector<Json>& Scene::getEntities() const noexcept
+const Json& Scene::getEntities() const noexcept
 {
     return m_entities;
 }
@@ -40,24 +41,10 @@ bool Scene::onLoad() noexcept
             return false;
         }
 
-        std::ifstream jsonFile(m_parameters.source.str());
-        if(!jsonFile.is_open())
-        {
-            logLoadError("Failed to open file '" + m_parameters.source.str() + "'");
+        if(JsonUtility::parseFile(m_parameters.source, m_parameters.json))
+            return loadFromJson(m_parameters.json);
+        else
             return false;
-        }
-        std::string jsonBuffer{std::istreambuf_iterator<char>(jsonFile), std::istreambuf_iterator<char>()};
-
-        try 
-        {
-            Json json = Json::parse(jsonBuffer);
-            return loadFromJson(json);
-        }
-        catch(const Json::parse_error& error)
-        {
-            logLoadError(error.what());
-            return false;
-        }
     }
     else if(!m_parameters.json.is_null())
     {
@@ -79,8 +66,24 @@ bool Scene::onUnload() noexcept
     return true;
 }
 
+bool Scene::loadFromSource(const Path& path) noexcept
+{
+    if(path.extension() != ".json")
+    {
+        logLoadError("Loading <" + Scene::identifier + "> from file '" + path + "'");
+        return false;
+    }
+
+    if(JsonUtility::parseFile(path, m_parameters.json))
+        return loadFromJson(m_parameters.json);
+    else
+        return false;
+}
 bool Scene::loadFromJson(const Json& json) noexcept
 {
+    Path source = JsonUtility::readString(json, "source");
+    if(!source.empty()) return loadFromSource(source);
+
     //Read gamemode name
     m_gameMode = JsonUtility::readString(json, "gamemode", "");
     
@@ -99,7 +102,8 @@ bool Scene::loadFromJson(const Json& json) noexcept
         {
             try
             {
-                m_assets = jAssets->get<std::vector<Json>>();
+                for(auto& asset : jAssets->get<std::vector<Json>>())
+                    Engine::asset().load(asset);
             }
             catch(...)
             {
@@ -141,11 +145,11 @@ bool Scene::loadFromJson(const Json& json) noexcept
     auto jEntities = json.find("entities");
     if(jEntities != json.end())
     {
-        if(jEntities->is_array())
+        if(jEntities->is_object())
         {
             try
             {
-                m_entities = jEntities->get<std::vector<Json>>();
+                m_entities = jEntities->get<Json>();
             }
             catch(...)
             {
@@ -155,7 +159,7 @@ bool Scene::loadFromJson(const Json& json) noexcept
         }
         else
         {
-            logLoadError("Attribute 'entities' is not an array");
+            logLoadError("Attribute 'entities' is not an object");
             return false;
         }
     }

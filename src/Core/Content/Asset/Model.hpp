@@ -39,7 +39,9 @@ namespace ax
         bool onUnload() noexcept override;
 
     private:
-        bool loadObjModel(Path path) noexcept;
+        bool loadFromSource(const Path& path) noexcept;
+        bool loadFromJson(const Json& json) noexcept;
+        bool loadObjModel(const Path& path) noexcept;
 
     private:
         Parameters m_parameters;

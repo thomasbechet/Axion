@@ -4,12 +4,13 @@
 #include <Core/Scene/Component/Component.hpp>
 #include <Core/Utility/Json.hpp>
 #include <Core/Utility/Types.hpp>
+#include <Core/Utility/NonCopyable.hpp>
 
 #include <vector>
 
 namespace ax
 {
-    class AXION_CORE_API Entity
+    class AXION_CORE_API Entity : public NonCopyable
     {
     public:
         friend class EntityManager;

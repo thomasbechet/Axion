@@ -9,14 +9,14 @@
 
 namespace ax
 {
-    struct AXION_CORE_API DirectionalLightComponent : public Component
+    class AXION_CORE_API DirectionalLightComponent : public Component
     {
     public:
         COMPONENT_IDENTIFIER("directional_light")
-        COMPONENT_REQUIREMENT(TransformComponent)
+        COMPONENT_REQUIREMENTS(TransformComponent)
         
-        DirectionalLightComponent(const Entity& entity, const Json& json);
-        DirectionalLightComponent(const Entity& entity);
+        DirectionalLightComponent(Entity& entity, const Json& json);
+        DirectionalLightComponent(Entity& entity);
         ~DirectionalLightComponent();
 
         void setColor(Color3 color) noexcept;

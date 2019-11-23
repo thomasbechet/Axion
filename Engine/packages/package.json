@@ -8,22 +8,14 @@
 			"source":"$ENGINE_DIR/textures/wall_normal2.bmp"
 		},
 		{
+			"type":"package",
+			"name":"test_pck",
+			"source":"$ENGINE_DIR/packages/package_test.json"
+		},
+		{
 			"type":"scene",
-			"name":"prototype_scene",
-			
-			"insertion":"override",
-			"gamemode":"MyGameMode",
-			"assets":[
-				{
-					"type":"texture",
-					"name":"texture_test",
-					"source":"$ENGINE_DIR/textures/wall_normal2.bmp"
-				}
-			],
-			"systems":["mysystem", "mysystem2"],
-			"entities":[
-				
-			]
+			"name":"balls_scene",
+			"source":"$ENGINE_DIR/scenes/balls_scene.json"
 		},
 		{
 			"type":"package",

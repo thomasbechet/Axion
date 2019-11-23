@@ -3,6 +3,7 @@
 #include <Core/Asset/AssetModule.ipp>
 #include <Core/Asset/JsonAttributes.hpp>
 #include <Core/Utility/Json.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tinyobjloader/tiny_obj_loader.h>
@@ -29,15 +30,7 @@ bool Model::onLoad() noexcept
 {
     if(!m_parameters.source.empty())
     {
-        if(m_parameters.source.extension() == ".obj")
-        {
-            return loadObjModel(m_parameters.source);
-        }
-        else
-        {
-            logLoadError("Unknown extension file '" + m_parameters.source.extension() + "'");
-            return false;
-        }
+        return loadFromSource(m_parameters.source);
     }
     else if(!m_parameters.json.is_null())
     {
@@ -100,7 +93,30 @@ bool Model::onUnload() noexcept
     return true;
 }
 
-bool Model::loadObjModel(Path path) noexcept
+bool Model::loadFromSource(const Path& path) noexcept
+{
+    if(m_parameters.source.extension() == ".obj")
+    {
+        return loadObjModel(m_parameters.source);
+    }
+    else if(m_parameters.source.extension() == ".json")
+    {
+        if(JsonUtility::parseFile(m_parameters.source, m_parameters.json))
+            return loadFromJson(m_parameters.json);
+        else
+            return false; 
+    }
+    else
+    {
+        logLoadError("Unknown extension file '" + m_parameters.source.extension() + "'");
+        return false;
+    }
+}
+bool Model::loadFromJson(const Json& json) noexcept
+{
+    return false;
+}
+bool Model::loadObjModel(const Path& path) noexcept
 {
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;

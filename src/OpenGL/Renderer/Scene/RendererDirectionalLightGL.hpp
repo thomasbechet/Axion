@@ -8,16 +8,15 @@
 
 namespace ax
 {
-    class Transform;
     class RenderContent;
 
     struct AXION_GL_API RendererDirectionalLightGL : public RendererDirectionalLight
     {
     public:
-        void setTransform(Transform* transform) override;
+        void setTransform(TransformComponent* transform) override;
         void setParameters(const RendererDirectionalLightParameters& parameters) override;
 
-        Transform* transform = nullptr;
+        TransformComponent* transform = nullptr;
 
         Color3 color;
 

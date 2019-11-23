@@ -4,7 +4,7 @@
 
 using namespace ax;
 
-BasicSpectatorComponent::BasicSpectatorComponent(const Entity& entity, const Json& json) :
+BasicSpectatorComponent::BasicSpectatorComponent(Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>()),
     camera(entity.getComponent<CameraComponent>())
 {
@@ -16,7 +16,7 @@ BasicSpectatorComponent::BasicSpectatorComponent(const Entity& entity, const Jso
     zoomSpeed = JsonUtility::readFloat(json, "zoom_speed", zoomSpeed);
     freeMode = JsonUtility::readBoolean(json, "free_mode", freeMode);
 }
-BasicSpectatorComponent::BasicSpectatorComponent(const Entity& entity) :
+BasicSpectatorComponent::BasicSpectatorComponent(Entity& entity) :
     transform(entity.getComponent<TransformComponent>()),
     camera(entity.getComponent<CameraComponent>())
 {

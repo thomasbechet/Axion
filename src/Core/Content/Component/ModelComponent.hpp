@@ -11,14 +11,14 @@
 
 namespace ax
 {
-    struct AXION_CORE_API ModelComponent : public Component
+    class AXION_CORE_API ModelComponent : public Component
     {
     public:
         COMPONENT_IDENTIFIER("model")
-        COMPONENT_REQUIREMENT(TransformComponent)
+        COMPONENT_REQUIREMENTS(TransformComponent)
         
-        ModelComponent(const Entity& entity, const Json& json);
-        ModelComponent(const Entity& entity);
+        ModelComponent(Entity& entity, const Json& json);
+        ModelComponent(Entity& entity);
         ~ModelComponent();
 
         void setModel(std::nullptr_t) noexcept;

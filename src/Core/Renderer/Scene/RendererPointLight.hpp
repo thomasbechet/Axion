@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/Math/Transform.hpp>
+#include <Core/Content/Component/TransformComponent.hpp>
 
 namespace ax
 {
@@ -15,14 +15,14 @@ namespace ax
     class AXION_CORE_API RendererPointLight
     {
     public:
-        virtual void setTransform(Transform* transform) = 0;
+        virtual void setTransform(TransformComponent* transform) = 0;
         virtual void setParameters(const RendererPointLightParameters& parameters) = 0;
     };
 
     class AXION_CORE_API NullRendererPointLight : public RendererPointLight
     {
     public:
-        void setTransform(Transform* transform) override {}
+        void setTransform(TransformComponent* transform) override {}
         void setParameters(const RendererPointLightParameters& parameters) override {}
     };
 

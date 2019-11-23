@@ -7,7 +7,6 @@
 
 namespace ax
 {
-    class Transform;
     class RendererMeshGL;
     class RendererMaterialGL;
     class RenderContent;
@@ -15,11 +14,11 @@ namespace ax
     class AXION_GL_API RendererStaticmeshGL : public RendererStaticmesh
     {
     public:
-        void setTransform(Transform* transform) override;
+        void setTransform(TransformComponent* transform) override;
         void setMaterial(RendererMaterialHandle material) override;
         void setMesh(RendererMeshHandle mesh) override;
 
-        Transform* transform = nullptr;
+        TransformComponent* transform = nullptr;
         RendererMeshGL* mesh = nullptr;
         RendererMaterialGL* material = nullptr;
 

@@ -21,7 +21,7 @@ namespace ax
         ~ChunkContainer();
 
         template<typename... Args>
-        Id add(Args... args) noexcept;
+        Id add(Args&... args) noexcept;
         
         void remove(Id id) noexcept;
 

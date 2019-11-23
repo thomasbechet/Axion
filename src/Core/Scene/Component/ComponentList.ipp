@@ -17,7 +17,7 @@ namespace ax
 
     template<typename C>
     template<typename... Args>
-    Id ComponentList<C>::create(const Entity& entity, Args&&... args) noexcept
+    Id ComponentList<C>::create(Entity& entity, Args&&... args) noexcept
     {
         return m_container.add(entity, args...);
     }

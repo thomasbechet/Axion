@@ -1,5 +1,7 @@
 #include <Core/Content/Asset/Template.hpp>
 
+#include <Core/Utility/JsonUtility.hpp>
+
 #include <fstream>
 
 using namespace ax;
@@ -22,30 +24,7 @@ bool Template::onLoad() noexcept
 {
     if(!m_parameters.source.empty())
     {
-        if(m_parameters.source.extension() != ".json")
-        {
-            logLoadError("Loading <" + Template::identifier + "> from file '" + m_parameters.source + "'");
-            return false;
-        }
-
-        std::ifstream jsonFile(m_parameters.source.str());
-        if(!jsonFile.is_open())
-        {
-            logLoadError("Failed to open file '" + m_parameters.source.str() + "'");
-            return false;
-        }
-        std::string jsonBuffer{std::istreambuf_iterator<char>(jsonFile), std::istreambuf_iterator<char>()};
-    
-        try
-        {
-            Json json = Json::parse(jsonBuffer);
-            return loadFromJson(json);
-        }
-        catch(const Json::parse_error& error)
-        {
-            logLoadError(error.what());
-            return false;
-        }
+        return loadFromSource(m_parameters.source);
     }
     else if(!m_parameters.json.is_null())
     {
@@ -63,8 +42,24 @@ bool Template::onUnload() noexcept
     return true;
 }
 
+bool Template::loadFromSource(const Path& path) noexcept
+{
+    if(path.extension() != ".json")
+    {
+        logLoadError("Loading <" + Template::identifier + "> from file '" + path + "'");
+        return false;
+    }
+
+    if(JsonUtility::parseFile(path, m_parameters.json))
+        return loadFromJson(m_parameters.json);
+    else
+        return false;
+}
 bool Template::loadFromJson(const Json& json) noexcept
 {
+    Path source = JsonUtility::readString(json, "source");
+    if(!source.empty()) return loadFromSource(source);
+
     auto jTemplate = m_parameters.json.find("template");
     if(jTemplate != m_parameters.json.end())
     {

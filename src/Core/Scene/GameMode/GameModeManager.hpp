@@ -10,7 +10,7 @@ namespace ax
     class AXION_CORE_API GameModeManager
     {
     public:
-        friend class ContextModule;
+        friend class SceneModule;
 
     public:
         GameModeManager();
@@ -18,6 +18,7 @@ namespace ax
     public:
         template<typename G>
         void set() noexcept;
+        void set(const std::string& identifier) noexcept;
         template<typename G>
         G& get() const noexcept;
         GameMode& get() const noexcept;

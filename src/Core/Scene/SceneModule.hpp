@@ -20,12 +20,18 @@ namespace ax
         EntityManager entity;
         SystemManager system;
         UIManager ui;
-        GameModeManager gamemode;
+        GameModeManager gamemode; 
+
+    public:
+        bool hasNext() noexcept;
+        void next() noexcept;
 
     public:
         void open(const std::string& scene) noexcept;
         void open(Reference<Scene> scene) noexcept;
 
-        Reference<Scene> m_activeScene;
+    private:
+        void openScene(const Scene& scene) noexcept;
+        Reference<Scene> m_nextScene;
     };
 }

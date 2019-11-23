@@ -5,7 +5,7 @@
 
 using namespace ax;
 
-DirectionalLightComponent::DirectionalLightComponent(const Entity& entity, const Json& json) :
+DirectionalLightComponent::DirectionalLightComponent(Entity& entity, const Json& json) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createDirectionalLight();
@@ -16,7 +16,7 @@ DirectionalLightComponent::DirectionalLightComponent(const Entity& entity, const
 
     m_handle->setParameters(m_parameters);
 }
-DirectionalLightComponent::DirectionalLightComponent(const Entity& entity) :
+DirectionalLightComponent::DirectionalLightComponent(Entity& entity) :
     transform(entity.getComponent<TransformComponent>())
 {
     m_handle = Engine::renderer().createDirectionalLight();

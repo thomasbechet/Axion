@@ -16,7 +16,7 @@ namespace ax
         if(hasComponent<C>())
             Engine::interrupt("Entity [id " + std::to_string(m_id) + "] already owns component <" + C::identifier + ">");
 
-        ComponentHandle handle = Engine::scene().component.create<C>(const_cast<const Entity&>(*this), args...);
+        ComponentHandle handle = Engine::scene().component.create<C>(*this, args...);
         m_handles.emplace(C::identifier, handle);
 
         return Engine::scene().component.get<C>(handle);

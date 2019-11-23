@@ -19,9 +19,6 @@ ADD_LIBRARY(
     Asset/AssetModule.cpp
     Asset/AssetLoader.cpp
     Asset/Asset.cpp
-    Builder/AssetFactories.cpp
-    Builder/ComponentFactories.cpp
-    Builder/SystemFactories.cpp
     Context/ContextModule.cpp
     Context/Engine.cpp
     Content/System/BasicWindowSystem.cpp
@@ -56,12 +53,12 @@ ADD_LIBRARY(
     Utility/LibraryLoader.cpp
     Utility/Path.cpp
     Utility/Reference.cpp
+    Utility/JsonUtility.cpp
     Input/InputModule.cpp
     Input/Button.cpp
     Input/Axis.cpp
     Logger/ThreadSafeLoggerModule.cpp
     Logger/ConsoleLoggerModule.cpp
-    Math/Transform.cpp
     Math/Transform2D.cpp
     Math/Geometry/Shape.cpp
     Math/Geometry/Sphere.cpp

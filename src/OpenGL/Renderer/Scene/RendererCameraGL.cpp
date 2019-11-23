@@ -18,7 +18,7 @@ void RendererModuleGL::destroyCamera(RendererCameraHandle& cameraPointer)
     cameraPointer = nullptr;
 }
 
-void RendererCameraGL::setTransform(Transform* transformPointer)
+void RendererCameraGL::setTransform(TransformComponent* transformPointer)
 {
     transform = transformPointer;
 }

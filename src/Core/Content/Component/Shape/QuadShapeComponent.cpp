@@ -2,15 +2,21 @@
 
 #include <Core/Asset/AssetModule.ipp>
 #include <Core/Renderer/RendererModule.hpp>
+#include <Core/Utility/JsonUtility.hpp>
 
 using namespace ax;
 
-QuadShapeComponent::QuadShapeComponent(const Entity& entity, const Json& json) :
-    transform(entity.getComponent<TransformComponent>())
+QuadShapeComponent::QuadShapeComponent(Entity& entity, const Json& json) :
+    QuadShapeComponent(
+        entity,
+        JsonUtility::readFloat(json, "x", 1.0f),
+        JsonUtility::readFloat(json, "y", 1.0f),
+        JsonUtility::readFloat(json, "factor", 1.0f)
+    )
 {
     
 }
-QuadShapeComponent::QuadShapeComponent(const Entity& entity, float x, float y, float factor) :
+QuadShapeComponent::QuadShapeComponent(Entity& entity, float x, float y, float factor) :
     Quad(x, y),
     transform(entity.getComponent<TransformComponent>()),
     m_coordinateFactor(factor)
