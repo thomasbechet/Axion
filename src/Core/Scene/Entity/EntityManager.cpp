@@ -2,7 +2,7 @@
 
 #include <Core/Asset/AssetModule.ipp>
 #include <Core/Builder/BuilderModule.hpp>
-#include <Core/Content/Asset/Template.hpp>
+#include <Core/Content/Asset/TemplateAsset.hpp>
 #include <Core/Utility/JsonUtility.hpp>
 #include <Core/Scene/Entity/Entity.ipp>
 
@@ -34,7 +34,7 @@ Entity& EntityManager::create(const std::string& key, const Json& json) noexcept
     std::string templateAsset = JsonUtility::readString(json, "template");
     if(!templateAsset.empty())
     {
-        body = Engine::asset().get<Template>(templateAsset)->merge(json);
+        body = Engine::asset().get<TemplateAsset>(templateAsset)->merge(json);
         body.erase("template");
     }
     else

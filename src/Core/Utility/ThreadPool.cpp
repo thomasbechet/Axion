@@ -1,10 +1,11 @@
 #include <Core/Utility/ThreadPool.hpp>
 
 #include <iostream>
+#include <Core/Engine/Engine.hpp>
 #include <Core/Logger/LoggerModule.hpp>
-#include <Core/Context/Engine.hpp>
 
 using namespace ax;
+using namespace ax::detail;
 
 ThreadPool::~ThreadPool()
 {

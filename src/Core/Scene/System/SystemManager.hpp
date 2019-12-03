@@ -11,11 +11,9 @@ namespace ax
     class AXION_CORE_API SystemManager : public NonCopyable
     {
     public:
-        friend class ContextModule;
-
         ~SystemManager();
 
-    private:
+    public:
         void start() noexcept;
         void stop() noexcept;
         void update() noexcept;

@@ -9,7 +9,7 @@
 #include <atomic>
 #include <queue>
 
-namespace ax
+namespace ax::detail
 {
     class AXION_CORE_API ThreadSafeLoggerModule : public LoggerModule
     {

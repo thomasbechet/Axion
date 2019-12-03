@@ -1,7 +1,5 @@
 #include <Core/Utility/Path.hpp>
 
-#include <Core/Context/Engine.hpp>
-
 #include <algorithm>
 #include <fstream>
 #include <regex>
@@ -89,9 +87,9 @@ Path::operator std::string() const
 std::string Path::sanitize(std::string path) noexcept
 {
     //Replace constants
-    path = std::regex_replace(path, std::regex("\\$ENGINE_DIR"), Engine::EngineDirectory);
-    path = std::regex_replace(path, std::regex("\\$GAMEDATA_DIR"), Engine::GameDataDirectory);
-    path = std::regex_replace(path, std::regex("\\$GAME_DIR"), Engine::GameDirectory);
+    path = std::regex_replace(path, std::regex("\\$ENGINE_DIR"), EngineDirectory);
+    path = std::regex_replace(path, std::regex("\\$GAMEDATA_DIR"), GameDataDirectory);
+    path = std::regex_replace(path, std::regex("\\$GAME_DIR"), GameDirectory);
 
     //Normalize path
     std::replace(path.begin(), path.end(), '\\', '/');

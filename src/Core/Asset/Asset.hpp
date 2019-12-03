@@ -1,51 +1,51 @@
 #pragma once
 
-#include <Core/Export.hpp>
-#include <Core/Utility/NonCopyable.hpp>
+#include <core/export.hpp>
+#include <core/utility/non_copyable.hpp>
 
 #include <atomic>
 #include <string>
 
 namespace ax
 {
-    class AXION_CORE_API Asset : public NonCopyable
+    class AXION_CORE_API asset : public non_copyable
     {
     public:
         template<typename T>
-        friend class AssetManager;
-        friend class AssetLoader;
+        friend class asset_manager;
+        friend class asset_loader;
 
     public:
-        enum State
+        enum state
         {
-            Pending,
-            Loaded,
-            Validated,
-            Unloaded,
-            Failed
+            pending,
+            loaded,
+            validated,
+            unloaded,
+            failed
         };
 
-        struct Information
+        struct information
         {
             std::string name;
             std::string identifier;
         };
 
     public:
-        Asset(const std::string& name, const std::string& identifier);
-        virtual ~Asset() = default;
+        asset(const std::string& name, const std::string& identifier);
+        virtual ~asset() = default;
 
-        std::string getName() const noexcept;
-        std::string getIdentifier() const noexcept;
-        State getState() const noexcept;
-        bool isValidated() const noexcept;
+        std::string get_name() const noexcept;
+        std::string get_identifier() const noexcept;
+        State get_state() const noexcept;
+        bool is_validated() const noexcept;
 
-        Information getInformation() const noexcept;
+        information get_information() const noexcept;
 
     protected:
-        void logLoadError(const std::string& error) noexcept;
-        void logValidateError(const std::string& error) noexcept;
-        void logUnloadError(const std::string& error) noexcept;
+        void log_load_error(const std::string& error) noexcept;
+        void log_validate_error(const std::string& error) noexcept;
+        void log_unload_error(const std::string& error) noexcept;
 
     private:
         bool load() noexcept;
@@ -53,13 +53,13 @@ namespace ax
         bool unload() noexcept;
 
     protected:
-        virtual bool onLoad() noexcept = 0;
-        virtual bool onValidate() noexcept = 0;
-        virtual bool onUnload() noexcept = 0;
+        virtual bool on_load() noexcept = 0;
+        virtual bool on_validate() noexcept = 0;
+        virtual bool on_unload() noexcept = 0;
 
     private:
         const std::string m_name;
         const std::string m_identifier;
-        std::atomic<State> m_state {State::Pending};
+        std::atomic<State> m_state {state::pending};
     };  
 }

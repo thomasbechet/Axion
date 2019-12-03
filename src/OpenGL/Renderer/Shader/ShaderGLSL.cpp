@@ -1,7 +1,7 @@
 #include <OpenGL/Renderer/Shader/ShaderGLSL.hpp>
 
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
-#include <Core/Context/Engine.hpp>
+#include <Core/Engine/Engine.hpp>
 #include <Core/Logger/LoggerModule.hpp>
 
 #include <fstream>

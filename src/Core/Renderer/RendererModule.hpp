@@ -1,11 +1,11 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/Context/Module.hpp>
+#include <Core/Engine/Module.hpp>
 #include <Core/Utility/Types.hpp>
-#include <Core/Content/Asset/Mesh.hpp>
-#include <Core/Content/Asset/Material.hpp>
-#include <Core/Content/Asset/Texture.hpp>
+#include <Core/Content/Asset/MeshAsset.hpp>
+#include <Core/Content/Asset/MaterialAsset.hpp>
+#include <Core/Content/Asset/TextureAsset.hpp>
 #include <Core/Renderer/RenderMode.hpp>
 #include <Core/Renderer/Asset/RendererMaterial.hpp>
 #include <Core/Renderer/Asset/RendererMesh.hpp>
@@ -20,7 +20,7 @@
 
 #include <string>
 
-namespace ax
+namespace ax::detail
 {
     class Transform;
 
@@ -40,7 +40,7 @@ namespace ax
         virtual void destroyMesh(RendererMeshHandle& mesh) = 0;
 
         //Texture
-        virtual RendererTextureHandle createTexture(Vector2u size, Texture::Format format, const Byte* data) = 0;
+        virtual RendererTextureHandle createTexture(Vector2u size, TextureAsset::Format format, const Byte* data) = 0;
         virtual void destroyTexture(RendererTextureHandle& texture) = 0;
 
         //Shader

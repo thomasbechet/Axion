@@ -1,0 +1,20 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.1.0)
+
+#Project declaration
+PROJECT(main LANGUAGES CXX VERSION 0.0.1)
+
+#Include headers
+INCLUDE_DIRECTORIES(".")
+
+#Build executable
+ADD_EXECUTABLE(
+    ${PROJECT_NAME}
+    main.cpp
+    #core/engine/engine.cpp
+)
+
+#Install targets
+INSTALL(
+    TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/."
+)

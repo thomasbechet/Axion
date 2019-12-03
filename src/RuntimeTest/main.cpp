@@ -10,7 +10,7 @@
 #include <Core/Scene/Entity/Entity.hpp>
 #include <Core/Scene/Entity/EntityManager.hpp>
 #include <Core/Scene/GameMode/GameModeManager.ipp>
-#include <Core/Context/Engine.hpp>
+#include <Core/Engine/Engine.hpp>
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Logger/LoggerModule.hpp>
 #include <Core/Utility/Memory.hpp>
@@ -34,7 +34,7 @@
 #include <Core/Utility/IndexVector.hpp>
 #include <Core/Asset/AssetModule.hpp>
 #include <Core/Asset/AssetHolder.hpp>
-#include <Core/Content/Asset/Package.hpp>
+#include <Core/Content/Asset/PackageAsset.hpp>
 #include <RuntimeTest/CustomSystem.hpp>
 #include <Core/Math/Transform2D.hpp>
 #include <Core/Utility/Macro.hpp>
@@ -60,15 +60,15 @@ public:
 
         //ax::Reference<ax::Texture> ref = ax::Engine::asset().get<ax::Texture>("test_texture");
 
-        ax::Texture::Parameters textureParameters;
+        ax::TextureAsset::Parameters textureParameters;
         textureParameters.source = "$ENGINE_DIR/textures/wall_normal2.bmp";
-        ax::Engine::asset().load<ax::Texture>("mytexture", textureParameters);       
+        ax::Engine::asset().load<ax::TextureAsset>("mytexture", textureParameters);       
 
         ax::Engine::asset().loader.resetLoadState();
 
-        ax::Package::Parameters packageParameters;
+        ax::PackageAsset::Parameters packageParameters;
         packageParameters.source = "../packages/package.json";
-        ax::Engine::asset().loadAsync<ax::Package>("main_package", packageParameters);
+        ax::Engine::asset().loadAsync<ax::PackageAsset>("main_package", packageParameters);
 
         ax::AssetLoader::LoadState loadState;
         std::string lastName;
@@ -100,6 +100,8 @@ public:
 
         ax::Timer timer;
         timer.start();
+
+        ax::
 
         ax::Engine::scene().open("balls_scene");
 

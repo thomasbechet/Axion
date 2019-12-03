@@ -4,7 +4,7 @@
 #include <Core/Renderer/RendererModule.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
-namespace ax
+namespace ax::detail
 {
     class AXION_CORE_API NullRendererModule : public RendererModule
     {
@@ -20,7 +20,7 @@ namespace ax
         void destroyMesh(RendererMeshHandle& mesh) override {mesh = nullptr;}
 
         //Texture
-        RendererTextureHandle createTexture(Vector2u size, Texture::Format format, const Byte* data) override {return &m_nullTexture;}
+        RendererTextureHandle createTexture(Vector2u size, TextureAsset::Format format, const Byte* data) override {return &m_nullTexture;}
         void destroyTexture(RendererTextureHandle& texture) override {texture = nullptr;}
 
         //Shader

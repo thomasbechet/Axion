@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Core/Export.hpp>
-#include <Core/Context/Module.hpp>
+#include <Core/Engine/Module.hpp>
 #include <Core/Input/Button.hpp>
 #include <Core/Input/Axis.hpp>
 #include <Core/Input/Keyboard.hpp>
@@ -11,7 +11,7 @@
 
 #include <unordered_map>
 
-namespace ax
+namespace ax::detail
 {
     enum CursorMode
     {

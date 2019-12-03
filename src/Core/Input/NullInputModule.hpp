@@ -5,7 +5,7 @@
 
 #include <memory>
 
-namespace ax
+namespace ax::detail
 {
     class AXION_CORE_API NullInputModule : public InputModule
     {

@@ -16,11 +16,11 @@ ADD_DEFINITIONS(-DAXION_CORE_EXPORT)
 #Build library from sources
 ADD_LIBRARY(
     ${PROJECT_NAME} SHARED
+    Engine/Engine.cpp
     Asset/AssetModule.cpp
     Asset/AssetLoader.cpp
     Asset/Asset.cpp
     Context/ContextModule.cpp
-    Context/Engine.cpp
     Content/System/BasicWindowSystem.cpp
     Content/System/BasicSpectatorSystem.cpp
     Content/System/RenderModeSystem.cpp
@@ -34,15 +34,15 @@ ADD_LIBRARY(
     Content/Component/Shape/UVSphereShapeComponent.cpp
     Content/Component/Shape/RectangleShapeComponent.cpp
     Content/Component/Shape/QuadShapeComponent.cpp
-    Content/Asset/Material.cpp
-    Content/Asset/Mesh.cpp
-    Content/Asset/Model.cpp
-    Content/Asset/Package.cpp
-    Content/Asset/Shader.cpp
-    Content/Asset/Texture.cpp
-    Content/Asset/Scene.cpp
-    Content/Asset/Template.cpp
-    Renderer/Renderer.cpp
+    Content/Asset/MaterialAsset.cpp
+    Content/Asset/MeshAsset.cpp
+    Content/Asset/ModelAsset.cpp
+    Content/Asset/PackageAsset.cpp
+    Content/Asset/ShaderAsset.cpp
+    Content/Asset/TextureAsset.cpp
+    Content/Asset/SceneAsset.cpp
+    Content/Asset/TemplateAsset.cpp
+    Renderer/RendererModule.cpp
     Utility/ThreadPool.cpp
     Utility/Time.cpp
     Utility/Timer.cpp

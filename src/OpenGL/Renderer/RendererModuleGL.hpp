@@ -38,13 +38,13 @@ namespace ax
         GLuint quadVBO;
         GLuint quadVAO;
 
-        Reference<Shader> debugLightCullingShader;
-        Reference<Shader> geometryShader;
-        Reference<Shader> genericShader;
-        Reference<Shader> postProcessShader;
-        Reference<Shader> quadTextureShader;
-        Reference<Shader> wireframeShader;
-        Reference<Shader> guiRectangleShader;
+        Reference<ShaderAsset> debugLightCullingShader;
+        Reference<ShaderAsset> geometryShader;
+        Reference<ShaderAsset> genericShader;
+        Reference<ShaderAsset> postProcessShader;
+        Reference<ShaderAsset> quadTextureShader;
+        Reference<ShaderAsset> wireframeShader;
+        Reference<ShaderAsset> guiRectangleShader;
         ShaderGLSL lightCullingComputeShader;
 
         std::unique_ptr<MaterialUBO> materialUBO;
@@ -72,7 +72,7 @@ namespace ax
         void destroyMesh(RendererMeshHandle& mesh) override;
 
         //Texture
-        RendererTextureHandle createTexture(Vector2u size, Texture::Format format, const Byte* data) override;
+        RendererTextureHandle createTexture(Vector2u size, TextureAsset::Format format, const Byte* data) override;
         void destroyTexture(RendererTextureHandle& texture) override;
 
         //Shader

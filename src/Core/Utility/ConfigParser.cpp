@@ -6,6 +6,7 @@
 #include <algorithm>
 
 using namespace ax;
+using namespace ax::detail;
 
 void ConfigParser::parse(const Path& path) noexcept
 {

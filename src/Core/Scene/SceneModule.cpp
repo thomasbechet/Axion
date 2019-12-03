@@ -21,13 +21,13 @@ void SceneModule::next() noexcept
 
 void SceneModule::open(const std::string& scene) noexcept
 {
-    open(Engine::asset().get<Scene>(scene));
+    open(Engine::asset().get<SceneAsset>(scene));
 }
-void SceneModule::open(Reference<Scene> scene) noexcept
+void SceneModule::open(Reference<SceneAsset> scene) noexcept
 {
     if(scene) openScene(*scene.get());
 }
-void SceneModule::openScene(const Scene& scene) noexcept
+void SceneModule::openScene(const SceneAsset& scene) noexcept
 {
     for(auto& [key, item] : scene.getEntities().items())
         Engine::scene().entity.create(key, item);

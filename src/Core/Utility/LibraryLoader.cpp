@@ -1,9 +1,10 @@
 #include <Core/Utility/LibraryLoader.hpp>
 
-#include <Core/Context/Engine.hpp>
+#include <Core/Engine/Engine.hpp>
 #include <Core/Logger/LoggerModule.hpp>
 
 using namespace ax;
+using namespace ax::detail;
 
 LibraryLoader::~LibraryLoader()
 {

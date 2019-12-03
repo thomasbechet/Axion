@@ -3,7 +3,7 @@
 #include <Core/Export.hpp>
 #include <Core/Logger/ThreadSafeLoggerModule.hpp>
 
-namespace ax
+namespace ax::detail
 {
     class AXION_CORE_API ConsoleLoggerModule : public ThreadSafeLoggerModule
     {

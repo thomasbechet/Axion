@@ -1,11 +1,11 @@
 #include <OpenGL/Renderer/RendererModuleGL.hpp>
 
 #include <OpenGL/Renderer/Shader/ShaderConstants.hpp>
-#include <Core/Context/Engine.hpp>
+#include <Core/Engine/Engine.hpp>
 #include <Core/Window/WindowModule.hpp>
 #include <Core/Logger/LoggerModule.hpp>
 #include <Core/Asset/AssetModule.ipp>
-#include <Core/Content/Asset/Package.hpp>
+#include <Core/Content/Asset/PackageAsset.hpp>
 #include <Core/Renderer/RendererException.hpp>
 
 #include <GL/glew.h>
@@ -56,16 +56,16 @@ void RendererModuleGL::initialize() noexcept
     if(USE_LIGHT_CULLING) m_content.cullLightSSBO = std::make_unique<CullLightSSBO>(Vector2u(1, 1));
 
     //Load shaders
-    Package::Parameters packageParameters;
+    PackageAsset::Parameters packageParameters;
     packageParameters.source = "$ENGINE_DIR/packages/glsl_shaders_package.json";
-    Engine::asset().load<Package>("glsl_shaders_package", packageParameters, true);
-    m_content.debugLightCullingShader = Engine::asset().get<Shader>("glsl_debug_light_culling");
-    m_content.geometryShader = Engine::asset().get<Shader>("glsl_geometry");
-    m_content.genericShader = Engine::asset().get<Shader>("glsl_generic");
-    m_content.postProcessShader = Engine::asset().get<Shader>("glsl_post_process");
-    m_content.quadTextureShader = Engine::asset().get<Shader>("glsl_quad_texture");
-    m_content.wireframeShader = Engine::asset().get<Shader>("glsl_wireframe");
-    m_content.guiRectangleShader = Engine::asset().get<Shader>("glsl_gui_rectangle");
+    Engine::asset().load<PackageAsset>("glsl_shaders_package", packageParameters, true);
+    m_content.debugLightCullingShader = Engine::asset().get<ShaderAsset>("glsl_debug_light_culling");
+    m_content.geometryShader = Engine::asset().get<ShaderAsset>("glsl_geometry");
+    m_content.genericShader = Engine::asset().get<ShaderAsset>("glsl_generic");
+    m_content.postProcessShader = Engine::asset().get<ShaderAsset>("glsl_post_process");
+    m_content.quadTextureShader = Engine::asset().get<ShaderAsset>("glsl_quad_texture");
+    m_content.wireframeShader = Engine::asset().get<ShaderAsset>("glsl_wireframe");
+    m_content.guiRectangleShader = Engine::asset().get<ShaderAsset>("glsl_gui_rectangle");
 
     //Compute shader
     if(USE_LIGHT_CULLING)
@@ -94,7 +94,7 @@ void RendererModuleGL::initialize() noexcept
     trans->translate(Vector2f(20.0f, 30.0f));
     rectangle1->setTransform(trans);
     rectangle1->setColor(Color3(1.0f, 0.0f, 0.0f));
-    rectangle1->setTexture(Engine::asset().get<Texture>("texture_image")->getHandle());
+    rectangle1->setTexture(Engine::asset().get<TextureAsset>("texture_image")->getHandle());
     rectangle1->setSize(Vector2u(300, 225));
     Rectu uv;
     uv.bottom = 0;
@@ -109,7 +109,7 @@ void RendererModuleGL::initialize() noexcept
     trans->rotate(30.0f);
     rectangle2->setTransform(trans);
     rectangle2->setColor(Color3(0.0f, 1.0f, 0.0f));
-    rectangle2->setTexture(Engine::asset().get<Texture>("texture_image")->getHandle());
+    rectangle2->setTexture(Engine::asset().get<TextureAsset>("texture_image")->getHandle());
     rectangle2->setSize(Vector2u(300, 225));
     uv.bottom = 0;
     uv.left = 0;

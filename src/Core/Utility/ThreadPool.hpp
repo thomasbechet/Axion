@@ -10,7 +10,7 @@
 #include <condition_variable>
 #include <algorithm>
 
-namespace ax
+namespace ax::detail
 {
     class AXION_CORE_API ThreadPool : public NonCopyable
     {

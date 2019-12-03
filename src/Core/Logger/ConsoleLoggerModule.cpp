@@ -10,6 +10,7 @@
     #include <windows.h>
 #endif
 
+using namespace ax::detail;
 using namespace ax;
 
 void ConsoleLoggerModule::onLog(const std::string& message, Severity severity) noexcept

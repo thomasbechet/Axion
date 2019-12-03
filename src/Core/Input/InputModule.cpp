@@ -1,8 +1,9 @@
 #include <Core/Input/InputModule.hpp>
 
-#include <Core/Context/Engine.hpp>
+#include <Core/Engine/Engine.hpp>
 
 using namespace ax;
+using namespace ax::detail;
 
 void InputModule::updateInputs() noexcept
 {

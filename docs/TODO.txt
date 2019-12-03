@@ -4,4 +4,8 @@ TODO:
 -TBN full implementation
 -Asset asynchron
 
--CustomShapeComponent
+- Valgrind => texture asset leak
+- material_asset => asset::material
+
+
+ax::system::basic_spectator

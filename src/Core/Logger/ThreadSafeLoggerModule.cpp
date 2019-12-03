@@ -1,5 +1,6 @@
 #include <Core/Logger/ThreadSafeLoggerModule.hpp>
 
+using namespace ax::detail;
 using namespace ax;
 
 void ThreadSafeLoggerModule::initialize() noexcept

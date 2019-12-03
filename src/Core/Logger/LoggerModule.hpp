@@ -15,16 +15,19 @@ namespace ax
         Fatal
     };
 
-    class AXION_CORE_API LoggerModule
+    namespace detail
     {
-    public:
-        virtual ~LoggerModule() = default;
+        class AXION_CORE_API LoggerModule
+        {
+        public:
+            virtual ~LoggerModule() = default;
 
-        virtual void initialize() noexcept = 0;
-        virtual void terminate() noexcept = 0;
+            virtual void initialize() noexcept = 0;
+            virtual void terminate() noexcept = 0;
 
-        virtual void log(const std::string& message, Severity severity = Severity::None) noexcept = 0;
-        virtual void displayDate(bool toggle) noexcept = 0;
-        virtual void flush() noexcept = 0;
-    };
+            virtual void log(const std::string& message, Severity severity = Severity::None) noexcept = 0;
+            virtual void displayDate(bool toggle) noexcept = 0;
+            virtual void flush() noexcept = 0;
+        };
+    }
 }

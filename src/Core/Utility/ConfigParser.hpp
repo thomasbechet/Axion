@@ -8,7 +8,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace ax
+namespace ax::detail
 {
     class AXION_CORE_API ConfigParser : public NonCopyable
     {

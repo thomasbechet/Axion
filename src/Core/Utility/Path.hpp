@@ -31,6 +31,10 @@ namespace ax
 
         static std::string sanitize(std::string path) noexcept;
 
+        static inline const std::string EngineDirectory = "..";                // => Game/Engine/
+        static inline const std::string GameDataDirectory = "../../GameData/"; // => Game/GameData/
+        static inline const std::string GameDirectory = "../..";               // => Game/
+
     private:
         std::string m_path;
     };

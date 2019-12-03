@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+.././core/scene/archetype.hpp
+type_traits
+-
+
+D:/Bureau/Axion/src_new/main.cpp
+iostream
+-
+core/scene/archetype.hpp
+-
+
