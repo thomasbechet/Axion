@@ -19,7 +19,7 @@ namespace ax
     constexpr auto DIRECTIONAL_LIGHT_UBO_BINDING_POINT = 4;
     constexpr auto DIRECTIONAL_LIGHT_MAX_NUMBER = 50;
 
-    constexpr auto USE_LIGHT_CULLING = false;
+    constexpr auto USE_LIGHT_CULLING = true;
     constexpr auto CULL_POINT_LIGHT_SSBO_BINDING_POINT = 1;
     constexpr auto CULL_POINT_LIGHT_MAX_PER_TILE = 512;
     constexpr auto CULL_TILE_SIZE = 32;

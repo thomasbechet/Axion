@@ -163,11 +163,11 @@ public:
             ax::Engine::renderer().setViewportRectangle(ax::Renderer::DefaultViewport, ax::Vector2f(0.0f, 0.0f), ax::Vector2f(0.5f, 1.0f));
         #endif
 
-        #define LOW_RESOLUTION
+        // #define LOW_RESOLUTION
         #if defined LOW_RESOLUTION
             //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(512, 288));
             //ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(64, 36));
-            //ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(3840, 2160));
+            // ax::Engine::renderer().setViewportResolution(ax::Renderer::DefaultViewport, ax::Vector2u(3840, 2160));
         #endif
 
         //Plane
@@ -177,7 +177,9 @@ public:
 
         ax::Entity& plane = ax::Engine::scene().entity.create();
         plane.addComponent<ax::TransformComponent>();
-        plane.addComponent<ax::QuadShapeComponent>(500.0f, 500.0f, 100.0f).setMaterial("wall_material");
+        auto& quad = plane.addComponent<ax::QuadShapeComponent>(500.0f, 500.0f, 100.0f);
+        quad.setMaterial("wall_material");
+        quad.setCoordinateFactor(0.2f);
 
         //Sponza
         ax::Entity& sponza = ax::Engine::scene().entity.create();
@@ -186,7 +188,7 @@ public:
         //Directional light
         ax::Entity& dlight = ax::Engine::scene().entity.create();        
         dlight.addComponent<ax::TransformComponent>().rotate(45.0f, ax::Vector3f(1.0f, 0.0f, 0.0f));
-        //dlight.addComponent<ax::DirectionalLightComponent>(dlight);
+        // dlight.addComponent<ax::DirectionalLightComponent>();
         //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1366, 768));
         //ax::Engine::renderer().getDefaultViewport()->setResolution(ax::Vector2u(1600, 900));
 

@@ -58,7 +58,7 @@ public:
             {
                 ax::Entity& pointLight = ax::Engine::scene().entity.create();
                 ax::TransformComponent* lightTransform = &pointLight.addComponent<ax::TransformComponent>();
-                lightTransform->setTranslation(0.0f + x * 5.0f, 0.2f, 50.0f + y * 5.0f);
+                lightTransform->setTranslation(200.0f + x * 5.0f, 0.2f, 50.0f + y * 5.0f);
                 m_pointlights.emplace_back(lightTransform);
                 ax::PointLightComponent& pointLightComponent = pointLight.addComponent<ax::PointLightComponent>();
                 pointLightComponent.setRadius(5.0f);
@@ -84,7 +84,7 @@ public:
 
         ax::Entity& directionalLight = ax::Engine::scene().entity.create();
         directionalLight.addComponent<ax::TransformComponent>().rotate(ax::radians(45.0f), ax::Vector3f(1.0f, 0.0f, 0.0f));
-        //directionalLight.add<ax::DirectionalLightComponent>();
+        directionalLight.addComponent<ax::DirectionalLightComponent>();
 
         ax::Entity& monkey = ax::Engine::scene().entity.create();
         monkey.addComponent<ax::TransformComponent>().setTranslation(10.0f, 3.0f, 0.0f);
@@ -123,7 +123,7 @@ public:
         ax::Vector3f lightPos;
         lightPos.x = std::cos(m_time * 0.5f) * 2.0f;
         lightPos.z = std::sin(m_time * 0.5f) * 2.0f;
-        lightPos.y = 0.5f;
+        lightPos.y = 2.0f;
         m_lightTransform->setTranslation(lightPos);
 
         //m_cubeTransform->rotate(delta * 0.3f, ax::Vector3f::up);
@@ -132,8 +132,8 @@ public:
 
 private:
     std::vector<ax::TransformComponent*> m_pointlights;
-    int MAX_X = 0;
-    int MAX_Y = 0;
+    int MAX_X = 10;
+    int MAX_Y = 10;
 
     ax::TransformComponent* m_spawn;
     ax::Button* spawnButton;

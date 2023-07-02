@@ -88,36 +88,36 @@ void RendererModuleGL::initialize() noexcept
         0
     );
 
-    RendererGUIRectangleHandle rectangle1 = m_layout->createRectangle();
-    Transform2D* trans = new Transform2D();
-    trans->translate(Vector2f(20.0f, 30.0f));
-    rectangle1->setTransform(trans);
-    rectangle1->setColor(Color3(1.0f, 0.0f, 0.0f));
-    rectangle1->setTexture(Engine::asset().texture("texture_image")->getHandle());
-    rectangle1->setSize(Vector2u(300, 225));
-    Rectu uv;
-    uv.bottom = 0;
-    uv.left = 0;
-    uv.width = 300;
-    uv.height = 225;
-    rectangle1->setUV(uv);
+    // RendererGUIRectangleHandle rectangle1 = m_layout->createRectangle();
+    // Transform2D* trans = new Transform2D();
+    // trans->translate(Vector2f(20.0f, 30.0f));
+    // rectangle1->setTransform(trans);
+    // rectangle1->setColor(Color3(1.0f, 0.0f, 0.0f));
+    // rectangle1->setTexture(Engine::asset().texture("texture_image")->getHandle());
+    // rectangle1->setSize(Vector2u(300, 225));
+    // Rectu uv;
+    // uv.bottom = 0;
+    // uv.left = 0;
+    // uv.width = 300;
+    // uv.height = 225;
+    // rectangle1->setUV(uv);
 
-    RendererGUIRectangleHandle rectangle2 = m_layout->createRectangle();
-    trans = new Transform2D();
-    trans->translate(Vector2f(270.0f, 30.0f));
-    trans->rotate(30.0f);
-    rectangle2->setTransform(trans);
-    rectangle2->setColor(Color3(0.0f, 1.0f, 0.0f));
-    rectangle2->setTexture(Engine::asset().texture("texture_image")->getHandle());
-    rectangle2->setSize(Vector2u(300, 225));
-    uv.bottom = 0;
-    uv.left = 0;
-    uv.width = 300;
-    uv.height = 225;
-    rectangle2->setUV(uv);
+    // RendererGUIRectangleHandle rectangle2 = m_layout->createRectangle();
+    // trans = new Transform2D();
+    // trans->translate(Vector2f(270.0f, 30.0f));
+    // trans->rotate(30.0f);
+    // rectangle2->setTransform(trans);
+    // rectangle2->setColor(Color3(0.0f, 1.0f, 0.0f));
+    // rectangle2->setTexture(Engine::asset().texture("texture_image")->getHandle());
+    // rectangle2->setSize(Vector2u(300, 225));
+    // uv.bottom = 0;
+    // uv.left = 0;
+    // uv.width = 300;
+    // uv.height = 225;
+    // rectangle2->setUV(uv);
 
     //rectangle1->setDepth(1);
-    rectangle2->setDepth(-1);
+    // rectangle2->setDepth(-1);
 }
 void RendererModuleGL::terminate() noexcept
 {
